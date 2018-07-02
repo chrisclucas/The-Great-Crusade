@@ -1,0 +1,26 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+<<<<<<< HEAD
+# Custom for Visual Studio
+*.cs     diff=csharp
+=======
+
+# Custom for Visual Studio
+*.cs     diff=csharp
+
+>>>>>>> b33dc6166a0e5d316307c670e8fda7e90fc5ca08
+# Standard to msysgit
+*.doc	 diff=astextplain
+*.DOC	 diff=astextplain
+*.docx diff=astextplain
+*.DOCX diff=astextplain
+*.dot  diff=astextplain
+*.DOT  diff=astextplain
+*.pdf  diff=astextplain
+*.PDF	 diff=astextplain
+*.rtf	 diff=astextplain
+*.RTF	 diff=astextplain
+<<<<<<< HEAD
+Map.png filter=lfs diff=lfs merge=lfs -text
+=======
+>>>>>>> b33dc6166a0e5d316307c670e8fda7e90fc5ca08
