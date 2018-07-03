@@ -347,6 +347,12 @@ public class CombatResolutionRoutines : MonoBehaviour
         okButton.onClick.AddListener(okButton.GetComponent<CombatResolutionButtonRoutines>().ok);
         GlobalDefinitions.combatResolutionOKButton = okButton.gameObject;
         GlobalDefinitions.combatResolutionOKButton.SetActive(true);
+
+        // If this is the resolution of the AI combats, remove the Continue button because the player cannot add combats for the AI
+        if (!GlobalDefinitions.AICombat)
+            GlobalDefinitions.combatResolutionOKButton.SetActive(true);
+        else
+            GlobalDefinitions.combatResolutionOKButton.SetActive(false);
     }
 
     /// <summary>
