@@ -57,6 +57,10 @@ public class GlobalDefinitions : MonoBehaviour
     public const int baseEnemyDistanceHexModifier = 6;
     public const int supplyHexModifier = -20;
 
+    // Indicates if either side has met victory conditions
+    public static bool alliedVictory = false;
+    public static bool germanVictory = false;
+
     // Keep track of how many factors are lost for strength of victory calculation
     public static int alliedFactorsEliminated = 0;
     public static int germanFactorsEliminated = 0;
@@ -1634,14 +1638,19 @@ public class GlobalDefinitions : MonoBehaviour
 
 
     /// <summary>
-    /// This routine checks if there are Allied units in Germany.  Victory is achieved when
-    /// 10 divisions are in supply in Germany for 4 turns
+    /// Allied victory is achieved when 10 divisions are in supply in Germany for 4 consecutive turns or no German units on the board
     /// </summary>
-    public static void checkForAlliedVictory()
+    public static bool checkForAlliedVictory()
     {
+        //  Only display the victory screen for the first turn victory has been met
+        if (alliedVictory)
+            return (true);
+
+        // Units that count for victory have to be non-HQ and in supply
         int count = 0;
         foreach (GameObject unit in alliedUnitsOnBoard)
-            if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().AlliedVictoryHex)
+            if ((unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().AlliedVictoryHex) &&
+                    unit.GetComponent<UnitDatabaseFields>().inSupply && !unit.GetComponent<UnitDatabaseFields>().HQ)
                 count++;
 
         writeToLogFile(count + " - number of allied units meeting victory conditions");
@@ -1651,7 +1660,55 @@ public class GlobalDefinitions : MonoBehaviour
             turnsAlliedMetVictoryCondition = 0;
 
         if (turnsAlliedMetVictoryCondition == 4)
-            executeAlliedVictory();
+        {
+            displayAlliedVictoryScreen();
+            alliedVictory = true;
+            return (true);
+        }
+        else
+            return (false);
+    }
+
+    /// <summary>
+    /// German victory is decided by there being no Allied units on the board anytime after the second invasion has taken place or after turn 16.  
+    /// The German also wins if the Allied player hasn't achieved victory by the 50th turn.
+    /// </summary>
+    public static bool checkForGermanVictory()
+    {
+        //  Only display the victory screen for the first turn victory has been met
+        if (germanVictory)
+            return (true);
+
+        if ((secondInvasionAreaIndex != -1) && (alliedUnitsOnBoard.Count == 0))
+        {
+            displayGermanVictoryScreen();
+            germanVictory = true;
+            return (true);
+        }
+        else if ((turnNumber > 8) && (alliedUnitsOnBoard.Count == 0))
+        {
+            displayGermanVictoryScreen();
+            germanVictory = true;
+            return (true);
+        }
+        else if ((turnNumber > 50) && !alliedVictory)
+        {
+            displayGermanVictoryScreen();
+            germanVictory = true;
+            return (true);
+        }
+
+        return (false);
+    }
+
+    public static void displayAlliedVictoryScreen()
+    {
+        guiUpdateStatusMessage("Allied Victory Conditions Met!!");
+    }
+
+    public static void displayGermanVictoryScreen()
+    {
+        guiUpdateStatusMessage("German Victory Conditions Met!!");
     }
 
     /// <summary>
@@ -1809,11 +1866,6 @@ public class GlobalDefinitions : MonoBehaviour
         string[] a3 = a2.Split('<');
         string a4 = a3[0];
         return a4;
-    }
-
-    public static void executeAlliedVictory()
-    {
-        guiUpdateStatusMessage("Allied Victory Conditions Met!!");
     }
 
     /// <summary>

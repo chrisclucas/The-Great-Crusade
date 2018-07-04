@@ -213,8 +213,6 @@ public class TurnInitializationState : GameState
         GlobalDefinitions.turnNumber++;
         GlobalDefinitions.guiUpdateTurn();
 
-
-        GlobalDefinitions.checkForAlliedVictory();
         // Update Allied victory weeks display
         GlobalDefinitions.guiDisplayAlliedVictoryStatus();
         GlobalDefinitions.guiDisplayAlliedVictoryUnits();
@@ -777,6 +775,7 @@ public class CombatState : GameState
             GlobalDefinitions.guiUpdatePhase("German Combat Mode");
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
         }
+
         GlobalDefinitions.guiClearUnitsOnHex();
         base.initialize(inputMessage);
 
@@ -872,6 +871,10 @@ public class CombatState : GameState
 
             if (GlobalDefinitions.AIExecuting)
                 GlobalDefinitions.AIExecuting = false;
+
+            // If this is the end of German combat, check if victory conditions have been met
+            GlobalDefinitions.checkForAlliedVictory();
+            GlobalDefinitions.checkForGermanVictory();
 
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage);
