@@ -1704,19 +1704,13 @@ public class GlobalDefinitions : MonoBehaviour
         if (germanVictory)
             return false;
 
-        if ((secondInvasionAreaIndex != -1) && (alliedUnitsOnBoard.Count == 0))
+        if ((turnNumber > 8) && (alliedUnitsOnBoard.Count == 0))
         {
             germanVictory = true;
             displayGermanVictoryScreen();
             return true;
         }
-        else if ((turnNumber > 8) && (alliedUnitsOnBoard.Count == 0))
-        {
-            germanVictory = true;
-            displayGermanVictoryScreen();
-            return true;
-        }
-        else if ((turnNumber > 50) && !alliedVictory)
+        else if ((turnNumber >= 50) && !alliedVictory)
         {
             germanVictory = true;
             displayGermanVictoryScreen();

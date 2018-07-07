@@ -34,7 +34,7 @@ public class CombatToggleRoutines : MonoBehaviour
                 else
                 {
                     GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshDefendersBasedOnAttackers since attacker added " + unit.name);
-                    refreshDefendersBasedOnAttackers(unit);
+                    refreshDefendersBasedOnAttackers();
                     //checkIfDefenderToBeAdded();
                 }
             }
@@ -59,7 +59,7 @@ public class CombatToggleRoutines : MonoBehaviour
                             childTransform.GetComponent<Toggle>().isOn = true;
 
                 GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshAttackersBasedOnDefenders since defender added " + unit.name);
-                refreshAttackersBasedOnDefenders(unit);
+                refreshAttackersBasedOnDefenders();
                 //checkIfDefenderToBeAdded();
             }
         }
@@ -100,7 +100,7 @@ public class CombatToggleRoutines : MonoBehaviour
                 else
                 {
                     GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshDefendersBasedOnAttackers since attacker removed " + unit.name);
-                    refreshDefendersBasedOnAttackers(unit);
+                    refreshDefendersBasedOnAttackers();
                     //checkDefenderToBeRemoved();
                 }
 
@@ -120,6 +120,7 @@ public class CombatToggleRoutines : MonoBehaviour
                 if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().fortress)
                     foreach (Transform childTransform in transform.parent.transform)
                         if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) &&
+                                (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit != null) &&
                                 (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit != unit) &&
                                 (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit.GetComponent<UnitDatabaseFields>().occupiedHex ==
                                 unit.GetComponent<UnitDatabaseFields>().occupiedHex) &&
@@ -129,7 +130,7 @@ public class CombatToggleRoutines : MonoBehaviour
                             childTransform.GetComponent<Toggle>().isOn = false;
 
                 GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshAttackersBasedOnDefenders since defender removed " + unit.name);
-                refreshAttackersBasedOnDefenders(unit);
+                refreshAttackersBasedOnDefenders();
                 //checkDefenderToBeRemoved();
             }
         }
@@ -140,7 +141,7 @@ public class CombatToggleRoutines : MonoBehaviour
     /// <summary>
     /// This routine executes when a new attacker is committed to attacking
     /// </summary>
-    private void refreshDefendersBasedOnAttackers(GameObject attackingUnit)
+    private void refreshDefendersBasedOnAttackers()
     {
         // First go through and enable all the defending units since if I don't, once a unit is disabled it will never be enabled again and this way 
         // I don't have to explicitly check for adjacency to all attackers
@@ -157,7 +158,7 @@ public class CombatToggleRoutines : MonoBehaviour
 
         // Go through each of the attackers and gray out any defender that isn't adjacent.  By going through each of the attackers I am left
         // with only defenders that are adjacent to all attacking units
-        //foreach (GameObject attackingUnit in currentCombat.GetComponent<Combat>().attackingUnits)
+        foreach (GameObject attackingUnit in currentCombat.GetComponent<Combat>().attackingUnits)
         {
             // Only check for adjacency if the attaker is selected
 
@@ -192,7 +193,7 @@ public class CombatToggleRoutines : MonoBehaviour
     /// <summary>
     /// This routine is called when a new defender is added to the attack and updates the toggles on the combat gui
     /// </summary>
-    private void refreshAttackersBasedOnDefenders(GameObject defendingUnit)
+    private void refreshAttackersBasedOnDefenders()
     {
         // First go through and enable all the attacking units since if I don't once a unit is disabled it will never be enabled again and this way 
         // I don't have to explicitly check for adjacency to all defenders
@@ -212,7 +213,7 @@ public class CombatToggleRoutines : MonoBehaviour
 
         // Go through each of the defenders and gray out any attacker that isn't adjacent.  By going through each of the defenders I am left
         // with only attackers that are adjacent to all defending units
-        //foreach (GameObject defendingUnit in currentCombat.GetComponent<Combat>().defendingUnits)
+        foreach (GameObject defendingUnit in currentCombat.GetComponent<Combat>().defendingUnits)
         {
             // Only check for adjacency if the defnder is selected
 
