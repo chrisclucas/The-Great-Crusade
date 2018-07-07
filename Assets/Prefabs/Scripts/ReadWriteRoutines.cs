@@ -324,6 +324,12 @@ public class ReadWriteRoutines : MonoBehaviour
         entryIndex++;
         GlobalDefinitions.germanFactorsEliminated = Convert.ToInt32(entries[entryIndex]);
         GlobalDefinitions.writeToLogFile("readGlobalVariables: Set germanFactorsEliminated set to - " + GlobalDefinitions.germanFactorsEliminated);
+
+        entryIndex++;
+        GlobalDefinitions.easiestDifficultySettingUsed = Convert.ToInt32(entries[entryIndex]);
+        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set easiestDifficultySettingUsed set to - " + GlobalDefinitions.easiestDifficultySettingUsed);
+
+        GlobalDefinitions.guiUpdateLossRatioText();
         GlobalDefinitions.guiDisplayAlliedVictoryStatus();
     }
 

@@ -95,6 +95,9 @@ public class SupplyButtonRoutines : MonoBehaviour
 
         GlobalDefinitions.removeGUI(GlobalDefinitions.supplySourceGUIInstance);
 
+        // Turn the button back on
+        GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
+
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit(GameControl.inputMessage.GetComponent<InputMessage>());
     }
 
@@ -120,6 +123,9 @@ public class SupplyButtonRoutines : MonoBehaviour
         GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkIfAlliedUnsuppliedUnitsShouldBeEliminated(false);
         //else
         //GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkIfAlliedUnsuppliedUnitsShouldBeEliminated(true);
+
+        // Turn the button back on
+        GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
 
         GlobalDefinitions.removeGUI(GlobalDefinitions.supplySourceGUIInstance);
     }

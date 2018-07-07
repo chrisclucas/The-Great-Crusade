@@ -204,6 +204,13 @@ public class CombatRoutines : MonoBehaviour
     /// <param name="defendingNationality"></param>
     public void prepForCombatDisplay(GameObject hex, GlobalDefinitions.Nationality defendingNationality)
     {
+        // First thing we need to do is check that the combat assignment gui isn't already active.  If it is do not load anoether one.
+        if (GameObject.Find("CombatGUIInstance") != null)
+        {
+            GlobalDefinitions.guiUpdateStatusMessage("Resolve current combat assignment before assigning another");
+            return;
+        }
+
         GameObject singleCombat = new GameObject();
         singleCombat.AddComponent<Combat>();
         // Check if the hex has uncommittted units of the right nationality on it and there are adjacent enemies

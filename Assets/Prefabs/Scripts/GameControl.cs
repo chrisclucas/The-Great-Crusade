@@ -41,6 +41,7 @@ public class GameControl : MonoBehaviour
     public static GameObject germanAISetupStateInstance;
     public static GameObject germanAIStateInstance;
     public static GameObject alliedAIStateInstance;
+    public static GameObject victoryState;
 
     public static GameObject inputMessage;
 
@@ -76,7 +77,7 @@ public class GameControl : MonoBehaviour
         }
 
         // There are three files that should have been installed with the game.  Note, I could get rid of all three of these and just have the
-        // board and the units built into the game rather than reading them.  But I haven't based on this somewhat vauge idea that this will
+        // board and the units built into the game rather than reading them.  But I haven't done this based on a somewhat vauge idea that this will
         // make future games easier to build.
         // The three files are:
         //      TGCBoardSetup.txt
@@ -195,12 +196,16 @@ public class GameControl : MonoBehaviour
         // Turn off the background of the unit display panel
         GameObject.Find("UnitDisplayPanel").GetComponent<CanvasGroup>().alpha = 0;
 
+        // Setup the state for when victory is achieved
+        victoryState = new GameObject("victoryState");
+        victoryState.AddComponent<VictoryState>();
+
         // At this point everything has been setup.  Call up GUI to have the user select the type of game being played
         GlobalDefinitions.writeToLogFile("GameControl start(): calling getGameModeUI()");
         MainMenuRoutines.getGameModeUI();
     }
 
-    private float initialTouch; // Used ti check if the mouse click is a double click
+    private float initialTouch; // Used to check if the mouse click is a double click
     void Update()
     {
         if (GlobalDefinitions.gameStarted)

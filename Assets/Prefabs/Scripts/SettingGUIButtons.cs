@@ -16,6 +16,9 @@ public class SettingGUIButtons : MonoBehaviour
         // Bring back any gui's that were active before this was called
         foreach (GameObject gui in GlobalDefinitions.guiList)
             gui.SetActive(true);
+
+        // Turn the button back on
+        GameObject.Find("SettingsButton").GetComponent<Button>().interactable = true;
     }
 
     /// <summary>

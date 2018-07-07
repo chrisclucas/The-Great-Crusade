@@ -465,6 +465,9 @@ public class SupplyRoutines : MonoBehaviour
     /// </summary>
     public void displaySupplySourceGUI()
     {
+        // Turn off the button
+        GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = false;
+
         createSupplySourceGUI(true);
     }
 
@@ -484,6 +487,10 @@ public class SupplyRoutines : MonoBehaviour
             if (GlobalDefinitions.supplySources.Count == 0)
             {
                 GlobalDefinitions.guiUpdateStatusMessage("No Allied supply sources have been assigned");
+
+                // Turn the button back on
+                GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
+
                 return;
             }
 

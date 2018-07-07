@@ -33,6 +33,9 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     public void goToMainMenu()
     {
+        // Turn off the button so that the same gui can't be pulled up
+        GameObject.Find("MainMenuButton").GetComponent<Button>().interactable = false;
+
         // Turn off any guis that are on
         if (GlobalDefinitions.guiList.Count > 0)
             foreach (GameObject gui in GlobalDefinitions.guiList)
@@ -46,6 +49,9 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     public void quitApplication()
     {
+        // Turn off the button
+        GameObject.Find("QuitButton").GetComponent<Button>().interactable = false;
+
         // Turn off any guis that are on
         if (GlobalDefinitions.guiList.Count > 0)
             foreach (GameObject gui in GlobalDefinitions.guiList)
@@ -127,6 +133,9 @@ public class GUIButtonRoutines : MonoBehaviour
 
         GlobalDefinitions.resetAllGlobalDefinitions();
 
+        // Turn the button back on
+        GameObject.Find("MainMenuButton").GetComponent<Button>().interactable = true;
+
         MainMenuRoutines.getGameModeUI();
     }
 
@@ -135,6 +144,9 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     private void yesQuit()
     {
+        // Turn the button back on - only applies to the editor since otherwise the applciation quits
+        GameObject.Find("QuitButton").GetComponent<Button>().interactable = true;
+
         Application.Quit();
     }
 
@@ -143,6 +155,9 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     private void noQuit()
     {
+        // Turn the button back on
+        GameObject.Find("QuitButton").GetComponent<Button>().interactable = true;
+
         // Turn back on any guis that are active
         foreach (GameObject gui in GlobalDefinitions.guiList)
             gui.SetActive(true);
@@ -153,6 +168,9 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     private void noMain()
     {
+        // Turn the button back on
+        GameObject.Find("MainMenuButton").GetComponent<Button>().interactable = true;
+
         // Turn back on any guis that are active
         foreach (GameObject gui in GlobalDefinitions.guiList)
             gui.SetActive(true);
@@ -168,6 +186,9 @@ public class GUIButtonRoutines : MonoBehaviour
             GlobalDefinitions.writeToLogFile("executeCombatResolution: Executing  combat count = " + GlobalDefinitions.allCombats.Count);
             if (GlobalDefinitions.allCombats.Count > 0)
             {
+                // Turn off the button
+                GameObject.Find("ResolveCombatButton").GetComponent<Button>().interactable = false;
+
                 CombatResolutionRoutines.combatResolutionDisplay();
 
                 if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
@@ -376,6 +397,9 @@ public class GUIButtonRoutines : MonoBehaviour
 
     public void updateSettings()
     {
+        // Turn the button off so that it can't pull up more of the same window
+        GameObject.Find("SettingsButton").GetComponent<Button>().interactable = false;
+
         Slider agressivenessSlider;
         Slider diffiultySlider;
         Button cancelButton;
@@ -497,5 +521,16 @@ public class GUIButtonRoutines : MonoBehaviour
     public void updateAggressivenessSettingText(float value)
     {
         GlobalDefinitions.aggressivenessSettingText.GetComponent<Text>().text = Convert.ToString(value);
+    }
+
+    /// <summary>
+    /// Executes when the user hits OK on the victory screen
+    /// </summary>
+    public void victoryOK()
+    {
+        InputMessage inputMessage = null;
+        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.victoryState.GetComponent<VictoryState>();
+        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage);
+        GlobalDefinitions.removeAllGUIs();
     }
 }

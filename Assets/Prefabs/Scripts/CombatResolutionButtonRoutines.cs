@@ -85,6 +85,9 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
         {
             GlobalDefinitions.removeGUI(GlobalDefinitions.combatResolutionGUIInstance);
 
+            // Turn the button back on
+            GameObject.Find("ResolveCombatButton").GetComponent<Button>().interactable = true;
+
             // Determine what state we are in and set the next executeMethod
             if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
                     (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance"))
@@ -103,6 +106,9 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
         }
         else
         {
+            // Turn the button back on
+            GameObject.Find("ResolveCombatButton").GetComponent<Button>().interactable = true;
+
             GlobalDefinitions.removeGUI(GlobalDefinitions.combatResolutionGUIInstance);
 
             GlobalDefinitions.allCombats.Clear();

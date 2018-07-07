@@ -19,6 +19,9 @@ public class GlobalDefinitions : MonoBehaviour
     public static int difficultySetting;
     public static int aggressiveSetting;
 
+    // Used to adjust strength of victory
+    public static int easiestDifficultySettingUsed = 5;
+
     // Odds used to determine AI attacks
     public static int minimumAIOdds = 2;
     public static int maximumAIOdds = 3;
@@ -105,6 +108,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static UnityEngine.UI.Button SecondInvasionYesButton;
     public static UnityEngine.UI.Button SecondInvasionNoButton;
 
+    // These are set by the player
     public static GameObject difficultySettingText;
     public static GameObject aggressivenessSettingText;
 
@@ -122,9 +126,6 @@ public class GlobalDefinitions : MonoBehaviour
     public static GameObject GermanSupplyRangeToggle = GameObject.Find("GermanSupplyToggle");
     public static GameObject AlliedSupplySourcesButton = GameObject.Find("SupplySourcesButton");
 
-    // Stores the inital height of the gui panel - makes updates easier
-    //public static int initialPanelHeight = 160;
-
     public const int GermanStackingLimit = 3;
     public const int AlliedStackingLimit = 2;
     public const int AirborneDropHexLimit = 5;
@@ -137,10 +138,9 @@ public class GlobalDefinitions : MonoBehaviour
     public const int maxNumberAlliedReinforcementPerTurn = 12;
     public const int germanReplacementsPerTurn = 5;
 
+    // Settings empirically derived to position the map properly
     public const float boardOffsetX = 20.52489f;
     public const float boardOffsetY = 16.1363f;
-
-    public static GameObject allUnitsOnBoard;
 
     // These are the colors of the hex highlights
     public static Vector4 TacticalAirCloseDefenseHighlightColor = new Vector4(1f, 0, 0, 0.5f); // red
@@ -199,6 +199,9 @@ public class GlobalDefinitions : MonoBehaviour
     // The following is a list of all hexes on the board.  It is loaded once after the map is read in.  Keeps from having to do GameObject.Find all the time to get the hexes
     public static List<GameObject> allHexesOnBoard = new List<GameObject>();
 
+    // The following is set to the Unity static object that contains all units placed on the board
+    public static GameObject allUnitsOnBoard;
+
     // The following lists are loaded at the start of each turn and hold all units of each nationality on the board
     public static List<GameObject> alliedUnitsOnBoard = new List<GameObject>();
     public static List<GameObject> germanUnitsOnBoard = new List<GameObject>();
@@ -221,9 +224,6 @@ public class GlobalDefinitions : MonoBehaviour
 
     public static GameObject selectedUnit = new GameObject();
     public static GameObject startHex = new GameObject();
-
-    //public static List<GameObject> mustAttackUnits = new List<GameObject>();
-    //public static List<GameObject> mustBeAttackedUnits = new List<GameObject>();
 
     public static List<GameObject> unitsToExchange = new List<GameObject>();
 
@@ -354,7 +354,18 @@ public class GlobalDefinitions : MonoBehaviour
         displayAlliedSupplyStatus = false;
         displayGermanSupplyStatus = false;
 
-        foreach(InvasionArea area in invasionAreas)
+        alliedVictory = false;
+        germanVictory = false;
+
+        alliedFactorsEliminated = 0;
+        germanFactorsEliminated = 0;
+
+        numberOfTurnsWithoutAttack = 0;
+
+        alliedVictory = false;
+        germanVictory = false;
+
+        foreach (InvasionArea area in invasionAreas)
         {
             area.airborneUnitsUsedThisTurn = 0;
             area.airborneUnitsUsedThisTurn = 0;
@@ -1636,6 +1647,13 @@ public class GlobalDefinitions : MonoBehaviour
         GameObject.Find("AlliedUnitVictoryText").GetComponent<Text>().text = returnNumberAlliedVictoryUnits() + " Units on Victory Hexes";
     }
 
+    public static void guiUpdateLossRatioText()
+    {
+        if ((alliedFactorsEliminated == 0) || (germanFactorsEliminated == 0))
+            GameObject.Find("LossRatioText").GetComponent<Text>().text = "0 Allied/German Loss";
+        else
+            GameObject.Find("LossRatioText").GetComponent<Text>().text = ((float)(alliedFactorsEliminated) / ((float)germanFactorsEliminated)).ToString("0.00") + " Allied/German Loss";
+    }
 
     /// <summary>
     /// Allied victory is achieved when 10 divisions are in supply in Germany for 4 consecutive turns or no German units on the board
@@ -1644,7 +1662,7 @@ public class GlobalDefinitions : MonoBehaviour
     {
         //  Only display the victory screen for the first turn victory has been met
         if (alliedVictory)
-            return (true);
+            return false;
 
         // Units that count for victory have to be non-HQ and in supply
         int count = 0;
@@ -1661,12 +1679,11 @@ public class GlobalDefinitions : MonoBehaviour
 
         if (turnsAlliedMetVictoryCondition == 4)
         {
-            displayAlliedVictoryScreen();
             alliedVictory = true;
-            return (true);
+            displayAlliedVictoryScreen();
+            return true;
         }
-        else
-            return (false);
+        return false;
     }
 
     /// <summary>
@@ -1677,38 +1694,167 @@ public class GlobalDefinitions : MonoBehaviour
     {
         //  Only display the victory screen for the first turn victory has been met
         if (germanVictory)
-            return (true);
+            return false;
 
         if ((secondInvasionAreaIndex != -1) && (alliedUnitsOnBoard.Count == 0))
         {
-            displayGermanVictoryScreen();
             germanVictory = true;
-            return (true);
+            displayGermanVictoryScreen();
+            return true;
         }
         else if ((turnNumber > 8) && (alliedUnitsOnBoard.Count == 0))
         {
-            displayGermanVictoryScreen();
             germanVictory = true;
-            return (true);
+            displayGermanVictoryScreen();
+            return true;
         }
         else if ((turnNumber > 50) && !alliedVictory)
         {
-            displayGermanVictoryScreen();
             germanVictory = true;
-            return (true);
+            displayGermanVictoryScreen();
+            return true;
         }
+        else
+            return false;
 
-        return (false);
+    }
+
+    /// <summary>
+    /// Returns the strength of victory.  Note this returns a score for whichever side has the victory.
+    /// </summary>
+    public static int calculateStrengthOfVictory()
+    {
+        int strengthOfVictory = 1;
+        float lossRatio;
+
+        // There are three factors that impact strength of victory: difficulty, loss ratio, and victor turn
+
+        if (easiestDifficultySettingUsed > 5)
+            strengthOfVictory++;
+        else if (easiestDifficultySettingUsed < 5)
+            strengthOfVictory--;
+        writeToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " easiestDifficultySettingUsed = " + easiestDifficultySettingUsed);
+
+        writeToLogFile("calculateStrengthOfVictory: alliedFactorsEliminated = " + alliedFactorsEliminated + " germanFactorsEliminated = " + germanFactorsEliminated);
+        if (germanVictory)
+            lossRatio = ((float) alliedFactorsEliminated) / ((float) germanFactorsEliminated);
+        else
+            lossRatio = ((float) germanFactorsEliminated) / ((float) alliedFactorsEliminated);
+
+        if (lossRatio >= 2)
+            strengthOfVictory += 2;
+        else if (lossRatio >= 1.5)
+            strengthOfVictory++;
+        else if (lossRatio >= 0.75)
+            strengthOfVictory--;
+        else if (lossRatio > 0)
+            strengthOfVictory -= 2;
+        else if (lossRatio == 0)
+            strengthOfVictory += 3; // In the unlikely event that no losses were suffered...
+
+        writeToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " lossRatio = " + lossRatio);
+
+        if (germanVictory)
+        {
+            if (turnNumber <= 16)
+                strengthOfVictory += 2;
+            else if (turnNumber < 50)
+                strengthOfVictory++;
+        }
+        else
+        {
+            if (turnNumber <= 31)
+                strengthOfVictory += 2;
+            else if (turnNumber <= 41)
+                strengthOfVictory++;
+        }
+        writeToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " turnNumber = " + turnNumber);
+
+        return (strengthOfVictory);
     }
 
     public static void displayAlliedVictoryScreen()
     {
-        guiUpdateStatusMessage("Allied Victory Conditions Met!!");
+        guiUpdateStatusMessage("Allied victory conditions met");
+
+        int strengthOfVictory = calculateStrengthOfVictory();
+        string message = "";
+
+        if (nationalityUserIsPlaying == Nationality.Allied)
+        {
+            if (strengthOfVictory < 1)
+                message = "While you have met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+            else if (strengthOfVictory < 3)
+                message = "Congratulations, you have attained a minor victory    strength of victory = " + strengthOfVictory;
+            else if (strengthOfVictory < 5)
+                message = "Congratulations you have attained a victory    strength of victory = " + strengthOfVictory;
+            else
+                message = "Congratulations you have attained a decisive victory    strength of victory = " + strengthOfVictory;
+        }
+        else
+        {
+            if (strengthOfVictory < 1)
+                message = "While your opponent has met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+            else if (strengthOfVictory < 3)
+                message = "You have suffered a minor defeat    strength of victory = " + strengthOfVictory;
+            else if (strengthOfVictory < 5)
+                message = "You have suffered a defeat    strength of victory = " + strengthOfVictory;
+            else
+                message = "You have suffered a decisive defeat    strength of victory = " + strengthOfVictory;
+        }
+
+        victoryScreen(message);
     }
 
     public static void displayGermanVictoryScreen()
     {
-        guiUpdateStatusMessage("German Victory Conditions Met!!");
+        guiUpdateStatusMessage("German victory conditions met");
+
+        int strengthOfVictory = calculateStrengthOfVictory();
+        string message = "";
+
+        writeToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + strengthOfVictory + " player is " + nationalityUserIsPlaying);
+
+        if (nationalityUserIsPlaying == Nationality.German)
+        {
+            if (strengthOfVictory < 1)
+                message = "While you have met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+            else if (strengthOfVictory < 3)
+                message = "Congratulations, you have attained a minor victory    strength of victory = " + strengthOfVictory;
+            else if (strengthOfVictory < 5)
+                message = "Congratulations you have attained a victory    strength of victory = " + strengthOfVictory;
+            else
+                message = "Congratulations you have attained a decisive victory    strength of victory = " + strengthOfVictory;
+        }
+        else
+        {
+            if (strengthOfVictory < 1)
+                message = "While your opponent has met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+            else if (strengthOfVictory < 3)
+                message = "You have suffered a minor defeat    strength of victory = " + strengthOfVictory;
+            else if (strengthOfVictory < 5)
+                message = "You have suffered a defeat    strength of victory = " + strengthOfVictory;
+            else
+                message = "You have suffered a decisive defeat    strength of victory = " + strengthOfVictory;
+        }
+        writeToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + calculateStrengthOfVictory() + " mwessage = " + message);
+        victoryScreen(message);
+    }
+
+    public static void victoryScreen( string message)
+    {
+        UnityEngine.UI.Button okButton;
+        writeToLogFile("victoryScreen: executing with message = " + message);
+        removeAllGUIs();
+        Canvas victoryCanvas = null;
+        createGUICanvas("AlliedVictoryMessage", 1000, 200, ref victoryCanvas);
+        createText("..." + message + " ...", "VictoryMessageText", 1000, 200, 0, 0, victoryCanvas);
+        okButton = createButton("VictoryOK", "OK",
+                0,
+                -30,
+                victoryCanvas);
+        okButton.gameObject.AddComponent<GUIButtonRoutines>();
+        okButton.onClick.AddListener(okButton.GetComponent<GUIButtonRoutines>().victoryOK);
     }
 
     /// <summary>
@@ -1841,6 +1987,7 @@ public class GlobalDefinitions : MonoBehaviour
         fileWriter.Write(turnsAlliedMetVictoryCondition + " ");
         fileWriter.Write(alliedFactorsEliminated + " ");
         fileWriter.Write(germanFactorsEliminated + " ");
+        fileWriter.Write(easiestDifficultySettingUsed + " ");
         fileWriter.WriteLine();
     }
 

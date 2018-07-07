@@ -160,6 +160,10 @@ public class SetUpState : GameState
 
     public override void executeQuit(InputMessage inputMessage)
     {
+        // Generally the easiest difficulty setting used is updated in the combat state sine it is where it is used.  I'm setting it here
+        // since a game is started with the setting from the last game and if it isn't reset it will represent the lowest setting ever used, not just in the current game
+        GlobalDefinitions.easiestDifficultySettingUsed = GlobalDefinitions.difficultySetting;
+
         // Just in case a Quit was issued in the middle of a move, unhighlight the selectedUnit
         if ((GlobalDefinitions.selectedUnit != null) && (GlobalDefinitions.selectedUnit.GetComponent<Renderer>() != null))
         {
@@ -815,6 +819,10 @@ public class CombatState : GameState
         //else
         //    executeMethod = executeSelectUnit;
 
+        // Check if the current difficulty needs to be stores as the easiest used
+        if (GlobalDefinitions.easiestDifficultySettingUsed > GlobalDefinitions.difficultySetting)
+            GlobalDefinitions.difficultySetting = GlobalDefinitions.easiestDifficultySettingUsed;
+
         executeMethod = executeSelectUnit;
     }
 
@@ -841,6 +849,9 @@ public class CombatState : GameState
 
     public override void executeQuit(InputMessage inputMessage)
     {
+        bool alliedVictory = false;
+        bool germanVictory = false;
+
         // If combat resolutin wasn't started then check to make sure that there aren't units that need to attack or be attacked
         // Note the check for combatResolutionStarted is needed because the result of combat can create must attack units for the next turn so we can't check if there has been resolution
         // not to mention that if combat resolution was started it was already checked that required units were involved in a combat already
@@ -867,17 +878,25 @@ public class CombatState : GameState
             if (currentNationality == GlobalDefinitions.Nationality.Allied)
                 CombatResolutionRoutines.endAlliedCombatPhase();
             else
+            {
                 CombatResolutionRoutines.endGermanCombatPhase();
+
+                // If this is the end of German combat, check if victory conditions have been met
+                alliedVictory = GlobalDefinitions.checkForAlliedVictory();
+                germanVictory = GlobalDefinitions.checkForGermanVictory();
+            }
 
             if (GlobalDefinitions.AIExecuting)
                 GlobalDefinitions.AIExecuting = false;
 
-            // If this is the end of German combat, check if victory conditions have been met
-            GlobalDefinitions.checkForAlliedVictory();
-            GlobalDefinitions.checkForGermanVictory();
+            GlobalDefinitions.guiUpdateLossRatioText();
 
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage);
+            // Only move to the next phase if the vicotry screen isn't being displayed
+            if (!alliedVictory && !germanVictory)
+            {
+                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
+                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage);
+            }
         }
     }
 }
@@ -1039,6 +1058,10 @@ public class GermanAISetupState : GameState
         GlobalDefinitions.AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
+
+        // Generally the easiest difficulty setting used is updated in the combat state sine it is where it is used.  I'm setting it here
+        // since a game is started with the setting from the last game and if it isn't reset it will represent the lowest setting ever used, not just in the current game
+        GlobalDefinitions.easiestDifficultySettingUsed = GlobalDefinitions.difficultySetting;
 
         GlobalDefinitions.guiUpdatePhase("German AI Setup Mode");
 
@@ -1435,4 +1458,34 @@ public class GermanAIState : GameState
     }
 }
 
+public class VictoryState : GameState
+{
+    // This is the state that is entered after a victory is achieved
+    public override void initialize(InputMessage inputMessage)
+    {
+        // Set the play to be in local control we're not looking to keep the two computers in sync anymore
+        GlobalDefinitions.localControl = true;
 
+        GlobalDefinitions.guiUpdatePhase("Victory Mode");
+        GlobalDefinitions.guiClearUnitsOnHex();
+        base.initialize(inputMessage);
+
+        GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().interactable = false;
+        GlobalDefinitions.AssignCombatButton.GetComponent<Button>().interactable = false;
+        GlobalDefinitions.DisplayAllCombatsButton.GetComponent<Button>().interactable = false;
+        GlobalDefinitions.AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
+        GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
+        GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
+
+        executeMethod = executeSelectUnit;
+    }
+
+    public void executeSelectUnit(InputMessage inputMessage)
+    {
+        // If the hex selected has enemy units on it display them in the gui
+        if (inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
+            GlobalDefinitions.guiDisplayUnitsOnHex(inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+    }
+}
