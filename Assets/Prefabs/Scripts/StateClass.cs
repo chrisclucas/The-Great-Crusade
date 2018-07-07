@@ -1260,8 +1260,7 @@ public class AlliedAIState : GameState
         foreach (GlobalDefinitions.CombatResults result in GlobalDefinitions.combatResultsFromLastTurn)
             GlobalDefinitions.writeToLogFile("executeAlliedAIState:    " + result);
         GlobalDefinitions.writeToLogFile("executeAlliedAIState: Successful attacks = " + AIRoutines.successfulAttacksLastTurn());
-        GlobalDefinitions.combatResultsFromLastTurn.Clear();
-
+        
         GlobalDefinitions.writeToLogFile("Ending Allied AI at: " + DateTime.Now + " AI ran for " + (DateTime.Now - executeTime));
         GlobalDefinitions.AICombat = true;
         GlobalDefinitions.localControl = true;

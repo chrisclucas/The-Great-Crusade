@@ -16,8 +16,9 @@ public class CombatToggleRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
+            GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: Toggle is on for unit " + unit.name);
+
             // Turn on the toggle on the remote computer
-            //GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: Toggle is on for unit " + unit.name);
             if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
                 TransportScript.SendSocketMessage(GlobalDefinitions.SETCOMBATTOGGLEKEYWORD + " " + name);
 
@@ -32,7 +33,8 @@ public class CombatToggleRoutines : MonoBehaviour
                     addDefendersOfFortressAttack(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
                 else
                 {
-                    refreshDefendersBasedOnAttackers();
+                    GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshDefendersBasedOnAttackers since attacker added " + unit.name);
+                    refreshDefendersBasedOnAttackers(unit);
                     //checkIfDefenderToBeAdded();
                 }
             }
@@ -56,13 +58,14 @@ public class CombatToggleRoutines : MonoBehaviour
                             // to be done because it is on the same hex as the unit being checked already
                             childTransform.GetComponent<Toggle>().isOn = true;
 
-                refreshAttackersBasedOnDefenders();
+                GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshAttackersBasedOnDefenders since defender added " + unit.name);
+                refreshAttackersBasedOnDefenders(unit);
                 //checkIfDefenderToBeAdded();
             }
         }
         else
         {
-            //GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: Toggle is off for unit " + unit.name);
+            GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: Toggle is off for unit " + unit.name);
             // Turn off the toggle on the remote computer
             if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
                 TransportScript.SendSocketMessage(GlobalDefinitions.RESETCOMBATTOGGLEKEYWORD + " " + name);
@@ -96,7 +99,8 @@ public class CombatToggleRoutines : MonoBehaviour
                 }
                 else
                 {
-                    refreshDefendersBasedOnAttackers();
+                    GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshDefendersBasedOnAttackers since attacker removed " + unit.name);
+                    refreshDefendersBasedOnAttackers(unit);
                     //checkDefenderToBeRemoved();
                 }
 
@@ -124,7 +128,8 @@ public class CombatToggleRoutines : MonoBehaviour
                             // to be done because it is on the same hex as the unit being checked already
                             childTransform.GetComponent<Toggle>().isOn = false;
 
-                refreshAttackersBasedOnDefenders();
+                GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshAttackersBasedOnDefenders since defender removed " + unit.name);
+                refreshAttackersBasedOnDefenders(unit);
                 //checkDefenderToBeRemoved();
             }
         }
@@ -135,7 +140,7 @@ public class CombatToggleRoutines : MonoBehaviour
     /// <summary>
     /// This routine executes when a new attacker is committed to attacking
     /// </summary>
-    private void refreshDefendersBasedOnAttackers()
+    private void refreshDefendersBasedOnAttackers(GameObject attackingUnit)
     {
         // First go through and enable all the defending units since if I don't, once a unit is disabled it will never be enabled again and this way 
         // I don't have to explicitly check for adjacency to all attackers
@@ -152,9 +157,22 @@ public class CombatToggleRoutines : MonoBehaviour
 
         // Go through each of the attackers and gray out any defender that isn't adjacent.  By going through each of the attackers I am left
         // with only defenders that are adjacent to all attacking units
-        foreach (GameObject attackingUnit in currentCombat.GetComponent<Combat>().attackingUnits)
+        //foreach (GameObject attackingUnit in currentCombat.GetComponent<Combat>().attackingUnits)
+        {
             // Only check for adjacency if the attaker is selected
-            if (attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
+
+            // When this is called because of the code changing a toggle status, the routine is called before the committed variable is set (since it is event triggered
+            // I used to check the isCommittedToAttack variable but this doesn't work in complex situations.  Therefore I will check if the unit is committed to the attack by
+            // checking the unit's toggle status
+
+            bool attackerIsCommitted = false;
+            foreach (Transform attackerChildTransform in transform.parent.transform)
+                if ((attackerChildTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) &&
+                        (attackerChildTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == attackingUnit))
+                    if (attackerChildTransform.gameObject.GetComponent<Toggle>().isOn)
+                        attackerIsCommitted = true;
+
+            if (attackerIsCommitted)
                 foreach (GameObject defendingUnit in currentCombat.GetComponent<Combat>().defendingUnits)
                     if (!GlobalDefinitions.twoUnitsAdjacent(attackingUnit, defendingUnit))
                         // The defending unit is not adjacent to the attacking unit so it needs to be greyed out and disabled in the display
@@ -162,17 +180,19 @@ public class CombatToggleRoutines : MonoBehaviour
                             if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) &&
                                     (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == defendingUnit))
                             {
+                                GlobalDefinitions.writeToLogFile("refreshDefendersBasedOnAttackers: decommiting defender and making non-interactable " + defendingUnit.name + "due to attacker " + attackingUnit.name + " isCommittedToAnAttack = " + attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack);
                                 GlobalDefinitions.unhighlightUnit(defendingUnit);
                                 defendingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
                                 childTransform.gameObject.GetComponent<Toggle>().isOn = false;
                                 childTransform.gameObject.GetComponent<Toggle>().interactable = false;
                             }
+        }
     }
 
     /// <summary>
     /// This routine is called when a new defender is added to the attack and updates the toggles on the combat gui
     /// </summary>
-    private void refreshAttackersBasedOnDefenders()
+    private void refreshAttackersBasedOnDefenders(GameObject defendingUnit)
     {
         // First go through and enable all the attacking units since if I don't once a unit is disabled it will never be enabled again and this way 
         // I don't have to explicitly check for adjacency to all defenders
@@ -192,10 +212,22 @@ public class CombatToggleRoutines : MonoBehaviour
 
         // Go through each of the defenders and gray out any attacker that isn't adjacent.  By going through each of the defenders I am left
         // with only attackers that are adjacent to all defending units
-        foreach (GameObject defendingUnit in currentCombat.GetComponent<Combat>().defendingUnits)
+        //foreach (GameObject defendingUnit in currentCombat.GetComponent<Combat>().defendingUnits)
         {
             // Only check for adjacency if the defnder is selected
-            if (defendingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
+
+            // When this is called because of the code changing a toggle status, the routine is called before the committed variable is set (since it is event triggered
+            // I used to check the isCommittedToAttack variable but this doesn't work in complex situations.  Therefore I will check if the unit is committed to the attack by
+            // checking the unit's toggle status
+
+            bool defendererIsCommitted = false;
+            foreach (Transform defenderChildTransform in transform.parent.transform)
+                if ((defenderChildTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) &&
+                        (defenderChildTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == defendingUnit))
+                    if (defenderChildTransform.gameObject.GetComponent<Toggle>().isOn)
+                        defendererIsCommitted = true;
+
+            if (defendererIsCommitted)
             {
                 foreach (GameObject attackingUnit in currentCombat.GetComponent<Combat>().attackingUnits)
                 {
@@ -206,6 +238,7 @@ public class CombatToggleRoutines : MonoBehaviour
                         {
                             if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) && (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == attackingUnit))
                             {
+                                GlobalDefinitions.writeToLogFile("refreshAttackersBasedOnDefenders: decommitting attacker and making non-interactable " + attackingUnit.name);
                                 GlobalDefinitions.unhighlightUnit(attackingUnit);
                                 attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
                                 childTransform.gameObject.GetComponent<Toggle>().isOn = false;
@@ -299,25 +332,27 @@ public class CombatToggleRoutines : MonoBehaviour
     }
 
     /// <summary>
-    /// This routine is called when a unit decides to attack from a fortress.   It toggles all units that are would be in the units ZOC if it wasn't in a fortress.
+    /// This routine is called when a unit decides to attack from a fortress.   It toggles all units that would be in the units ZOC if it wasn't in a fortress.
     /// </summary>
     /// <param name="fortressHex"></param>
     public void addDefendersOfFortressAttack(GameObject fortressHex)
     {
         foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
             if (fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
-                if (!fortressHex.GetComponent<BoolArrayData>().riverSides[(int)hexSide] && !fortressHex.GetComponent<HexDatabaseFields>().fortress)
+                if (!fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().riverSides[(int)hexSide] && 
+                        !fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().fortress)
                     if ((fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                             (fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality !=
                             fortressHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality))
-                        // If we get here then the unit should be highlighted if it is adjacent
+                        // If we get here then the unit should be highlighted since it is adjacent and isn't separated by a river or is a fortress
                         foreach (GameObject unit in fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit)
                         {
                             GlobalDefinitions.highlightUnit(unit);
                             foreach (Transform childTransform in transform.parent.transform)
                                 if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) && (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == unit))
                                 {
-                                    // Turn on the defenders toggle to show that is defending the fortress attack
+                                    // Turn on the defenders toggle to show that the unit must be attacked
+                                    GlobalDefinitions.writeToLogFile("addDefendersOfFortressAttach: adding unit " + unit.name + " as defender of attack from fortress");
                                     childTransform.GetComponent<Toggle>().isOn = true;
                                     // The only way to turn the toggle off will be to click off the attacking unit
                                     childTransform.GetComponent<Toggle>().interactable = false;

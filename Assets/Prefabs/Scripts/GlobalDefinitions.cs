@@ -1683,6 +1683,14 @@ public class GlobalDefinitions : MonoBehaviour
             displayAlliedVictoryScreen();
             return true;
         }
+
+        if (germanUnitsOnBoard.Count == 0)
+        {
+            alliedVictory = true;
+            displayAlliedVictoryScreen();
+            return true;
+        }
+
         return false;
     }
 

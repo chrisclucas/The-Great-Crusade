@@ -69,7 +69,14 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
             CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, false);
 
         if (GlobalDefinitions.allCombats.Count > 0)
+        {
             CombatResolutionRoutines.combatResolutionDisplay();
+        }
+        else
+        {
+            // If the last battle has been canceled then turn the button back on
+            GameObject.Find("ResolveCombatButton").GetComponent<Button>().interactable = true;
+        }
     }
 
     /// <summary>
@@ -172,7 +179,6 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
         // If combat resolution hasn't started then check to make sure all required combats have been created
         if (!GlobalDefinitions.combatResolutionStarted)
         {
-
             if (CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, true))
             {
                 GlobalDefinitions.guiUpdateStatusMessage("Cannot start combat resolution, highlighted units must be committed to combat first.");
@@ -181,6 +187,7 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
             }
             else
             {
+
                 // All required units are attacking or being attacked
                 GlobalDefinitions.combatResolutionStarted = true;
 
@@ -199,8 +206,9 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
                 // Only check for carpet bombing if Allies are attacking.  This is needed to keep the German attacks from being loaded
                 if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
                 {
-                    // Empty out the hexes from last turn
+                    // Clear our record of previous attacks and hexes attacked last turn only if it is the Allies turn
                     GlobalDefinitions.hexesAttackedLastTurn.Clear();
+                    GlobalDefinitions.combatResultsFromLastTurn.Clear();
 
                     // Store all hexes being attacked this turn.  Used for carpet bombing availability next turn
                     foreach (GameObject combat in GlobalDefinitions.allCombats)
@@ -227,6 +235,7 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
             if (combat.GetComponent<Combat>().resolveButton != null)
                 allAttacksResolved = false;
 
+        // If all attacks have been resolved turn on the quit button (which is the continue button with the text changed
         if (allAttacksResolved)
         {
             GlobalDefinitions.combatResolutionOKButton.SetActive(true);

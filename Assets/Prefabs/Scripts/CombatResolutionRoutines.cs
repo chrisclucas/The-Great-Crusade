@@ -495,8 +495,8 @@ public class CombatResolutionRoutines : MonoBehaviour
     public static void executeCombatResults(List<GameObject> defendingUnits, List<GameObject> attackingUnits, string combatOdds, int dieRollResult,
             GlobalDefinitions.CombatResults combatResults, Vector2 buttonLocation)
     {
-        // The combat results from last turn are only saved for the AI player because it is used to determine carpet bombing and airborne attacks and if the AI is stuck
-        if (GlobalDefinitions.AICombat)
+        // The combat results from last turn are only saved for the Allied player because it is used by the AI to determine carpet bombing and airborne attacks
+        if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
             GlobalDefinitions.combatResultsFromLastTurn.Add(combatResults);
 
         // The added text below is to put the combat results in the Combat Results GUI in place of the deleted Resolve button
@@ -1612,7 +1612,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     }
 
     /// <summary>
-    /// This routine gets the unit to interdict based on the user input
+    /// Stores the unit to interdict based on the user input
     /// </summary>
     public static void getInterdictedUnit(GameObject interdictedUnitHex)
     {
@@ -1625,20 +1625,23 @@ public class CombatResolutionRoutines : MonoBehaviour
             {
                 if (interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German)
                 {
+                    // Check for units that already interdicted and are available for strategic movement
                     for (int index = 0; index < interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count; index++)
-                        if (!interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().unitInterdiction)
+                        if (!interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().unitInterdiction &&
+                                interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().availableForStrategicMovement)
                             numberOfUnits++;
 
                     if (numberOfUnits == 1)
                     {
                         // There is only one unit available on the hex so don't need to have user select
                         for (int index = 0; index < interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count; index++)
-                            if (!interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().unitInterdiction)
+                            if (!interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().unitInterdiction &&
+                                    interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().availableForStrategicMovement)
                                 addInterdictedUnitToList(interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index]);
                     }
                     else if (numberOfUnits == 0)
                     {
-                        GlobalDefinitions.guiUpdateStatusMessage("All units on the hex have been interdicted");
+                        GlobalDefinitions.guiUpdateStatusMessage("All units on the hex have been interdicted or aren't available for strategic movement anyhow");
 
                         // If a gui isn't already up then call up a tactical air gui
                         if (GlobalDefinitions.guiList.Count == 0)
@@ -1663,7 +1666,8 @@ public class CombatResolutionRoutines : MonoBehaviour
                                 2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                                 tacticalAirMultiUnitCanvasInstance);
                         for (int index = 0; index < interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count; index++)
-                            if (!interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().unitInterdiction)
+                            if (!interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().unitInterdiction &&
+                                    interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().availableForStrategicMovement)
                             {
                                 Toggle tempToggle;
                                 tempToggle = GlobalDefinitions.createUnitTogglePair("tacticalAirMultiUnitTogglePair" + index,
