@@ -1521,17 +1521,26 @@ public class MovementRoutines : MonoBehaviour
         // Brest
         if (hex == GlobalDefinitions.getHexAtXY(22, 1))
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
+            {
+                GlobalDefinitions.unhighlightHex(hex);
                 GlobalDefinitions.alliedCapturedBrest = true;
+            }
 
         // Rotterdam
         if (hex == GlobalDefinitions.getHexAtXY(8, 23))
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
+            {
+                GlobalDefinitions.unhighlightHex(hex);
                 GlobalDefinitions.alliedCapturedRotterdam = true;
+            }
 
         // Boulogne
         if (hex == GlobalDefinitions.getHexAtXY(14, 16))
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
+            {
+                GlobalDefinitions.unhighlightHex(hex);
                 GlobalDefinitions.alliedCapturedBoulogne = true;
+            }
     }
 
     /// <summary>

@@ -1338,7 +1338,9 @@ public class GlobalDefinitions : MonoBehaviour
             targetRenderer.sortingOrder = 2;
         }
         // If it is an Allied repalcement hex it is highlighted green - Rotterdam 8,23 Boulogne 14,16 Brest 22,1
-        else if ((hex == getHexAtXY(22, 1)) || (hex == getHexAtXY(14, 16)) || (hex == getHexAtXY(8, 23)))
+        else if (((hex == getHexAtXY(22, 1)) && !alliedCapturedBrest) || 
+                ((hex == getHexAtXY(14, 16)) && !alliedCapturedBoulogne) || 
+                ((hex == getHexAtXY(8, 23)) && !alliedCapturedRotterdam))
         {
             hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";

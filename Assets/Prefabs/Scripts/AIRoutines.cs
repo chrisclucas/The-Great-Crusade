@@ -2468,6 +2468,10 @@ public class AIRoutines : MonoBehaviour
         List<GameObject> airborneReplacements = new List<GameObject>();
         List<GameObject> infantryReplacements = new List<GameObject>();
 
+        // Check for the condition where there are no Allied units on the board.  This means the German has won but that won't be decided until the end of combat.
+        if (GlobalDefinitions.alliedUnitsOnBoard.Count == 0)
+            return;
+
         // The target location will be used when determining which replacement hex to use
         targetLocation = getAverageEnemyLocation(GlobalDefinitions.Nationality.Allied);
 
