@@ -1679,6 +1679,8 @@ public class GlobalDefinitions : MonoBehaviour
 
         if (turnsAlliedMetVictoryCondition == 4)
         {
+            // Update the number of weeks otherwise it will be showing 3 which will be confusing
+            guiDisplayAlliedVictoryStatus();
             alliedVictory = true;
             displayAlliedVictoryScreen();
             return true;
@@ -1747,6 +1749,10 @@ public class GlobalDefinitions : MonoBehaviour
             strengthOfVictory += 2;
         else if (lossRatio >= 1.5)
             strengthOfVictory++;
+        else if (lossRatio >= 1)
+        {
+            // Don't make any adjustment for a loss ratio of 1
+        }
         else if (lossRatio >= 0.75)
             strengthOfVictory--;
         else if (lossRatio > 0)
