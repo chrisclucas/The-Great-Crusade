@@ -116,8 +116,8 @@ public class CreateBoard : MonoBehaviour
                                     v3Pos.y += Mathf.Sqrt(3) * edgeLength * hexPositionY;
                                     v3Pos.z = 0;
 
-                                    // When I first started writing this I had a differnt resource for each type of hex.
-                                    // Not that I am overlaying a picture of the actual board there really is no reason 
+                                    // When I first started writing this I had a different resource for each type of hex.
+                                    // Now that I am overlaying a picture of the actual board there really is no reason 
                                     // to load special hexes so I'm just loading a plan hex for highlighting purposes.
                                     //hexagonPrefab = (GameObject)Resources.Load(entries[hexTypeWord]);
                                     hexagonPrefab = (GameObject)Resources.Load("Land");
@@ -405,6 +405,34 @@ public class CreateBoard : MonoBehaviour
             }
             while (line != null);
             theReader.Close();
+        }
+        // Highlight the strategic installations.  Before the addition of this it was reliant on the hex being unhighlighted
+        // Rotterdam 8,23 Boulogne 14,16 Brest 22,1
+        GameObject hex;
+        Renderer targetRenderer;
+        hex = GlobalDefinitions.getHexAtXY(8, 23);
+        {
+            targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
+            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            targetRenderer.sortingLayerName = "Hex";
+            targetRenderer.material.color = GlobalDefinitions.StrategicInstallationHexColor;
+            targetRenderer.sortingOrder = 2;
+        }
+        hex = GlobalDefinitions.getHexAtXY(14, 16);
+        {
+            targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
+            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            targetRenderer.sortingLayerName = "Hex";
+            targetRenderer.material.color = GlobalDefinitions.StrategicInstallationHexColor;
+            targetRenderer.sortingOrder = 2;
+        }
+        hex = GlobalDefinitions.getHexAtXY(22, 1);
+        {
+            targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
+            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            targetRenderer.sortingLayerName = "Hex";
+            targetRenderer.material.color = GlobalDefinitions.StrategicInstallationHexColor;
+            targetRenderer.sortingOrder = 2;
         }
     }
 

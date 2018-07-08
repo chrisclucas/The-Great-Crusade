@@ -373,13 +373,17 @@ public class GUIButtonRoutines : MonoBehaviour
         if (GameObject.Find("HideUnitsToggle").GetComponent<Toggle>().isOn)
         {
             // The toggle is on so hide the units
-            foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
-            {
-                Renderer targetRenderer = unit.GetComponent(typeof(SpriteRenderer)) as Renderer;
-                targetRenderer.material.color = new Vector4(0f, 0f, 0f, 0f);
-
-            }
-            foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
+            //foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
+            //{
+            //    Renderer targetRenderer = unit.GetComponent(typeof(SpriteRenderer)) as Renderer;
+            //    targetRenderer.material.color = new Vector4(0f, 0f, 0f, 0f);
+            //}
+            //foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
+            //{
+            //    Renderer targetRenderer = unit.GetComponent(typeof(SpriteRenderer)) as Renderer;
+            //    targetRenderer.material.color = new Vector4(0f, 0f, 0f, 0f);
+            //}
+            foreach (Transform unit in GlobalDefinitions.allUnitsOnBoard.transform)
             {
                 Renderer targetRenderer = unit.GetComponent(typeof(SpriteRenderer)) as Renderer;
                 targetRenderer.material.color = new Vector4(0f, 0f, 0f, 0f);
@@ -388,10 +392,12 @@ public class GUIButtonRoutines : MonoBehaviour
         else
         {
             // Bring the units back
-            foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
-                GlobalDefinitions.unhighlightUnit(unit);
-            foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
-                GlobalDefinitions.unhighlightUnit(unit);
+            //foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
+            //    GlobalDefinitions.unhighlightUnit(unit);
+            //foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
+            //    GlobalDefinitions.unhighlightUnit(unit);
+            foreach (Transform unit in GlobalDefinitions.allUnitsOnBoard.transform)
+                GlobalDefinitions.unhighlightUnit(unit.gameObject);
         }
     }
 

@@ -146,7 +146,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static Vector4 TacticalAirCloseDefenseHighlightColor = new Vector4(1f, 0, 0, 0.5f); // red
     public static Vector4 TacticalAirRiverInterdictionHighlightColor = new Vector4(1f, 0, 1f, 0.5f); // magenta
     public static Vector4 SuccessfulInvasionSiteColor = new Vector4(0.5f, 0.5f, 0.5f, 0.5f); // cyan
-    public static Vector4 AlliedReplacementHexColor = new Vector4(0, 1f, 0, 0.5f); //green
+    public static Vector4 StrategicInstallationHexColor = new Vector4(0, 1f, 0, 0.5f); //green
     public static Vector4 HexInSupplyHighlightColor = new Vector4(0f, 0f, 1f, 0.5f); // blue
 
     public enum Nationality { German, Allied }
@@ -1344,7 +1344,7 @@ public class GlobalDefinitions : MonoBehaviour
         {
             hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";
-            targetRenderer.material.color = AlliedReplacementHexColor;
+            targetRenderer.material.color = StrategicInstallationHexColor;
             targetRenderer.sortingOrder = 2;
         }
     }
@@ -1394,11 +1394,13 @@ public class GlobalDefinitions : MonoBehaviour
                 targetRenderer.sortingOrder = 2;
             }
             // If it is an Allied repalcement hex it is highlighted green - Rotterdam 8,23 Boulogne 14,16 Brest 22,1
-            else if ((hex == getHexAtXY(22, 1)) || (hex == getHexAtXY(14, 16)) || (hex == getHexAtXY(8, 23)))
+            else if (((hex == getHexAtXY(22, 1)) && !alliedCapturedBrest) ||
+                ((hex == getHexAtXY(14, 16)) && !alliedCapturedBoulogne) ||
+                ((hex == getHexAtXY(8, 23)) && !alliedCapturedRotterdam))
             {
                 hex.transform.localScale = new Vector2(0.75f, 0.75f);
                 targetRenderer.sortingLayerName = "Hex";
-                targetRenderer.material.color = AlliedReplacementHexColor;
+                targetRenderer.material.color = StrategicInstallationHexColor;
                 targetRenderer.sortingOrder = 2;
             }
         }

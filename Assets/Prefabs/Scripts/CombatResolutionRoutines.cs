@@ -2004,7 +2004,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting maximumAIOdds = 1");
                 GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting minimumAIOdds = -2");
 #endif
-                GlobalDefinitions.maximumAIOdds = 1;
+                GlobalDefinitions.maximumAIOdds = 3;
                 GlobalDefinitions.minimumAIOdds = -2;
                 break;
         }

@@ -157,7 +157,6 @@ public class GameControl : MonoBehaviour
         // Reset the min/max odds since the aggressiveness has just been read
         CombatResolutionRoutines.adjustAggressiveness();
 
-
         AIRoutines.setIntrinsicHexValues();
 
         // AI TESTING

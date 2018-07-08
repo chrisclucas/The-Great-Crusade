@@ -1522,24 +1522,24 @@ public class MovementRoutines : MonoBehaviour
         if (hex == GlobalDefinitions.getHexAtXY(22, 1))
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
             {
-                GlobalDefinitions.unhighlightHex(hex);
                 GlobalDefinitions.alliedCapturedBrest = true;
+                GlobalDefinitions.unhighlightHex(hex);
             }
 
         // Rotterdam
         if (hex == GlobalDefinitions.getHexAtXY(8, 23))
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
             {
-                GlobalDefinitions.unhighlightHex(hex);
                 GlobalDefinitions.alliedCapturedRotterdam = true;
+                GlobalDefinitions.unhighlightHex(hex);
             }
 
         // Boulogne
         if (hex == GlobalDefinitions.getHexAtXY(14, 16))
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
             {
-                GlobalDefinitions.unhighlightHex(hex);
                 GlobalDefinitions.alliedCapturedBoulogne = true;
+                GlobalDefinitions.unhighlightHex(hex);
             }
     }
 
