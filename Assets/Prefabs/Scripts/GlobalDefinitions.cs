@@ -1338,8 +1338,8 @@ public class GlobalDefinitions : MonoBehaviour
             targetRenderer.sortingOrder = 2;
         }
         // If it is an Allied repalcement hex it is highlighted green - Rotterdam 8,23 Boulogne 14,16 Brest 22,1
-        else if (((hex == getHexAtXY(22, 1)) && !alliedCapturedBrest) || 
-                ((hex == getHexAtXY(14, 16)) && !alliedCapturedBoulogne) || 
+        else if (((hex == getHexAtXY(22, 1)) && !alliedCapturedBrest) ||
+                ((hex == getHexAtXY(14, 16)) && !alliedCapturedBoulogne) ||
                 ((hex == getHexAtXY(8, 23)) && !alliedCapturedRotterdam))
         {
             hex.transform.localScale = new Vector2(0.75f, 0.75f);
@@ -1737,17 +1737,27 @@ public class GlobalDefinitions : MonoBehaviour
 
         // There are three factors that impact strength of victory: difficulty, loss ratio, and victor turn
 
-        if (easiestDifficultySettingUsed > 5)
+        if (easiestDifficultySettingUsed > 9)
+            strengthOfVictory += 3;
+        else if (easiestDifficultySettingUsed > 7)
+            strengthOfVictory += 2;
+        else if (easiestDifficultySettingUsed > 5)
             strengthOfVictory++;
-        else if (easiestDifficultySettingUsed < 5)
+        else if (easiestDifficultySettingUsed == 5) { } // Don't adjust - this is the norm
+        else if (easiestDifficultySettingUsed > 2)
             strengthOfVictory--;
+        else if (easiestDifficultySettingUsed > 0)
+            strengthOfVictory -= 2;
+        else if (easiestDifficultySettingUsed == 0)
+            strengthOfVictory -= 3;
+
         writeToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " easiestDifficultySettingUsed = " + easiestDifficultySettingUsed);
 
         writeToLogFile("calculateStrengthOfVictory: alliedFactorsEliminated = " + alliedFactorsEliminated + " germanFactorsEliminated = " + germanFactorsEliminated);
         if (germanVictory)
-            lossRatio = ((float) alliedFactorsEliminated) / ((float) germanFactorsEliminated);
+            lossRatio = ((float)alliedFactorsEliminated) / ((float)germanFactorsEliminated);
         else
-            lossRatio = ((float) germanFactorsEliminated) / ((float) alliedFactorsEliminated);
+            lossRatio = ((float)germanFactorsEliminated) / ((float)alliedFactorsEliminated);
 
         if (lossRatio >= 2)
             strengthOfVictory += 2;
@@ -1853,7 +1863,7 @@ public class GlobalDefinitions : MonoBehaviour
         victoryScreen(message);
     }
 
-    public static void victoryScreen( string message)
+    public static void victoryScreen(string message)
     {
         UnityEngine.UI.Button okButton;
         writeToLogFile("victoryScreen: executing with message = " + message);

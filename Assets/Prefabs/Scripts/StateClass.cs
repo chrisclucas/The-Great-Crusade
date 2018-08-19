@@ -819,7 +819,7 @@ public class CombatState : GameState
         //else
         //    executeMethod = executeSelectUnit;
 
-        // Check if the current difficulty needs to be stores as the easiest used
+        // Check if the current difficulty needs to be stored as the easiest used
         if (GlobalDefinitions.easiestDifficultySettingUsed > GlobalDefinitions.difficultySetting)
             GlobalDefinitions.difficultySetting = GlobalDefinitions.easiestDifficultySettingUsed;
 

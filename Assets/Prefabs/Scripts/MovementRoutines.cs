@@ -327,7 +327,7 @@ public class MovementRoutines : MonoBehaviour
             return (false);
         }
 
-        // Check if the unit is occupied by an enemy unit
+        // Check if the destination is occupied by an enemy unit
         if ((destinationHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                 (selectedUnit.GetComponent<UnitDatabaseFields>().nationality != destinationHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality))
         {
@@ -352,6 +352,10 @@ public class MovementRoutines : MonoBehaviour
             //GlobalDefinitions.writeToLogFile("checkForMovementAvailable: movement not available - overstacked");
             //return (false);
         }
+
+        // Need to add a check that prohibits a unit from moving from the ZOC of an enemy to another hex that is in the same units ZOC.  This is an issue when
+        // a unit starts its turn in an enemy ZOC because of post combat movement by the enemy at the end of the last turn.  It is allowed for a unit to move
+        // from one ZOC hex to another enemy ZOC hex as long as the same unit isn't exerting ZOC to both hexes.
 
         // Need to add a special check for HQ units.  They cannot enter an enemy ZOC
         if (selectedUnit.GetComponent<UnitDatabaseFields>().HQ)
@@ -871,9 +875,8 @@ public class MovementRoutines : MonoBehaviour
     /// This is called when a hex has been vacated, it is used to reset the ZOC on the adjacent hexes from the hex that was vacated.
     /// </summary>
     /// <param name="hex"></param>
-    public static void checkAdjacentHexZOCImpact(GameObject hex)
+    public static void  checkAdjacentHexZOCImpact(GameObject hex)
     {
-
         hex.GetComponent<HexDatabaseFields>().inGermanZOC = false;
         hex.GetComponent<HexDatabaseFields>().inAlliedZOC = false;
 
