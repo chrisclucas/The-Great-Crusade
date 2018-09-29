@@ -96,6 +96,8 @@ public class CombatResolutionRoutines : MonoBehaviour
         Button okButton;
         bool playerControl = true;
 
+        GameObject combatResolutionGuiInstance = new GameObject("combatResolutionGuiInstance");
+
         // I'm going to set a flag to indicate when the display is being presented to resolve the AI's combats.
         // The air support toggle and cancel button will be disabled since the user should not be able to do anything other than 
         // resolve combats
@@ -114,14 +116,33 @@ public class CombatResolutionRoutines : MonoBehaviour
         else
             panelHeight = ((GlobalDefinitions.allCombats.Count * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) + 2 * GlobalDefinitions.GUIUNITIMAGESIZE);
 
-        //panelImage.rectTransform.sizeDelta = new Vector2(panelWidth, panelHeight);
-        //panelImage.rectTransform.anchoredPosition = new Vector2(0, 0);
-
         Canvas combatCanvas = null;
-        GameObject combatResolutionGuiInstance = GlobalDefinitions.createGUICanvas("CombatResolutionGUIInstance",
+
+        // In case a scrolling window is needed for the supply sources need to create a content panel
+        GameObject combatContentPanel = new GameObject("CombatContentPanel");
+        GlobalDefinitions.combatContentPanel = combatContentPanel;
+        Image panelImage = combatContentPanel.AddComponent<Image>();
+
+        panelImage.color = new Color32(0, 44, 255, 220);
+        panelImage.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        panelImage.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+        panelImage.rectTransform.sizeDelta = new Vector2(panelWidth, panelHeight);
+        panelImage.rectTransform.anchoredPosition = new Vector2(0, 0);
+
+        if (panelHeight > (UnityEngine.Screen.height - 50))
+            combatResolutionGuiInstance = GlobalDefinitions.createScrollingGUICanvas("CombatResolutionGUIInstance", 
+                    panelWidth, 
+                    panelHeight, 
+                    ref combatContentPanel, 
+                    ref combatCanvas);
+        else
+        {
+            combatResolutionGuiInstance = GlobalDefinitions.createGUICanvas("CombatResolutionGUIInstance",
                 panelWidth,
                 panelHeight,
                 ref combatCanvas);
+            combatContentPanel.transform.SetParent(combatResolutionGuiInstance.transform, false);
+        }
         GlobalDefinitions.combatResolutionGUIInstance = combatResolutionGuiInstance;
 
         // Put a series of text boxes along the top row to serve as the header
@@ -132,7 +153,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas);
+                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column four the defense factor will be listed
         GlobalDefinitions.createText("Defense", "DefenseHeader",
@@ -140,7 +161,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas);
+                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column five the attack factor will be listed
         GlobalDefinitions.createText("Attack", "AttackHeader",
@@ -148,7 +169,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas);
+                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column six the odds will be listed
         GlobalDefinitions.createText("Odds", "OddsHeader",
@@ -156,33 +177,33 @@ public class CombatResolutionRoutines : MonoBehaviour
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 6 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas);
+                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column seven the carpet bombing indicator will be placed if Allied mode
         // if it is the German mode will put the close defense indicator
         if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
             GlobalDefinitions.createText("Carpet Bomb", "CarpetBombHeader",
-                GlobalDefinitions.GUIUNITIMAGESIZE,
-                GlobalDefinitions.GUIUNITIMAGESIZE,
-                GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
-                (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas);
+                    GlobalDefinitions.GUIUNITIMAGESIZE,
+                    GlobalDefinitions.GUIUNITIMAGESIZE,
+                    GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
+                    (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
+                    combatCanvas).transform.SetParent(combatContentPanel.transform, false);
         else
             GlobalDefinitions.createText("Air Def", "CloseDefenseHeader",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
-                GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
-                (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    combatCanvas);
+                    GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
+                    (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
+                    combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column eight the air support toggle will be placed only if it is Allied combat
         if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
             GlobalDefinitions.createText("Air Support", "AirSupportHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
-                GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
-                (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    combatCanvas);
+                    GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
+                    (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
+                    combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         //  In column nine the combat results will be listed
         GlobalDefinitions.createText("Combat Results", "CombatResultsHeaderText",
@@ -190,7 +211,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 9 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas);
+                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         foreach (GameObject combat in GlobalDefinitions.allCombats)
         {
@@ -212,7 +233,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                             "UnitImage",
                             GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE,
                             yPosition,
-                            combatCanvas);
+                            combatCanvas).transform.SetParent(combatContentPanel.transform, false);
             }
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("combatResolutionDisplay: combat number = " + GlobalDefinitions.allCombats.IndexOf(combat) + " defender count = " + combat.GetComponent<Combat>().defendingUnits.Count + " attacker count = " + combat.GetComponent<Combat>().attackingUnits.Count);
@@ -224,7 +245,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    combatCanvas);
+                    combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
             // In column five the attack factor will be listed
             attackFactorTextGameObject = GlobalDefinitions.createText(GlobalDefinitions.calculateAttackFactor(combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport).ToString(),
@@ -234,6 +255,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
                     yPosition,
                     combatCanvas);
+            attackFactorTextGameObject.transform.SetParent(combatContentPanel.transform, false);
 
             // In column six the odds will be listed
             oddsTextGameObject = GlobalDefinitions.createText(GlobalDefinitions.convertOddsToString(GlobalDefinitions.returnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport)),
@@ -243,6 +265,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     GlobalDefinitions.GUIUNITIMAGESIZE * 6 * 1.25f - 0.5f * panelWidth,
                     yPosition,
                     combatCanvas);
+            oddsTextGameObject.transform.SetParent(combatContentPanel.transform, false);
 
             // If allied turn, put "Yes" in column seven if carpet bombing is active
             // if it is German turn, put a "Yes" in the column is close defense is active
@@ -251,22 +274,22 @@ public class CombatResolutionRoutines : MonoBehaviour
                 if (checkIfCarpetBombingInEffect(combat.GetComponent<Combat>().defendingUnits))
                     GlobalDefinitions.createText("Yes",
                             "CarpetBombingActiveText",
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
-                        yPosition,
-                        combatCanvas);
+                            GlobalDefinitions.GUIUNITIMAGESIZE,
+                            GlobalDefinitions.GUIUNITIMAGESIZE,
+                            GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
+                            yPosition,
+                            combatCanvas).transform.SetParent(combatContentPanel.transform, false);
             }
             else
             {
                 if (checkIfCloseDefenseActive(combat.GetComponent<Combat>().defendingUnits))
                     GlobalDefinitions.createText("Yes",
                             "CloseDefenseActiveText",
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
-                        yPosition,
-                        combatCanvas);
+                            GlobalDefinitions.GUIUNITIMAGESIZE,
+                            GlobalDefinitions.GUIUNITIMAGESIZE,
+                            GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
+                            yPosition,
+                            combatCanvas).transform.SetParent(combatContentPanel.transform, false);
             }
 
             // In column eight a toggle will be listed to add air support if this is the Allied combat mode
@@ -276,6 +299,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
                     yPosition,
                     combatCanvas).GetComponent<Toggle>();
+                combat.GetComponent<Combat>().airSupportToggle.transform.SetParent(combatContentPanel.transform, false);
                 combat.GetComponent<Combat>().airSupportToggle.gameObject.AddComponent<CombatResolutionButtonRoutines>();
                 combat.GetComponent<Combat>().airSupportToggle.GetComponent<CombatResolutionButtonRoutines>().curentCombat = combat;
                 combat.GetComponent<Combat>().airSupportToggle.GetComponent<CombatResolutionButtonRoutines>().attackFactorTextGameObject = attackFactorTextGameObject;
@@ -303,6 +327,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     GlobalDefinitions.GUIUNITIMAGESIZE * 9 * 1.25f - 0.5f * panelWidth,
                     yPosition,
                     combatCanvas);
+            combat.GetComponent<Combat>().resolveButton.transform.SetParent(combatContentPanel.transform, false);
 
             if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedCombatStateInstance") ||
                     (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanCombatStateInstance"))
@@ -320,6 +345,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                    GlobalDefinitions.GUIUNITIMAGESIZE * 10 * 1.25f - 0.5f * panelWidth,
                    yPosition,
                    combatCanvas);
+            combat.GetComponent<Combat>().locateButton.transform.SetParent(combatContentPanel.transform, false);
             combat.GetComponent<Combat>().locateButton.gameObject.AddComponent<CombatResolutionButtonRoutines>();
             combat.GetComponent<Combat>().locateButton.GetComponent<CombatResolutionButtonRoutines>().curentCombat = combat;
             combat.GetComponent<Combat>().locateButton.onClick.AddListener(combat.GetComponent<Combat>().locateButton.GetComponent<CombatResolutionButtonRoutines>().locateAttack);
@@ -329,6 +355,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     GlobalDefinitions.GUIUNITIMAGESIZE * 11 * 1.25f - 0.5f * panelWidth,
                     yPosition,
                     combatCanvas);
+            combat.GetComponent<Combat>().cancelButton.transform.SetParent(combatContentPanel.transform, false);
             combat.GetComponent<Combat>().cancelButton.gameObject.AddComponent<CombatResolutionButtonRoutines>();
             combat.GetComponent<Combat>().cancelButton.GetComponent<CombatResolutionButtonRoutines>().curentCombat = combat;
             combat.GetComponent<Combat>().cancelButton.onClick.AddListener(combat.GetComponent<Combat>().cancelButton.GetComponent<CombatResolutionButtonRoutines>().cancelAttack);
@@ -342,6 +369,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 7 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
+        okButton.transform.SetParent(combatContentPanel.transform, false);
 
         okButton.gameObject.AddComponent<CombatResolutionButtonRoutines>();
         okButton.onClick.AddListener(okButton.GetComponent<CombatResolutionButtonRoutines>().ok);
@@ -379,7 +407,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         if (GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Network)
         {
             GlobalDefinitions.dieRollResult1 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
-            //GlobalDefinitions.dieRollResult1 = 1;  // REMOVE - FOR TESTING ONLY
+            //GlobalDefinitions.dieRollResult1 = 0;  // REMOVE - FOR TESTING ONLY
             // 1:1 odds results 0-Delim 1-Exchange 2-Dback2 3-Aback2 4-Aelim 5-Aelim 
 
             GlobalDefinitions.dieRollResult2 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
@@ -391,8 +419,10 @@ public class CombatResolutionRoutines : MonoBehaviour
             TransportScript.SendSocketMessage(GlobalDefinitions.DIEROLLRESULT2KEYWORD + " " + GlobalDefinitions.dieRollResult2);
         }
 
-        //GlobalDefinitions.guiUpdateStatusMessage("Combat Results: die roll result 1 = " + GlobalDefinitions.dieRollResult1);
-        //GlobalDefinitions.guiUpdateStatusMessage("Combat Results: die roll result 2 = " + GlobalDefinitions.dieRollResult2);
+#if OUTPUTDEBUG
+        GlobalDefinitions.guiUpdateStatusMessage("Combat Results: die roll result 1 = " + GlobalDefinitions.dieRollResult1);
+        GlobalDefinitions.guiUpdateStatusMessage("Combat Results: die roll result 2 = " + GlobalDefinitions.dieRollResult2);
+#endif
 
         GlobalDefinitions.guiUpdateStatusMessage("Combat Results: Odds " + combatOdds + "  Die Roll " + (GlobalDefinitions.dieRollResult1 + 1) + "   which translates to " + GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]);
 
@@ -505,7 +535,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 buttonLocation.x,
                 buttonLocation.y,
-                GlobalDefinitions.combatResolutionGUIInstance.GetComponent<Canvas>());
+                GlobalDefinitions.combatResolutionGUIInstance.GetComponent<Canvas>()).transform.SetParent(GlobalDefinitions.combatContentPanel.transform, false);
 
         switch (combatResults)
         {

@@ -479,174 +479,195 @@ public class SupplyRoutines : MonoBehaviour
         GameObject unassignedTextGameObject;
 
         // Only create the gui if there isn't already one active
-        if (GlobalDefinitions.guiList.Count == 0)
+        if (GlobalDefinitions.guiList.Count > 0)
         {
+            GlobalDefinitions.guiUpdateStatusMessage("Resolve current gui before invoking another");
+            return;
+        }
 
-            GlobalDefinitions.writeToLogFile("createSupplySourceGUI: executing");
+        if (GlobalDefinitions.supplySources.Count == 0)
+        {
+            GlobalDefinitions.guiUpdateStatusMessage("No Allied supply sources have been assigned");
 
-            if (GlobalDefinitions.supplySources.Count == 0)
-            {
-                GlobalDefinitions.guiUpdateStatusMessage("No Allied supply sources have been assigned");
+            // Turn the button back on
+            GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
 
-                // Turn the button back on
-                GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
+            return;
+        }
 
-                return;
-            }
 
-            GlobalDefinitions.unassignedTextObejcts.Clear();
+        // Clear out the global variables related to the supply gui
+        float yPosition = 0;
+        Button okButton;
+        GlobalDefinitions.unassignedTextObejcts.Clear();
+        GlobalDefinitions.supplyGUI.Clear();
 
-            float yPosition = 0;
-            Button okButton;
-            GlobalDefinitions.supplyGUI.Clear();
+        float panelWidth = 11 * GlobalDefinitions.GUIUNITIMAGESIZE;
+        float panelHeight;
+        if (GlobalDefinitions.supplySources.Count == 0)
+            panelHeight = (GlobalDefinitions.supplySources.Count * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) + 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
+        else
+            panelHeight = (GlobalDefinitions.supplySources.Count * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) + 2 * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-            float panelWidth = 11 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            float panelHeight;
-            if (GlobalDefinitions.supplySources.Count == 0)
-                panelHeight = (GlobalDefinitions.supplySources.Count * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) + 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            else
-                panelHeight = (GlobalDefinitions.supplySources.Count * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) + 2 * GlobalDefinitions.GUIUNITIMAGESIZE;
+        Canvas supplyCanvas = new Canvas();
 
-            Canvas supplyCanvas = new Canvas();
+        // In case a scrolling window is needed for the supply sources need to create a content panel
+        GameObject supplyContentPanel = new GameObject("SupplyContentPanel");
+        Image panelImage = supplyContentPanel.AddComponent<Image>();
+
+        panelImage.color = new Color32(0, 44, 255, 220);
+        panelImage.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        panelImage.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+        panelImage.rectTransform.sizeDelta = new Vector2(panelWidth, panelHeight);
+        panelImage.rectTransform.anchoredPosition = new Vector2(0, 0);
+
+        if (panelHeight > (UnityEngine.Screen.height - 50))
             GlobalDefinitions.supplySourceGUIInstance =
-                    GlobalDefinitions.createGUICanvas("SupplyGUICanvas", panelWidth, panelHeight, ref supplyCanvas);
+                    GlobalDefinitions.createScrollingGUICanvas("SupplyGUICanvas", panelWidth, panelHeight, ref supplyContentPanel, ref supplyCanvas);
+        else
+        {
+            GlobalDefinitions.supplySourceGUIInstance = GlobalDefinitions.createGUICanvas(name, panelWidth, panelHeight, ref supplyCanvas);
+            supplyContentPanel.transform.SetParent(GlobalDefinitions.supplySourceGUIInstance.transform, false);
+        }
 
-            yPosition = 0.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight;
+        yPosition = 0.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight;
 
-            // Need an OK button to get out of the gui
-            okButton = GlobalDefinitions.createButton("SupplySourcesOKButton", "OK",
-                    5.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
-                    yPosition,
-                    supplyCanvas);
+        // Need an OK button to get out of the gui
+        okButton = GlobalDefinitions.createButton("SupplySourcesOK", "OK",
+                5.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
+                yPosition,
+                supplyCanvas);
 
-            okButton.gameObject.AddComponent<SupplyButtonRoutines>();
-            if (!displayOnly)
-                okButton.onClick.AddListener(okButton.GetComponent<SupplyButtonRoutines>().okSupplyWithEndPhase);
-            else
-                okButton.onClick.AddListener(okButton.GetComponent<SupplyButtonRoutines>().okSupply);
-            GlobalDefinitions.combatResolutionOKButton = okButton.gameObject;
-            GlobalDefinitions.combatResolutionOKButton.SetActive(true);
+        okButton.gameObject.AddComponent<SupplyButtonRoutines>();
+        if (!displayOnly)
+            okButton.onClick.AddListener(okButton.GetComponent<SupplyButtonRoutines>().okSupplyWithEndPhase);
+        else
+            okButton.onClick.AddListener(okButton.GetComponent<SupplyButtonRoutines>().okSupply);
+        GlobalDefinitions.combatResolutionOKButton = okButton.gameObject;
+        GlobalDefinitions.combatResolutionOKButton.SetActive(true);
+        okButton.transform.SetParent(supplyContentPanel.transform, false);
 
-            for (int index = 0; index < GlobalDefinitions.supplySources.Count; index++)
-            {
-                GameObject singleSupplyGUI = new GameObject("singleSupplyGUI" + index);
-                singleSupplyGUI.AddComponent<SupplyGUIObject>();
+        for (int index = 0; index < GlobalDefinitions.supplySources.Count; index++)
+        {
+            GameObject singleSupplyGUI = new GameObject("singleSupplyGUI" + index);
+            singleSupplyGUI.AddComponent<SupplyGUIObject>();
 
-                yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
-
-                // This creates a text box with the name of the source
-                GlobalDefinitions.createText(GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().hexName,
-                        "SourceNameText",
-                        2 * GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
-                        yPosition,
-                        supplyCanvas);
-
-                if (!displayOnly)
-                {
-                    // In column three a toggle will be displayed to select the supply source
-                    singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle = GlobalDefinitions.createToggle("SupplySourceSelectToggle" + index,
-                            GlobalDefinitions.GUIUNITIMAGESIZE * 3 * 1.25f - 0.5f * panelWidth,
-                            yPosition,
-                            supplyCanvas).GetComponent<Toggle>();
-                    singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle.gameObject.AddComponent<SupplyButtonRoutines>();
-                    singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle.GetComponent<SupplyButtonRoutines>().supplySource = GlobalDefinitions.supplySources[index];
-                    singleSupplyGUI.GetComponent<SupplyGUIObject>().supplySource = GlobalDefinitions.supplySources[index];
-                    // A separate Toggle object is needed otherwise the Listener won't work without it
-                    Toggle tempToggle;
-                    tempToggle = singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle.GetComponent<Toggle>();
-                    tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<SupplyButtonRoutines>().checkToggle());
-                }
-
-                // In column four the range of the source will be displayed
-                GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyRange).ToString(),
-                        "supplySourceRangeText",
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
-                        yPosition,
-                        supplyCanvas);
-
-                // In column six the total supply capacity will be listed
-                GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyCapacity).ToString(),
-                        "SupplySourceCapacityText",
-                        2 * GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
-                        yPosition,
-                        supplyCanvas);
-
-                // In column eight the unassigned capacity will be listed
-                unassignedTextGameObject = GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().unassignedSupply).ToString(),
-                        "SupplySourceUnassignedText",
-                        2 * GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE * 6.5f * 1.25f - 0.5f * panelWidth,
-                        yPosition,
-                        supplyCanvas);
-                GlobalDefinitions.unassignedTextObejcts.Add(unassignedTextGameObject);
-                GlobalDefinitions.writeToLogFile("createSupplySourceGUI: adding unassignedTextGameObject count = " + GlobalDefinitions.unassignedTextObejcts.Count);
-
-                // In column 10 add a button to locate the supply source
-                singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton = GlobalDefinitions.createButton("CombatResolutionLocateButton", "Locate",
-                       GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
-                       yPosition,
-                       supplyCanvas);
-                singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.gameObject.AddComponent<SupplyButtonRoutines>();
-                singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.gameObject.GetComponent<SupplyButtonRoutines>().supplySource = GlobalDefinitions.supplySources[index];
-                singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.onClick.AddListener(singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.GetComponent<SupplyButtonRoutines>().locateSupplySource);
-
-                GlobalDefinitions.supplyGUI.Add(singleSupplyGUI);
-            }
-
-            // Put a series of text boxes along the top row to serve as the header
             yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
-            // The first column contains the names of the supply sources
-            GlobalDefinitions.createText("Supply Source", "SupplySourceNameHeaderText",
+
+            // This creates a text box with the name of the source
+            (GlobalDefinitions.createText(GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().hexName,
+                    "SourceName",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    supplyCanvas);
+                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
             if (!displayOnly)
             {
-                // In column three a toggle for selection will be listed
-                GlobalDefinitions.createText("Select", "SupplySelectionText",
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
-                        GlobalDefinitions.GUIUNITIMAGESIZE,
+                // In column three a toggle will be displayed to select the supply source
+                singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle = GlobalDefinitions.createToggle("SupplySourceSelectToggle" + index,
                         GlobalDefinitions.GUIUNITIMAGESIZE * 3 * 1.25f - 0.5f * panelWidth,
                         yPosition,
-                        supplyCanvas);
+                        supplyCanvas).GetComponent<Toggle>();
+                singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle.transform.SetParent(supplyContentPanel.transform, false);
+                singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle.gameObject.AddComponent<SupplyButtonRoutines>();
+                singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle.GetComponent<SupplyButtonRoutines>().supplySource = GlobalDefinitions.supplySources[index];
+                singleSupplyGUI.GetComponent<SupplyGUIObject>().supplySource = GlobalDefinitions.supplySources[index];
+                // A separate Toggle object is needed otherwise the Listener won't work without it
+                Toggle tempToggle;
+                tempToggle = singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle.GetComponent<Toggle>();
+                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<SupplyButtonRoutines>().checkToggle());
             }
 
-            // In column four the range of the source will be listed
-            GlobalDefinitions.createText("Range", "SupplyRangeText",
+            // In column four the range of the source will be displayed
+            (GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyRange).ToString(),
+                    "supplySourceRange",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    supplyCanvas);
+                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
-            // In column five the Total Supply Capacity will be listed
-            GlobalDefinitions.createText("Total  Capacity", "SuppplyCapacityText",
-                    1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
+            // In column six the total supply capacity will be listed
+            (GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyCapacity).ToString(),
+                    "SupplySourceCapacity",
+                    2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    supplyCanvas);
+                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
-            // In column six the Unassigned Capacity will be listed
-            GlobalDefinitions.createText("Unassigned Supply", "UnassignedSupplyText",
-                    1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
+            // In column eight the unassigned capacity will be listed
+            unassignedTextGameObject = GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().unassignedSupply).ToString(),
+                    "SupplySourceUnassigned",
+                    2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 6.5f * 1.25f - 0.5f * panelWidth,
                     yPosition,
                     supplyCanvas);
+            unassignedTextGameObject.transform.SetParent(supplyContentPanel.transform, false);
+            GlobalDefinitions.unassignedTextObejcts.Add(unassignedTextGameObject);
+            GlobalDefinitions.writeToLogFile("createSupplySourceGUI: adding unassignedTextGameObject count = " + GlobalDefinitions.unassignedTextObejcts.Count);
+
+            // In column 10 add a button to locate the supply source
+            singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton = GlobalDefinitions.createButton("CombatResolutionLocateButton", "Locate",
+                   GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
+                   yPosition,
+                   supplyCanvas);
+            singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.transform.SetParent(supplyContentPanel.transform, false);
+            singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.gameObject.AddComponent<SupplyButtonRoutines>();
+            singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.gameObject.GetComponent<SupplyButtonRoutines>().supplySource = GlobalDefinitions.supplySources[index];
+            singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.onClick.AddListener(singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.GetComponent<SupplyButtonRoutines>().locateSupplySource);
+
+            GlobalDefinitions.supplyGUI.Add(singleSupplyGUI);
         }
-        else
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve current gui before invoking another");
+
+        // Put a series of text boxes along the top row to serve as the header
+        yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
+        // The first column contains the names of the supply sources
+        (GlobalDefinitions.createText("Supply Source", "SupplySourceNameHeader",
+                2 * GlobalDefinitions.GUIUNITIMAGESIZE,
+                GlobalDefinitions.GUIUNITIMAGESIZE,
+                GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
+                yPosition,
+                supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+
+        if (!displayOnly)
+        {
+            // In column three a toggle for selection will be listed
+            (GlobalDefinitions.createText("Select", "SupplySelection",
+                    GlobalDefinitions.GUIUNITIMAGESIZE,
+                    GlobalDefinitions.GUIUNITIMAGESIZE,
+                    GlobalDefinitions.GUIUNITIMAGESIZE * 3 * 1.25f - 0.5f * panelWidth,
+                    yPosition,
+                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+        }
+
+            // In column four the range of the source will be listed
+            (GlobalDefinitions.createText("Range", "SupplyRange",
+                    GlobalDefinitions.GUIUNITIMAGESIZE,
+                    GlobalDefinitions.GUIUNITIMAGESIZE,
+                    GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
+                    yPosition,
+                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+
+        // In column five the Total Supply Capacity will be listed
+        (GlobalDefinitions.createText("Total  Capacity", "SuppplyCapacity",
+                1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
+                GlobalDefinitions.GUIUNITIMAGESIZE,
+                GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
+                yPosition,
+                supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+
+        // In column six the Unassigned Capacity will be listed
+        (GlobalDefinitions.createText("Unassigned Supply", "UnassignedSupply",
+                1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
+                GlobalDefinitions.GUIUNITIMAGESIZE,
+                GlobalDefinitions.GUIUNITIMAGESIZE * 6.5f * 1.25f - 0.5f * panelWidth,
+                yPosition,
+                supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+
     }
 
     /// <summary>

@@ -178,6 +178,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static float exchangeFactorsSelected = 0;
     public static int exchangeFactorsToLose = 0;
 
+    public static GameObject combatContentPanel;
     public static GameObject getGameModeGuiInstance;
     public static GameObject combatResolutionGUIInstance;
     public static GameObject combatGUIInstance;
@@ -1130,11 +1131,91 @@ public class GlobalDefinitions : MonoBehaviour
         panelImage.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
         panelImage.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         panelImage.rectTransform.sizeDelta = new Vector2(panelWidth, panelHeight);
-        //panelImage.rectTransform.anchoredPosition = new Vector2(panelWidth / 2, panelHeight / 2);
         panelImage.rectTransform.anchoredPosition = new Vector2(0, 0);
         guiPanel.transform.SetParent(guiInstance.transform, false);
 
-        //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentGUI = guiInstance;
+        return (guiInstance);
+    }
+
+    public static GameObject createScrollingGUICanvas(string name, float panelWidth, float panelHeight, ref GameObject scrollContentPanel, ref Canvas canvasObject)
+    {
+        writeToLogFile("createScrollingGUICanvas: screen height = " + UnityEngine.Screen.height);
+
+        if (panelHeight < (UnityEngine.Screen.height - 50))
+        {
+            writeToLogFile("createScrollingGUICanvas: panel height = " + panelHeight);
+            // The height is small enough that scrolling isn't needed
+            return createGUICanvas(name, panelWidth, panelHeight, ref canvasObject);
+        }
+
+        GameObject squareImage = (GameObject)Resources.Load("SquareObject");
+        GameObject sliderHandleImage = (GameObject)Resources.Load("SliderHandleObject");
+
+        GameObject guiInstance = new GameObject(name);
+        guiList.Add(guiInstance);
+        canvasObject = guiInstance.AddComponent<Canvas>();
+        guiInstance.AddComponent<CanvasScaler>();
+        guiInstance.AddComponent<GraphicRaycaster>();
+        canvasObject.renderMode = RenderMode.ScreenSpaceOverlay;
+
+        GameObject scrollRect = new GameObject("Scroll Rect");
+        ScrollRect scrollable = scrollRect.AddComponent<ScrollRect>();
+        Image scrollRectImage = scrollRect.AddComponent<Image>();
+
+        scrollable.horizontal = false;
+        scrollable.vertical = true;
+        scrollable.movementType = UnityEngine.UI.ScrollRect.MovementType.Clamped;
+        scrollable.inertia = false;
+        scrollable.scrollSensitivity = -1;
+
+        scrollRectImage.color = new Color32(0, 44, 255, 220);
+
+        scrollRect.GetComponent<RectTransform>().sizeDelta = new Vector2(panelWidth, (UnityEngine.Screen.height - 50));
+        scrollRect.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
+        scrollRect.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
+        scrollRect.transform.SetParent(guiInstance.transform, false);
+
+        GameObject scrollViewport = new GameObject("ScrollViewport");
+        Mask scrollViewpoerMask = scrollViewport.AddComponent<Mask>();
+        Image scrollViewportImage = scrollViewport.AddComponent<Image>();
+        scrollViewport.GetComponent<RectTransform>().sizeDelta = new Vector2(panelWidth, (UnityEngine.Screen.height - 50));
+        scrollViewport.transform.SetParent(scrollRect.transform);
+        scrollViewport.GetComponent<RectTransform>().localPosition = new Vector2(0f, 0f);
+
+        GameObject scrollContent = new GameObject("ScrollContent");
+        scrollContent.AddComponent<RectTransform>();
+        scrollContent.GetComponent<RectTransform>().sizeDelta = new Vector2(panelWidth, panelHeight);
+        scrollContent.transform.SetParent(scrollViewport.transform, false);
+        scrollContentPanel.transform.SetParent(scrollContent.transform, false);
+
+        scrollable.content = scrollContent.GetComponent<RectTransform>();
+        scrollable.viewport = scrollViewport.GetComponent<RectTransform>();
+
+
+        GameObject scrollHandle = new GameObject("ScrollHandle");
+        Image scrollHandleImage = scrollHandle.AddComponent<Image>();
+        scrollHandle.GetComponent<Image>().sprite = sliderHandleImage.GetComponent<Image>().sprite;
+        scrollHandle.GetComponent<RectTransform>().sizeDelta = new Vector2(20, 400);        
+
+        GameObject scrollbarObject = new GameObject("ScrollbarObject");
+        scrollbarObject.transform.SetParent(scrollRect.transform);
+        Scrollbar verticalScroll = scrollbarObject.AddComponent<Scrollbar>();
+        scrollbarObject.GetComponent<RectTransform>().sizeDelta = new Vector2(20, (UnityEngine.Screen.height - 50));
+        scrollbarObject.GetComponent<RectTransform>().localPosition = new Vector2(panelWidth / 2, 0f);
+        scrollable.verticalScrollbar = verticalScroll;
+        verticalScroll.GetComponent<Scrollbar>().direction = Scrollbar.Direction.BottomToTop;
+        verticalScroll.targetGraphic = scrollHandle.GetComponent<Image>();
+        verticalScroll.handleRect = scrollHandle.GetComponent<RectTransform>();
+
+        Image scrollbarImage = scrollbarObject.AddComponent<Image>();
+        scrollbarImage.sprite = squareImage.GetComponent<Image>().sprite;
+
+        GameObject scrollArea = new GameObject("ScrollArea");
+        scrollArea.AddComponent<RectTransform>();
+        scrollArea.transform.SetParent(scrollbarObject.transform, false);
+
+        scrollHandle.transform.SetParent(scrollArea.transform, false);
+
         return (guiInstance);
     }
 

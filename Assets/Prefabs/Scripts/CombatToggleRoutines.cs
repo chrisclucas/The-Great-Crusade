@@ -333,19 +333,20 @@ public class CombatToggleRoutines : MonoBehaviour
     }
 
     /// <summary>
-    /// This routine is called when a unit decides to attack from a fortress.   It toggles all units that would be in the units ZOC if it wasn't in a fortress.
+    /// This routine is called when a unit decides to attack from a fortress.   It toggles all units that would be in the unit's ZOC if it wasn't in a fortress.
     /// </summary>
     /// <param name="fortressHex"></param>
     public void addDefendersOfFortressAttack(GameObject fortressHex)
     {
         foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
             if (fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
-                if (!fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().riverSides[(int)hexSide] && 
+            {
+                if (!fortressHex.GetComponent<BoolArrayData>().riverSides[(int)hexSide] &&
                         !fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().fortress)
                     if ((fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                             (fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality !=
                             fortressHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality))
-                        // If we get here then the unit should be highlighted since it is adjacent and isn't separated by a river or is a fortress
+                        // If we get here then the unit should be highlighted since it is adjacent and isn't separated by a river or it isn't a fortress
                         foreach (GameObject unit in fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit)
                         {
                             GlobalDefinitions.highlightUnit(unit);
@@ -353,12 +354,13 @@ public class CombatToggleRoutines : MonoBehaviour
                                 if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) && (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == unit))
                                 {
                                     // Turn on the defenders toggle to show that the unit must be attacked
-                                    GlobalDefinitions.writeToLogFile("addDefendersOfFortressAttach: adding unit " + unit.name + " as defender of attack from fortress");
+                                    GlobalDefinitions.writeToLogFile("addDefendersOfFortressAttack: adding unit " + unit.name + " as defender of attack from fortress");
                                     childTransform.GetComponent<Toggle>().isOn = true;
                                     // The only way to turn the toggle off will be to click off the attacking unit
                                     childTransform.GetComponent<Toggle>().interactable = false;
                                 }
                         }
+            }
     }
 
     /// <summary>
