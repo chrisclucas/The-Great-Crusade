@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 public class GlobalDefinitions : MonoBehaviour
 {
-    public const string releaseVersion = "0.4";
+    public const string releaseVersion = "1.0";
 
     // File names
     public static string logfile = "TGCOutputFiles\\TGCLogFile.txt";
@@ -1176,8 +1176,8 @@ public class GlobalDefinitions : MonoBehaviour
         scrollRect.transform.SetParent(guiInstance.transform, false);
 
         GameObject scrollViewport = new GameObject("ScrollViewport");
-        Mask scrollViewpoerMask = scrollViewport.AddComponent<Mask>();
-        Image scrollViewportImage = scrollViewport.AddComponent<Image>();
+        scrollViewport.AddComponent<Mask>();
+        scrollViewport.AddComponent<Image>();
         scrollViewport.GetComponent<RectTransform>().sizeDelta = new Vector2(panelWidth, (UnityEngine.Screen.height - 50));
         scrollViewport.transform.SetParent(scrollRect.transform);
         scrollViewport.GetComponent<RectTransform>().localPosition = new Vector2(0f, 0f);
@@ -1193,7 +1193,7 @@ public class GlobalDefinitions : MonoBehaviour
 
 
         GameObject scrollHandle = new GameObject("ScrollHandle");
-        Image scrollHandleImage = scrollHandle.AddComponent<Image>();
+        scrollHandle.AddComponent<Image>();
         scrollHandle.GetComponent<Image>().sprite = sliderHandleImage.GetComponent<Image>().sprite;
         scrollHandle.GetComponent<RectTransform>().sizeDelta = new Vector2(20, 400);        
 

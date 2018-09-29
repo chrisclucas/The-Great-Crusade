@@ -76,6 +76,8 @@ public class GameControl : MonoBehaviour
             GlobalDefinitions.guiUpdateStatusMessage("ERROR: Cannot access log file - cannot continue");
         }
 
+        GlobalDefinitions.writeToLogFile ("Game Version " + GlobalDefinitions.releaseVersion);
+
         // There are three files that should have been installed with the game.  Note, I could get rid of all three of these and just have the
         // board and the units built into the game rather than reading them.  But I haven't done this based on a somewhat vauge idea that this will
         // make future games easier to build.
