@@ -31,7 +31,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
-        MainMenuRoutines.opponentIPaddr.GetComponent<Toggle>().interactable = true;
+        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
         if (TransportScript.channelEstablished)
         {
             // This executes when the channel is established but the two computers have the same intiating state
