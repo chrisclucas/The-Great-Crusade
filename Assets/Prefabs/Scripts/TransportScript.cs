@@ -39,14 +39,13 @@ public class TransportScript : MonoBehaviour
 
     public static string fileName;
 
-    //private void Start()
-    public void transportScriptStart()
+    void Start()
+    //public void transportScriptStart()
     {
         GlobalDefinitions.writeToLogFile("TransportScript update(): executing start()");
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
         globalConfig.MaxPacketSize = 1500;
-
 
         ConnectionConfig config = new ConnectionConfig();
         config.PacketSize = 1400;
@@ -302,6 +301,7 @@ public class TransportScript : MonoBehaviour
         if (!channelEstablished)
         {
             byte error;
+            NetworkTransport.Init();
             connectionId = NetworkTransport.Connect(clientSocket, opponentIPaddr, socketPort, 0, out error);
 
             GlobalDefinitions.writeToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
