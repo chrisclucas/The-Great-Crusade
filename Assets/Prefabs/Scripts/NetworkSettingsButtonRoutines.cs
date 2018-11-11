@@ -115,8 +115,10 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     public void okNetworkSettings()
     {
         GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+
         if (TransportScript.channelEstablished)
         {
+            GlobalDefinitions.removeGUI(transform.parent.gameObject);
             // This executes when the channel is established but the two computers have the same intiating state
             if (GlobalDefinitions.userIsIntiating)
             {
