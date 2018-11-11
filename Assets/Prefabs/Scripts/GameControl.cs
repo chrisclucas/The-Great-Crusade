@@ -216,10 +216,6 @@ public class GameControl : MonoBehaviour
                 // Left mouse button click
                 if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                 {
-                    // If a network game send the mouse click to the opponent's computer
-                    if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                        sendMouseClickToNetwork(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
-
                     // Check if the user double clicked
                     if ((Time.time < initialTouch + 0.5f) &&
                             ((gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") || 
@@ -242,6 +238,10 @@ public class GameControl : MonoBehaviour
                     {
                         inputMessage.GetComponent<InputMessage>().hex = GlobalDefinitions.getHexFromUserInput(Input.mousePosition);
                         inputMessage.GetComponent<InputMessage>().unit = GlobalDefinitions.getUnitWithoutHex(Input.mousePosition);
+
+                        // If a network game send the mouse click to the opponent's computer
+                        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
+                            sendMouseClickToNetwork(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
 
                         gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(inputMessage.GetComponent<InputMessage>());
 
@@ -643,12 +643,18 @@ public class GameControl : MonoBehaviour
         string hexName;
         string unitName;
         if (hex != null)
+        {
             hexName = hex.name;
+            GlobalDefinitions.writeToLogFile("sendMoustClickToNetwork: processing with hex = " + hex.name);
+        }
         else
             hexName = "null";
 
         if (unit != null)
+        {
             unitName = unit.name;
+            GlobalDefinitions.writeToLogFile("sendMoustClickToNetwork: processing with unit = " + unit.name);
+        }
         else
             unitName = "null";
 
