@@ -171,11 +171,11 @@ public class TransportScript : MonoBehaviour
                     // Playing a new game
                     if (MainMenuRoutines.playNewGame)
                     {
-                        SendSocketMessage(GlobalDefinitions.PLAYNEWGAMEKEYWORD);
                         // Set the game state to Setup 
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
                         GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNoResponse();
+                        SendSocketMessage(GlobalDefinitions.PLAYNEWGAMEKEYWORD + GlobalDefinitions.germanSetupFileUsed);
                         GlobalDefinitions.gameStarted = true;
 
                         if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
@@ -468,24 +468,24 @@ public class TransportScript : MonoBehaviour
 
     public static void OnConnect(int hostId, int conenctionId, NetworkError error)
     {
-        GlobalDefinitions.writeToLogFile("OnConnect(hostId = " + hostId + ", connectionId = " + connectionId + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        GlobalDefinitions.writeToLogFile("TransportScript.OnConnect: (hostId = " + hostId + ", connectionId = " + connectionId + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
     }
 
     public static void OnDisconnect(int hostId, int connectionId, NetworkError error)
     {
-        GlobalDefinitions.writeToLogFile("OnDisconnect(hostId = " + hostId + ", connectionId = "
+        GlobalDefinitions.writeToLogFile("TransportScript.OnDisconnect: (hostId = " + hostId + ", connectionId = "
             + connectionId + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
     }
 
     public static void OnBroadcast(int hostId, byte[] data, int size, NetworkError error)
     {
-        GlobalDefinitions.writeToLogFile("OnBroadcast(hostId = " + hostId + ", data = "
+        GlobalDefinitions.writeToLogFile("TransportScript.OnBroadcast: (hostId = " + hostId + ", data = "
             + data + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
     }
 
     public static void OnData(int hostId, int connectionId, int channelId, string message, int size, NetworkError error)
     {
-        GlobalDefinitions.writeToLogFile("OnData(hostId = " + hostId + ", connectionId = "
+        GlobalDefinitions.writeToLogFile("TransportScript.OnData: (hostId = " + hostId + ", connectionId = "
             + connectionId + ", channelId = " + channelId + ", data = "
             + message + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
     }

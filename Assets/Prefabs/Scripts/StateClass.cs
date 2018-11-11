@@ -127,16 +127,24 @@ public class SetUpState : GameState
 
     public void executeNoResponse()
     {
+        int fileNumber;
         executeMethod = executeSelectUnit;
         GlobalDefinitions.guiUpdatePhase(currentNationality + " Setup Mode");
         GlobalDefinitions.guiUpdateStatusMessage("German Setup Mode: Place units in preparation for an invasion.\n        Note that static units must go on coastal hexes or inland ports\n        German reserves must start on starred hexes");
 
-        // Randomly pick a German setup file
-        int fileNumber = GlobalDefinitions.dieRoll.Next(1, 10);
+        // If the fileNumber is less than 100 the number to be used is being passed as part of a network game
+        if (GlobalDefinitions.germanSetupFileUsed < 100)
+        {
+            // Randomly pick a German setup file
+            fileNumber = GlobalDefinitions.dieRoll.Next(1, 10);
+            GlobalDefinitions.germanSetupFileUsed = fileNumber;
+        }
+        else
+            // The file to use has been set - this is a network game and the other computer is determining the file to use
+            fileNumber = GlobalDefinitions.germanSetupFileUsed;
 
         GlobalDefinitions.guiUpdateStatusMessage("German setup file number = " + fileNumber);
         GameControl.createBoardInstance.GetComponent<CreateBoard>().readGermanPlacement(GameControl.path + "GermanSetup\\TGCGermanSetup" + fileNumber + ".txt");
-
 
         GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
     }

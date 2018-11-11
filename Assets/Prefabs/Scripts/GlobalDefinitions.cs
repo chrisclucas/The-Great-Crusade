@@ -274,6 +274,8 @@ public class GlobalDefinitions : MonoBehaviour
 
     public static bool AIExecuting;
 
+    public static int germanSetupFileUsed = 100;
+
     /// <summary>
     /// Goes through and resets all variables 
     /// </summary>
@@ -376,6 +378,8 @@ public class GlobalDefinitions : MonoBehaviour
             area.totalUnitsUsedThisTurn = 0;
             area.turn = 0;
         }
+
+        germanSetupFileUsed = 100;
     }
 
     /// <summary>

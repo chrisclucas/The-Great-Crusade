@@ -529,10 +529,15 @@ public class GameControl : MonoBehaviour
             case GlobalDefinitions.PLAYNEWGAMEKEYWORD:
                 gameStateControlInstance.GetComponent<gameStateControl>().currentState = setUpStateInstance.GetComponent<SetUpState>();
                 gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage.GetComponent<InputMessage>());
+
+                // Set the global parameter on what file to use, can't pass it to the executeNoResponse since it is passed as a method delegate elsewhere
+                GlobalDefinitions.germanSetupFileUsed = Convert.ToInt32(switchEntries[1]);
+
                 setUpStateInstance.GetComponent<SetUpState>().executeNoResponse();
                 break;
 
             case GlobalDefinitions.INVASIONAREASELECTIONKEYWORD:
+                GlobalDefinitions.writeToLogFile("processNetworkMessage: Received INVASIONAREASELECTIONKEYWORD - turning toggle " + switchEntries[1] + " to true");
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
                 break;
 
