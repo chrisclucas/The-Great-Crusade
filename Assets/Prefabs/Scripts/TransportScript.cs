@@ -161,7 +161,7 @@ public class TransportScript : MonoBehaviour
             else if (handshakeConfirmed && !gameDataSent)
             {
                 GlobalDefinitions.chatPanel.SetActive(true);
-                GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsGuiInstance"));  // Get rid of the gui, we don't need it if we got here.
+                GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));  // Get rid of the gui, we don't need it if we got here.
                 GlobalDefinitions.writeToLogFile("TransportScript update()3: Computers in sync - Waiting on intial data load");
                 GlobalDefinitions.guiUpdateStatusMessage("Waiting on intial data load");
 
@@ -369,7 +369,7 @@ public class TransportScript : MonoBehaviour
     /// <param name="message"></param>
     public static void checkForHandshakeReceipt(string message)
     {
-        // Otherwise have to check to confirm that the remote computer is set appropriately compared to what is set on the local computer.
+        // Check to confirm that the remote computer is set appropriately compared to what is set on the local computer.
         if (GlobalDefinitions.userIsIntiating)
         {
             if (message == "InControl")
@@ -416,7 +416,7 @@ public class TransportScript : MonoBehaviour
             GlobalDefinitions.writeToLogFile("Received opponent comfirmation" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
             //GlobalDefinitions.GameMode = GlobalDefinitions.GameModeValues.Network;
             opponentComputerConfirmsSync = true;
-            //Destroy(GameObject.Find("NetworkSettingsGuiInstance"));
+            //Destroy(GameObject.Find("NetworkSettingsCanvas"));
         }
     }
 
@@ -429,7 +429,7 @@ public class TransportScript : MonoBehaviour
         disconnectionTime = connectionTime - DateTime.Now;
         Debug.Log("Disconnect event received. Time since connection attempt = " + disconnectionTime.ToString());
 
-        GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsGuiInstance"));
+        GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));
         channelEstablished = false;
         GlobalDefinitions.writeToLogFile("resetConnection: Setting connectionConfirmed to false");
         connectionConfirmed = false;
