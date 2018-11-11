@@ -175,7 +175,7 @@ public class TransportScript : MonoBehaviour
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
                         GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNoResponse();
-                        SendSocketMessage(GlobalDefinitions.PLAYNEWGAMEKEYWORD + GlobalDefinitions.germanSetupFileUsed);
+                        SendSocketMessage(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                         GlobalDefinitions.gameStarted = true;
 
                         if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
