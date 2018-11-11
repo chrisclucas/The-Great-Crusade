@@ -133,7 +133,7 @@ public class SetUpState : GameState
         GlobalDefinitions.guiUpdateStatusMessage("German Setup Mode: Place units in preparation for an invasion.\n        Note that static units must go on coastal hexes or inland ports\n        German reserves must start on starred hexes");
 
         // If the fileNumber is less than 100 the number to be used is being passed as part of a network game
-        if (GlobalDefinitions.germanSetupFileUsed < 100)
+        if (GlobalDefinitions.germanSetupFileUsed == 100)
         {
             // Randomly pick a German setup file
             fileNumber = GlobalDefinitions.dieRoll.Next(1, 10);
