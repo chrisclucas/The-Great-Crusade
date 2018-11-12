@@ -230,6 +230,9 @@ public class GameControl : MonoBehaviour
                             GlobalDefinitions.unhighlightHex(hex.gameObject);
                         GlobalDefinitions.selectedUnit = null;
 
+                        sendMouseDoubleClickToNetwork(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
+                            gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+
                         movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
                             gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
                     }
@@ -403,6 +406,24 @@ public class GameControl : MonoBehaviour
 
                 gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(inputMessage.GetComponent<InputMessage>());
                 break;
+            case GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD:
+                GlobalDefinitions.Nationality passedNationality;
+
+                if (switchEntries[2] == "German")
+                    passedNationality = GlobalDefinitions.Nationality.German;
+                else
+                    passedNationality = GlobalDefinitions.Nationality.Allied;
+
+
+                if (GlobalDefinitions.selectedUnit != null)
+                    GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                foreach (Transform hex in GameObject.Find("Board").transform)
+                    GlobalDefinitions.unhighlightHex(hex.gameObject);
+                GlobalDefinitions.selectedUnit = null;
+
+
+                movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GameObject.Find(switchEntries[1]), passedNationality);
+                break;
             case GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD:
                 CombatResolutionRoutines.combatResolutionDisplay();
                 break;
@@ -443,6 +464,13 @@ public class GameControl : MonoBehaviour
                 break;
             case GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().multiUnitSelection();
+                break;
+
+            case GlobalDefinitions.MULTIUNITSELECTIONKEYWORD:
+                GameObject.Find(switchEntries[1]).GetComponent<MultiUnitMovementToggleRoutines>().selectUnitToMove();
+                break;
+            case GlobalDefinitions.MULTIUNITSELECTIONCANCELKEYWORD:
+                GameObject.Find(switchEntries[1]).GetComponent<MultiUnitMovementToggleRoutines>().cancelGui();
                 break;
 
             case GlobalDefinitions.SETCOMBATTOGGLEKEYWORD:
@@ -645,7 +673,7 @@ public class GameControl : MonoBehaviour
         if (hex != null)
         {
             hexName = hex.name;
-            GlobalDefinitions.writeToLogFile("sendMoustClickToNetwork: processing with hex = " + hex.name);
+            //GlobalDefinitions.writeToLogFile("sendMoustClickToNetwork: processing with hex = " + hex.name);
         }
         else
             hexName = "null";
@@ -653,12 +681,24 @@ public class GameControl : MonoBehaviour
         if (unit != null)
         {
             unitName = unit.name;
-            GlobalDefinitions.writeToLogFile("sendMoustClickToNetwork: processing with unit = " + unit.name);
+            //GlobalDefinitions.writeToLogFile("sendMoustClickToNetwork: processing with unit = " + unit.name);
         }
         else
             unitName = "null";
 
         TransportScript.SendSocketMessage(GlobalDefinitions.MOUSESELECTIONKEYWORD + " " + hexName + " " + unitName);
+    }
+
+    /// <summary>
+    /// Send the informaiton needed for a double click to the network computer
+    /// </summary>
+    /// <param name="hex"></param>
+    /// <param name="currentNationality"></param>
+    public static void sendMouseDoubleClickToNetwork(GameObject hex, GlobalDefinitions.Nationality currentNationality)
+    {
+        TransportScript.SendSocketMessage(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
+
+        TransportScript.SendSocketMessage(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + hex.name + " " + currentNationality);
     }
 
     /// <summary>

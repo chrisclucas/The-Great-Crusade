@@ -937,7 +937,7 @@ public class MovementRoutines : MonoBehaviour
             {
                 Toggle tempToggle;
 
-                tempToggle = GlobalDefinitions.createUnitTogglePair("multiUnitMovement",
+                tempToggle = GlobalDefinitions.createUnitTogglePair("multiUnitMovement" + index,
                     index * xSeperation + xOffset - 0.5f * panelWidth,
                     2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     movementCanvas,

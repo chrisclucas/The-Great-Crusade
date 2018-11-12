@@ -2269,6 +2269,9 @@ public class GlobalDefinitions : MonoBehaviour
     public const string READSAVEDGAMECONTROLPARAMETERSKEYWORD = "GameControlParameters";
     public const string READSAVEDGLOBALDEFINITIONSPARAMETERSKEYWORD = "GlobalDefinitionsParameters";
     public const string MOUSESELECTIONKEYWORD = "MouseSelection";
+    public const string MOUSEDOUBLECLICKIONKEYWORD = "MouseDoubleClick";
+    public const string MULTIUNITSELECTIONKEYWORD = "MultiUnitSelection";
+    public const string MULTIUNITSELECTIONCANCELKEYWORD = "MultiUnitSelectionCancel";
     public const string SETCAMERAPOSITIONKEYWORD = "SetCameraPosition";
     public const string DISPLAYCOMBATRESOLUTIONKEYWORD = "DisplayCombatResolution";
     public const string QUITKEYWORD = "Quit";

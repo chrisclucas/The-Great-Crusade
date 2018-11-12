@@ -161,6 +161,7 @@ public class TransportScript : MonoBehaviour
             else if (handshakeConfirmed && !gameDataSent)
             {
                 GlobalDefinitions.chatPanel.SetActive(true);
+                GameObject.Find("ChatInputField").SetActive(true);
                 GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));  // Get rid of the gui, we don't need it if we got here.
                 GlobalDefinitions.writeToLogFile("TransportScript update()3: Computers in sync - Waiting on intial data load");
                 GlobalDefinitions.guiUpdateStatusMessage("Waiting on intial data load");
