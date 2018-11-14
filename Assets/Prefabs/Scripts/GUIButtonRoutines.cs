@@ -286,6 +286,9 @@ public class GUIButtonRoutines : MonoBehaviour
     {
         if (GlobalDefinitions.guiList.Count == 0)
         {
+            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
+                TransportScript.SendSocketMessage(GlobalDefinitions.LOADCOMBATKEYWORD);
+
             GlobalDefinitions.guiUpdateStatusMessage("Select a hex to attack");
             if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedInvasionStateInstance")
                 GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =

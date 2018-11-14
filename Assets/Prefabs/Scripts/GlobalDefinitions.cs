@@ -2327,6 +2327,7 @@ public class GlobalDefinitions : MonoBehaviour
     public const string DISPLAYMUSTATTACKTOGGLEWORD = "DisplayMustAttackToggle";
     public const string TOGGLEAIRSUPPORTCOMBATTOGGLE = "ToggleAirSupportCombatToggle";
     public const string TOGGLECARPETBOMBINGCOMBATTOGGLE = "ToggleCarpetBombingCombatToggle";
+    public const string LOADCOMBATKEYWORD = "LoadCombat";
 }
 
 public class HexLocation
