@@ -472,6 +472,11 @@ public class GameControl : MonoBehaviour
             case GlobalDefinitions.MULTIUNITSELECTIONCANCELKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<MultiUnitMovementToggleRoutines>().cancelGui();
                 break;
+            case GlobalDefinitions.LOADCOMBATKEYWORD:
+                GameObject GUIButtonInstance = new GameObject("GUIButtonInstance");
+                GUIButtonInstance.AddComponent<GUIButtonRoutines>();
+                GUIButtonInstance.GetComponent<GUIButtonRoutines>().loadCombat();
+                break;
 
             case GlobalDefinitions.SETCOMBATTOGGLEKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
