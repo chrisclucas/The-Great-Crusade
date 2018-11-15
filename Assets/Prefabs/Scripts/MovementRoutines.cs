@@ -875,7 +875,7 @@ public class MovementRoutines : MonoBehaviour
     /// This is called when a hex has been vacated, it is used to reset the ZOC on the adjacent hexes from the hex that was vacated.
     /// </summary>
     /// <param name="hex"></param>
-    public static void  checkAdjacentHexZOCImpact(GameObject hex)
+    public static void checkAdjacentHexZOCImpact(GameObject hex)
     {
         hex.GetComponent<HexDatabaseFields>().inGermanZOC = false;
         hex.GetComponent<HexDatabaseFields>().inAlliedZOC = false;
@@ -1562,10 +1562,15 @@ public class MovementRoutines : MonoBehaviour
     /// This routine will select an allied unit from the dead pile and move it to its location in Britain
     /// </summary>
     /// <returns></returns>
-    public void selectAlliedReplacementUnit()
+    public void selectAlliedReplacementUnit(GameObject unit)
     {
         GameObject selectedUnit;
-        selectedUnit = GlobalDefinitions.getUnitWithoutHex(Input.mousePosition);
+
+        // During network mode the mouse click isn't sent but the unit is, so check if this is a network game
+        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (!GlobalDefinitions.localControl))
+            selectedUnit = unit;
+        else
+            selectedUnit = GlobalDefinitions.getUnitWithoutHex(Input.mousePosition);
 
         //  Check for valid unit
         if (selectedUnit == null)

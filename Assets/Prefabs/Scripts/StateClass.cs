@@ -321,7 +321,7 @@ public class AlliedReplacementState : GameState
 
     public void executeSelectUnit(InputMessage inputMessage)
     {
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().selectAlliedReplacementUnit();
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().selectAlliedReplacementUnit(inputMessage.unit);
         if (GlobalDefinitions.alliedReplacementsRemaining > 3)
             GlobalDefinitions.guiUpdateStatusMessage("Allied replacement factors remaining = " + GlobalDefinitions.alliedReplacementsRemaining + " select an allied unit from the OOB sheet");
         else
