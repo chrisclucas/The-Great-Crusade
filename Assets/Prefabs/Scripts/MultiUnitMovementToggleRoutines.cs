@@ -38,8 +38,8 @@ public class MultiUnitMovementToggleRoutines : MonoBehaviour
                 GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<SetUpState>().executeSelectUnitDestination;
 
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-                GameControl.sendMouseClickToNetwork(GlobalDefinitions.selectedUnit, GlobalDefinitions.startHex);
+            //if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+            //    GameControl.sendMouseClickToNetwork(GlobalDefinitions.selectedUnit, GlobalDefinitions.startHex);
         }
 
         else
