@@ -386,6 +386,7 @@ public class GlobalDefinitions : MonoBehaviour
         userIsIntiating = false;
         isServer = false;
         hasReceivedConfirmation = false;
+        gameStarted = false;
         TransportScript.channelEstablished = false;
         TransportScript.connectionConfirmed = false;
         TransportScript.handshakeConfirmed = false;

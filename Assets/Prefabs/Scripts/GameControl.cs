@@ -329,6 +329,7 @@ public class GameControl : MonoBehaviour
                         GlobalDefinitions.userIsIntiating = false;
                         GlobalDefinitions.isServer = false;
                         GlobalDefinitions.hasReceivedConfirmation = false;
+                        GlobalDefinitions.gameStarted = false;
                         TransportScript.channelEstablished = false;
                         TransportScript.connectionConfirmed = false;
                         TransportScript.handshakeConfirmed = false;
