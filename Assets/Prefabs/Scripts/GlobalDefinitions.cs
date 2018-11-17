@@ -380,6 +380,14 @@ public class GlobalDefinitions : MonoBehaviour
         }
 
         germanSetupFileUsed = 100;
+
+        // The following is for resetting the variables associated with a network game
+        opponentIPAddress = "";
+        TransportScript.channelEstablished = false;
+        userIsIntiating = false;
+        isServer = false;
+        hasReceivedConfirmation = false;
+
     }
 
     /// <summary>
