@@ -383,10 +383,14 @@ public class GlobalDefinitions : MonoBehaviour
 
         // The following is for resetting the variables associated with a network game
         opponentIPAddress = "";
-        TransportScript.channelEstablished = false;
         userIsIntiating = false;
         isServer = false;
         hasReceivedConfirmation = false;
+        TransportScript.channelEstablished = false;
+        TransportScript.connectionConfirmed = false;
+        TransportScript.handshakeConfirmed = false;
+        TransportScript.opponentComputerConfirmsSync = false;
+        TransportScript.gameDataSent = false;
 
     }
 
@@ -1207,7 +1211,7 @@ public class GlobalDefinitions : MonoBehaviour
         GameObject scrollHandle = new GameObject("ScrollHandle");
         scrollHandle.AddComponent<Image>();
         scrollHandle.GetComponent<Image>().sprite = sliderHandleImage.GetComponent<Image>().sprite;
-        scrollHandle.GetComponent<RectTransform>().sizeDelta = new Vector2(20, 400);        
+        scrollHandle.GetComponent<RectTransform>().sizeDelta = new Vector2(20, 400);
 
         GameObject scrollbarObject = new GameObject("ScrollbarObject");
         scrollbarObject.transform.SetParent(scrollRect.transform);

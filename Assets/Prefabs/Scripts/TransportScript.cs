@@ -22,7 +22,7 @@ public class TransportScript : MonoBehaviour
     public static bool connectionConfirmed = false;
     public static bool handshakeConfirmed = false;
     public static bool opponentComputerConfirmsSync = false;
-    private bool gameDataSent = false;
+    public static bool gameDataSent = false;
 
     static byte sendError;
     static byte[] sendBuffer = new byte[BUFFERSIZE];
