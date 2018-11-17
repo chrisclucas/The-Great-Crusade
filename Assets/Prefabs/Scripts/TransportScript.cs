@@ -76,6 +76,14 @@ public class TransportScript : MonoBehaviour
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
+                GlobalDefinitions.writeToLogFile("TransportScropt update(): executing");
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    channelEstablished - " + TransportScript.channelEstablished);
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    gameStarted - " + GlobalDefinitions.gameStarted);
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    gameDataSent - " + TransportScript.gameDataSent);
+
+
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.ConnectEvent:
@@ -131,6 +139,14 @@ public class TransportScript : MonoBehaviour
             {
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
+
+                GlobalDefinitions.writeToLogFile("TransportScropt update(): executing");
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    channelEstablished - " + TransportScript.channelEstablished);
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    gameStarted - " + GlobalDefinitions.gameStarted);
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+                GlobalDefinitions.writeToLogFile("TransportScropt update():    gameDataSent - " + TransportScript.gameDataSent);
+
 
                 switch (recNetworkEvent)
                 {
@@ -220,8 +236,8 @@ public class TransportScript : MonoBehaviour
                             TransportScript.SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
                         }
 
-                        GlobalDefinitions.writeToLogFile("TranportScript: setting gameDataSent to ture");
-                        gameDataSent = true;
+                        //GlobalDefinitions.writeToLogFile("TranportScript: setting gameDataSent to ture");
+                        //gameDataSent = true;
                     }
                 }
                 else
@@ -409,17 +425,17 @@ public class TransportScript : MonoBehaviour
         }
     }
 
-    private void checkForOpponentSyncMessage(string message)
-    {
-        if (!opponentComputerConfirmsSync && (message == "ConfirmSync"))
-        {
-            Debug.Log("Received opponent comfirmation");
-            GlobalDefinitions.writeToLogFile("Received opponent comfirmation" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-            //GlobalDefinitions.GameMode = GlobalDefinitions.GameModeValues.Network;
-            opponentComputerConfirmsSync = true;
-            //Destroy(GameObject.Find("NetworkSettingsCanvas"));
-        }
-    }
+   // private void checkForOpponentSyncMessage(string message)
+    //{
+    //    if (!opponentComputerConfirmsSync && (message == "ConfirmSync"))
+    //    {
+    //        Debug.Log("Received opponent comfirmation");
+    //        GlobalDefinitions.writeToLogFile("Received opponent comfirmation" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+    //        //GlobalDefinitions.GameMode = GlobalDefinitions.GameModeValues.Network;
+    //        opponentComputerConfirmsSync = true;
+    //        //Destroy(GameObject.Find("NetworkSettingsCanvas"));
+    //    }
+   // }
 
     private static void resetConnection(int hostId)
     {

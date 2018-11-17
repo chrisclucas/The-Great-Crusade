@@ -116,6 +116,14 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     {
         GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
 
+        GlobalDefinitions.writeToLogFile("okNetworkSettings: executing");
+        GlobalDefinitions.writeToLogFile("okNetworkSettings:    channelEstablished - " + TransportScript.channelEstablished);
+        GlobalDefinitions.writeToLogFile("okNetworkSettings:    gameStarted - " + GlobalDefinitions.gameStarted);
+        GlobalDefinitions.writeToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+        GlobalDefinitions.writeToLogFile("okNetworkSettings:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+        GlobalDefinitions.writeToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
+
+
         if (TransportScript.channelEstablished)
         {
             // This executes when the channel is established but the two computers have the same intiating state
@@ -144,7 +152,6 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
                 {
                     TransportScript.channelEstablished = true;
                     GlobalDefinitions.writeToLogFile("okNetworkSettings: Channel Established");
-                    Debug.Log("Channel Established");
                     GlobalDefinitions.guiUpdateStatusMessage("Channel Established");
                 }
                 else
