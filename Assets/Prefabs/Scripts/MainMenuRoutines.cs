@@ -30,7 +30,7 @@ public class MainMenuRoutines : MonoBehaviour
         GameObject tempText;
 
         float panelWidth = 6 * GlobalDefinitions.GUIUNITIMAGESIZE;
-        float panelHeight = 6 * GlobalDefinitions.GUIUNITIMAGESIZE;
+        float panelHeight = 5 * GlobalDefinitions.GUIUNITIMAGESIZE; // Is email game is an option this needs to change to 6
         Canvas getGameModeCanvas = new Canvas();
         GlobalDefinitions.createGUICanvas("GameModeCanvas", 
                 panelWidth, 
@@ -42,7 +42,7 @@ public class MainMenuRoutines : MonoBehaviour
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
-                5.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                4.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
 
@@ -50,21 +50,21 @@ public class MainMenuRoutines : MonoBehaviour
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
-                5.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                4.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
 
         // Now list the four game modes
         hotseatToggle = GlobalDefinitions.createToggle("hostseatToggle",
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
-                4.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
 
         tempText = GlobalDefinitions.createText("Hot-seat", "hotseatDescriptionString",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
-                4.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
         hotseatToggle.gameObject.AddComponent<GameModeSelectionButtonRoutines>();
@@ -72,14 +72,14 @@ public class MainMenuRoutines : MonoBehaviour
 
         AIToggle = GlobalDefinitions.createToggle("AIToggle",
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
-                3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
 
         tempText = GlobalDefinitions.createText("Play against Computer", "AIDescriptionString",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
-                3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
         AIToggle.gameObject.AddComponent<GameModeSelectionButtonRoutines>();
@@ -88,13 +88,13 @@ public class MainMenuRoutines : MonoBehaviour
 
         networkToggle = GlobalDefinitions.createToggle("networkToggle",
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
-                2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
         tempText = GlobalDefinitions.createText("Play against Internet opponent", "networkDescriptionString",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
-                2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
         networkToggle.gameObject.AddComponent<GameModeSelectionButtonRoutines>();
@@ -117,7 +117,7 @@ public class MainMenuRoutines : MonoBehaviour
         // Add an OK button
         okButton = GlobalDefinitions.createButton("getGameModeOKButton", "OK",
                 GlobalDefinitions.GUIUNITIMAGESIZE * 3 - (0.5f * panelWidth),
-                1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
         okButton.gameObject.AddComponent<GameModeSelectionButtonRoutines>();
         okButton.onClick.AddListener(okButton.GetComponent<GameModeSelectionButtonRoutines>().okGameMode);
