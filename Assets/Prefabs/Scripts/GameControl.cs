@@ -322,9 +322,25 @@ public class GameControl : MonoBehaviour
                 {
                     case NetworkEventType.DisconnectEvent:
                         TransportScript.OnDisconnect(TransportScript.recHostId, TransportScript.recConnectionId, (NetworkError)TransportScript.recError);
-                        GlobalDefinitions.writeToLogFile("TransportScript update(): Setting connectionConfirmed to false");
-                        TransportScript.connectionConfirmed = false;
+                        GlobalDefinitions.writeToLogFile("TransportScript update(): Disconnect event received - Setting connectionConfirmed to false");
+                        TransportScript.disconnectFromRemoteComputer();
+
+                        GlobalDefinitions.opponentIPAddress = "";
+                        GlobalDefinitions.userIsIntiating = false;
+                        GlobalDefinitions.isServer = false;
+                        GlobalDefinitions.hasReceivedConfirmation = false;
                         TransportScript.channelEstablished = false;
+                        TransportScript.connectionConfirmed = false;
+                        TransportScript.handshakeConfirmed = false;
+                        TransportScript.opponentComputerConfirmsSync = false;
+                        TransportScript.gameDataSent = false;
+
+                        // Since the connetion has been broken, quit the game and go back to the main menu
+                        GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
+                        guiButtonInstance.AddComponent<GUIButtonRoutines>();
+                        guiButtonInstance.GetComponent<GUIButtonRoutines>().yesMain();
+
+
                         break;
                     case NetworkEventType.DataEvent:
                         Stream stream = new MemoryStream(TransportScript.recBuffer);

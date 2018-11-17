@@ -67,7 +67,7 @@ public class GUIButtonRoutines : MonoBehaviour
     {
         List<GameObject> removeUnitList = new List<GameObject>();
 
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
+        if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network)
         {
             //FirewallRoutines.ClosePort(TransportScript.socketPort);
             TransportScript.disconnectFromRemoteComputer();
