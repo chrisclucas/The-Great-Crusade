@@ -76,12 +76,12 @@ public class TransportScript : MonoBehaviour
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
-                GlobalDefinitions.writeToLogFile("TransportScropt update(): executing");
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    channelEstablished - " + TransportScript.channelEstablished);
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    gameStarted - " + GlobalDefinitions.gameStarted);
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    gameDataSent - " + TransportScript.gameDataSent);
+                GlobalDefinitions.writeToLogFile("TransportScript update()1: executing");
+                GlobalDefinitions.writeToLogFile("TransportScript update()1:    channelEstablished - " + TransportScript.channelEstablished);
+                GlobalDefinitions.writeToLogFile("TransportScript update()1:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+                GlobalDefinitions.writeToLogFile("TransportScript update()1:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+                GlobalDefinitions.writeToLogFile("TransportScript update()1:    gameDataSent - " + TransportScript.gameDataSent);
+                GlobalDefinitions.writeToLogFile("TransportScript update()1:    gameStarted - " + GlobalDefinitions.gameStarted);
 
 
                 switch (recNetworkEvent)
@@ -140,13 +140,12 @@ public class TransportScript : MonoBehaviour
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
-                GlobalDefinitions.writeToLogFile("TransportScropt update(): executing");
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    channelEstablished - " + TransportScript.channelEstablished);
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    gameStarted - " + GlobalDefinitions.gameStarted);
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-                GlobalDefinitions.writeToLogFile("TransportScropt update():    gameDataSent - " + TransportScript.gameDataSent);
-
+                GlobalDefinitions.writeToLogFile("TransportScript update()2: executing");
+                GlobalDefinitions.writeToLogFile("TransportScript update()2:    channelEstablished - " + TransportScript.channelEstablished);
+                GlobalDefinitions.writeToLogFile("TransportScript update()2:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+                GlobalDefinitions.writeToLogFile("TransportScript update()2:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+                GlobalDefinitions.writeToLogFile("TransportScript update()2:    gameDataSent - " + TransportScript.gameDataSent);
+                GlobalDefinitions.writeToLogFile("TransportScript update()2:    gameStarted - " + GlobalDefinitions.gameStarted);
 
                 switch (recNetworkEvent)
                 {
@@ -176,6 +175,14 @@ public class TransportScript : MonoBehaviour
             // Executes from confirmation of handshake to sending of game data
             else if (handshakeConfirmed && !gameDataSent)
             {
+
+                GlobalDefinitions.writeToLogFile("TransportScript update()3: executing");
+                GlobalDefinitions.writeToLogFile("TransportScript update()3:    channelEstablished - " + TransportScript.channelEstablished);
+                GlobalDefinitions.writeToLogFile("TransportScript update()3:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+                GlobalDefinitions.writeToLogFile("TransportScript update()3:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+                GlobalDefinitions.writeToLogFile("TransportScript update()3:    gameDataSent - " + TransportScript.gameDataSent);
+                GlobalDefinitions.writeToLogFile("TransportScript update()3:    gameStarted - " + GlobalDefinitions.gameStarted);
+
                 GlobalDefinitions.chatPanel.SetActive(true);
                 GameObject.Find("ChatInputField").SetActive(true);
                 GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));  // Get rid of the gui, we don't need it if we got here.
@@ -242,7 +249,7 @@ public class TransportScript : MonoBehaviour
                 }
                 else
                 {
-                    GlobalDefinitions.writeToLogFile("Computer is not initiating game - setting gameStarted to true and localControl to false");
+                    GlobalDefinitions.writeToLogFile("TransportScript Update()3:Computer is not initiating game - setting gameStarted to true and localControl to false");
                     // The non-initiating computer will move on to game mode since the read of the game data is conducted with gameStarted set
                     GlobalDefinitions.gameStarted = true;
                     GlobalDefinitions.localControl = false;
@@ -252,6 +259,14 @@ public class TransportScript : MonoBehaviour
             // Last section before turning over to game play
             else if (gameDataSent)
             {
+
+                GlobalDefinitions.writeToLogFile("TransportScript update()4: executing");
+                GlobalDefinitions.writeToLogFile("TransportScript update()4:    channelEstablished - " + TransportScript.channelEstablished);
+                GlobalDefinitions.writeToLogFile("TransportScript update()4:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+                GlobalDefinitions.writeToLogFile("TransportScript update()4:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+                GlobalDefinitions.writeToLogFile("TransportScript update()4:    gameDataSent - " + TransportScript.gameDataSent);
+                GlobalDefinitions.writeToLogFile("TransportScript update()4:    gameStarted - " + GlobalDefinitions.gameStarted);
+
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
@@ -274,7 +289,7 @@ public class TransportScript : MonoBehaviour
 
                         if (switchEntries[0] == GlobalDefinitions.GAMEDATALOADEDKEYWORD)
                         {
-                            GlobalDefinitions.guiUpdateStatusMessage("Remote data load complete - read the file sent = " + fileName);
+                            GlobalDefinitions.guiUpdateStatusMessage("TransportScript Update()4:Remote data load complete - read the file sent = " + fileName);
 
                             // Call the routine to read a saved file
                             GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(fileName); // Note this will set the currentState based on the saved file
@@ -299,7 +314,7 @@ public class TransportScript : MonoBehaviour
                         break;
 
                     default:
-                        GlobalDefinitions.writeToLogFile("TransportScript update() 3: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        GlobalDefinitions.writeToLogFile("TransportScript update() 4: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         break;
                 }
             }
