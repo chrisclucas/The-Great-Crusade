@@ -571,7 +571,7 @@ public class CreateBoard : MonoBehaviour
         else
         {
             // This is a problem, the two hexes aren't neighbors
-            Debug.Log("Two hexes provided for river that don't abutt.  Hex 1 (" +
+            GlobalDefinitions.writeToLogFile("DrawRiverBetweenHexes: ERROR - Two hexes provided for river that don't abutt.  Hex 1 (" +
                     hex1.GetComponent<HexDatabaseFields>().xMapCoor + "," + hex1.GetComponent<HexDatabaseFields>().yMapCoor + ")  + Hex 2(" +
                     hex2.GetComponent<HexDatabaseFields>().xMapCoor + ", " + hex2.GetComponent<HexDatabaseFields>().yMapCoor + ") ");
         }

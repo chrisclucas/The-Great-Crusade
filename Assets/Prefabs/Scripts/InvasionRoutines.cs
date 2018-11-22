@@ -246,7 +246,7 @@ public class InvasionRoutines : MonoBehaviour
     {
         if (targetArea.turn == 0)
         {
-            Debug.Log("returnMaxTotalUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
+            GlobalDefinitions.writeToLogFile("returnMaxTotalUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
             return (0);
         }
         else if (targetArea.turn == 1)
@@ -261,7 +261,7 @@ public class InvasionRoutines : MonoBehaviour
     {
         if (targetArea.turn == 0)
         {
-            Debug.Log("returnMaxArmorUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
+            GlobalDefinitions.writeToLogFile("returnMaxArmorUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
             return (0);
         }
         else if (targetArea.turn == 1)
@@ -276,7 +276,7 @@ public class InvasionRoutines : MonoBehaviour
     {
         if (targetArea.turn == 0)
         {
-            Debug.Log("returnMaxInfantryUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
+            GlobalDefinitions.writeToLogFile("returnMaxInfantryUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
             return (0);
         }
         else if (targetArea.turn == 1)

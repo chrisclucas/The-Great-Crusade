@@ -137,10 +137,8 @@ public class ReadWriteRoutines : MonoBehaviour
             //if (GlobalDefinitions.localControl && (GlobalDefinitions.GameMode == GlobalDefinitions.GameModeValues.Network))
             //StartCoroutine(TransportScript.sendInitialGameData(GlobalDefinitions.SAVEFILETRANSMITCOMPLETEKEYWORD));
 
-            // If the current state is set-up mode then set the executeMode to executeSelectUnit so that the user can update the
-            // setup file read in.  Otherwise execute the 
-            //GlobalDefinitions.writeToLogFile("readTurnFile: File read complete.  Initialize Game State");
-            //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
+            GlobalDefinitions.writeToLogFile("readTurnFile: File read complete.  Initialize Game State");
+            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
         }
     }
 
@@ -215,7 +213,7 @@ public class ReadWriteRoutines : MonoBehaviour
         }
         else
         {
-            Debug.Log("Unit read error - " + entries[1] + ": found no location to place this unit");
+            GlobalDefinitions.writeToLogFile("processUnitRecord: Unit read error - " + entries[1] + ": found no location to place this unit");
         }
 
         if (!unit.GetComponent<UnitDatabaseFields>().unitEliminated && !unit.GetComponent<UnitDatabaseFields>().inBritain)

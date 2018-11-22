@@ -373,7 +373,6 @@ public class TransportScript : MonoBehaviour
         }
         else
         {
-            Debug.Log("Connection hasn't been confirmed");
             GlobalDefinitions.writeToLogFile("Connection hasn't been confirmed message = " + message + "  " + DateTime.Now.ToString("h:mm:ss tt"));
         }
     }

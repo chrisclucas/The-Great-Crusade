@@ -348,7 +348,6 @@ public class GameControl : MonoBehaviour
                             break;
                         }
                     default:
-                        Debug.LogError("Unknown network message type received: " + recNetworkEvent);
                         GlobalDefinitions.writeToLogFile("GameControl Update(): Unknown network message type received: " + recNetworkEvent);
                         break;
                 }

@@ -698,7 +698,7 @@ public class GlobalDefinitions : MonoBehaviour
         GameObject river = new GameObject();
 
         if (lineMaterial == null)
-            Debug.Log("Material returned null from Resources");
+            writeToLogFile("DrawBlueLineBetweenTwoPoints: ERROR - Material returned null from Resources");
 
         river.layer = LayerMask.NameToLayer("River");
         river.name = "River";
