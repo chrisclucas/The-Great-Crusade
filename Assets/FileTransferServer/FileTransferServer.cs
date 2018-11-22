@@ -331,9 +331,13 @@ public class FileTransferServer : MonoBehaviour
             }
             // If the message is too big will fail:
             if (data.Length > client.Client.SendBufferSize)
+            {
                 //GlobalDefinitions.writeToLogFile("[FIleTransferServer.SendData] Message bigger than " + client.Client.SendBufferSize.ToString() + " bytes. Please reduce the chunk size.");
+            }
             else
+            {
                 client.Send(data, data.Length, remoteEndPoint);
+            }
         }
     }
     /// <summary>String IP parser. If not parsed correctly returns null without crashing.</summary>
