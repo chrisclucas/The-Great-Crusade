@@ -130,10 +130,10 @@ public class CombatResolutionRoutines : MonoBehaviour
         panelImage.rectTransform.anchoredPosition = new Vector2(0, 0);
 
         if (panelHeight > (UnityEngine.Screen.height - 50))
-            combatResolutionGuiInstance = GlobalDefinitions.createScrollingGUICanvas("CombatResolutionGUIInstance", 
-                    panelWidth, 
-                    panelHeight, 
-                    ref combatContentPanel, 
+            combatResolutionGuiInstance = GlobalDefinitions.createScrollingGUICanvas("CombatResolutionGUIInstance",
+                    panelWidth,
+                    panelHeight,
+                    ref combatContentPanel,
                     ref combatCanvas);
         else
         {
@@ -1587,15 +1587,16 @@ public class CombatResolutionRoutines : MonoBehaviour
         }
 
         // Only pull up a gui if this isn't the AI calling the routine
-        if (GlobalDefinitions.localControl)
-        {
-            // If a gui isn't already up then call up a tactical air gui
-            if (GlobalDefinitions.guiList.Count == 0)
-                createTacticalAirGUI();
+        if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI))
+            return;
 
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                    GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().nonToggleSelection;
-        }
+        // If a gui isn't already up then call up a tactical air gui
+        if (GlobalDefinitions.guiList.Count == 0)
+            createTacticalAirGUI();
+
+        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
+                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().nonToggleSelection;
+
     }
 
     /// <summary>

@@ -1328,7 +1328,7 @@ public class GlobalDefinitions : MonoBehaviour
         GameObject tempToggle;
 
         createUnitImage(unit, name, xPosition, yPosition, canvasInstance);
-        tempToggle = createToggle(name + "UnitToggle", xPosition, yPosition - GUIUNITIMAGESIZE, canvasInstance);
+        tempToggle = createToggle(name, xPosition, yPosition - GUIUNITIMAGESIZE, canvasInstance);
 
         tempToggle.name = name;
 
