@@ -19,6 +19,7 @@ public class InvasionSelectionToggleRoutines : MonoBehaviour
             GlobalDefinitions.writeToLogFile("invadedAreaSelected: execute method set to executeSelectUnit()");
 
             GlobalDefinitions.writeToLogFile("invadedAreaSelected: removing gui with transform parent = " + transform.parent.name + "   game object name = " + transform.parent.gameObject.name);
+
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
             GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
             GlobalDefinitions.undoButton.GetComponent<Button>().interactable = true;
