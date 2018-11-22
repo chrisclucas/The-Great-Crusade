@@ -139,8 +139,8 @@ public class ReadWriteRoutines : MonoBehaviour
 
             // If the current state is set-up mode then set the executeMode to executeSelectUnit so that the user can update the
             // setup file read in.  Otherwise execute the 
-            GlobalDefinitions.writeToLogFile("readTurnFile: File read complete.  Initialize Game State");
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
+            //GlobalDefinitions.writeToLogFile("readTurnFile: File read complete.  Initialize Game State");
+            //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
         }
     }
 
