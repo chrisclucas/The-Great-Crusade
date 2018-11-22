@@ -2341,6 +2341,7 @@ public class GlobalDefinitions : MonoBehaviour
     public const string TOGGLEAIRSUPPORTCOMBATTOGGLE = "ToggleAirSupportCombatToggle";
     public const string TOGGLECARPETBOMBINGCOMBATTOGGLE = "ToggleCarpetBombingCombatToggle";
     public const string LOADCOMBATKEYWORD = "LoadCombat";
+    public const string DISCONNECTFROMREMOTECOMPUTER = "DisconnectFromRemoteComputer";
 }
 
 public class HexLocation
