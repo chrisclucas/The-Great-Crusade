@@ -33,6 +33,7 @@ public class InvasionRoutines : MonoBehaviour
     /// <returns></returns>
     public void selectInvasionArea()
     {
+        GlobalDefinitions.writeToLogFile("selectInvasionArea: executing");
         Canvas invasionAreaSelectionCanvasInstance = new Canvas();
 
         float panelWidth = 3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
