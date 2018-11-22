@@ -148,7 +148,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         // Put a series of text boxes along the top row to serve as the header
 
         // The first three columns contain images of the defending units
-        GlobalDefinitions.createText("Units on Defense", "UnitsHeader",
+        GlobalDefinitions.createText("Units on Defense", "UnitsHeaderText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
@@ -156,7 +156,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column four the defense factor will be listed
-        GlobalDefinitions.createText("Defense", "DefenseHeader",
+        GlobalDefinitions.createText("Defense", "DefenseHeaderText",
                 1.1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
@@ -164,7 +164,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column five the attack factor will be listed
-        GlobalDefinitions.createText("Attack", "AttackHeader",
+        GlobalDefinitions.createText("Attack", "AttackHeaderText",
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
@@ -172,7 +172,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column six the odds will be listed
-        GlobalDefinitions.createText("Odds", "OddsHeader",
+        GlobalDefinitions.createText("Odds", "OddsHeaderText",
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 6 * 1.25f - 0.5f * panelWidth,
@@ -182,14 +182,14 @@ public class CombatResolutionRoutines : MonoBehaviour
         // In column seven the carpet bombing indicator will be placed if Allied mode
         // if it is the German mode will put the close defense indicator
         if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
-            GlobalDefinitions.createText("Carpet Bomb", "CarpetBombHeader",
+            GlobalDefinitions.createText("Carpet Bomb", "CarpetBombHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
                     (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas).transform.SetParent(combatContentPanel.transform, false);
         else
-            GlobalDefinitions.createText("Air Def", "CloseDefenseHeader",
+            GlobalDefinitions.createText("Air Def", "CloseDefenseHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
@@ -458,7 +458,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     panelHeight,
                     ref carpetBombingCanvasInstance);
 
-            GlobalDefinitions.createText("Select a Result", "CarpetBombingGUIHeader",
+            GlobalDefinitions.createText("Select a Result", "CarpetBombingGUIHeaderText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -774,7 +774,7 @@ public class CombatResolutionRoutines : MonoBehaviour
 
         GlobalDefinitions.ExchangeGUIInstance = exchangeGuiInstance;
 
-        GlobalDefinitions.createText("Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected, "Exchange",
+        GlobalDefinitions.createText("Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected, "ExchangeText",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0.5f * (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -786,7 +786,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         for (int index = 0; index < unitList.Count; index++)
         {
             Toggle tempToggle;
-            tempToggle = GlobalDefinitions.createUnitTogglePair("Exchange" + index,
+            tempToggle = GlobalDefinitions.createUnitTogglePair("ExchangeUnitToggle" + index,
                     index * xSeperation + xOffset - 0.5f * panelWidth,
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas,
@@ -798,7 +798,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<ExchangeToggleRoutines>().addOrSubtractExchangeFactors());
         }
 
-        okButton = GlobalDefinitions.createButton("ExchangeOK", "OK",
+        okButton = GlobalDefinitions.createButton("ExchangeOKButton", "OK",
                 0.5f * (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
@@ -836,7 +836,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 ref combatCanvas);
         GlobalDefinitions.postCombatMovementGuiInstance = postCombatMovementGuiInstance;
 
-        GlobalDefinitions.createText("Select units to occupy the vacated hex", "PostCombatMovement",
+        GlobalDefinitions.createText("Select units to occupy the vacated hex", "PostCombatMovementText",
                 widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
@@ -849,7 +849,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         {
             Toggle tempToggle;
 
-            tempToggle = GlobalDefinitions.createUnitTogglePair("PostCombatMovement" + index,
+            tempToggle = GlobalDefinitions.createUnitTogglePair("PostCombatMovementUnitToggle" + index,
                     index * xSeperation + xOffset - 0.5f * panelWidth,
                     2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas,
@@ -865,7 +865,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<PostCombatMovementToggleRoutines>().moveSelectedUnit());
         }
 
-        okButton = GlobalDefinitions.createButton("PostCombatMovement", "OK",
+        okButton = GlobalDefinitions.createButton("PostCombatMovementButton", "OK",
                 widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
@@ -934,7 +934,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     panelHeight,
                     ref combatCanvas);
 
-            GlobalDefinitions.createText("Select unit to retreat", "Retreat",
+            GlobalDefinitions.createText("Select unit to retreat", "RetreatText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (GlobalDefinitions.retreatingUnits.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -947,7 +947,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             {
                 Toggle tempToggle;
 
-                tempToggle = GlobalDefinitions.createUnitTogglePair("Retreat" + index,
+                tempToggle = GlobalDefinitions.createUnitTogglePair("RetreatUnitToggle" + index,
                         index * xSeperation + xOffset - 0.5f * panelWidth,
                         1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         combatCanvas,
@@ -1460,7 +1460,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             {
                 Button closeDefenseLocateButton;
                 Button closeDefenseCancelButton;
-                GlobalDefinitions.createText("Close Defense", "CloseDefenseInstance",
+                GlobalDefinitions.createText("Close Defense", "CloseDefenseInstanceText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1524,21 +1524,21 @@ public class CombatResolutionRoutines : MonoBehaviour
 
                 yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-                GlobalDefinitions.createText("Assign Close Defense Support", "CloseDefense",
+                GlobalDefinitions.createText("Assign Close Defense Support", "CloseDefenseText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
 
-                GlobalDefinitions.createText("Assign River Interdiction", "RiverInterdiction",
+                GlobalDefinitions.createText("Assign River Interdiction", "RiverInterdictionText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
 
-                GlobalDefinitions.createText("Assign Unit Interdiction", "UnitInterdiction",
+                GlobalDefinitions.createText("Assign Unit Interdiction", "UnitInterdictionText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1548,7 +1548,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
             }
 
-            GlobalDefinitions.numberTacticalAirFactorsRemainingText = GlobalDefinitions.createText((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) + " number of air factors remaining", "RemainingFactors",
+            GlobalDefinitions.numberTacticalAirFactorsRemainingText = GlobalDefinitions.createText((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) + " number of air factors remaining", "RemainingFactorsText",
                     7 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,

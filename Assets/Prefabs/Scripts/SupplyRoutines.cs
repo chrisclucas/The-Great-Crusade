@@ -533,7 +533,7 @@ public class SupplyRoutines : MonoBehaviour
         yPosition = 0.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight;
 
         // Need an OK button to get out of the gui
-        okButton = GlobalDefinitions.createButton("SupplySourcesOK", "OK",
+        okButton = GlobalDefinitions.createButton("SupplySourcesOKButton", "OK",
                 5.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 yPosition,
                 supplyCanvas);
@@ -556,7 +556,7 @@ public class SupplyRoutines : MonoBehaviour
 
             // This creates a text box with the name of the source
             (GlobalDefinitions.createText(GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().hexName,
-                    "SourceName",
+                    "SourceNameText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
@@ -582,7 +582,7 @@ public class SupplyRoutines : MonoBehaviour
 
             // In column four the range of the source will be displayed
             (GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyRange).ToString(),
-                    "supplySourceRange",
+                    "supplySourceRangeText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
@@ -591,7 +591,7 @@ public class SupplyRoutines : MonoBehaviour
 
             // In column six the total supply capacity will be listed
             (GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyCapacity).ToString(),
-                    "SupplySourceCapacity",
+                    "SupplySourceCapacityText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
@@ -600,7 +600,7 @@ public class SupplyRoutines : MonoBehaviour
 
             // In column eight the unassigned capacity will be listed
             unassignedTextGameObject = GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().unassignedSupply).ToString(),
-                    "SupplySourceUnassigned",
+                    "SupplySourceUnassignedText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 6.5f * 1.25f - 0.5f * panelWidth,
@@ -626,7 +626,7 @@ public class SupplyRoutines : MonoBehaviour
         // Put a series of text boxes along the top row to serve as the header
         yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
         // The first column contains the names of the supply sources
-        (GlobalDefinitions.createText("Supply Source", "SupplySourceNameHeader",
+        (GlobalDefinitions.createText("Supply Source", "SupplySourceNameHeaderText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
@@ -636,7 +636,7 @@ public class SupplyRoutines : MonoBehaviour
         if (!displayOnly)
         {
             // In column three a toggle for selection will be listed
-            (GlobalDefinitions.createText("Select", "SupplySelection",
+            (GlobalDefinitions.createText("Select", "SupplySelectionText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 3 * 1.25f - 0.5f * panelWidth,
@@ -645,7 +645,7 @@ public class SupplyRoutines : MonoBehaviour
         }
 
             // In column four the range of the source will be listed
-            (GlobalDefinitions.createText("Range", "SupplyRange",
+            (GlobalDefinitions.createText("Range", "SupplyRangeText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
@@ -653,7 +653,7 @@ public class SupplyRoutines : MonoBehaviour
                     supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
         // In column five the Total Supply Capacity will be listed
-        (GlobalDefinitions.createText("Total  Capacity", "SuppplyCapacity",
+        (GlobalDefinitions.createText("Total  Capacity", "SuppplyCapacityText",
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
@@ -661,7 +661,7 @@ public class SupplyRoutines : MonoBehaviour
                 supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
         // In column six the Unassigned Capacity will be listed
-        (GlobalDefinitions.createText("Unassigned Supply", "UnassignedSupply",
+        (GlobalDefinitions.createText("Unassigned Supply", "UnassignedSupplyText",
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 6.5f * 1.25f - 0.5f * panelWidth,
@@ -809,7 +809,7 @@ public class SupplyRoutines : MonoBehaviour
                 panelWidth,
                 panelHeight,
                 ref supplyCanvas);
-        GlobalDefinitions.createText("Select a unit", "multiUnitSupply",
+        GlobalDefinitions.createText("Select a unit", "multiUnitSupplyText",
                 (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 //0.5f * (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -834,7 +834,7 @@ public class SupplyRoutines : MonoBehaviour
 
                 Toggle tempToggle;
 
-                tempToggle = GlobalDefinitions.createUnitTogglePair("multiUnitSupply" + index,
+                tempToggle = GlobalDefinitions.createUnitTogglePair("multiUnitSupplyUnitToggle" + index,
                         index * xSeperation + xOffset - 0.5f * panelWidth,
                         2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         supplyCanvas,

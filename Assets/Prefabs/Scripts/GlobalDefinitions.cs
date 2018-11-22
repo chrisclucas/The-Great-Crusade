@@ -1249,7 +1249,7 @@ public class GlobalDefinitions : MonoBehaviour
         tempButton.image.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         tempButton.image.rectTransform.sizeDelta = new Vector2(90, 30);
         tempButton.image.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
-        tempButton.name = name + "Button";
+        tempButton.name = name;
         tempButton.GetComponentInChildren<Text>().text = buttonText;
         return (tempButton);
     }
@@ -1271,7 +1271,7 @@ public class GlobalDefinitions : MonoBehaviour
 
     public static GameObject createText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, Canvas canvasInstance)
     {
-        GameObject textGameObject = new GameObject(name + "Text");
+        GameObject textGameObject = new GameObject(name);
         textGameObject.transform.SetParent(canvasInstance.transform, false);
         Text tempText = textGameObject.AddComponent<Text>();
         tempText.text = textMessage;
@@ -1302,7 +1302,6 @@ public class GlobalDefinitions : MonoBehaviour
     public static void updateHexValueText(GameObject hex)
     {
         GameObject textGameObject = GameObject.Find(hex.name + "HexValueText");
-        //Debug.Log("Searching for " + hex.name + "Text");
         textGameObject.GetComponent<Text>().text = Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexValue);
 
     }
@@ -1320,7 +1319,7 @@ public class GlobalDefinitions : MonoBehaviour
         //tempInputField.image.rectTransform.sizeDelta = new Vector2(180, 30);
         tempInputField.image.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
         tempInputField.name = name + "InputField";
-        tempInputField.text = "192.168.0.163";
+        tempInputField.text = "192.168.1.73";
         return (tempInputField);
     }
 
@@ -1331,7 +1330,7 @@ public class GlobalDefinitions : MonoBehaviour
         createUnitImage(unit, name, xPosition, yPosition, canvasInstance);
         tempToggle = createToggle(name + "UnitToggle", xPosition, yPosition - GUIUNITIMAGESIZE, canvasInstance);
 
-        tempToggle.name = name + "UnitToggle";
+        tempToggle.name = name;
 
         return (tempToggle.GetComponent<Toggle>());
     }
@@ -1969,7 +1968,7 @@ public class GlobalDefinitions : MonoBehaviour
         Canvas victoryCanvas = null;
         createGUICanvas("AlliedVictoryMessage", 1000, 200, ref victoryCanvas);
         createText("..." + message + " ...", "VictoryMessageText", 1000, 200, 0, 0, victoryCanvas);
-        okButton = createButton("VictoryOK", "OK",
+        okButton = createButton("VictoryOKButton", "OK",
                 0,
                 -30,
                 victoryCanvas);

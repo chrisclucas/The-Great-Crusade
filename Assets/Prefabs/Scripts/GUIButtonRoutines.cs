@@ -438,7 +438,7 @@ public class GUIButtonRoutines : MonoBehaviour
                 panelHeight,
                 ref settingCanvas);
 
-        GlobalDefinitions.createText("Settings", "Settings",
+        GlobalDefinitions.createText("Settings", "SettingsText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
@@ -452,28 +452,28 @@ public class GUIButtonRoutines : MonoBehaviour
         agressivenessSlider.value = GlobalDefinitions.aggressiveSetting;
         agressivenessSlider.onValueChanged.AddListener(delegate { updateAggressivenessSettingText(agressivenessSlider.value); });
 
-        GlobalDefinitions.createText("Aggressive", "Aggressive",
+        GlobalDefinitions.createText("Aggressive", "AggressiveText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        GlobalDefinitions.createText("Defensive", "Defensive",
+        GlobalDefinitions.createText("Defensive", "DefensiveText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        GlobalDefinitions.aggressivenessSettingText = GlobalDefinitions.createText(Convert.ToString(agressivenessSlider.value), "Aggressiveness",
+        GlobalDefinitions.aggressivenessSettingText = GlobalDefinitions.createText(Convert.ToString(agressivenessSlider.value), "AggressivenessSettingText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        GlobalDefinitions.createText("Computer Aggressiveness", "Aggressiveness",
+        GlobalDefinitions.createText("Computer Aggressiveness", "ComputerAggressivenessText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
@@ -487,28 +487,28 @@ public class GUIButtonRoutines : MonoBehaviour
         diffiultySlider.value = GlobalDefinitions.difficultySetting;
         diffiultySlider.onValueChanged.AddListener(delegate { updateDifficultySettingText(diffiultySlider.value); });
 
-        GlobalDefinitions.createText("Harder", "Harder",
+        GlobalDefinitions.createText("Harder", "HarderText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 settingCanvas);
 
-        GlobalDefinitions.createText("Easier", "Easier",
+        GlobalDefinitions.createText("Easier", "EasierText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 settingCanvas);
 
-        GlobalDefinitions.difficultySettingText = GlobalDefinitions.createText(Convert.ToString(diffiultySlider.value), "Difficulty",
+        GlobalDefinitions.difficultySettingText = GlobalDefinitions.createText(Convert.ToString(diffiultySlider.value), "DifficultySettingText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 -0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        GlobalDefinitions.createText("Game Difficulty", "Difficulty",
+        GlobalDefinitions.createText("Game Difficulty", "GameDifficultyText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,

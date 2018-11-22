@@ -38,7 +38,7 @@ public class MainMenuRoutines : MonoBehaviour
                 ref getGameModeCanvas);
 
         // This gui has two columns, selection toggles and desription
-        tempText = GlobalDefinitions.createText("Select", "gameModeSelectString",
+        tempText = GlobalDefinitions.createText("Select", "gameModeSelectText",
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
@@ -46,7 +46,7 @@ public class MainMenuRoutines : MonoBehaviour
                 getGameModeCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
 
-        tempText = GlobalDefinitions.createText("Game Mode", "gameModeDescriptionString",
+        tempText = GlobalDefinitions.createText("Game Mode", "gameModeDescriptionText",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
@@ -60,7 +60,7 @@ public class MainMenuRoutines : MonoBehaviour
                 3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
 
-        tempText = GlobalDefinitions.createText("Hot-seat", "hotseatDescriptionString",
+        tempText = GlobalDefinitions.createText("Hot-seat", "hotseatDescriptionText",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
@@ -75,7 +75,7 @@ public class MainMenuRoutines : MonoBehaviour
                 2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
 
-        tempText = GlobalDefinitions.createText("Play against Computer", "AIDescriptionString",
+        tempText = GlobalDefinitions.createText("Play against Computer", "AIDescriptionText",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
@@ -90,7 +90,7 @@ public class MainMenuRoutines : MonoBehaviour
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getGameModeCanvas);
-        tempText = GlobalDefinitions.createText("Play against Internet opponent", "networkDescriptionString",
+        tempText = GlobalDefinitions.createText("Play against Internet opponent", "networkDescriptionText",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
@@ -140,7 +140,7 @@ public class MainMenuRoutines : MonoBehaviour
                 ref networkSettingsCanvas);
 
         // Add an OK button
-        okButton = GlobalDefinitions.createButton("networkSettingsOK", "OK",
+        okButton = GlobalDefinitions.createButton("networkSettingsOKButton", "OK",
                 8 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelWidth),
                 1 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 networkSettingsCanvas);
@@ -156,7 +156,7 @@ public class MainMenuRoutines : MonoBehaviour
         cancelButton.onClick.AddListener(cancelButton.GetComponent<NetworkSettingsButtonRoutines>().cancelNetworkSettings);
 
         // Get opponent ip address from the user
-        tempText = GlobalDefinitions.createText("Enter opponents IP address", "opponentIPAddr",
+        tempText = GlobalDefinitions.createText("Enter opponents IP address", "opponentIPAddrLabelText",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelWidth),

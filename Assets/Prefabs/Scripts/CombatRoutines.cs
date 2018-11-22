@@ -306,7 +306,7 @@ public class CombatRoutines : MonoBehaviour
                 panelHeight,
                 ref combatCanvas);
 
-        GlobalDefinitions.createText("Combat Odds", "Odds",
+        GlobalDefinitions.createText("Combat Odds", "OddsText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 (0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE) - 0.5f * panelWidth,
@@ -379,7 +379,7 @@ public class CombatRoutines : MonoBehaviour
             else
                 airToggle.GetComponent<Toggle>().interactable = false;
 
-            GlobalDefinitions.createText("Air Support", "CombatAirSupport",
+            GlobalDefinitions.createText("Air Support", "CombatAirSupportText",
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth - 1 * GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -400,7 +400,7 @@ public class CombatRoutines : MonoBehaviour
             else
                 carpetToggle.GetComponent<Toggle>().interactable = false;
 
-            GlobalDefinitions.createText("Carpet Bombing", "CarpetBombingSupport",
+            GlobalDefinitions.createText("Carpet Bombing", "CarpetBombingSupportText",
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -409,7 +409,7 @@ public class CombatRoutines : MonoBehaviour
         }
 
         // OK button
-        okButton = GlobalDefinitions.createButton("combatOK", "OK",
+        okButton = GlobalDefinitions.createButton("combatOKButton", "OK",
                 0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth - 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
@@ -418,7 +418,7 @@ public class CombatRoutines : MonoBehaviour
         okButton.onClick.AddListener(okButton.GetComponent<CombatGUIOK>().okCombatGUISelection);
 
         // Cancel button
-        cancelButton = GlobalDefinitions.createButton("combatCancel", "Cancel",
+        cancelButton = GlobalDefinitions.createButton("combatCancelButton", "Cancel",
                 0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
@@ -499,7 +499,7 @@ public class CombatRoutines : MonoBehaviour
                         bombingCanvas);
             }
 
-            tempLocateButton = GlobalDefinitions.createButton("BombingLocate" + index, "Locate",
+            tempLocateButton = GlobalDefinitions.createButton("BombingLocateButton" + index, "Locate",
                     3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     (index + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     bombingCanvas);

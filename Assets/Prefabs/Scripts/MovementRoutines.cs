@@ -924,7 +924,7 @@ public class MovementRoutines : MonoBehaviour
                     panelWidth,
                     panelHeight,
                     ref movementCanvas);
-            GlobalDefinitions.createText("Select a unit", "multiUnitMovement",
+            GlobalDefinitions.createText("Select a unit", "multiUnitMovementText",
                     (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -937,7 +937,7 @@ public class MovementRoutines : MonoBehaviour
             {
                 Toggle tempToggle;
 
-                tempToggle = GlobalDefinitions.createUnitTogglePair("multiUnitMovement" + index,
+                tempToggle = GlobalDefinitions.createUnitTogglePair("multiUnitMovementUnitToggle" + index,
                     index * xSeperation + xOffset - 0.5f * panelWidth,
                     2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     movementCanvas,
