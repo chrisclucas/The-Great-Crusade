@@ -443,7 +443,7 @@ public class GameControl : MonoBehaviour
                 TacticalAirToggleRoutines.tacticalAirOK();
                 break;
             case GlobalDefinitions.ADDCLOSEDEFENSEKEYWORD:
-                GameObject.Find("CloseDefenseToggle").GetComponent<TacticalAirToggleRoutines>().addCloseDefenseHex();
+                GameObject.Find("CloseDefense").GetComponent<TacticalAirToggleRoutines>().addCloseDefenseHex();
                 break;
             case GlobalDefinitions.CANCELCLOSEDEFENSEKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().cancelCloseDefense();
@@ -452,7 +452,7 @@ public class GameControl : MonoBehaviour
                 GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().locateCloseDefense();
                 break;
             case GlobalDefinitions.ADDRIVERINTERDICTIONKEYWORD:
-                GameObject.Find("RiverInterdictionToggle").GetComponent<TacticalAirToggleRoutines>().addRiverInterdiction();
+                GameObject.Find("RiverInterdiction").GetComponent<TacticalAirToggleRoutines>().addRiverInterdiction();
                 break;
             case GlobalDefinitions.CANCELRIVERINTERDICTIONKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().cancelRiverInterdiction();
@@ -461,7 +461,7 @@ public class GameControl : MonoBehaviour
                 GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().locateRiverInterdiction();
                 break;
             case GlobalDefinitions.ADDUNITINTERDICTIONKEYWORD:
-                GameObject.Find("UnitInterdictionToggle").GetComponent<TacticalAirToggleRoutines>().addInterdictedUnit();
+                GameObject.Find("UnitInterdiction").GetComponent<TacticalAirToggleRoutines>().addInterdictedUnit();
                 break;
             case GlobalDefinitions.CANCELUNITINTERDICTIONKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().cancelInterdictedUnit();
