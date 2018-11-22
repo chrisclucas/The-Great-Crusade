@@ -790,7 +790,7 @@ public class GameControl : MonoBehaviour
             inputMessage.GetComponent<InputMessage>().hex = null;
             inputMessage.GetComponent<InputMessage>().unit = null;
             GlobalDefinitions.writeToLogFile("setGameState: call intialization");
-            gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage.GetComponent<InputMessage>());
+            //gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage.GetComponent<InputMessage>());
         }
     }
 
