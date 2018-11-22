@@ -33,6 +33,14 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     public void goToMainMenu()
     {
+
+        // If this is a network game and the player isn't in control do not allow to reset.  Player has to quit to exit in this case.
+        if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+        {
+            GlobalDefinitions.guiUpdateStatusMessage("Cannot reset game when not in control");
+            return;
+        }
+
         // Turn off the button so that the same gui can't be pulled up
         GameObject.Find("MainMenuButton").GetComponent<Button>().interactable = false;
 
@@ -67,10 +75,10 @@ public class GUIButtonRoutines : MonoBehaviour
     {
         List<GameObject> removeUnitList = new List<GameObject>();
 
+        // If this is a network game I've already checked that the player is in control
         if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network)
         {
-            //FirewallRoutines.ClosePort(TransportScript.socketPort);
-            TransportScript.disconnectFromRemoteComputer();
+            TransportScript.resetConnection(TransportScript.recHostId);
         }
 
         // Copy list so the guis can be removed

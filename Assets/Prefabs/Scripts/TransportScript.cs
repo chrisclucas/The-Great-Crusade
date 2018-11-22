@@ -87,9 +87,9 @@ public class TransportScript : MonoBehaviour
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.ConnectEvent:
+                        GlobalDefinitions.writeToLogFile("TransportScript update()1: OnConnect: (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         GlobalDefinitions.writeToLogFile("TransportScript update()1: Setting connectionConfirmed to true");
                         connectionConfirmed = true;
-                        OnConnect(recHostId, recConnectionId, (NetworkError)recError);
                         GlobalDefinitions.communicationSocket = recHostId;
                         GlobalDefinitions.communicationChannel = recConnectionId;
 
@@ -99,7 +99,8 @@ public class TransportScript : MonoBehaviour
                         break;
 
                     case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.writeToLogFile("TransportScript update()1: disconnect event - calling resetConnection");
+                        GlobalDefinitions.guiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
+                        GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));
                         resetConnection(recHostId);
                         break;
 
@@ -150,7 +151,8 @@ public class TransportScript : MonoBehaviour
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.writeToLogFile("TransportScript update()2: disconnect event - calling resetConnection");
+                        GlobalDefinitions.guiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
+                        GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));
                         resetConnection(recHostId);
                         break;
 
@@ -273,7 +275,8 @@ public class TransportScript : MonoBehaviour
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.writeToLogFile("TransportScript update()4: disconnect event - calling resetConnection");
+                        GlobalDefinitions.guiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
+                        GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));
                         resetConnection(recHostId);
                         break;
 
@@ -347,12 +350,6 @@ public class TransportScript : MonoBehaviour
             }
         }
         return (true); // Connection already established
-    }
-
-    public static void disconnectFromRemoteComputer()
-    {
-        byte error;
-        NetworkTransport.Disconnect(clientSocket, connectionId, out error);
     }
 
     /// <summary>
@@ -440,36 +437,27 @@ public class TransportScript : MonoBehaviour
         }
     }
 
-   // private void checkForOpponentSyncMessage(string message)
-    //{
-    //    if (!opponentComputerConfirmsSync && (message == "ConfirmSync"))
-    //    {
-    //        Debug.Log("Received opponent comfirmation");
-    //        GlobalDefinitions.writeToLogFile("Received opponent comfirmation" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-    //        //GlobalDefinitions.GameMode = GlobalDefinitions.GameModeValues.Network;
-    //        opponentComputerConfirmsSync = true;
-    //        //Destroy(GameObject.Find("NetworkSettingsCanvas"));
-    //    }
-   // }
-
-    private static void resetConnection(int hostId)
+    public static void resetConnection(int hostId)
     {
         byte error;
 
-        OnDisconnect(recHostId, recConnectionId, (NetworkError)recError);
-        GlobalDefinitions.writeToLogFile("Disconnect event received - errror " + (NetworkError)recError + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-        disconnectionTime = connectionTime - DateTime.Now;
-        Debug.Log("Disconnect event received. Time since connection attempt = " + disconnectionTime.ToString());
+        GlobalDefinitions.writeToLogFile("TransportScript.resetConnection: (hostId = " + hostId + ", connectionId = "
+                + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
-        GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));
-        channelEstablished = false;
-        GlobalDefinitions.writeToLogFile("resetConnection: Setting connectionConfirmed to false");
-        connectionConfirmed = false;
-        handshakeConfirmed = false;
-        opponentComputerConfirmsSync = false;
+        // Send a disconnect command to the remote computer
+        SendSocketMessage(GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER);
+
         GlobalDefinitions.localControl = false;
+        GlobalDefinitions.opponentIPAddress = "";
         GlobalDefinitions.userIsIntiating = false;
-        GlobalDefinitions.writeToLogFile("resetConnection: disconnecting remote computer");
+        GlobalDefinitions.isServer = false;
+        GlobalDefinitions.hasReceivedConfirmation = false;
+        GlobalDefinitions.gameStarted = false;
+        TransportScript.channelEstablished = false;
+        TransportScript.connectionConfirmed = false;
+        TransportScript.handshakeConfirmed = false;
+        TransportScript.opponentComputerConfirmsSync = false;
+        TransportScript.gameDataSent = false;
 
         if (hostId == serverSocket)
         {
@@ -487,37 +475,17 @@ public class TransportScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Need to send game data through this IEnumerator routine since pausing is needed to avoid resource issues
+    /// Writes data event to log file
     /// </summary>
+    /// <param name="hostId"></param>
+    /// <param name="connectionId"></param>
+    /// <param name="channelId"></param>
     /// <param name="message"></param>
-    /// <returns></returns>
-    //public static IEnumerator sendInitialGameData(string message)
-    //{
-        // I'm using the pause here during the initial send to make sure I don't overwhelm the send queue
-        //yield return new WaitForSeconds(5);
-        //SendSocketMessage(message);
-    //}
-
-    public static void OnConnect(int hostId, int conenctionId, NetworkError error)
-    {
-        GlobalDefinitions.writeToLogFile("TransportScript.OnConnect: (hostId = " + hostId + ", connectionId = " + connectionId + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-    }
-
-    public static void OnDisconnect(int hostId, int connectionId, NetworkError error)
-    {
-        GlobalDefinitions.writeToLogFile("TransportScript.OnDisconnect: (hostId = " + hostId + ", connectionId = "
-            + connectionId + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-    }
-
-    public static void OnBroadcast(int hostId, byte[] data, int size, NetworkError error)
-    {
-        GlobalDefinitions.writeToLogFile("TransportScript.OnBroadcast: (hostId = " + hostId + ", data = "
-            + data + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-    }
-
+    /// <param name="size"></param>
+    /// <param name="error"></param>
     public static void OnData(int hostId, int connectionId, int channelId, string message, int size, NetworkError error)
     {
-        GlobalDefinitions.writeToLogFile("TransportScript.OnData: (hostId = " + hostId + ", connectionId = "
+        GlobalDefinitions.writeToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
             + connectionId + ", channelId = " + channelId + ", data = "
             + message + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
     }

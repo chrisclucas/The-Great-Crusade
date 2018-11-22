@@ -321,20 +321,10 @@ public class GameControl : MonoBehaviour
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.DisconnectEvent:
-                        TransportScript.OnDisconnect(TransportScript.recHostId, TransportScript.recConnectionId, (NetworkError)TransportScript.recError);
-                        GlobalDefinitions.writeToLogFile("TransportScript update(): Disconnect event received - Setting connectionConfirmed to false");
-                        TransportScript.disconnectFromRemoteComputer();
-
-                        GlobalDefinitions.opponentIPAddress = "";
-                        GlobalDefinitions.userIsIntiating = false;
-                        GlobalDefinitions.isServer = false;
-                        GlobalDefinitions.hasReceivedConfirmation = false;
-                        GlobalDefinitions.gameStarted = false;
-                        TransportScript.channelEstablished = false;
-                        TransportScript.connectionConfirmed = false;
-                        TransportScript.handshakeConfirmed = false;
-                        TransportScript.opponentComputerConfirmsSync = false;
-                        TransportScript.gameDataSent = false;
+                        GlobalDefinitions.writeToLogFile("GameControl udpate() OnDisconnect: (hostId = " + TransportScript.recHostId + ", connectionId = "
+                                + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        GlobalDefinitions.guiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
+                        TransportScript.resetConnection(TransportScript.recHostId);
 
                         // Since the connetion has been broken, quit the game and go back to the main menu
                         GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
@@ -354,7 +344,7 @@ public class GameControl : MonoBehaviour
                         break;
                     case NetworkEventType.ConnectEvent:
                         {
-                            TransportScript.OnConnect(TransportScript.recHostId, TransportScript.recConnectionId, (NetworkError)TransportScript.recError);
+                            GlobalDefinitions.writeToLogFile("TransportScript.OnConnect: (hostId = " + TransportScript.recHostId + ", connectionId = " + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                             break;
                         }
                     default:
@@ -672,6 +662,14 @@ public class GameControl : MonoBehaviour
                         else
                             GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().isOn = true;
                     }
+                    break;
+                }
+            case GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER:
+                {
+                    // Quit the game and go back to the main menu
+                    GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
+                    guiButtonInstance.AddComponent<GUIButtonRoutines>();
+                    guiButtonInstance.GetComponent<GUIButtonRoutines>().yesMain();
                     break;
                 }
 
