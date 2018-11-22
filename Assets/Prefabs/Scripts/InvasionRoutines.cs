@@ -73,6 +73,7 @@ public class InvasionRoutines : MonoBehaviour
     /// <param name="invadedAreaSectionIndex"></param>
     public void setInvasionArea(int invadedAreaSectionIndex)
     {
+        GlobalDefinitions.writeToLogFile("setInvasionArea: executing with index " + invadedAreaSectionIndex);
         GlobalDefinitions.numberInvasionsExecuted++;
         if (GlobalDefinitions.turnNumber == 1)
         {

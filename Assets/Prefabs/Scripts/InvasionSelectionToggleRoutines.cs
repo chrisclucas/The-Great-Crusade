@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class InvasionSelectionToggleRoutines : MonoBehaviour
@@ -11,11 +9,16 @@ public class InvasionSelectionToggleRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
+            GlobalDefinitions.writeToLogFile("invadedAreaSelected: exeucuting");
             if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
                 TransportScript.SendSocketMessage(GlobalDefinitions.INVASIONAREASELECTIONKEYWORD + " " + name);
             GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().setInvasionArea(index);
+
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
                     GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedInvasionState>().executeSelectUnit;
+            GlobalDefinitions.writeToLogFile("invadedAreaSelected: execute method set to executeSelectUnit()");
+
+            GlobalDefinitions.writeToLogFile("invadedAreaSelected: removing gui with transform parent = " + transform.parent.name + "   game object name = " + transform.parent.gameObject.name);
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
             GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
             GlobalDefinitions.undoButton.GetComponent<Button>().interactable = true;
