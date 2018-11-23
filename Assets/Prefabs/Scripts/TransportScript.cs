@@ -39,10 +39,9 @@ public class TransportScript : MonoBehaviour
 
     public static string fileName;
 
-    void Start()
-    //public void transportScriptStart()
+    static void networkInit()
     {
-        GlobalDefinitions.writeToLogFile("TransportScript update(): executing start()");
+        GlobalDefinitions.writeToLogFile("TransportScript networkInit(): executing");
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
         globalConfig.MaxPacketSize = 1500;
@@ -51,7 +50,6 @@ public class TransportScript : MonoBehaviour
         config.PacketSize = 1400;
         config.MaxConnectionAttempt = Byte.MaxValue;
 
-        //reliableChannelId = config.AddChannel(QosType.ReliableSequenced);
         reliableChannelId = config.AddChannel(QosType.AllCostDelivery);
 
         int maxConnections = 2;
@@ -63,6 +61,12 @@ public class TransportScript : MonoBehaviour
 
         serverSocket = NetworkTransport.AddHost(topology, socketPort);
         clientSocket = NetworkTransport.AddHost(topology);
+    }
+
+    void Start()
+    {
+        GlobalDefinitions.writeToLogFile("TransportScript executing start()");
+        networkInit();
     }
 
     void Update()
@@ -82,8 +86,6 @@ public class TransportScript : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("TransportScript update()1:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
                 GlobalDefinitions.writeToLogFile("TransportScript update()1:    gameDataSent - " + TransportScript.gameDataSent);
                 GlobalDefinitions.writeToLogFile("TransportScript update()1:    gameStarted - " + GlobalDefinitions.gameStarted);
-
-                SendMessage("ConfirmSync");
 
                 switch (recNetworkEvent)
                 {
@@ -472,6 +474,8 @@ public class TransportScript : MonoBehaviour
         }
         else
             GlobalDefinitions.writeToLogFile("resetConnectin: Request recieved to disconnect unknown host - " + hostId);
+
+        networkInit();
     }
 
     /// <summary>
