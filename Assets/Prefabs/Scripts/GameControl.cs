@@ -783,15 +783,6 @@ public class GameControl : MonoBehaviour
                 gameStateControlInstance.GetComponent<gameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
             }
         }
-
-        GlobalDefinitions.writeToLogFile("setGameState: localControl = " + GlobalDefinitions.localControl);
-        if (!GlobalDefinitions.localControl)
-        {
-            inputMessage.GetComponent<InputMessage>().hex = null;
-            inputMessage.GetComponent<InputMessage>().unit = null;
-            GlobalDefinitions.writeToLogFile("setGameState: call intialization");
-            //gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage.GetComponent<InputMessage>());
-        }
     }
 
     /// <summary>
