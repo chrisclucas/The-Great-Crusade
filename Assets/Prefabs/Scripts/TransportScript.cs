@@ -83,6 +83,7 @@ public class TransportScript : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("TransportScript update()1:    gameDataSent - " + TransportScript.gameDataSent);
                 GlobalDefinitions.writeToLogFile("TransportScript update()1:    gameStarted - " + GlobalDefinitions.gameStarted);
 
+                SendMessage("ConfirmSync");
 
                 switch (recNetworkEvent)
                 {
