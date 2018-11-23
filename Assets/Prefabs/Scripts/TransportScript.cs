@@ -41,6 +41,8 @@ public class TransportScript : MonoBehaviour
 
     static void networkInit()
     {
+        byte error;
+
         GlobalDefinitions.writeToLogFile("TransportScript networkInit(): executing");
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
@@ -58,6 +60,17 @@ public class TransportScript : MonoBehaviour
         topology.SentMessagePoolSize = 1024; // Default 128
 
         NetworkTransport.Init(globalConfig);
+
+        if (serverSocket != -1)
+        {
+            NetworkTransport.Disconnect(serverSocket, connectionId, out error);
+            serverSocket = -1;
+        }
+        if (clientSocket != -1)
+        {
+            NetworkTransport.Disconnect(clientSocket, connectionId, out error);
+            clientSocket = -1;
+        }
 
         serverSocket = NetworkTransport.AddHost(topology, socketPort);
         clientSocket = NetworkTransport.AddHost(topology);
