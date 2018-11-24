@@ -100,6 +100,8 @@ public class MainMenuRoutines : MonoBehaviour
         networkToggle.gameObject.AddComponent<GameModeSelectionButtonRoutines>();
         networkToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => networkToggle.gameObject.GetComponent<GameModeSelectionButtonRoutines>().toggleChange());
 
+        networkToggle.GetComponent<Toggle>().interactable = false;
+
         //emailToggle = GlobalDefinitions.createToggle("emailToggle",
         //        GlobalDefinitions.GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
         //        1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),

@@ -2236,8 +2236,6 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="element"></param>
     public static void removeGUI(GameObject element)
     {
-        foreach (GameObject temp in guiList)
-            GlobalDefinitions.writeToLogFile("removeGUI:    active gui element - " + temp.name);
         if (guiList.Contains(element))
             guiList.Remove(element);
         DestroyImmediate(element);

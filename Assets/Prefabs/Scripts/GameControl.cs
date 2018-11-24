@@ -76,7 +76,7 @@ public class GameControl : MonoBehaviour
             GlobalDefinitions.guiUpdateStatusMessage("ERROR: Cannot access log file - cannot continue");
         }
 
-        GlobalDefinitions.writeToLogFile ("Game Version " + GlobalDefinitions.releaseVersion);
+        GlobalDefinitions.writeToLogFile("Game Version " + GlobalDefinitions.releaseVersion);
 
         // There are three files that should have been installed with the game.  Note, I could get rid of all three of these and just have the
         // board and the units built into the game rather than reading them.  But I haven't done this based on a somewhat vauge idea that this will
@@ -218,8 +218,8 @@ public class GameControl : MonoBehaviour
                 {
                     // Check if the user double clicked
                     if ((Time.time < initialTouch + 0.5f) &&
-                            ((gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") || 
-                            (gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance") || 
+                            ((gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
+                            (gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance") ||
                             (gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "setUpStateInstance")))
                     {
                         // When we have a double click that means that there was already a single click that would have selected a unit
@@ -230,8 +230,9 @@ public class GameControl : MonoBehaviour
                             GlobalDefinitions.unhighlightHex(hex.gameObject);
                         GlobalDefinitions.selectedUnit = null;
 
-                        sendMouseDoubleClickToNetwork(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
-                            gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+                        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+                            sendMouseDoubleClickToNetwork(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
+                                    gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
 
                         movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
                             gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
