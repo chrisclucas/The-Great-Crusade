@@ -181,7 +181,6 @@ public class CombatToggleRoutines : MonoBehaviour
                             if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) &&
                                     (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == defendingUnit))
                             {
-                                GlobalDefinitions.writeToLogFile("refreshDefendersBasedOnAttackers: decommiting defender and making non-interactable " + defendingUnit.name + "due to attacker " + attackingUnit.name + " isCommittedToAnAttack = " + attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack);
                                 GlobalDefinitions.unhighlightUnit(defendingUnit);
                                 defendingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
                                 childTransform.gameObject.GetComponent<Toggle>().isOn = false;

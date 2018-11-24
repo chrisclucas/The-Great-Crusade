@@ -34,12 +34,12 @@ public class TransportScript : MonoBehaviour
     public static int dataSize;
     public static byte recError;
 
-    private static System.DateTime connectionTime;
+    //private static System.DateTime connectionTime;
     private static System.TimeSpan disconnectionTime;
 
     public static string fileName;
 
-    static void networkInit()
+    public static void networkInit()
     {
         byte error;
 
@@ -78,8 +78,8 @@ public class TransportScript : MonoBehaviour
 
     void Start()
     {
-        GlobalDefinitions.writeToLogFile("TransportScript executing start()");
-        networkInit();
+        //GlobalDefinitions.writeToLogFile("TransportScript executing start()");
+        //networkInit();
     }
 
     void Update()
@@ -356,7 +356,7 @@ public class TransportScript : MonoBehaviour
             connectionId = NetworkTransport.Connect(clientSocket, opponentIPaddr, socketPort, 0, out error);
 
             GlobalDefinitions.writeToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-            connectionTime = DateTime.Now;
+            //connectionTime = DateTime.Now;
 
             if (connectionId <= 0)
                 return (false);

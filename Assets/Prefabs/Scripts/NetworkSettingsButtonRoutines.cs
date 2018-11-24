@@ -114,6 +114,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
 
     public void okNetworkSettings()
     {
+        TransportScript.networkInit();
         GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
 
         GlobalDefinitions.writeToLogFile("okNetworkSettings: executing");
