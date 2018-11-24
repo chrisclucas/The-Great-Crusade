@@ -1588,6 +1588,7 @@ public class MovementRoutines : MonoBehaviour
                     {
                         GlobalDefinitions.alliedReplacementsRemaining -= selectedUnit.GetComponent<UnitDatabaseFields>().attackFactor;
                         selectedUnit.transform.position = selectedUnit.GetComponent<UnitDatabaseFields>().locationInBritain;
+                        //selectedUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex = selectedUnit.GetComponent<UnitDatabaseFields>().locationInBritain;
                         selectedUnit.GetComponent<UnitDatabaseFields>().unitEliminated = false;
                         selectedUnit.transform.parent = GameObject.Find("Units In Britain").transform;
                         selectedUnit.GetComponent<UnitDatabaseFields>().inBritain = true;

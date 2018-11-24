@@ -116,7 +116,7 @@ public class FileTransferServer : MonoBehaviour
             }
             catch (System.Exception e)
             {
-                //GlobalDefinitions.writeToLogFile("[FIleTransferServer.Awake] UDP error: " + e.Message);
+                GlobalDefinitions.writeToLogFile("[FIleTransferServer.Awake] UDP ERROR: " + e.Message);
                 if (onConnectionFailed != null)
                     onConnectionFailed.Invoke();
             }
