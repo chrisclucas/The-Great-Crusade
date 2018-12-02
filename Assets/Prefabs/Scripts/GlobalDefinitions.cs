@@ -147,7 +147,9 @@ public class GlobalDefinitions : MonoBehaviour
     public static Vector4 TacticalAirRiverInterdictionHighlightColor = new Vector4(1f, 0, 1f, 0.5f); // magenta
     public static Vector4 SuccessfulInvasionSiteColor = new Vector4(0.5f, 0.5f, 0.5f, 0.5f); // cyan
     public static Vector4 StrategicInstallationHexColor = new Vector4(0, 1f, 0, 0.5f); //green
-    public static Vector4 HexInSupplyHighlightColor = new Vector4(0f, 0f, 1f, 0.5f); // blue
+    public static Vector4 HexInSupplyHighlightColor = new Vector4(0f, 0f, 1f, 0.15f); // blue
+    public static Vector4 HexAvailableForMovmentColor = new Vector4(1f, 0.922f, 0.016f, 0.5f); // yellow
+    public static Vector4 HexOverstackedColor = new Vector4(1f, 0.922f, 0.016f, 0.5f); // yellow
 
     public enum Nationality { German, Allied }
     public static Nationality nationalityUserIsPlaying;
@@ -1371,7 +1373,16 @@ public class GlobalDefinitions : MonoBehaviour
         Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
         hex.transform.localScale = new Vector2(0.75f, 0.75f);
         targetRenderer.sortingLayerName = "Highlight";
-        targetRenderer.material.color = new Vector4(1f, 0.922f, 0.016f, 0.5f);
+        targetRenderer.material.color = HexAvailableForMovmentColor;
+        targetRenderer.sortingOrder = 2;
+    }
+
+    public static void highlightOverstackedHex(GameObject hex)
+    {
+        Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
+        hex.transform.localScale = new Vector2(0.75f, 0.75f);
+        targetRenderer.sortingLayerName = "Highlight";
+        targetRenderer.material.color = HexOverstackedColor;
         targetRenderer.sortingOrder = 2;
     }
 
@@ -1390,7 +1401,7 @@ public class GlobalDefinitions : MonoBehaviour
             Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
             hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Highlight";
-            targetRenderer.material.color = new Vector4(0f, 0f, 1f, 0.15f);
+            targetRenderer.material.color = HexInSupplyHighlightColor;
             targetRenderer.sortingOrder = 2;
         }
     }

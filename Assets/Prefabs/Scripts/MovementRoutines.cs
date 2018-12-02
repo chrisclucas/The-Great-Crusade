@@ -1029,10 +1029,14 @@ public class MovementRoutines : MonoBehaviour
         foreach (GameObject unit in onBoardList)
             if (GlobalDefinitions.stackingLimitExceeded(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality))
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Hex at(" + unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().xMapCoor + "," +
-                        unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().yMapCoor + ") is overstacked");
+                GlobalDefinitions.highlightOverstackedHex(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                //GlobalDefinitions.guiUpdateStatusMessage("Hex at(" + unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().xMapCoor + "," +
+                //        unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().yMapCoor + ") is overstacked");
                 returnState = false;
             }
+
+        if (!returnState)
+            GlobalDefinitions.guiUpdateStatusMessage("Hexes highlighted in yellow are overstacked.  Units must be moved off the hex or undo movement that placed them there");
 
         return (returnState);
     }
