@@ -829,7 +829,11 @@ public class CombatState : GameState
 
         // Check if the current difficulty needs to be stored as the easiest used
         if (GlobalDefinitions.easiestDifficultySettingUsed > GlobalDefinitions.difficultySetting)
-            GlobalDefinitions.difficultySetting = GlobalDefinitions.easiestDifficultySettingUsed;
+            GlobalDefinitions.easiestDifficultySettingUsed = GlobalDefinitions.difficultySetting;
+
+        // If this is the first combat turn the easiest difficulty need to written.  When loading a saved game from setup the difficulty shouldn't be used
+        if (GlobalDefinitions.turnNumber == 1)
+            GlobalDefinitions.easiestDifficultySettingUsed = GlobalDefinitions.difficultySetting;
 
         executeMethod = executeSelectUnit;
     }

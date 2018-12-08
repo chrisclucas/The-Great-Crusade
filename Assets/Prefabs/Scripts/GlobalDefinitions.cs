@@ -1967,7 +1967,7 @@ public class GlobalDefinitions : MonoBehaviour
             else
                 message = "You have suffered a decisive defeat    strength of victory = " + strengthOfVictory;
         }
-        writeToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + calculateStrengthOfVictory() + " mwessage = " + message);
+        writeToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + calculateStrengthOfVictory() + " message = " + message);
         victoryScreen(message);
     }
 
