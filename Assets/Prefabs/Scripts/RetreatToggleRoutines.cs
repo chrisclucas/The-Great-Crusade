@@ -13,8 +13,7 @@ public class RetreatToggleRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-                TransportScript.SendSocketMessage(GlobalDefinitions.RETREATSELECTIONKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.RETREATSELECTIONKEYWORD + " " + name);
             
             // The unit has been selected so move it to the zero position in the list since that is what will be moved
             GlobalDefinitions.retreatingUnits.Remove(GetComponent<RetreatToggleRoutines>().unit);

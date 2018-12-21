@@ -10,8 +10,7 @@ public class InvasionSelectionToggleRoutines : MonoBehaviour
         if (GetComponent<Toggle>().isOn)
         {
             GlobalDefinitions.writeToLogFile("invadedAreaSelected: exeucuting");
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-                TransportScript.SendSocketMessage(GlobalDefinitions.INVASIONAREASELECTIONKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.INVASIONAREASELECTIONKEYWORD + " " + name);
             GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().setInvasionArea(index);
 
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =

@@ -413,11 +413,8 @@ public class CombatResolutionRoutines : MonoBehaviour
             GlobalDefinitions.dieRollResult2 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
         }
 
-        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-        {
-            TransportScript.SendSocketMessage(GlobalDefinitions.DIEROLLRESULT1KEYWORD + " " + GlobalDefinitions.dieRollResult1);
-            TransportScript.SendSocketMessage(GlobalDefinitions.DIEROLLRESULT2KEYWORD + " " + GlobalDefinitions.dieRollResult2);
-        }
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DIEROLLRESULT1KEYWORD + " " + GlobalDefinitions.dieRollResult1);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DIEROLLRESULT2KEYWORD + " " + GlobalDefinitions.dieRollResult2);
 
 #if OUTPUTDEBUG
         GlobalDefinitions.guiUpdateStatusMessage("Combat Results: die roll result 1 = " + GlobalDefinitions.dieRollResult1);
@@ -435,8 +432,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     GlobalDefinitions.dieRollResult1,
                     GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1],
                     buttonLocation);
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && GlobalDefinitions.localControl)
-                TransportScript.SendSocketMessage(GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD + " " + GlobalDefinitions.CombatResultToggleName);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD + " " + GlobalDefinitions.CombatResultToggleName);
 
         }
         else

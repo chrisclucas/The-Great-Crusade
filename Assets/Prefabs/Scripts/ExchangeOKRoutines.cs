@@ -13,8 +13,7 @@ public class ExchangeOKRoutines : MonoBehaviour
         // Determine if the user has selected enough factors
         if (GlobalDefinitions.exchangeFactorsSelected >= GlobalDefinitions.exchangeFactorsToLose)
         {
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-                TransportScript.SendSocketMessage(GlobalDefinitions.OKEXCHANGEKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.OKEXCHANGEKEYWORD + " " + name);
             
             GlobalDefinitions.writeToLogFile("exchangeOKSelected: attackerHadMostFactors = " + attackerHadMostFactors + " Units selected for exchange:");
             foreach (GameObject unit in GlobalDefinitions.unitsToExchange)

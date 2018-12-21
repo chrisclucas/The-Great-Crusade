@@ -86,7 +86,7 @@ public class TransportScript : MonoBehaviour
     {
         // This update() executes up until the game data is loaded and everything is set up.  Then the GameControl update() takes over.
         if (!GlobalDefinitions.gameStarted)
-        { 
+        {
             // This goes from the intial connect attempt to the confirmation from the remote computer
             if (channelEstablished && !opponentComputerConfirmsSync)
             {
@@ -213,11 +213,17 @@ public class TransportScript : MonoBehaviour
                     // Playing a new game
                     if (MainMenuRoutines.playNewGame)
                     {
+
+                        // Since at this point we know we are starting a new game and not running the command file, remove the command file
+                        if (!GlobalDefinitions.commandFileBeingRead)
+                            if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
+                                File.Delete(GameControl.path + GlobalDefinitions.commandFile);
+
                         // Set the game state to Setup 
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
-                        GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNoResponse();
-                        SendSocketMessage(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
+                        GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
+                        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                         GlobalDefinitions.gameStarted = true;
 
                         if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
@@ -258,7 +264,7 @@ public class TransportScript : MonoBehaviour
                         if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
                         {
                             GlobalDefinitions.writeToLogFile("TransportScript Update()3: Sending file name to remote computer");
-                            TransportScript.SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
+                            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
                         }
 
                         //GlobalDefinitions.writeToLogFile("TranportScript: setting gameDataSent to ture");
@@ -383,7 +389,7 @@ public class TransportScript : MonoBehaviour
             GlobalDefinitions.writeToLogFile("Sending message - " + message + " serverSocket=" + GlobalDefinitions.communicationSocket + "  communicationChannel=" + GlobalDefinitions.communicationChannel + " Error: " + (NetworkError)sendError);
 
             if ((NetworkError)sendError != NetworkError.Ok)
-            { 
+            {
                 GlobalDefinitions.guiUpdateStatusMessage("ERROR IN TRANSMISSION - Network Error returned = " + (NetworkError)sendError);
             }
         }

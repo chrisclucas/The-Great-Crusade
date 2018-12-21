@@ -8,9 +8,7 @@ public class MultiUnitMovementToggleRoutines : MonoBehaviour
 
     public void selectUnitToMove()
     {
-        // Send the selection to the network computer
-        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            TransportScript.SendSocketMessage(GlobalDefinitions.MULTIUNITSELECTIONKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MULTIUNITSELECTIONKEYWORD + " " + name);
 
         List<GameObject> movementHexes = new List<GameObject>();
         if (GetComponent<Toggle>().isOn)
@@ -54,9 +52,7 @@ public class MultiUnitMovementToggleRoutines : MonoBehaviour
     /// </summary>
     public void cancelGui()
     {
-        // Send the selection to the network computer
-        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            TransportScript.SendSocketMessage(GlobalDefinitions.MULTIUNITSELECTIONCANCELKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MULTIUNITSELECTIONCANCELKEYWORD + " " + name);
 
         if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
                 (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance"))

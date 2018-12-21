@@ -19,8 +19,7 @@ public class CombatToggleRoutines : MonoBehaviour
             GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: Toggle is on for unit " + unit.name);
 
             // Turn on the toggle on the remote computer
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                TransportScript.SendSocketMessage(GlobalDefinitions.SETCOMBATTOGGLEKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCOMBATTOGGLEKEYWORD + " " + name);
 
             unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = true;
             GlobalDefinitions.highlightUnit(unit);
@@ -67,8 +66,7 @@ public class CombatToggleRoutines : MonoBehaviour
         {
             GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: Toggle is off for unit " + unit.name);
             // Turn off the toggle on the remote computer
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                TransportScript.SendSocketMessage(GlobalDefinitions.RESETCOMBATTOGGLEKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.RESETCOMBATTOGGLEKEYWORD + " " + name);
 
             GlobalDefinitions.unhighlightUnit(unit);
             unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
@@ -393,8 +391,7 @@ public class CombatToggleRoutines : MonoBehaviour
     /// </summary>
     public void toggleAirSupport()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.TOGGLEAIRSUPPORTCOMBATTOGGLE + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.TOGGLEAIRSUPPORTCOMBATTOGGLE + " " + name);
 
         if (this.GetComponent<Toggle>().isOn)
         {
@@ -420,8 +417,7 @@ public class CombatToggleRoutines : MonoBehaviour
 
     public void toggleCarpetBombing()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.TOGGLECARPETBOMBINGCOMBATTOGGLE + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.TOGGLECARPETBOMBINGCOMBATTOGGLE + " " + name);
 
         if (this.GetComponent<Toggle>().isOn)
         {

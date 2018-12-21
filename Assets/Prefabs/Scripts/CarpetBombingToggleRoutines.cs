@@ -11,11 +11,8 @@ public class CarpetBombingToggleRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            {
-                GlobalDefinitions.writeToLogFile("Sending message - CarpetBombingSelection");
-                TransportScript.SendSocketMessage(GlobalDefinitions.CARPETBOMBINGSELECTIONKEYWORD + " " + name);
-            }
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CARPETBOMBINGSELECTIONKEYWORD + " " + name);
+
             foreach (Transform childTransform in transform.parent.transform)
                 if (childTransform.gameObject.name == "BombingToggle")
                     if ((childTransform.gameObject != gameObject) && (childTransform.gameObject.GetComponent<Toggle>().isOn))
@@ -25,8 +22,7 @@ public class CarpetBombingToggleRoutines : MonoBehaviour
 
     public void locateCarpetBombingHex()
     {
-        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            TransportScript.SendSocketMessage(GlobalDefinitions.CARPETBOMBINGLOCATIONKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CARPETBOMBINGLOCATIONKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // This centers the camera on the unit

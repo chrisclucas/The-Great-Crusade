@@ -16,8 +16,7 @@ public class SupplyButtonRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-                TransportScript.SendSocketMessage(GlobalDefinitions.SETSUPPLYKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETSUPPLYKEYWORD + " " + name);
 
             // The toggle was turned on.  Turn any other toggles that are on off.
             // Don't need to reset highlighting since the highlighting routine called
@@ -37,10 +36,7 @@ public class SupplyButtonRoutines : MonoBehaviour
         }
         else
         {
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            {
-                TransportScript.SendSocketMessage(GlobalDefinitions.RESETSUPPLYKEYWORD + " " + name);
-            }
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.RESETSUPPLYKEYWORD + " " + name);
 
             GlobalDefinitions.currentSupplySource = null;
             // The toggle was turned off so reset all highlighting
@@ -54,10 +50,7 @@ public class SupplyButtonRoutines : MonoBehaviour
     /// </summary>
     public void locateSupplySource()
     {
-        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-        {
-            TransportScript.SendSocketMessage(GlobalDefinitions.LOCATESUPPLYKEYWORD + " " + name);
-        }
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOCATESUPPLYKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // This centers the camera on the unit
@@ -75,8 +68,7 @@ public class SupplyButtonRoutines : MonoBehaviour
     /// </summary>
     public void okSupplyWithEndPhase()
     {
-        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            TransportScript.SendSocketMessage(GlobalDefinitions.OKSUPPLYKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.OKSUPPLYKEYWORD + " " + name);
 
         // Reset all highlighting
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
@@ -106,8 +98,7 @@ public class SupplyButtonRoutines : MonoBehaviour
     /// </summary>
     public void okSupply()
     {
-        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            TransportScript.SendSocketMessage(GlobalDefinitions.OKSUPPLYKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.OKSUPPLYKEYWORD + " " + name);
 
         // Reset all highlighting
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
@@ -137,10 +128,7 @@ public class SupplyButtonRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            {
-                TransportScript.SendSocketMessage(GlobalDefinitions.CHANGESUPPLYSTATUSKEYWORD + " " + name);
-            }
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CHANGESUPPLYSTATUSKEYWORD + " " + name);
 
             GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().swapSupplyStatus(unit);
         }

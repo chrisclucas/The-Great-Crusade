@@ -57,7 +57,7 @@ public class GameControl : MonoBehaviour
         // Set up the log file
         path = System.IO.Directory.GetCurrentDirectory() + "\\";
 
-        // Put the log file in a try block since an exception will be thrown if the game was installed in an un-writeable folder
+        // Put the log and command file in a try block since an exception will be thrown if the game was installed in an un-writeable folder
         try
         {
 
@@ -69,6 +69,7 @@ public class GameControl : MonoBehaviour
                 logFile.WriteLine("Starting game at: " + DateTime.Now);
                 logFile.WriteLine("GameControl start(): path = " + System.IO.Directory.GetCurrentDirectory() + "\\");
             }
+
         }
         catch
         {
@@ -89,7 +90,7 @@ public class GameControl : MonoBehaviour
 
         if (!File.Exists(path + GlobalDefinitions.boardsetupfile))
         {
-            MessageBox.Show("ERROR: TGCBoardSetup.txt file not found - cannot continue");
+            MessageBox.Show("ERROR: " + GlobalDefinitions.boardsetupfile + " file not found - cannot continue");
             UnityEngine.Application.Quit();
         }
         else
@@ -97,7 +98,7 @@ public class GameControl : MonoBehaviour
 
         if (!File.Exists(path + GlobalDefinitions.britainunitlocationfile))
         {
-            MessageBox.Show("ERROR: TGCBritainUnitLocation.txt file not found - cannot continue");
+            MessageBox.Show("ERROR: " + GlobalDefinitions.britainunitlocationfile + "  file not found - cannot continue");
             UnityEngine.Application.Quit();
         }
         else
@@ -230,9 +231,8 @@ public class GameControl : MonoBehaviour
                             GlobalDefinitions.unhighlightHex(hex.gameObject);
                         GlobalDefinitions.selectedUnit = null;
 
-                        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-                            sendMouseDoubleClickToNetwork(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
-                                    gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+                        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
+                        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + GlobalDefinitions.getHexFromUserInput(Input.mousePosition).name + " " + gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
 
                         movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
                             gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
@@ -243,9 +243,7 @@ public class GameControl : MonoBehaviour
                         inputMessage.GetComponent<InputMessage>().hex = GlobalDefinitions.getHexFromUserInput(Input.mousePosition);
                         inputMessage.GetComponent<InputMessage>().unit = GlobalDefinitions.getUnitWithoutHex(Input.mousePosition);
 
-                        // If a network game send the mouse click to the opponent's computer
-                        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                            sendMouseClickToNetwork(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
+                        recordMouseClick(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
 
                         gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(inputMessage.GetComponent<InputMessage>());
 
@@ -339,7 +337,7 @@ public class GameControl : MonoBehaviour
                         BinaryFormatter formatter = new BinaryFormatter();
                         string message = formatter.Deserialize(stream) as string;
                         TransportScript.OnData(TransportScript.recHostId, TransportScript.recConnectionId, TransportScript.recChannelId, message, TransportScript.dataSize, (NetworkError)TransportScript.recError);
-                        processNetworkMessage(message);
+                        ExecuteGameCommand.processCommand(message);
                         break;
                     case NetworkEventType.Nothing:
                         break;
@@ -367,326 +365,13 @@ public class GameControl : MonoBehaviour
     }
 
     /// <summary>
-    /// This routine is what processes the message received from the opponent computer
-    /// </summary>
-    /// <param name="message"></param>
-    public void processNetworkMessage(string message)
-    {
-        char[] delimiterChars = { ' ' };
-        string[] switchEntries = message.Split(delimiterChars);
-
-        string[] lineEntries = message.Split(delimiterChars);
-        // I am going to use the same routine to read records that is used when reading from a file.
-        // In order to do this I need to drop the first word on the line since the files don't have key words
-        for (int index = 0; index < (lineEntries.Length - 1); index++)
-            lineEntries[index] = lineEntries[index + 1];
-
-        switch (switchEntries[0])
-        {
-            // Message sent by initiating computer to indicate the side the local player will be in playing
-            // SetPlaySide <Nationality: German or Allied
-            // Note that the default is Allied
-            case GlobalDefinitions.PLAYSIDEKEYWORD:
-                if (switchEntries[1] == "German")
-                    GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.German;
-                else
-                    GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.Allied;
-                break;
-            case GlobalDefinitions.PASSCONTROLKEYWORK:
-                GlobalDefinitions.localControl = true;
-                GlobalDefinitions.writeToLogFile("processNetworkMessage: Message received to set local control");
-                break;
-            case GlobalDefinitions.SETCAMERAPOSITIONKEYWORD:
-                Camera.main.transform.position = new Vector3(float.Parse(switchEntries[1]), float.Parse(switchEntries[2]), float.Parse(switchEntries[3]));
-                Camera.main.GetComponent<Camera>().orthographicSize = float.Parse(switchEntries[4]);
-                break;
-            case GlobalDefinitions.MOUSESELECTIONKEYWORD:
-                if (switchEntries[1] != "null")
-                    inputMessage.GetComponent<InputMessage>().hex = GameObject.Find(switchEntries[1]);
-                else
-                    inputMessage.GetComponent<InputMessage>().hex = null;
-
-                if (switchEntries[2] != "null")
-                    inputMessage.GetComponent<InputMessage>().unit = GameObject.Find(switchEntries[2]);
-                else
-                    inputMessage.GetComponent<InputMessage>().unit = null;
-
-                gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(inputMessage.GetComponent<InputMessage>());
-                break;
-            case GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD:
-                GlobalDefinitions.Nationality passedNationality;
-
-                if (switchEntries[2] == "German")
-                    passedNationality = GlobalDefinitions.Nationality.German;
-                else
-                    passedNationality = GlobalDefinitions.Nationality.Allied;
-
-
-                if (GlobalDefinitions.selectedUnit != null)
-                    GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
-                foreach (Transform hex in GameObject.Find("Board").transform)
-                    GlobalDefinitions.unhighlightHex(hex.gameObject);
-                GlobalDefinitions.selectedUnit = null;
-
-
-                movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GameObject.Find(switchEntries[1]), passedNationality);
-                break;
-            case GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD:
-                CombatResolutionRoutines.combatResolutionDisplay();
-                break;
-            case GlobalDefinitions.QUITKEYWORD:
-                GlobalDefinitions.writeToLogFile("processNetworkMessage: Executing Quit");
-                gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit(inputMessage.GetComponent<InputMessage>());
-                break;
-
-            case GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD:
-                TacticalAirToggleRoutines.tacticalAirOK();
-                break;
-            case GlobalDefinitions.ADDCLOSEDEFENSEKEYWORD:
-                GameObject.Find("CloseDefense").GetComponent<TacticalAirToggleRoutines>().addCloseDefenseHex();
-                break;
-            case GlobalDefinitions.CANCELCLOSEDEFENSEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().cancelCloseDefense();
-                break;
-            case GlobalDefinitions.LOCATECLOSEDEFENSEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().locateCloseDefense();
-                break;
-            case GlobalDefinitions.ADDRIVERINTERDICTIONKEYWORD:
-                GameObject.Find("RiverInterdiction").GetComponent<TacticalAirToggleRoutines>().addRiverInterdiction();
-                break;
-            case GlobalDefinitions.CANCELRIVERINTERDICTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().cancelRiverInterdiction();
-                break;
-            case GlobalDefinitions.LOCATERIVERINTERDICTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().locateRiverInterdiction();
-                break;
-            case GlobalDefinitions.ADDUNITINTERDICTIONKEYWORD:
-                GameObject.Find("UnitInterdiction").GetComponent<TacticalAirToggleRoutines>().addInterdictedUnit();
-                break;
-            case GlobalDefinitions.CANCELUNITINTERDICTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().cancelInterdictedUnit();
-                break;
-            case GlobalDefinitions.LOCATEUNITINTERDICTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().locateInterdictedUnit();
-                break;
-            case GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().multiUnitSelection();
-                break;
-
-            case GlobalDefinitions.MULTIUNITSELECTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-            case GlobalDefinitions.MULTIUNITSELECTIONCANCELKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<MultiUnitMovementToggleRoutines>().cancelGui();
-                break;
-            case GlobalDefinitions.LOADCOMBATKEYWORD:
-                GameObject GUIButtonInstance = new GameObject("GUIButtonInstance");
-                GUIButtonInstance.AddComponent<GUIButtonRoutines>();
-                GUIButtonInstance.GetComponent<GUIButtonRoutines>().loadCombat();
-                break;
-
-            case GlobalDefinitions.SETCOMBATTOGGLEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-            case GlobalDefinitions.RESETCOMBATTOGGLEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = false;
-                break;
-            case GlobalDefinitions.COMBATGUIOKKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatGUIOK>().okCombatGUISelection();
-                break;
-            case GlobalDefinitions.COMBATGUICANCELKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatGUIOK>().cancelCombatGUISelection();
-                break;
-
-            case GlobalDefinitions.ADDCOMBATAIRSUPPORTKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-            case GlobalDefinitions.REMOVECOMBATAIRSUPPORTKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = false;
-                break;
-            case GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD:
-                // Load the combat results; the die roll is on the Global variable
-                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().resolutionSelected();
-                break;
-            case GlobalDefinitions.COMBATLOCATIONSELECTEDKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().locateAttack();
-                break;
-            case GlobalDefinitions.COMBATCANCELKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().cancelAttack();
-                break;
-            case GlobalDefinitions.COMBATOKKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().ok();
-                break;
-            case GlobalDefinitions.CARPETBOMBINGRESULTSSELECTEDKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-            case GlobalDefinitions.RETREATSELECTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-            case GlobalDefinitions.POSTCOMBATMOVEMENTKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-            case GlobalDefinitions.ADDEXCHANGEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-            case GlobalDefinitions.REMOVEEXCHANGEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = false;
-                break;
-            case GlobalDefinitions.OKEXCHANGEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<ExchangeOKRoutines>().exchangeOKSelected();
-                break;
-            case GlobalDefinitions.POSTCOMBATOKKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<PostCombatMovementOkRoutines>().executePostCombatMovement();
-                break;
-            case GlobalDefinitions.SETSUPPLYKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-            case GlobalDefinitions.RESETSUPPLYKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = false;
-                break;
-            case GlobalDefinitions.LOCATESUPPLYKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().locateSupplySource();
-                break;
-            case GlobalDefinitions.OKSUPPLYKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().okSupplyWithEndPhase();
-                break;
-            case GlobalDefinitions.CHANGESUPPLYSTATUSKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-
-            case GlobalDefinitions.SAVEFILENAMEKEYWORD:
-                if (File.Exists(GameControl.path + "TGCOutputFiles\\TGCRemoteSaveFile.txt"))
-                    File.Delete(GameControl.path + "TGCOutputFiles\\TGCRemoteSaveFile.txt");
-                break;
-            case GlobalDefinitions.SENDSAVEFILELINEKEYWORD:
-                using (StreamWriter saveFile = File.AppendText(GameControl.path + "TGCOutputFiles\\TGCRemoteSaveFile.txt"))
-                {
-                    for (int index = 1; index < (switchEntries.Length); index++)
-                        saveFile.Write(switchEntries[index] + " ");
-                    saveFile.WriteLine();
-                }
-                break;
-            case GlobalDefinitions.PLAYNEWGAMEKEYWORD:
-                gameStateControlInstance.GetComponent<gameStateControl>().currentState = setUpStateInstance.GetComponent<SetUpState>();
-                gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage.GetComponent<InputMessage>());
-
-                // Set the global parameter on what file to use, can't pass it to the executeNoResponse since it is passed as a method delegate elsewhere
-                GlobalDefinitions.germanSetupFileUsed = Convert.ToInt32(switchEntries[1]);
-
-                setUpStateInstance.GetComponent<SetUpState>().executeNoResponse();
-                break;
-
-            case GlobalDefinitions.INVASIONAREASELECTIONKEYWORD:
-                GlobalDefinitions.writeToLogFile("processNetworkMessage: Received INVASIONAREASELECTIONKEYWORD - turning toggle " + switchEntries[1] + " to true");
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-
-            case GlobalDefinitions.CARPETBOMBINGSELECTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
-                break;
-            case GlobalDefinitions.CARPETBOMBINGLOCATIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CarpetBombingToggleRoutines>().locateCarpetBombingHex();
-                break;
-            case GlobalDefinitions.CARPETBOMBINGOKKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CarpetBombingOKRoutines>().carpetBombingOK();
-                break;
-
-            case GlobalDefinitions.DIEROLLRESULT1KEYWORD:
-                GlobalDefinitions.dieRollResult1 = Convert.ToInt32(switchEntries[1]);
-                break;
-            case GlobalDefinitions.DIEROLLRESULT2KEYWORD:
-                GlobalDefinitions.dieRollResult2 = Convert.ToInt32(switchEntries[1]);
-                break;
-            case GlobalDefinitions.UNDOKEYWORD:
-                GUIButtonRoutinesInstance.GetComponent<GUIButtonRoutines>().executeUndo();
-                break;
-            case GlobalDefinitions.CHATMESSAGEKEYWORD:
-                string chatMessage = "";
-                for (int index = 0; index < (switchEntries.Length - 1); index++)
-                    chatMessage += switchEntries[index + 1] + " ";
-                GlobalDefinitions.writeToLogFile("Chat message received: " + chatMessage);
-                GlobalDefinitions.addChatMessage(chatMessage);
-                break;
-            case GlobalDefinitions.SENDTURNFILENAMEWORD:
-                // This command tells the remote computer what the name of the file is that will provide the saved turn file
-
-                // The file name could have ' ' in it so need to reconstruct the full name
-                string receivedFileName;
-                receivedFileName = switchEntries[1];
-                for (int i = 2; i < switchEntries.Length; i++)
-                    receivedFileName = receivedFileName + " " + switchEntries[i];
-
-                GlobalDefinitions.writeToLogFile("Received name of save file, calling FileTransferServer: fileName = " + receivedFileName + "  path to save = " + path);
-                fileTransferServerInstance.GetComponent<FileTransferServer>().RequestFile(GlobalDefinitions.opponentIPAddress, receivedFileName, GameControl.path, true);
-                break;
-
-            case GlobalDefinitions.DISPLAYALLIEDSUPPLYRANGETOGGLEWORD:
-                if (GameObject.Find("AlliedSupplyToggle").GetComponent<Toggle>().isOn)
-                    GameObject.Find("AlliedSupplyToggle").GetComponent<Toggle>().isOn = false;
-                else
-                    GameObject.Find("AlliedSupplyToggle").GetComponent<Toggle>().isOn = true;
-                break;
-
-            case GlobalDefinitions.DISPLAYGERMANSUPPLYRANGETOGGLEWORD:
-                if (GameObject.Find("GermanSupplyToggle").GetComponent<Toggle>().isOn)
-                    GameObject.Find("GermanSupplyToggle").GetComponent<Toggle>().isOn = false;
-                else
-                    GameObject.Find("GermanSupplyToggle").GetComponent<Toggle>().isOn = true;
-                break;
-
-            case GlobalDefinitions.DISPLAYMUSTATTACKTOGGLEWORD:
-                if (GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().isOn)
-                    GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().isOn = false;
-                else
-                    GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().isOn = true;
-                break;
-
-            case GlobalDefinitions.TOGGLEAIRSUPPORTCOMBATTOGGLE:
-                {
-                    if (GlobalDefinitions.combatAirSupportToggle != null)
-                    {
-                        if (GlobalDefinitions.combatAirSupportToggle.GetComponent<Toggle>().isOn)
-                            GlobalDefinitions.combatAirSupportToggle.GetComponent<Toggle>().isOn = false;
-                        else
-                            GlobalDefinitions.combatAirSupportToggle.GetComponent<Toggle>().isOn = true;
-                    }
-                    break;
-                }
-
-            case GlobalDefinitions.TOGGLECARPETBOMBINGCOMBATTOGGLE:
-                {
-                    if (GlobalDefinitions.combatCarpetBombingToggle != null)
-                    {
-                        if (GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().isOn)
-                            GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().isOn = false;
-                        else
-                            GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().isOn = true;
-                    }
-                    break;
-                }
-            case GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER:
-                {
-                    // Quit the game and go back to the main menu
-                    GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
-                    guiButtonInstance.AddComponent<GUIButtonRoutines>();
-                    guiButtonInstance.GetComponent<GUIButtonRoutines>().yesMain();
-                    break;
-                }
-
-            default:
-                GlobalDefinitions.writeToLogFile("processNetworkMessage: Unknown network command received: " + message);
-                break;
-        }
-    }
-
-    /// <summary>
     /// This routine sends a command for a mouse click to the opponent's computer
     /// </summary>
     /// <param name="unit"></param>
     /// <param name="hex"></param>
-    public static void sendMouseClickToNetwork(GameObject unit, GameObject hex)
+    public static void recordMouseClick(GameObject unit, GameObject hex)
     {
-        TransportScript.SendSocketMessage(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
 
         string hexName;
         string unitName;
@@ -706,19 +391,7 @@ public class GameControl : MonoBehaviour
         else
             unitName = "null";
 
-        TransportScript.SendSocketMessage(GlobalDefinitions.MOUSESELECTIONKEYWORD + " " + hexName + " " + unitName);
-    }
-
-    /// <summary>
-    /// Send the informaiton needed for a double click to the network computer
-    /// </summary>
-    /// <param name="hex"></param>
-    /// <param name="currentNationality"></param>
-    public static void sendMouseDoubleClickToNetwork(GameObject hex, GlobalDefinitions.Nationality currentNationality)
-    {
-        TransportScript.SendSocketMessage(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
-
-        TransportScript.SendSocketMessage(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + hex.name + " " + currentNationality);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MOUSESELECTIONKEYWORD + " " + hexName + " " + unitName);
     }
 
     /// <summary>
@@ -894,6 +567,7 @@ public class GameControl : MonoBehaviour
         // The AI is playing the German side
         if (nationalityBeingPlayed == GlobalDefinitions.Nationality.Allied)
         {
+            setUpStateInstance = new GameObject("setUpStateInstance");
             germanAIStateInstance = new GameObject("GermanAIStateInstance");
             turnInitializationStateInstance = new GameObject("turnInitializationStateInstance");
             alliedReplacementStateInstance = new GameObject("alliedReplacementStateInstance");
@@ -905,6 +579,7 @@ public class GameControl : MonoBehaviour
             alliedTacticalAirStateInstance = new GameObject("alliedTacticalAirStateInstance");
             germanAISetupStateInstance = new GameObject("germanAIStateSetupInstance");
 
+            setUpStateInstance.AddComponent<SetUpState>();
             germanAISetupStateInstance.AddComponent<GermanAISetupState>();
             turnInitializationStateInstance.AddComponent<TurnInitializationState>();
             alliedReplacementStateInstance.AddComponent<AlliedReplacementState>();

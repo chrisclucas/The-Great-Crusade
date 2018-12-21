@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine.UI;
 
 using System.Collections;
@@ -28,10 +29,7 @@ public class gameStateControl : MonoBehaviour
 
     private void Awake()
     {
-        // Will need to add a main menu callup here to set the game parameters
 
-        //currentGameType = enGameTypes.HotSeat;
-        //currentNationality = GlobalDefinitions.Nationality.German;
     }
 }
 
@@ -96,19 +94,23 @@ public class SetUpState : GameState
 
         // We only need to check for the type of game if it's hotseat or AI and not Network
         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Hotseat) || (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI))
-            GlobalDefinitions.askUserYesNoQuestion("Do you want to load a saved game.  If you answer No a new game will begin", ref GlobalDefinitions.TypeOfGameYesButton, ref GlobalDefinitions.TypeOfGameNoButton, executeYesResponse, executeNoResponse);
+            GlobalDefinitions.getNewOrSavedGame();
     }
 
-    public void executeYesResponse()
+    public void executeSavedGame()
     {
-        GlobalDefinitions.writeToLogFile("executeYesResponse:");
         string turnFileName;
+
+        // Since at this point we know we are starting a new game and not running the command file, remove the command file
+        if (!GlobalDefinitions.commandFileBeingRead)
+            if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
+                File.Delete(GameControl.path + GlobalDefinitions.commandFile);
 
         // This calls up the file browser
         turnFileName = GlobalDefinitions.guiFileDialog();
 
         if (turnFileName == null)
-            executeNoResponse();
+            executeNewGame();
         else
         {
 
@@ -117,15 +119,11 @@ public class SetUpState : GameState
             // If this is a network game send the file name to the remote computer so it can be requested through the file transfer routines.  It's silly that 
             // I have to tell it what to ask for but I bought the code and that is how it works
             GlobalDefinitions.writeToLogFile("ExecuteYesResponse: GameMode = " + GlobalDefinitions.gameMode + " localControl" + GlobalDefinitions.localControl);
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            {
-                GlobalDefinitions.writeToLogFile("ExecuteYesResponse: Sending file name to remote computer");
-                TransportScript.SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
-            }
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
         }
     }
 
-    public void executeNoResponse()
+    public void executeNewGame()
     {
         int fileNumber;
         executeMethod = executeSelectUnit;
@@ -146,7 +144,70 @@ public class SetUpState : GameState
         GlobalDefinitions.guiUpdateStatusMessage("German setup file number = " + fileNumber);
         GameControl.createBoardInstance.GetComponent<CreateBoard>().readGermanPlacement(GameControl.path + "GermanSetup\\TGCGermanSetup" + fileNumber + ".txt");
 
+        // The network communication is a little different for a new game so I can't use the routine to write to the command file
+        // since I don't want it sending a message to the remote computer.
+        if (!GlobalDefinitions.commandFileBeingRead)
+            using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
+                writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
+
         GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
+    }
+
+    /// <summary>
+    /// Routine used to load the command file
+    /// </summary>
+    public void readCommandFile()
+    {
+        char[] delimiterChars = { ' ' };
+        string line;
+        string[] switchEntries;
+
+        GlobalDefinitions.commandFileBeingRead = true;
+
+        StreamReader theReader = new StreamReader(GameControl.path + GlobalDefinitions.commandFile);
+        using (theReader)
+        {
+            do
+            {
+                line = theReader.ReadLine();
+                GlobalDefinitions.writeToLogFile("readCommandFile: reading line - " + line);
+                if (line != null)
+                {
+                    switchEntries = line.Split(delimiterChars);
+                    switch (switchEntries[0])
+                    {
+                        case "SavedTurnFile":
+                            // A path name with a space in it will cause the name to be split.  Anything after the [0] entry needs to be added back together
+                            int a = 3;
+                            string fileName = switchEntries[2];
+                            GlobalDefinitions.writeToLogFile("readCommandFile: switchEntries[1] = " + switchEntries[1] + "  loop length = " + switchEntries.Length);
+                            while (a < switchEntries.Length)
+                            {
+                                GlobalDefinitions.writeToLogFile("readCommandFile: a = " + a + " switchEntries[a] = " + switchEntries[a]);
+                                fileName = fileName + " " + switchEntries[a];
+                                a++;
+                            }
+                            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(fileName);
+                            break;
+                        case GlobalDefinitions.PLAYNEWGAMEKEYWORD:
+                            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
+                            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
+
+                            // Set the global parameter on what file to use, can't pass it to the executeNoResponse since it is passed as a method delegate elsewhere
+                            GlobalDefinitions.germanSetupFileUsed = Convert.ToInt32(switchEntries[1]);
+
+                            GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
+                            break;
+                        default:
+                            ExecuteGameCommand.processCommand(line);
+                            break;
+                    }
+                }
+            }
+            while (line != null);
+            theReader.Close();
+        }
+        GlobalDefinitions.commandFileBeingRead = false;
     }
 
     public void executeSelectUnit(InputMessage inputMessage)
@@ -197,7 +258,7 @@ public class TurnInitializationState : GameState
         if (GlobalDefinitions.localControl && GlobalDefinitions.gameStarted && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German) && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
         {
             GlobalDefinitions.writeToLogFile("TurnInitializationState: passing control to remote computer");
-            TransportScript.SendSocketMessage(GlobalDefinitions.PASSCONTROLKEYWORK);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
             GlobalDefinitions.localControl = false;
         }
 
@@ -691,12 +752,6 @@ public class MovementState : GameState
             executeMethod = executeSelectUnit;
     }
 
-    //public void executeMultiUnitSelection(InputMessage inputMessage)
-    //{
-    //    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(inputMessage.hex, currentNationality);
-    //    // Game control determiend by the gui called
-    //}
-
     public override void executeUndo(InputMessage inputMessage)
     {
         if ((GlobalDefinitions.selectedUnit != null) && (GlobalDefinitions.selectedUnit.GetComponent<SpriteRenderer>() != null))
@@ -968,7 +1023,7 @@ public class GermanIsolationState : GameState
         if (GlobalDefinitions.localControl && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.Allied) && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
         {
             GlobalDefinitions.writeToLogFile("GermanIsolationState: passing control to remote computer");
-            TransportScript.SendSocketMessage(GlobalDefinitions.PASSCONTROLKEYWORK);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
             GlobalDefinitions.localControl = false;
         }
 
@@ -1071,13 +1126,14 @@ public class GermanAISetupState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
-        // Generally the easiest difficulty setting used is updated in the combat state sine it is where it is used.  I'm setting it here
+        // Generally the easiest difficulty setting used is updated in the combat state since it is where it is used.  I'm setting it here
         // since a game is started with the setting from the last game and if it isn't reset it will represent the lowest setting ever used, not just in the current game
         GlobalDefinitions.easiestDifficultySettingUsed = GlobalDefinitions.difficultySetting;
 
         GlobalDefinitions.guiUpdatePhase("German AI Setup Mode");
+        GlobalDefinitions.getNewOrSavedGame();
 
-        GlobalDefinitions.askUserYesNoQuestion("Do you want to load a saved game.  If you answer No a new game will begin", ref GlobalDefinitions.TypeOfGameYesButton, ref GlobalDefinitions.TypeOfGameNoButton, executeYesResponse, executeNoResponse);
+        //GlobalDefinitions.askUserYesNoQuestion("Do you want to load a saved game.  If you answer No a new game will begin", ref GlobalDefinitions.TypeOfGameYesButton, ref GlobalDefinitions.TypeOfGameNoButton, executeYesResponse, executeNoResponse);
     }
 
     public void executeYesResponse()
@@ -1272,7 +1328,7 @@ public class AlliedAIState : GameState
         foreach (GlobalDefinitions.CombatResults result in GlobalDefinitions.combatResultsFromLastTurn)
             GlobalDefinitions.writeToLogFile("executeAlliedAIState:    " + result);
         GlobalDefinitions.writeToLogFile("executeAlliedAIState: Successful attacks = " + AIRoutines.successfulAttacksLastTurn());
-        
+
         GlobalDefinitions.writeToLogFile("Ending Allied AI at: " + DateTime.Now + " AI ran for " + (DateTime.Now - executeTime));
         GlobalDefinitions.AICombat = true;
         GlobalDefinitions.localControl = true;

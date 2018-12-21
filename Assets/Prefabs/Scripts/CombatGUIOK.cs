@@ -15,8 +15,7 @@ public class CombatGUIOK : MonoBehaviour
         Button noButton = null;
         List<GameObject> removeUnit = new List<GameObject>();
 
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.COMBATGUIOKKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATGUIOKKEYWORD + " " + name);
 
         removeUnit.Clear();
         foreach (GameObject unit in singleCombat.GetComponent<Combat>().defendingUnits)
@@ -48,7 +47,7 @@ public class CombatGUIOK : MonoBehaviour
             // count as an attack on the defending units
             GlobalDefinitions.askUserYesNoQuestion("Attacking at odds less than 1:6 is useless: do you want to continue?", ref yesButton, ref noButton, yesContinue, noAbort);
         }
-        
+
         else
         {
 
@@ -134,14 +133,14 @@ public class CombatGUIOK : MonoBehaviour
     // Cancels the combat assignment
     public void cancelCombatGUISelection()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.COMBATGUICANCELKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATGUICANCELKEYWORD + " " + name);
 
         foreach (GameObject unit in singleCombat.GetComponent<Combat>().defendingUnits)
         {
             GlobalDefinitions.unhighlightUnit(unit);
             unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
         }
+
         foreach (GameObject unit in singleCombat.GetComponent<Combat>().attackingUnits)
         {
             GlobalDefinitions.unhighlightUnit(unit);

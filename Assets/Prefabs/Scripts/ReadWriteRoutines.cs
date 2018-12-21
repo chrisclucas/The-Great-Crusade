@@ -50,6 +50,15 @@ public class ReadWriteRoutines : MonoBehaviour
             fileWriter.Write("Game_Control ");
             GameControl.writeGameControlStatusVariables(fileWriter);
             fileWriter.Close();
+
+            // A new saved file has been written so delete the current command file and load the new turn file
+            if (!GlobalDefinitions.commandFileBeingRead)
+            {
+                if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
+                    File.Delete(GameControl.path + GlobalDefinitions.commandFile);
+                using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
+                    writeFile.WriteLine("SavedTurnFile " + " " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
+            }
         }
     }
 
@@ -63,6 +72,8 @@ public class ReadWriteRoutines : MonoBehaviour
         string line;
         string[] lineEntries;
         string[] switchEntries;
+
+        GlobalDefinitions.writeToLogFile("readTurnFile: executing - passed file = " + fileName);
 
         StreamReader theReader = new StreamReader(fileName);
         using (theReader)

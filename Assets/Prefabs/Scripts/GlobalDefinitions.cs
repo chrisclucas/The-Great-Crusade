@@ -14,10 +14,14 @@ public class GlobalDefinitions : MonoBehaviour
     public static string boardsetupfile = "TGCBoardSetup.txt";
     public static string britainunitlocationfile = "TGCBritainUnitLocation.txt";
     public static string settingsFile = "TGCSettingsFile.txt";
+    public static string commandFile = "TGCOutputFiles\\TGCCommandFile.txt";
 
     // Configuration settings
     public static int difficultySetting;
     public static int aggressiveSetting;
+
+    // Indicates when a command file is being read so that commands are not written
+    public static bool commandFileBeingRead = false;
 
     // Used to adjust strength of victory
     public static int easiestDifficultySettingUsed = 5;
@@ -192,6 +196,9 @@ public class GlobalDefinitions : MonoBehaviour
     public static GameObject supplySourceGUIInstance;
     public static GameObject combatAirSupportToggle;
     public static GameObject combatCarpetBombingToggle;
+    public static GameObject newGameToggle;
+    public static GameObject savedGameToggle;
+    public static GameObject commandFileToggle;
 
     public static bool combatResolutionStarted = false;
 
@@ -1329,7 +1336,7 @@ public class GlobalDefinitions : MonoBehaviour
     {
         GameObject tempToggle;
 
-        createUnitImage(unit, name, xPosition, yPosition, canvasInstance);
+        createUnitImage(unit, name + "Image", xPosition, yPosition, canvasInstance);
         tempToggle = createToggle(name, xPosition, yPosition - GUIUNITIMAGESIZE, canvasInstance);
 
         tempToggle.name = name;
@@ -1655,6 +1662,94 @@ public class GlobalDefinitions : MonoBehaviour
                     (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German))
                 return false;
         return true;
+    }
+
+    /// <summary>
+    /// Pulls up gui for the player to select new or saved game or run the command file
+    /// </summary>
+    public static void getNewOrSavedGame()
+    {
+        UnityEngine.UI.Button okButton;
+        GameObject tempText;
+
+        float panelWidth = 6 * GUIUNITIMAGESIZE;
+        float panelHeight = 5 * GUIUNITIMAGESIZE; 
+        Canvas getNewSaveGameCanvas = new Canvas();
+        createGUICanvas("NewSaveGameCanvas",
+                panelWidth,
+                panelHeight,
+                ref getNewSaveGameCanvas);
+
+        // This gui has two columns, selection toggles and desription
+        tempText = createText("Select", "NewSaveGameSelectText",
+                GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
+                4.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                getNewSaveGameCanvas);
+        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+
+        tempText = createText("Game Type", "NewSaveGameDescriptionText",
+                4 * GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
+                4.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                getNewSaveGameCanvas);
+        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+
+        // Now list the four game modes
+        newGameToggle = createToggle("NewGameToggle",
+                GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
+                3.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                getNewSaveGameCanvas);
+
+        tempText = createText("New Game", "NewGameDescriptionText",
+                4 * GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
+                3.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                getNewSaveGameCanvas);
+        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+        newGameToggle.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
+        newGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => newGameToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().toggleChange());
+
+        savedGameToggle = createToggle("SavedGameToggle",
+                GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
+                2.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                getNewSaveGameCanvas);
+
+        tempText = createText("Saved Game", "SavedGameDescriptionText",
+                4 * GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
+                2.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                getNewSaveGameCanvas);
+        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+        savedGameToggle.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
+        savedGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => savedGameToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().toggleChange());
+
+
+        commandFileToggle = createToggle("commandFileToggle",
+                GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
+                1.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                getNewSaveGameCanvas);
+        tempText = createText("Execute Command File", "CommandFileDescriptionText",
+                4 * GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE,
+                GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
+                1.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                getNewSaveGameCanvas);
+        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+        commandFileToggle.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
+        commandFileToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => commandFileToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().toggleChange());
+
+        // Add an OK button
+        okButton = createButton("getNewSaveGameOKButton", "OK",
+                GUIUNITIMAGESIZE * 3 - (0.5f * panelWidth),
+                0.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                getNewSaveGameCanvas);
+        okButton.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
+        okButton.onClick.AddListener(okButton.GetComponent<GameTypeSelectionButtonRoutines>().newSavedGameOK);
     }
 
     /// <summary>
@@ -2121,10 +2216,30 @@ public class GlobalDefinitions : MonoBehaviour
         fileWriter.WriteLine();
     }
 
+    /// <summary>
+    /// Writes message to the log file
+    /// </summary>
+    /// <param name="logEntry"></param>
     public static void writeToLogFile(string logEntry)
     {
-        using (StreamWriter logFile = File.AppendText(GameControl.path + logfile))
-            logFile.WriteLine(logEntry);
+        using (StreamWriter writeFile = File.AppendText(GameControl.path + logfile))
+            writeFile.WriteLine(logEntry);
+    }
+
+    /// <summary>
+    /// Writes a command to the command file. Also sends socket message if network game
+    /// </summary>
+    /// <param name="commandString"></param>
+    public static void writeToCommandFile(string commandString)
+    {
+        if (!GlobalDefinitions.commandFileBeingRead)
+        {
+            using (StreamWriter writeFile = File.AppendText(GameControl.path + commandFile))
+                writeFile.WriteLine(commandString);
+
+            if (localControl && (gameMode == GameModeValues.Network))
+                TransportScript.SendSocketMessage(commandString);
+        }
     }
 
     /// <summary>
@@ -2297,7 +2412,7 @@ public class GlobalDefinitions : MonoBehaviour
     public const string MULTIUNITSELECTIONCANCELKEYWORD = "MultiUnitSelectionCancel";
     public const string SETCAMERAPOSITIONKEYWORD = "SetCameraPosition";
     public const string DISPLAYCOMBATRESOLUTIONKEYWORD = "DisplayCombatResolution";
-    public const string QUITKEYWORD = "Quit";
+    public const string NEXTPHASEKEYWORD = "NextPhase";
     public const string EXECUTETACTICALAIROKKEYWORD = "ExecteTacticalAirOK";
     public const string ADDCLOSEDEFENSEKEYWORD = "AddCloseDefense";
     public const string CANCELCLOSEDEFENSEKEYWORD = "CancelCloseDefense";

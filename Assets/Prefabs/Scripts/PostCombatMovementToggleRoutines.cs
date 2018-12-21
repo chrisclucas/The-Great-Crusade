@@ -13,8 +13,7 @@ public class PostCombatMovementToggleRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
-            if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-                TransportScript.SendSocketMessage(GlobalDefinitions.POSTCOMBATMOVEMENTKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.POSTCOMBATMOVEMENTKEYWORD + " " + name);
 
             // The user has selected a unit.  If there is only one hex available move it there.
             // Otherwise turn off the gui, highlight the hexes available and wait for user selection

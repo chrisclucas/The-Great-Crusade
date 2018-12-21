@@ -18,16 +18,14 @@ public class ExchangeToggleRoutines : MonoBehaviour
                 GlobalDefinitions.exchangeFactorsSelected += GlobalDefinitions.returnAttackFactor(GetComponent<ExchangeToggleRoutines>().unit);
                 GlobalDefinitions.unitsToExchange.Add(GetComponent<ExchangeToggleRoutines>().unit);
                 GlobalDefinitions.highlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
-                if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                    TransportScript.SendSocketMessage(GlobalDefinitions.ADDEXCHANGEKEYWORD + " " + name);
+                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDEXCHANGEKEYWORD + " " + name);
             }
             else
             {
                 GlobalDefinitions.exchangeFactorsSelected -= GlobalDefinitions.returnAttackFactor(GetComponent<ExchangeToggleRoutines>().unit);
                 GlobalDefinitions.unitsToExchange.Remove(GetComponent<ExchangeToggleRoutines>().unit);
                 GlobalDefinitions.unhighlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
-                if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                    TransportScript.SendSocketMessage(GlobalDefinitions.REMOVEEXCHANGEKEYWORD + " " + name);
+                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.REMOVEEXCHANGEKEYWORD + " " + name);
             }
         }
         else
@@ -37,16 +35,14 @@ public class ExchangeToggleRoutines : MonoBehaviour
                 GlobalDefinitions.exchangeFactorsSelected += GlobalDefinitions.calculateUnitDefendingFactor(GetComponent<ExchangeToggleRoutines>().unit, attackingUnits);
                 GlobalDefinitions.unitsToExchange.Add(GetComponent<ExchangeToggleRoutines>().unit);
                 GlobalDefinitions.highlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
-                if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                    TransportScript.SendSocketMessage(GlobalDefinitions.ADDEXCHANGEKEYWORD + " " + name);
+                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDEXCHANGEKEYWORD + " " + name);
             }
             else
             {
                 GlobalDefinitions.exchangeFactorsSelected -= GlobalDefinitions.calculateUnitDefendingFactor(GetComponent<ExchangeToggleRoutines>().unit, attackingUnits);
                 GlobalDefinitions.unitsToExchange.Remove(GetComponent<ExchangeToggleRoutines>().unit);
                 GlobalDefinitions.unhighlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
-                if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                    TransportScript.SendSocketMessage(GlobalDefinitions.REMOVEEXCHANGEKEYWORD + " " + name);
+                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.REMOVEEXCHANGEKEYWORD + " " + name);
             }
         }
         GameObject.Find("ExchangeText").GetComponent<Text>().text = "Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected;

@@ -17,9 +17,8 @@ public class GUIButtonRoutines : MonoBehaviour
         // Check if there is a gui up before we move to the next phase since it could result in unknown state
         if (GlobalDefinitions.guiList.Count == 0)
         {
-            // Need to do this first since during changes in control the quit routine passes control so this would never be sent
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                TransportScript.SendSocketMessage(GlobalDefinitions.QUITKEYWORD);
+            // Need to do this first since during changes in control the next phase routine passes control so this would never be sent
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.NEXTPHASEKEYWORD);
 
             // Button to quit the current game state
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit(GameControl.inputMessage.GetComponent<InputMessage>());
@@ -199,10 +198,7 @@ public class GUIButtonRoutines : MonoBehaviour
 
                 CombatResolutionRoutines.combatResolutionDisplay();
 
-                if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                {
-                    TransportScript.SendSocketMessage(GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD);
-                }
+                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD);
             }
             else
                 GlobalDefinitions.guiUpdateStatusMessage("No combats have been selected therefore nothing to resolve");
@@ -216,8 +212,7 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     public void executeUndo()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.UNDOKEYWORD);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.UNDOKEYWORD);
 
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeUndo(GameControl.inputMessage.GetComponent<InputMessage>());
     }
@@ -228,8 +223,7 @@ public class GUIButtonRoutines : MonoBehaviour
     public void displayAlliedSupplyRange()
     {
         // Notify the remote computer
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.DISPLAYALLIEDSUPPLYRANGETOGGLEWORD);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYALLIEDSUPPLYRANGETOGGLEWORD);
 
 
         if (gameObject.GetComponent<Toggle>().isOn)
@@ -262,9 +256,7 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     public void displayMustAttackUnits()
     {
-        // Notify the remote computer
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.DISPLAYMUSTATTACKTOGGLEWORD);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYMUSTATTACKTOGGLEWORD);
 
         if (gameObject.GetComponent<Toggle>().isOn)
             CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, true);
@@ -294,8 +286,7 @@ public class GUIButtonRoutines : MonoBehaviour
     {
         if (GlobalDefinitions.guiList.Count == 0)
         {
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                TransportScript.SendSocketMessage(GlobalDefinitions.LOADCOMBATKEYWORD);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOADCOMBATKEYWORD);
 
             GlobalDefinitions.guiUpdateStatusMessage("Select a hex to attack");
             if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedInvasionStateInstance")
@@ -322,9 +313,7 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     public void displayGermanSupplyRange()
     {
-        // Notify the remote computer
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.DISPLAYGERMANSUPPLYRANGETOGGLEWORD);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYGERMANSUPPLYRANGETOGGLEWORD);
 
         if (gameObject.GetComponent<Toggle>().isOn)
         {

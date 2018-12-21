@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,11 +22,8 @@ public class CarpetBombingSelectionToggleRoutines : MonoBehaviour
             }
             else
             {
-                if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network)
-                {
-                    TransportScript.SendSocketMessage(GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD + " " + GlobalDefinitions.CombatResultToggleName);
-                    TransportScript.SendSocketMessage(GlobalDefinitions.CARPETBOMBINGRESULTSSELECTEDKEYWORD + " " + name + " " + dieRollResult);
-                }
+                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD + " " + GlobalDefinitions.CombatResultToggleName);
+                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CARPETBOMBINGRESULTSSELECTEDKEYWORD + " " + name + " " + dieRollResult);
                 GlobalDefinitions.removeGUI(transform.parent.gameObject);
                 CombatResolutionRoutines.executeCombatResults(defendingUnits, attackingUnits, combatOdds, dieRollResult, combatResults, buttonLocation);
 

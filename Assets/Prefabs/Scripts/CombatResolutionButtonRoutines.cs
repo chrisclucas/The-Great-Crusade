@@ -12,9 +12,7 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
     /// </summary>
     public void cancelAttack()
     {
-        // If a network game, have the remote game cancel the attack
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.COMBATCANCELKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATCANCELKEYWORD + " " + name);
 
         // Since we are going to reset the mustBeAttackedUnits list I need to clear out all the highlighting since 
         // there are cases where units were added to the list because of cross river attacks but haven't been assigned
@@ -85,8 +83,7 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
     public void ok()
     {
         // If network game notify the remote system to execute OK
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.COMBATOKKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATOKKEYWORD + " " + name);
 
         if (GetComponentInChildren<Text>().text == "Continue")
         {
@@ -149,8 +146,7 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
 
     public void locateAttack()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.COMBATLOCATIONSELECTEDKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATLOCATIONSELECTEDKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 
@@ -248,8 +244,7 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                TransportScript.SendSocketMessage(GlobalDefinitions.ADDCOMBATAIRSUPPORTKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDCOMBATAIRSUPPORTKEYWORD + " " + name);
 
             if (GlobalDefinitions.tacticalAirMissionsThisTurn < GlobalDefinitions.maxNumberOfTacticalAirMissions)
             {
@@ -274,8 +269,7 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
         }
         else
         {
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-                TransportScript.SendSocketMessage(GlobalDefinitions.REMOVECOMBATAIRSUPPORTKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.REMOVECOMBATAIRSUPPORTKEYWORD + " " + name);
 
             curentCombat.GetComponent<Combat>().attackAirSupport = false;
             GlobalDefinitions.tacticalAirMissionsThisTurn--;

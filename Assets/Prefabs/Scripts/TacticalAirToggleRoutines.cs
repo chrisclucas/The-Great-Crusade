@@ -10,8 +10,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void addCloseDefenseHex()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.ADDCLOSEDEFENSEKEYWORD);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDCLOSEDEFENSEKEYWORD);
 
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
                 GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().executeCloseDefenseSelection;
@@ -20,8 +19,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void cancelCloseDefense()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.CANCELCLOSEDEFENSEKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CANCELCLOSEDEFENSEKEYWORD + " " + name);
 
         for (int index = 0; index < GlobalDefinitions.closeDefenseHexes.Count; index++)
             if (GlobalDefinitions.closeDefenseHexes[index] == hex)
@@ -37,8 +35,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void locateCloseDefense()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.LOCATECLOSEDEFENSEKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOCATECLOSEDEFENSEKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // This centers the camera on the hex
@@ -52,8 +49,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void addInterdictedUnit()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.ADDUNITINTERDICTIONKEYWORD);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDUNITINTERDICTIONKEYWORD);
 
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
                 GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().executeUnitInterdictionSelection;
@@ -62,8 +58,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void cancelInterdictedUnit()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.CANCELUNITINTERDICTIONKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CANCELUNITINTERDICTIONKEYWORD + " " + name);
 
         for (int index = 0; index < GlobalDefinitions.interdictedUnits.Count; index++)
             if (GlobalDefinitions.interdictedUnits[index] == unit)
@@ -78,8 +73,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void locateInterdictedUnit()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.LOCATEUNITINTERDICTIONKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOCATEUNITINTERDICTIONKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // This centers the camera on the unit
@@ -93,8 +87,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void addRiverInterdiction()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.ADDRIVERINTERDICTIONKEYWORD);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDRIVERINTERDICTIONKEYWORD);
 
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
                 GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().executeRiverInterdictionSelection;
@@ -103,8 +96,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void cancelRiverInterdiction()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.CANCELRIVERINTERDICTIONKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CANCELRIVERINTERDICTIONKEYWORD + " " + name);
 
         for (int index = 0; index < GlobalDefinitions.riverInderdictedHexes.Count; index++)
             if (GlobalDefinitions.riverInderdictedHexes[index] == hex)
@@ -120,8 +112,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void locateRiverInterdiction()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.LOCATERIVERINTERDICTIONKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOCATERIVERINTERDICTIONKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // This centers the camera on the hex
@@ -135,8 +126,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public void multiUnitSelection()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD + " " + name);
 
         GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
         CombatResolutionRoutines.addInterdictedUnitToList(unit);
@@ -144,8 +134,7 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
     public static void tacticalAirOK()
     {
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
-            TransportScript.SendSocketMessage(GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD);
 
         GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
 
