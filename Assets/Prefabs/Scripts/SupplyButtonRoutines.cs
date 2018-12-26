@@ -90,7 +90,7 @@ public class SupplyButtonRoutines : MonoBehaviour
         // Turn the button back on
         GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit(GameControl.inputMessage.GetComponent<InputMessage>());
+        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
     }
 
     /// <summary>

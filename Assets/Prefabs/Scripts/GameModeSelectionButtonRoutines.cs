@@ -24,9 +24,10 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
         {
             GlobalDefinitions.writeToLogFile("okGameMode: Setting up hotseat mode");
             GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.Hotseat;
+            GlobalDefinitions.commandFileHeader = "Hotseat";
             GameControl.createStatesForHotSeatOrNetwork();
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
+            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
             GlobalDefinitions.gameStarted = true;
             GlobalDefinitions.localControl = true;
@@ -38,6 +39,7 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             // Note: unlike hotseat or network the state transitions in AI are determined by the side being played so the state creation is called in the button routines
             // that are invoked by the user selecting the side to play
             GlobalDefinitions.writeToLogFile("okGameMode: Setting up AI mode");
+            GlobalDefinitions.commandFileHeader = "AI";
             GlobalDefinitions.askUserWhichSideToPlay();
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
         }
@@ -45,6 +47,7 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
         {
             GlobalDefinitions.writeToLogFile("okGameMode: Setting up Network mode");
             GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.Network;
+            GlobalDefinitions.commandFileHeader = "Network";
             GameControl.createStatesForHotSeatOrNetwork();
             GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
             MainMenuRoutines.networkSettingsUI();

@@ -21,7 +21,7 @@ public class GUIButtonRoutines : MonoBehaviour
             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.NEXTPHASEKEYWORD);
 
             // Button to quit the current game state
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit(GameControl.inputMessage.GetComponent<InputMessage>());
+            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
         }
         else
             GlobalDefinitions.guiUpdateStatusMessage("Resolve current gui before advancing to the next phase");
@@ -534,9 +534,8 @@ public class GUIButtonRoutines : MonoBehaviour
     /// </summary>
     public void victoryOK()
     {
-        InputMessage inputMessage = null;
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.victoryState.GetComponent<VictoryState>();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessage);
+        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
         GlobalDefinitions.removeAllGUIs();
     }
 }

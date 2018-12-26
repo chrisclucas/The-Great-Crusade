@@ -25,8 +25,7 @@ public class GameTypeSelectionButtonRoutines : MonoBehaviour
 
             // Since at this point we know we are starting a new game and not running the command file, remove the command file
             if (!GlobalDefinitions.commandFileBeingRead)
-                if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
-                    File.Delete(GameControl.path + GlobalDefinitions.commandFile);
+                GlobalDefinitions.deleteCommandFile();
 
             GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
@@ -38,8 +37,7 @@ public class GameTypeSelectionButtonRoutines : MonoBehaviour
 
             // Since at this point we know we are starting a new game and not running the command file, remove the command file
             if (!GlobalDefinitions.commandFileBeingRead)
-                if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
-                    File.Delete(GameControl.path + GlobalDefinitions.commandFile);
+                GlobalDefinitions.deleteCommandFile();
 
             GameControl.setUpStateInstance.GetComponent<SetUpState>().executeSavedGame();
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
@@ -47,9 +45,9 @@ public class GameTypeSelectionButtonRoutines : MonoBehaviour
         else if (GlobalDefinitions.commandFileToggle.GetComponent<Toggle>().isOn)
         {
             GlobalDefinitions.writeToLogFile("newSavedGameOK: Executing command file");
-            
-            GameControl.setUpStateInstance.GetComponent<SetUpState>().readCommandFile();
+
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
+            GameControl.setUpStateInstance.GetComponent<SetUpState>().readCommandFile();            
         }
     }
 

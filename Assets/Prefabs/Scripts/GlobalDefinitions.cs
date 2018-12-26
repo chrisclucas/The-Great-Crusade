@@ -89,6 +89,7 @@ public class GlobalDefinitions : MonoBehaviour
     // Contains the current game mode
     public enum GameModeValues { Hotseat, AI, Network, EMail }
     public static GameModeValues gameMode;
+    public static string commandFileHeader; // Used to log what type of game the command file was generated with
     public static bool gameStarted = false;
 
     //  Use to determine if Combat Assignment is available
@@ -2243,6 +2244,16 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
     /// <summary>
+    /// Deletes the current command file if it exists and writes the header line to a new version
+    /// </summary>
+    public static void deleteCommandFile()
+    {
+        if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
+            File.Delete(GameControl.path + GlobalDefinitions.commandFile);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.commandFileHeader);
+    }
+
+    /// <summary>
     /// This routine returns the local public ip address
     /// </summary>
     /// <returns></returns>
@@ -2436,7 +2447,8 @@ public class GlobalDefinitions : MonoBehaviour
     public const string COMBATOKKEYWORD = "CombatOK";
     public const string CARPETBOMBINGRESULTSSELECTEDKEYWORD = "CarpetBombingResultsSelected";
     public const string RETREATSELECTIONKEYWORD = "RetreatSelection";
-    public const string POSTCOMBATMOVEMENTKEYWORD = "PostCombatMovement";
+    public const string SELECTPOSTCOMBATMOVEMENTKEYWORD = "SelectPostCombatMovement";
+    public const string DESELECTPOSTCOMBATMOVEMENTKEYWORD = "DeselectPostCombatMovement";
     public const string ADDEXCHANGEKEYWORD = "AddExchange";
     public const string OKEXCHANGEKEYWORD = "OKExchange";
     public const string REMOVEEXCHANGEKEYWORD = "RemoveExchange";

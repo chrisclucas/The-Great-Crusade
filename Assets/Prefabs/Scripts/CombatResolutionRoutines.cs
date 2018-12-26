@@ -118,7 +118,7 @@ public class CombatResolutionRoutines : MonoBehaviour
 
         Canvas combatCanvas = null;
 
-        // In case a scrolling window is needed for the supply sources need to create a content panel
+        // In case a scrolling window is needed for the combats need to create a content panel
         GameObject combatContentPanel = new GameObject("CombatContentPanel");
         GlobalDefinitions.combatContentPanel = combatContentPanel;
         Image panelImage = combatContentPanel.AddComponent<Image>();
@@ -404,7 +404,7 @@ public class CombatResolutionRoutines : MonoBehaviour
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("Combat Results: Odds " + combatOdds);
 #endif
-        if (GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Network)
+        if ((GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Network) && !GlobalDefinitions.commandFileBeingRead)
         {
             GlobalDefinitions.dieRollResult1 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
             //GlobalDefinitions.dieRollResult1 = 0;  // REMOVE - FOR TESTING ONLY

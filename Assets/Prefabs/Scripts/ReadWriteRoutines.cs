@@ -55,7 +55,7 @@ public class ReadWriteRoutines : MonoBehaviour
             if (!GlobalDefinitions.commandFileBeingRead)
             {
                 if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
-                    File.Delete(GameControl.path + GlobalDefinitions.commandFile);
+                    GlobalDefinitions.deleteCommandFile();
                 using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
                     writeFile.WriteLine("SavedTurnFile " + " " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
             }
@@ -149,7 +149,7 @@ public class ReadWriteRoutines : MonoBehaviour
             //StartCoroutine(TransportScript.sendInitialGameData(GlobalDefinitions.SAVEFILETRANSMITCOMPLETEKEYWORD));
 
             GlobalDefinitions.writeToLogFile("readTurnFile: File read complete.  Initialize Game State");
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
+            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
         }
     }
 

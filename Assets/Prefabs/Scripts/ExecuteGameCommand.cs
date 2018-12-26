@@ -72,7 +72,7 @@ public class ExecuteGameCommand : MonoBehaviour {
                 CombatResolutionRoutines.combatResolutionDisplay();
                 break;
             case GlobalDefinitions.NEXTPHASEKEYWORD:
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit(GameControl.inputMessage.GetComponent<InputMessage>());
+                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
                 break;
 
             case GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD:
@@ -142,6 +142,8 @@ public class ExecuteGameCommand : MonoBehaviour {
                 break;
             case GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD:
                 // Load the combat results; the die roll is on the Global variable
+                GlobalDefinitions.writeToLogFile("Die Roll 1 = " + GlobalDefinitions.dieRollResult1);
+                GlobalDefinitions.writeToLogFile("Die Roll 2 = " + GlobalDefinitions.dieRollResult2);
                 GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().resolutionSelected();
                 break;
             case GlobalDefinitions.COMBATLOCATIONSELECTEDKEYWORD:
@@ -159,8 +161,11 @@ public class ExecuteGameCommand : MonoBehaviour {
             case GlobalDefinitions.RETREATSELECTIONKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
                 break;
-            case GlobalDefinitions.POSTCOMBATMOVEMENTKEYWORD:
+            case GlobalDefinitions.SELECTPOSTCOMBATMOVEMENTKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
+                break;
+            case GlobalDefinitions.DESELECTPOSTCOMBATMOVEMENTKEYWORD:
+                GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = false;
                 break;
             case GlobalDefinitions.ADDEXCHANGEKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
@@ -204,7 +209,7 @@ public class ExecuteGameCommand : MonoBehaviour {
                 break;
             case GlobalDefinitions.PLAYNEWGAMEKEYWORD:
                 GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
+                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
 
                 // Set the global parameter on what file to use, can't pass it to the executeNoResponse since it is passed as a method delegate elsewhere
                 GlobalDefinitions.germanSetupFileUsed = Convert.ToInt32(switchEntries[1]);

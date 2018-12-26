@@ -597,6 +597,7 @@ public class GameControl : MonoBehaviour
             germanCombatStateInstance.GetComponent<CombatState>().nextGameState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
 
             // Set up the state transitions
+            setUpStateInstance.GetComponent<SetUpState>().nextGameState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
             germanAISetupStateInstance.GetComponent<GermanAISetupState>().nextGameState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
             turnInitializationStateInstance.GetComponent<TurnInitializationState>().nextGameState = alliedReplacementStateInstance.GetComponent<AlliedReplacementState>();
             alliedReplacementStateInstance.GetComponent<AlliedReplacementState>().nextGameState = alliedSupplyStateInstance.GetComponent<SupplyState>();

@@ -13,7 +13,7 @@ public class PostCombatMovementToggleRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.POSTCOMBATMOVEMENTKEYWORD + " " + name);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SELECTPOSTCOMBATMOVEMENTKEYWORD + " " + name);
 
             // The user has selected a unit.  If there is only one hex available move it there.
             // Otherwise turn off the gui, highlight the hexes available and wait for user selection
@@ -66,6 +66,7 @@ public class PostCombatMovementToggleRoutines : MonoBehaviour
         // This executes when a unit is deselected
         else
         {
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DESELECTPOSTCOMBATMOVEMENTKEYWORD + " " + name);
             // Take the unit and move it back to its beginning hex
             GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(beginningHex,
                     gameObject.GetComponent<PostCombatMovementToggleRoutines>().unit.GetComponent<UnitDatabaseFields>().occupiedHex,

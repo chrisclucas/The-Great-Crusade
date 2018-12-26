@@ -138,6 +138,6 @@ public class TacticalAirToggleRoutines : MonoBehaviour
 
         GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit(GameControl.inputMessage.GetComponent<InputMessage>());
+        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
     }
 }

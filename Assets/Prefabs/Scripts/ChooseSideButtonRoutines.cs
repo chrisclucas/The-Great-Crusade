@@ -8,6 +8,7 @@ public class ChooseSideButtonRoutines : MonoBehaviour
     public void allyButtonSelected()
     {
         GlobalDefinitions.nationalityUserIsPlaying = GlobalDefinitions.Nationality.Allied;
+        GlobalDefinitions.commandFileHeader += " Allied";
         GameControl.createStatesForAI(GlobalDefinitions.Nationality.Allied);
         GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
         GlobalDefinitions.gameStarted = true;
@@ -16,7 +17,7 @@ public class ChooseSideButtonRoutines : MonoBehaviour
 
         // Call the setup routine.  The user will indicate whether they are playing a saved or new game there.
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.germanAISetupStateInstance.GetComponent<GermanAISetupState>();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
+        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
         // Note there is no execute method for the German AI state
     }
 
@@ -26,6 +27,7 @@ public class ChooseSideButtonRoutines : MonoBehaviour
     public void germanButtonSelected()
     {
         GlobalDefinitions.nationalityUserIsPlaying = GlobalDefinitions.Nationality.German;
+        GlobalDefinitions.commandFileHeader += " German";
         GameControl.createStatesForAI(GlobalDefinitions.Nationality.German);
         GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
         GlobalDefinitions.gameStarted = true;
@@ -33,7 +35,7 @@ public class ChooseSideButtonRoutines : MonoBehaviour
         GlobalDefinitions.removeGUI(transform.parent.gameObject);
 
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
+        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
     }
 }

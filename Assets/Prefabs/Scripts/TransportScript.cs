@@ -217,11 +217,11 @@ public class TransportScript : MonoBehaviour
                         // Since at this point we know we are starting a new game and not running the command file, remove the command file
                         if (!GlobalDefinitions.commandFileBeingRead)
                             if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
-                                File.Delete(GameControl.path + GlobalDefinitions.commandFile);
+                                GlobalDefinitions.deleteCommandFile();
 
                         // Set the game state to Setup 
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(GameControl.inputMessage.GetComponent<InputMessage>());
+                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
                         GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
                         GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                         GlobalDefinitions.gameStarted = true;
