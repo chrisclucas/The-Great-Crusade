@@ -100,7 +100,7 @@ public class InvasionRoutines : MonoBehaviour
         //  Check for valid unit
         if (selectedUnit == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No unit selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No unit selected; select a unit in Britain that is available to invade this turn");
         }
 
         // Check if the unit is on a sea hex, this would make it a unit that has already been deployed for an invasion
@@ -169,7 +169,7 @@ public class InvasionRoutines : MonoBehaviour
                     else
                     {
                         // Don't know why we would ever get here but if we do return a null
-                        GlobalDefinitions.guiUpdateStatusMessage("Selected unit is not recognized as armor, infantry, or airborne");
+                        GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Selected unit is not recognized as armor, infantry, or airborne");
                     }
                 }
             }
@@ -225,11 +225,11 @@ public class InvasionRoutines : MonoBehaviour
             else
             {
                 GlobalDefinitions.guiDisplayUnitsOnHex(selectedHex);
-                GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not available");
+                GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not available for invasion, must select a highlighted hex");
             }
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No hex selected, must select a highlighted hex");
 
         if (GlobalDefinitions.selectedUnit != null)
             GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);

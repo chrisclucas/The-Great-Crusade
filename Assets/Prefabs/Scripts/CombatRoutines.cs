@@ -235,13 +235,13 @@ public class CombatRoutines : MonoBehaviour
         else
         {
             if (hex == null)
-                GlobalDefinitions.guiUpdateStatusMessage("No valid hex selected");
+                GlobalDefinitions.guiUpdateStatusMessage("No valid hex selected for combat; hex selected must contain enemy units");
             else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0)
-                GlobalDefinitions.guiUpdateStatusMessage("No units found on hex selected");
+                GlobalDefinitions.guiUpdateStatusMessage("No units found on hex selected for combat; hex selected must contain enemy units");
             else if (!nonCommittedDefendersAvailable(hex))
-                GlobalDefinitions.guiUpdateStatusMessage("No uncommitted defenders found on hex selected");
+                GlobalDefinitions.guiUpdateStatusMessage("No uncommitted defenders found on hex selected; all units on hex are already assigned to combat.  Cancel attacks and reassign combat to add additional attacking units.");
             else if (returnUncommittedUnits(returnAdjacentEnemyUnits(hex, GlobalDefinitions.returnOppositeNationality(defendingNationality))).Count == 0)
-                GlobalDefinitions.guiUpdateStatusMessage("No available units available to attack the hex selected");
+                GlobalDefinitions.guiUpdateStatusMessage("No units are available to attack the hex selected");
             else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality != defendingNationality)
                 GlobalDefinitions.guiDisplayUnitsOnHex(hex);
 

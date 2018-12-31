@@ -43,7 +43,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             case "7:1":
                 return (12);
             default:
-                GlobalDefinitions.guiUpdateStatusMessage("Unknown Odds Found - " + combatOdds);
+                GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unknown Odds Found - " + combatOdds);
                 return (11);
         }
     }
@@ -68,7 +68,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             case GlobalDefinitions.CombatResults.Exchange:
                 return ("Exchange");
             default:
-                GlobalDefinitions.guiUpdateStatusMessage("Can't translate combat results - " + combatResults);
+                GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Can't translate combat results - " + combatResults);
                 return ("");
         }
     }
@@ -733,7 +733,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 break;
 
             default:
-                GlobalDefinitions.guiUpdateStatusMessage("Unknown combat result - " + convertResultsToString(combatResults));
+                GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unknown combat result - " + convertResultsToString(combatResults));
                 break;
         }
     }
@@ -1244,7 +1244,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             GlobalDefinitions.postCombatMovementGuiInstance.SetActive(true);
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Invalid hex selected");
+            GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not available for post-combat movement");
     }
 
     /// <summary>
@@ -1579,7 +1579,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Invalid hex selected for Close Defense Support");
+            GlobalDefinitions.guiUpdateStatusMessage("Invalid hex selected for Close Defense Support.  Hex must be occupied by Allied units");
         }
 
         // Only pull up a gui if this isn't the AI calling the routine
@@ -1603,7 +1603,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         bool riverHex = false;
 
         if (riverInterdictionHex == null)
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No hex selected; must select a hex bordered by a river");
 
         else if (riverInterdictionHex.GetComponent<HexDatabaseFields>().bridge)
             GlobalDefinitions.guiUpdateStatusMessage("Dyke cannot be selected for river interdiction");
@@ -1668,7 +1668,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     }
                     else if (numberOfUnits == 0)
                     {
-                        GlobalDefinitions.guiUpdateStatusMessage("All units on the hex have been interdicted or aren't available for strategic movement anyhow");
+                        GlobalDefinitions.guiUpdateStatusMessage("All units on the hex have already been interdicted or aren't available for strategic movement anyhow");
 
                         // If a gui isn't already up then call up a tactical air gui
                         if (GlobalDefinitions.guiList.Count == 0)
@@ -1727,7 +1727,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("No unit selected");
+                GlobalDefinitions.guiUpdateStatusMessage("No units to interdict on the hex selected");
 
                 // Only pull up a gui if this isn't the AI calling the routine
                 if (GlobalDefinitions.localControl)
@@ -1743,7 +1743,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No hex selected; must select a hex that has German units on it");
 
             // Only pull up a gui if this isn't the AI calling the routine
             if (GlobalDefinitions.localControl)
@@ -1787,7 +1787,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         // The German units are all North of the line so the Free French units need to be marked as being available
         if (germanUnitsCleared)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Free French units are available");
+            GlobalDefinitions.guiUpdateStatusMessage("The five Free French units at the bottom of the board are now available");
             GameObject.Find("Armor-FR-5").GetComponent<UnitDatabaseFields>().turnAvailable = GlobalDefinitions.turnNumber;
             GameObject.Find("Infantry-FR-14").GetComponent<UnitDatabaseFields>().turnAvailable = GlobalDefinitions.turnNumber;
             GameObject.Find("Infantry-FR-2").GetComponent<UnitDatabaseFields>().turnAvailable = GlobalDefinitions.turnNumber;

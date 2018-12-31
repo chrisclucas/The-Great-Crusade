@@ -8,7 +8,6 @@ using System.Collections;
 public delegate object delMethod(object delMessage);
 public delegate void methodDelegateWithParameters(InputMessage inputMessage);
 public delegate void Action();
-//public enum enGameTypes { HotSeat, Network, AI, Email };
 
 public class InputMessage : MonoBehaviour
 {
@@ -156,7 +155,7 @@ public class SetUpState : GameState
         {
             executeMethod = executeSelectUnit;
             GlobalDefinitions.guiUpdatePhase(currentNationality + " Setup Mode");
-            GlobalDefinitions.guiUpdateStatusMessage("German Setup Mode: Place units in preparation for an invasion.\n        Note that static units must go on coastal hexes or inland ports\n        German reserves must start on starred hexes");
+            GlobalDefinitions.guiUpdateStatusMessage("German Setup Mode: Place units in preparation for an invasion.\n        Note that static units must go on coastal hexes, ports, or inland ports\n        German reserves must start on starred hexes in Germany");
             GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
         }
     }
@@ -187,7 +186,7 @@ public class SetUpState : GameState
                 GlobalDefinitions.guiUpdateStatusMessage("The command file game mode doesn't match the current game mode - cannot execute");
                 GlobalDefinitions.commandFileBeingRead = false;
                 theReader.Close();
-                GlobalDefinitions.getNewOrSavedGame();
+                MainMenuRoutines.getGameModeUI();
                 return;
             }
 
@@ -562,7 +561,7 @@ public class AlliedInvasionState : GameState
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Unit is committed to an attack.  Attack must be canceled in order to undo movement");
+                GlobalDefinitions.guiUpdateStatusMessage("Unit selected is committed to an attack.  Attack must be canceled in order to undo movement. \nIn order to cancel combat click the Display All Combats button");
                 GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
@@ -665,7 +664,7 @@ public class AlliedAirborneState : GameState
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Unit is committed to an attack.  Attack must be canceled in order to undo movement");
+                GlobalDefinitions.guiUpdateStatusMessage("Unit selected is committed to an attack.  Attack must be canceled in order to undo movement. \nIn order to cancel combat click the Display All Combats button");
                 GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
@@ -730,13 +729,16 @@ public class MovementState : GameState
 
     public void executeSelectUnit(InputMessage inputMessage)
     {
+        GlobalDefinitions.writeToLogFile("executeSelectUnit: executing");
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().processUnitSelectionForMovement(inputMessage.unit, currentNationality);
 
         if (inputMessage.unit != null)
             if ((currentNationality == GlobalDefinitions.Nationality.Allied) && inputMessage.unit.GetComponent<UnitDatabaseFields>().inBritain)
                 executeMethod = executeSelectReinforcementDestination;
             else if (GlobalDefinitions.startHex != null)
+            {
                 executeMethod = executeSelectUnitDestination;
+            }
 
         // Need to set this so that the desitination routines know what unit is moving
         GlobalDefinitions.selectedUnit = inputMessage.unit;
@@ -806,7 +808,7 @@ public class MovementState : GameState
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Unit is committed to an attack.  Attack must be canceled in order to undo movement");
+                GlobalDefinitions.guiUpdateStatusMessage("Unit selected is committed to an attack.  Attack must be canceled in order to undo movement. \nIn order to cancel combat click the Display All Combats button");
                 GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
@@ -948,11 +950,11 @@ public class CombatState : GameState
         // not to mention that if combat resolution was started it was already checked that required units were involved in a combat already
         if ((!GlobalDefinitions.combatResolutionStarted) && (CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, true)))
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Units required to be involved in combat this turn are still unassigned.  Cannot exit combat mode");
+            GlobalDefinitions.guiUpdateStatusMessage("Units highlighted are required to be involved in combat this turn and not committed to combat.  Cannot exit combat mode until this is resolved by adding units to combat.");
         }
         else if (GlobalDefinitions.allCombats.Count > 0)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Must resolve committed combats before exiting combat mode");
+            GlobalDefinitions.guiUpdateStatusMessage("Must resolve committed combats before exiting combat mode.  Click the Display All Combats button and resolve all combats.");
         }
         else
         {
@@ -1034,7 +1036,7 @@ public class AlliedTacticalAirState : GameState
 
     public void nonToggleSelection(InputMessage inputMessage)
     {
-        GlobalDefinitions.guiUpdateStatusMessage("Must select a Toogle before selecting unit");
+        GlobalDefinitions.guiUpdateStatusMessage("Must select the type of air mission from the menu before selecting unit or hex");
     }
 }
 
@@ -1098,7 +1100,7 @@ public class GermanReplacementState : GameState
         {
             GlobalDefinitions.germanReplacementsRemaining += 5;
             GlobalDefinitions.guiUpdateStatusMessage("German replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + " select a German unit from the OOB sheet");
-            GlobalDefinitions.guiUpdateStatusMessage("Select a German replacement unit from the OOB sheet or hit Next to save the factors");
+            GlobalDefinitions.guiUpdateStatusMessage("Select a German replacement unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
             // Initialized mode
             executeMethod = executeSelectUnit;
         }
@@ -1116,7 +1118,7 @@ public class GermanReplacementState : GameState
             executeMethod = executeSelectUnitDestination;
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Selected unit has to be on the OOB sheet");
+            GlobalDefinitions.guiUpdateStatusMessage("Selected unit has to be on the OOB sheet.  Select a German replacement unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
     }
 
     public void executeSelectUnitDestination(InputMessage inputMessage)
@@ -1124,7 +1126,7 @@ public class GermanReplacementState : GameState
         if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landGermanUnitFromOffBoard(GlobalDefinitions.selectedUnit, inputMessage.hex))
         {
             if (GlobalDefinitions.germanReplacementsRemaining > 0)
-                GlobalDefinitions.guiUpdateStatusMessage("German replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + " select an German unit from the OOB sheet");
+                GlobalDefinitions.guiUpdateStatusMessage("German replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + " select an German unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
         }
         GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
         GlobalDefinitions.selectedUnit = null;
@@ -1242,17 +1244,14 @@ public class AlliedAIState : GameState
     private IEnumerator executeAlliedAIMode()
     {
         messageText = "Initializing Units";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState - executing unit initialization");
         yield return new WaitForSeconds(.1f);
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().initializeUnits();
 
         messageText = "Determining Reinforcement Ports";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState - determining allied reinforcement ports");
         yield return new WaitForSeconds(.1f);
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().determineAvailableReinforcementPorts();
 
         messageText = "Determining Supply Status";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState - determining allied supply status");
         yield return new WaitForSeconds(.1f);
         GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().setAlliedSupplyStatus(false);
 
@@ -1260,7 +1259,6 @@ public class AlliedAIState : GameState
         if ((GlobalDefinitions.turnNumber == 1) || (GlobalDefinitions.turnNumber == 9))
         {
             messageText = "Determine Invasion Site";
-            GlobalDefinitions.writeToLogFile("executeAlliedAIState: - making Allied invasion  turn " + GlobalDefinitions.turnNumber);
             yield return new WaitForSeconds(.1f);
             AIRoutines.determineInvasionSite();
         }
@@ -1269,7 +1267,6 @@ public class AlliedAIState : GameState
         if (GlobalDefinitions.turnNumber > 8)
         {
             messageText = "Calculating Replacement Factors";
-            GlobalDefinitions.writeToLogFile("executeAlliedAIState - calculating replacement factors");
             yield return new WaitForSeconds(.1f);
             GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().calculateAlliedRelacementFactors();
         }
@@ -1279,26 +1276,22 @@ public class AlliedAIState : GameState
                     GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().checkIfAlliedReplacementsAvailable())
         {
             messageText = "Selecting Replacements";
-            GlobalDefinitions.writeToLogFile("executeAlliedAIState: - selecting Allied replacements  turn " + GlobalDefinitions.turnNumber + "  factors " + GlobalDefinitions.alliedReplacementsRemaining);
             yield return new WaitForSeconds(.1f);
             AIRoutines.selectAlliedAIReplacementUnits();
         }
 
         // Make supply movements with HQ's before combat moves, supply is a problem for the Allies
         messageText = "Making Supply Movmements";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState: make supply movements");
         yield return new WaitForSeconds(.1f);
         AIRoutines.makeSupplyMovements();
 
         // Set the airborne limits available this turn
         messageText = "Set Airborne Limits";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState: set airborne limits");
         yield return new WaitForSeconds(.1f);
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().setAirborneLimits();
 
         // Make combat moves
         messageText = "Making Combat Movement";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState: - moving Allied units for combat");
         yield return new WaitForSeconds(.1f);
         List<GameObject> defendingHexes = new List<GameObject>();
         AIRoutines.setAlliedAttackHexValues(defendingHexes);
@@ -1306,7 +1299,6 @@ public class AlliedAIState : GameState
 
         // Land any reinforcements that are available
         messageText = "Landing Reinforcements";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState: landing reinforcements");
         yield return new WaitForSeconds(.1f);
         AIRoutines.landAllAlliedReinforcementUnits();
 
@@ -1318,13 +1310,11 @@ public class AlliedAIState : GameState
 
         // Make strategic moves (units that are out of attack range)
         messageText = "Making Strategic Movement";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState: - moving strategic Allied units");
         yield return new WaitForSeconds(.1f);
         AIRoutines.makeAlliedStrategicMoves(GlobalDefinitions.alliedUnitsOnBoard);
 
         // Determine movement actions
         messageText = "Moving Remaining Units";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState: - moving all Allied units");
         yield return new WaitForSeconds(.1f);
         AIRoutines.moveAllUnits(GlobalDefinitions.Nationality.Allied);
 
@@ -1340,7 +1330,6 @@ public class AlliedAIState : GameState
         // There are scenarios where a unit can be blocked from moving so they were not able to escape from an enemy ZOC
         // but were not able to meet the target odds.  Check for units in enemy ZOC here and assign combat regardless of odds
         messageText = "Set Remaining Attacks";
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState: - set default attacks");
         yield return new WaitForSeconds(.1f);
         AIRoutines.setDefaultAttacks(GlobalDefinitions.Nationality.Allied);
 
@@ -1349,10 +1338,9 @@ public class AlliedAIState : GameState
             unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().alliedControl = true;
 
         // Clear out the combat results from the last turn
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState: Combat results from last turn - Count = " + GlobalDefinitions.combatResultsFromLastTurn.Count);
-        foreach (GlobalDefinitions.CombatResults result in GlobalDefinitions.combatResultsFromLastTurn)
-            GlobalDefinitions.writeToLogFile("executeAlliedAIState:    " + result);
-        GlobalDefinitions.writeToLogFile("executeAlliedAIState: Successful attacks = " + AIRoutines.successfulAttacksLastTurn());
+        //foreach (GlobalDefinitions.CombatResults result in GlobalDefinitions.combatResultsFromLastTurn)
+        //    GlobalDefinitions.writeToLogFile("executeAlliedAIState:    " + result);
+        //GlobalDefinitions.writeToLogFile("executeAlliedAIState: Successful attacks = " + AIRoutines.successfulAttacksLastTurn());
 
         GlobalDefinitions.writeToLogFile("Ending Allied AI at: " + DateTime.Now + " AI ran for " + (DateTime.Now - executeTime));
         GlobalDefinitions.AICombat = true;

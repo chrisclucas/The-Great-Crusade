@@ -1717,11 +1717,11 @@ public class AIRoutines : MonoBehaviour
             if (attackingNationality == GlobalDefinitions.Nationality.Allied && !oddsMet && hexBeingAttacked && !successfulAttacksLastTurn() &&
                     (GlobalDefinitions.currentAirborneDropsThisTurn < GlobalDefinitions.maxNumberAirborneDropsThisTurn))
             {
-                List<GameObject> airborneUnits = new List<GameObject>();
+                List <GameObject> airborneUnits = new List<GameObject>();
                 GameObject airborneUnit;
                 foreach (AISingleAttackHex singleAttackHex in newPotentialAttack.defendingHexes[0].singleAttackHexes)
                     if (!oddsMet && GlobalDefinitions.hexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied) &&
-                            (GlobalDefinitions.maxNumberAirborneDropsThisTurn > 0))
+                            (GlobalDefinitions.maxNumberAirborneDropsThisTurn > 0) && (GlobalDefinitions.currentAirborneDropsThisTurn < GlobalDefinitions.maxNumberAirborneDropsThisTurn))
                     {
                         airborneUnit = returnAirborneFromBritain(airborneUnits);
                         if (airborneUnit != null)
@@ -4069,9 +4069,9 @@ public class AIRoutines : MonoBehaviour
 
         foreach (GameObject unit in unitList)
         {
-#if OUTPUTDEBUG
+            #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("makeSupplyMovements: sending HQ " + unit.name + "back to Britain due to being in German ZOC");
-#endif
+            #endif
             GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit, true);
         }
 
@@ -4099,9 +4099,9 @@ public class AIRoutines : MonoBehaviour
                 }
             }
         }
-#if OUTPUTDEBUG
+        #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("makeSupplyMovements: number of empty ports = " + availablePorts.Count);
-#endif
+        #endif
         // Sort the available ports by from highest supply capacity to lowest
         availablePorts.Sort((b, a) => a.GetComponent<HexDatabaseFields>().supplyCapacity.CompareTo(b.GetComponent<HexDatabaseFields>().supplyCapacity));
 
@@ -4111,15 +4111,15 @@ public class AIRoutines : MonoBehaviour
                 availableHQs.Add(unit);
 
         bool stillNeedSupply = true;
-#if OUTPUTDEBUG
-        //GlobalDefinitions.writeToLogFile("makeSupplyMovements: number of available HQs = " + availableHQs.Count);
-#endif
+        #if OUTPUTDEBUG
+        GlobalDefinitions.writeToLogFile("makeSupplyMovements: number of available HQs = " + availableHQs.Count);
+        #endif
         // Check if any of the available HQ's can move to any of the available ports
         foreach (GameObject unit in availableHQs)
         {
-#if OUTPUTDEBUG
+            #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("makeSupplyMovement: executing for HQ on board " + unit.name);
-#endif
+            #endif
             // Get the available movement for the unit
             unit.GetComponent<UnitDatabaseFields>().availableMovementHexes =
                     GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
@@ -4145,9 +4145,9 @@ public class AIRoutines : MonoBehaviour
                 foreach (GameObject hex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
                     if (!unitMoved && hex.GetComponent<HexDatabaseFields>().sea)
                     {
-#if OUTPUTDEBUG
+                        #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("makeSupplyMovement:       sending HQ back to Britain " + unit.name);
-#endif
+                        #endif
                         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit, true);
                         unitMoved = true;
                     }
@@ -4174,17 +4174,17 @@ public class AIRoutines : MonoBehaviour
                 }
             }
         }
-#if OUTPUTDEBUG
+        #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("makeSupplyMovements: supplyNeeded = " + supplyNeeded());
-#endif
+        #endif
         // If supply is still needed at this point and there are no available HQ's check to see if any HQ's can be landed
         if (supplyNeeded())
         {
-#if OUTPUTDEBUG
+            #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("makeSupplyMovements: all reinforcement ports - turn = " + GlobalDefinitions.turnNumber);
             foreach (GameObject port in GlobalDefinitions.availableReinforcementPorts)
                 GlobalDefinitions.writeToLogFile("makeSupplyMovements:      port - " + port.name);
-#endif
+            #endif
             // The approach I'm going to use is to only land HQs on ports.  I'm not going to land them somewhere and try to get them to the port.
             foreach (GameObject port in GlobalDefinitions.availableReinforcementPorts)
             {
@@ -4195,9 +4195,9 @@ public class AIRoutines : MonoBehaviour
                         GameObject hqUnit = returnAvailableHQUnit(1);
                         if (hqUnit != null)
                         {
-#if OUTPUTDEBUG
+                            #if OUTPUTDEBUG
                             GlobalDefinitions.writeToLogFile("makeSupplyMovements: landing hq unit " + hqUnit.name + " landing on port " + port.name);
-#endif
+                            #endif
                             port.GetComponent<HexDatabaseFields>().availableForMovement = true;
                             GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(hqUnit, port, false);
                             hqUnit.GetComponent<UnitDatabaseFields>().hasMoved = true; // Don't want the unit wandering off during combat or movement
@@ -4208,9 +4208,9 @@ public class AIRoutines : MonoBehaviour
         }
 
         // Check for adding to the current supply range
-#if OUTPUTDEBUG
+        #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("makeSupplyMovements: no supply needed, checking if supply range needs to be extended");
-#endif
+        #endif
         float furthestUnit;
         // Loop through each of the supply sources and determine the furthest unit that it is supplying
         foreach (GameObject supplySource in GlobalDefinitions.supplySources)
@@ -4227,9 +4227,9 @@ public class AIRoutines : MonoBehaviour
             if ((supplyRange == 0) && supplySource.GetComponent<HexDatabaseFields>().successfullyInvaded)
                 // If a hex is successfully invaded it automatically gets a range of GlobalDefinitions.supplyRangeIncrement hexes even without an HQ unit
                 supplyRange = GlobalDefinitions.supplyRangeIncrement;
-#if OUTPUTDEBUG
+            #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("makeSupplyMovements: supply source " + supplySource.name + " supply range = " + supplyRange + " furthest unit = " + furthestUnit);
-#endif
+            #endif
             if ((int)furthestUnit > (supplyRange - 4))
             {
                 if (GlobalDefinitions.numberHQOnHex(supplySource) < 3)
@@ -4241,9 +4241,9 @@ public class AIRoutines : MonoBehaviour
                         GameObject hqUnit = returnAvailableHQUnit(1);
                         if (hqUnit != null)
                         {
-#if OUTPUTDEBUG
+                            #if OUTPUTDEBUG
                             GlobalDefinitions.writeToLogFile("makeSupplyMovements: extending supply range, landing hq unit " + hqUnit.name + " landing on port " + supplySource.name);
-#endif
+                            #endif
                             supplySource.GetComponent<HexDatabaseFields>().availableForMovement = true;
                             GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(hqUnit, supplySource, false);
                             hqUnit.GetComponent<UnitDatabaseFields>().hasMoved = true; // Don't want the unit wandering off during combat or movement
@@ -4265,17 +4265,21 @@ public class AIRoutines : MonoBehaviour
                 // Only check if not in a German ZOC.  Combat movement comes later.
                 if (!port.GetComponent<HexDatabaseFields>().inGermanZOC)
                 {
-#if OUTPUTDEBUG
+                    #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("makeSupplyMovements: checking if port " + port.name + " needs defenders added");
-#endif
+                    #endif
+
                     List<GameObject> nearbyEnemyUnits = new List<GameObject>();
                     int enemyAttackFactors = 0;
                     int numberDefendersNeeded = 1;
                     int numberDefendersPresent = 0;
 
                     nearbyEnemyUnits = findNearbyEnemyUnits(port, GlobalDefinitions.Nationality.Allied, GlobalDefinitions.attackRange); // Nothing can attack if more than four hexes away
-                    //GlobalDefinitions.writeToLogFile("makeSupplyMovements:      nearby enemy units count = " + nearbyEnemyUnits.Count);
-
+                    
+                    #if OUTPUTDEBUG
+                    GlobalDefinitions.writeToLogFile("makeSupplyMovements:      nearby enemy units count = " + nearbyEnemyUnits.Count);
+                    #endif
+                    
                     // Successfully invaded hexes don't need a unit on them to be a reinforcement port
                     if (nearbyEnemyUnits.Count > 0)
                     {
@@ -4284,9 +4288,11 @@ public class AIRoutines : MonoBehaviour
                             enemyAttackFactors += enemyUnit.GetComponent<UnitDatabaseFields>().attackFactor;
                         if (enemyAttackFactors > 4)
                             numberDefendersNeeded = 2; // If more than four total factors need to put two units on the hex (if possible)
-#if OUTPUTDEBUG
+                        
+                        #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("makeSupplyMovements:      enemy attack factors = " + enemyAttackFactors);
-#endif
+                        #endif
+
                         foreach (GameObject tempUnit in port.GetComponent<HexDatabaseFields>().occupyingUnit)
                         {
                             // Set the hasMoved flag so the unit doesn't move off the hex
@@ -4295,40 +4301,44 @@ public class AIRoutines : MonoBehaviour
                                 numberDefendersPresent++;
                         }
 
-#if OUTPUTDEBUG
+                        #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("makeSupplyMovements:      number of defenders present = " + numberDefendersPresent);
-#endif
+                        #endif
+
                         while (numberDefendersNeeded > numberDefendersPresent)
                         {
                             // The hex needs more defense on it and there are enemy units nearby, land an infantry unit
-
                             GameObject reinforcementUnit = returnAvailableInfantryUnit();
                             if (reinforcementUnit == null)
                                 reinforcementUnit = returnAvailableArmorUnit();
+
                             if (reinforcementUnit != null)
                             {
                                 if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnReinforcementLandingHexes(reinforcementUnit).Contains(port))
                                 {
-#if OUTPUTDEBUG
+                                    #if OUTPUTDEBUG
                                     GlobalDefinitions.writeToLogFile("makeSupplyMovements: landing infantry unit " + reinforcementUnit.name + " for defense on port " + port.name);
-#endif
+                                    #endif
+
                                     GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(reinforcementUnit, port, false);
                                     reinforcementUnit.GetComponent<UnitDatabaseFields>().hasMoved = true; // Don't want the unit wandering off during combat or movement
                                     numberDefendersPresent++;
                                 }
                                 else
                                 {
-#if OUTPUTDEBUG
+                                    #if OUTPUTDEBUG
                                     GlobalDefinitions.writeToLogFile("makeSupplyMovements:      no reinforcement units available");
-#endif
+                                    #endif
+
                                     numberDefendersPresent = numberDefendersNeeded; // No units are available so exit out
                                 }
                             }
                             else
                             {
-#if OUTPUTDEBUG
+                                #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("makeSupplyMovements:      no reinforcement units available");
-#endif
+                                #endif
+
                                 numberDefendersPresent = numberDefendersNeeded; // No units are available so exit out
                             }
                         }
@@ -4338,22 +4348,22 @@ public class AIRoutines : MonoBehaviour
         // If supply is needed, need to see if there are open ports (not included in reinforcement ports) that can be occupied to increase supply.
         // If I don't do this here, early on in an invasion the units will be allocated to attacks and there won't be any to capture unoccupied hexes
         // when movement comes along.
-#if OUTPUTDEBUG
+        #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("makeSupplyMovements: supplyNeeded = " + supplyNeeded());
-#endif
+        #endif
         if (supplyNeeded())
         {
-#if OUTPUTDEBUG
+            #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("makeSupplyMovements: Check for additional supply ports available");
-#endif
+            #endif
             // We've already checked all the ports with allied units on them so now check ports that don't have any units on them
             foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
                 if ((hex.GetComponent<HexDatabaseFields>().coastalPort || hex.GetComponent<HexDatabaseFields>().inlandPort) &&
                     !hex.GetComponent<HexDatabaseFields>().inGermanZOC && (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0))
                 {
-#if OUTPUTDEBUG
+                    #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("makeSupplyMovements: Found an empty port " + hex.name);
-#endif
+                    #endif
                     List<GameObject> nearbyHexes = new List<GameObject>();
                     // This is an empty port.  Check to see if there is a reinforcement port within 7 hexes
                     // It is 7 hexes because all allied units move four hexes and it counts one to land so there are only 7 more moves remaining in strategic movement
@@ -4361,9 +4371,9 @@ public class AIRoutines : MonoBehaviour
                     foreach (GameObject reinforcementPort in GlobalDefinitions.availableReinforcementPorts)
                         if (nearbyHexes.Contains(reinforcementPort))
                         {
-#if OUTPUTDEBUG
+                            #if OUTPUTDEBUG
                             GlobalDefinitions.writeToLogFile("makeSupplyMovements: " + reinforcementPort.name + "is within range of " + hex.gameObject.name);
-#endif
+                            #endif
                             // There is a reinforcement port within movement range.  Land a unit and then see if movement is available
 
                             GameObject reinforcementUnit = returnAvailableInfantryUnit();
@@ -4372,15 +4382,15 @@ public class AIRoutines : MonoBehaviour
 
                             if (reinforcementUnit != null)
                             {
-#if OUTPUTDEBUG
+                                #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("makeSupplyMovements: landing unit " + reinforcementUnit.name);
-#endif
+                                #endif
                                 // We have a unit, now land it
                                 if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(reinforcementUnit, reinforcementPort, false))
                                 {
-#if OUTPUTDEBUG
+                                    #if OUTPUTDEBUG
                                     GlobalDefinitions.writeToLogFile("makeSupplyMovements:      unit landed");
-#endif
+                                    #endif
                                     reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes =
                                     GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(reinforcementPort, reinforcementUnit);
                                     if (reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Contains(hex.gameObject))
@@ -4397,7 +4407,7 @@ public class AIRoutines : MonoBehaviour
                         }
                 }
         }
-#if OUTPUTDEBUG
+        #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("makeSupplyMovements: executing  number of Allied units on board = " + GlobalDefinitions.alliedUnitsOnBoard.Count);
         GlobalDefinitions.writeToLogFile("makeSupplyMovements:      number of supply sources = " + GlobalDefinitions.supplySources.Count);
         foreach (GameObject hex in GlobalDefinitions.supplySources)
@@ -4405,7 +4415,7 @@ public class AIRoutines : MonoBehaviour
             GlobalDefinitions.writeToLogFile("makeSupplyMovements:          " + hex.name + " supply capacity = " + hex.GetComponent<HexDatabaseFields>().supplyCapacity + " supply excess = " + hex.GetComponent<HexDatabaseFields>().unassignedSupply);
             GlobalDefinitions.writeToLogFile("makeSupplyMovements:              number of units = " + hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + "  supply range = " + hex.GetComponent<HexDatabaseFields>().supplyRange);
         }
-#endif
+        #endif
     }
 
     /// <summary>

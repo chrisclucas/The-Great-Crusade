@@ -117,7 +117,7 @@ public class SetupRoutines : MonoBehaviour
             // Not sure if this is needed.  Can't really be in "Units On Board" without a hex assignment
             if (unit.GetComponent<UnitDatabaseFields>().occupiedHex == null)
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Unit " + unit.GetComponent<UnitDatabaseFields>().name + " is not assigned a hex locunit.GetComponent<UnitDatabaseFields>().ation");
+                GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unit " + unit.GetComponent<UnitDatabaseFields>().name + " is not assigned a hex locunit.GetComponent<UnitDatabaseFields>().ation");
                 GlobalDefinitions.highlightUnit(unit);
                 returnState = false;
             }
@@ -128,7 +128,7 @@ public class SetupRoutines : MonoBehaviour
                     !unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().inlandPort &&
                     !unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().coastalPort)
             {
-                GlobalDefinitions.guiUpdateStatusMessage(unit.GetComponent<UnitDatabaseFields>().unitDesignation + " is a static unit and must start on a coast hex or an inland port");
+                GlobalDefinitions.guiUpdateStatusMessage(unit.GetComponent<UnitDatabaseFields>().unitDesignation + " is a static unit and must start on a coast hex, a port, or an inland port");
                 GlobalDefinitions.highlightUnit(unit);
                 returnState = false;
             }
@@ -142,7 +142,7 @@ public class SetupRoutines : MonoBehaviour
                     (unit.name == "Armor-German-15SS")) &&
                     (!unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().germanRepalcement))
             {
-                GlobalDefinitions.guiUpdateStatusMessage(unit.GetComponent<UnitDatabaseFields>().unitDesignation + " must start on a replacement hex");
+                GlobalDefinitions.guiUpdateStatusMessage(unit.GetComponent<UnitDatabaseFields>().unitDesignation + " must start on a replacement hex (hexes in Germany with a star on them");
                 GlobalDefinitions.highlightUnit(unit);
                 returnState = false;
             }

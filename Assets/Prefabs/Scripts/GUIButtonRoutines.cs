@@ -24,7 +24,7 @@ public class GUIButtonRoutines : MonoBehaviour
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve current gui before advancing to the next phase");
+            GlobalDefinitions.guiUpdateStatusMessage("Resolve displayed menu before trying advancing to the next phase");
     }
 
     /// <summary>
@@ -201,10 +201,10 @@ public class GUIButtonRoutines : MonoBehaviour
                 GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD);
             }
             else
-                GlobalDefinitions.guiUpdateStatusMessage("No combats have been selected therefore nothing to resolve");
+                GlobalDefinitions.guiUpdateStatusMessage("No combats have been assigned therefore there is nothing to resolve");
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve current gui before trying to bring up combat display");
+            GlobalDefinitions.guiUpdateStatusMessage("Resolve the currently displayed menu before trying to bring up combat display");
     }
 
     /// <summary>
@@ -288,7 +288,7 @@ public class GUIButtonRoutines : MonoBehaviour
         {
             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOADCOMBATKEYWORD);
 
-            GlobalDefinitions.guiUpdateStatusMessage("Select a hex to attack");
+            GlobalDefinitions.guiUpdateStatusMessage("Select a hex to attack; hex must contain enemy units that are adjacent to friendly units");
             if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedInvasionStateInstance")
                 GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedInvasionState>().loadCombat;
@@ -305,7 +305,7 @@ public class GUIButtonRoutines : MonoBehaviour
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<CombatState>().executeSelectUnit;
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve current gui before assigning combat");
+            GlobalDefinitions.guiUpdateStatusMessage("Resolve the currently displayed menu before assigning combat");
     }
 
     /// <summary>

@@ -47,7 +47,7 @@ public class ExecuteGameCommand : MonoBehaviour {
                     GameControl.inputMessage.GetComponent<InputMessage>().unit = GameObject.Find(switchEntries[2]);
                 else
                     GameControl.inputMessage.GetComponent<InputMessage>().unit = null;
-
+                
                 GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
                 break;
             case GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD:

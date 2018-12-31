@@ -20,7 +20,7 @@ public class PostCombatMovementToggleRoutines : MonoBehaviour
             if (GlobalDefinitions.hexesAvailableForPostCombatMovement.Count == 0)
             {
                 // This should never happen
-                GlobalDefinitions.guiUpdateStatusMessage("Post-combat unit selected for move but no hexes available");
+                GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Post-combat unit selected for move but no hexes available");
             }
             else if (GlobalDefinitions.hexesAvailableForPostCombatMovement.Count == 1)
             {
@@ -42,7 +42,7 @@ public class PostCombatMovementToggleRoutines : MonoBehaviour
                 }
                 else
                 {
-                    GlobalDefinitions.guiUpdateStatusMessage("Hex is at stacking limit");
+                    GlobalDefinitions.guiUpdateStatusMessage("Hex is at stacking limit; cannot move unit to the hex selected, select a highlighted hex");
                     GetComponent<Toggle>().isOn = false;
                 }
             }

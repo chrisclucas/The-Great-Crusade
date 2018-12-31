@@ -2001,7 +2001,7 @@ public class GlobalDefinitions : MonoBehaviour
 
     public static void displayAlliedVictoryScreen()
     {
-        guiUpdateStatusMessage("Allied victory conditions met");
+        guiUpdateStatusMessage("Allied victory conditions have been met");
 
         int strengthOfVictory = calculateStrengthOfVictory();
         string message = "";
@@ -2034,7 +2034,7 @@ public class GlobalDefinitions : MonoBehaviour
 
     public static void displayGermanVictoryScreen()
     {
-        guiUpdateStatusMessage("German victory conditions met");
+        guiUpdateStatusMessage("German victory conditions have been met");
 
         int strengthOfVictory = calculateStrengthOfVictory();
         string message = "";
@@ -2154,8 +2154,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static void guiUpdateStatusMessage(string message)
     {
         writeToLogFile("guiUpdateStatusMessage: " + message);
-        //GameObject.Find("StatusMessageText").GetComponent<Text>().text = message + "\n" + GameObject.Find("StatusMessageText").GetComponent<Text>().text;
-        GameObject.Find("StatusMessageText").GetComponent<Text>().text = message + "\n" + GameObject.Find("StatusMessageText").GetComponent<Text>().text;
+        GameObject.Find("StatusMessageText").GetComponent<Text>().text = message + "\n\n" + GameObject.Find("StatusMessageText").GetComponent<Text>().text;
     }
 
     /// <summary>

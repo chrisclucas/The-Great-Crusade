@@ -68,7 +68,7 @@ public class CreateBoard : MonoBehaviour
         if (!File.Exists(fileName))
         {
             // There is no recovering from this error but let the user know
-            GlobalDefinitions.guiUpdateStatusMessage("Unable to open the map file " + fileName);
+            GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unable to open the map file " + fileName);
             return;
         }
 
@@ -745,7 +745,7 @@ public class CreateBoard : MonoBehaviour
         StreamReader theReader = new StreamReader(fileName);
         if (theReader == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Unable to read Britain placement file " + fileName);
+            GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unable to read Britain placement file " + fileName);
         }
         using (theReader)
         {
@@ -794,7 +794,7 @@ public class CreateBoard : MonoBehaviour
         if (theReader == null)
         {
             // Can't recover from this error but notify the user
-            GlobalDefinitions.guiUpdateStatusMessage("Cannot access German setup file " + fileName);
+            GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Cannot access German setup file " + fileName);
         }
         else
         {

@@ -245,66 +245,48 @@ public class ReadWriteRoutines : MonoBehaviour
     public void readGlobalVariables(string[] entries)
     {
         GlobalDefinitions.numberOfCarpetBombingsUsed = Convert.ToInt32(entries[1]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set numberofCarpetBombingsUsed set to - " + GlobalDefinitions.numberOfCarpetBombingsUsed);
         GlobalDefinitions.numberInvasionsExecuted = Convert.ToInt32(entries[2]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set numberInvasionsExecuted set to - " + GlobalDefinitions.numberInvasionsExecuted);
         GlobalDefinitions.firstInvasionAreaIndex = Convert.ToInt32(entries[3]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set firstInvasionAreaIndex set to - " + GlobalDefinitions.firstInvasionAreaIndex);
         if (GlobalDefinitions.firstInvasionAreaIndex != -1)
         {
             GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].invaded = true;
-            GlobalDefinitions.writeToLogFile("readGlobalVariables: Set GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].invaded set to - " + GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].invaded);
         }
         GlobalDefinitions.secondInvasionAreaIndex = Convert.ToInt32(entries[4]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set secondInvasionAreaIndex set to - " + GlobalDefinitions.secondInvasionAreaIndex);
         if (GlobalDefinitions.secondInvasionAreaIndex != -1)
         {
             GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].invaded = true;
-            GlobalDefinitions.writeToLogFile("readGlobalVariables: Set GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].invaded set to - " + GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].invaded);
         }
         GlobalDefinitions.germanReplacementsRemaining = Convert.ToInt32(entries[5]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set germanReplacementsRemaining set to - " + GlobalDefinitions.germanReplacementsRemaining);
         GlobalDefinitions.alliedReplacementsRemaining = Convert.ToInt32(entries[6]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set alliedReplacementsRemaining set to - " + GlobalDefinitions.alliedReplacementsRemaining);
         GlobalDefinitions.alliedCapturedBrest = Convert.ToBoolean(entries[7]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set alliedCapturedBrest set to - " + GlobalDefinitions.alliedCapturedBrest);
         GlobalDefinitions.alliedCapturedBoulogne = Convert.ToBoolean(entries[8]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set alliedCapturedBoulogne set to - " + GlobalDefinitions.alliedCapturedBoulogne);
         GlobalDefinitions.alliedCapturedRotterdam = Convert.ToBoolean(entries[9]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set alliedCapturedRotterdam set to - " + GlobalDefinitions.alliedCapturedRotterdam);
         if (GlobalDefinitions.firstInvasionAreaIndex != -1)
         {
             GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].turn = Convert.ToInt32(entries[10]);
-            GlobalDefinitions.writeToLogFile("readGlobalVariables: Set GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].turn set to - " + GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].turn);
         }
         if (GlobalDefinitions.secondInvasionAreaIndex != -1)
         {
             GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].turn = Convert.ToInt32(entries[11]);
-            GlobalDefinitions.writeToLogFile("readGlobalVariables: Set GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].turn set to - " + GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].turn);
         }
         GlobalDefinitions.numberOfTurnsWithoutAttack = Convert.ToInt32(entries[12]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set numberOfTurnsWithoutAttack set to - " + GlobalDefinitions.germanReplacementsRemaining);
 
         GlobalDefinitions.hexesAttackedLastTurn.Clear();
         int loopLimit = Convert.ToInt32(entries[13]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: loading hexes attacked last turn Count = " + loopLimit);
         int entryIndex = 13;
         for (int index = 0; index < loopLimit; index++)
         {
             entryIndex++;
             GlobalDefinitions.hexesAttackedLastTurn.Add(GameObject.Find(entries[entryIndex]));
-            GlobalDefinitions.writeToLogFile("readGlobalVariables:      " + entries[entryIndex]);
         }
 
         entryIndex++;
         GlobalDefinitions.combatResultsFromLastTurn.Clear();
         loopLimit = Convert.ToInt32(entries[entryIndex]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: loading combat results from last turn Count = " + loopLimit);
         for (int index = 0; index < loopLimit; index++)
         {
             entryIndex++;
 
-            GlobalDefinitions.writeToLogFile("readGlobalVariables:      " + entries[entryIndex]);
             switch (entries[entryIndex])
             {
                 case "Delim":
@@ -326,17 +308,13 @@ public class ReadWriteRoutines : MonoBehaviour
         }
         entryIndex++;
         GlobalDefinitions.turnsAlliedMetVictoryCondition = Convert.ToInt32(entries[entryIndex]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set turnsAlliedMetVictoryCondition set to - " + GlobalDefinitions.turnsAlliedMetVictoryCondition);
         entryIndex++;
         GlobalDefinitions.alliedFactorsEliminated = Convert.ToInt32(entries[entryIndex]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set alliedFactorsEliminated set to - " + GlobalDefinitions.alliedFactorsEliminated);
         entryIndex++;
         GlobalDefinitions.germanFactorsEliminated = Convert.ToInt32(entries[entryIndex]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set germanFactorsEliminated set to - " + GlobalDefinitions.germanFactorsEliminated);
 
         entryIndex++;
         GlobalDefinitions.easiestDifficultySettingUsed = Convert.ToInt32(entries[entryIndex]);
-        GlobalDefinitions.writeToLogFile("readGlobalVariables: Set easiestDifficultySettingUsed set to - " + GlobalDefinitions.easiestDifficultySettingUsed);
 
         GlobalDefinitions.guiUpdateLossRatioText();
         GlobalDefinitions.guiDisplayAlliedVictoryStatus();

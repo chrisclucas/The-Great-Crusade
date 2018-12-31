@@ -74,7 +74,7 @@ public class GameControl : MonoBehaviour
         catch
         {
             MessageBox.Show("ERROR: Cannot access log file - cannot continue");
-            GlobalDefinitions.guiUpdateStatusMessage("ERROR: Cannot access log file - cannot continue");
+            GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Cannot access log file - cannot continue");
         }
 
         GlobalDefinitions.writeToLogFile("Game Version " + GlobalDefinitions.releaseVersion);
@@ -232,7 +232,9 @@ public class GameControl : MonoBehaviour
                         GlobalDefinitions.selectedUnit = null;
 
                         GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
-                        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + GlobalDefinitions.getHexFromUserInput(Input.mousePosition).name + " " + gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+                        // I had a bug where double clicking on an off-board unit causes an exception in the following line because it is assuming a hex is being clicked
+                        if (GlobalDefinitions.getHexFromUserInput(Input.mousePosition) != null)
+                            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + GlobalDefinitions.getHexFromUserInput(Input.mousePosition).name + " " + gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
 
                         movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
                             gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);

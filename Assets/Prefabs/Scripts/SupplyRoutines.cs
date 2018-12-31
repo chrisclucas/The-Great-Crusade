@@ -481,7 +481,7 @@ public class SupplyRoutines : MonoBehaviour
         // Only create the gui if there isn't already one active
         if (GlobalDefinitions.guiList.Count > 0)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve current gui before invoking another");
+            GlobalDefinitions.guiUpdateStatusMessage("Resolve currently displayed menu before invoking another");
             return;
         }
 
@@ -770,10 +770,10 @@ public class SupplyRoutines : MonoBehaviour
                         GlobalDefinitions.highlightUnit(unit);
                     }
                     else
-                        GlobalDefinitions.guiUpdateStatusMessage("The currently selected source is not a source for this unit");
+                        GlobalDefinitions.guiUpdateStatusMessage("The currently selected supply source is not a supply source for this unit");
                 }
                 else
-                    GlobalDefinitions.guiUpdateStatusMessage("The source does not have unassigned supply capacity");
+                    GlobalDefinitions.guiUpdateStatusMessage("The supply source does not have unassigned supply capacity");
             }
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
                     GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<SupplyState>().executeSelectUnit;

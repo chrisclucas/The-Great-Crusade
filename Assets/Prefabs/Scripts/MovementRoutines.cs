@@ -131,7 +131,7 @@ public class MovementRoutines : MonoBehaviour
             {
                 GlobalDefinitions.unhighlightUnit(unit);
                 unit = null;
-                GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not avaiable");
+                GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not avaiable; must select a highlighted hex");
                 return (false);
             }
         }
@@ -144,7 +144,7 @@ public class MovementRoutines : MonoBehaviour
                 GlobalDefinitions.unhighlightHex(tempHex);
                 tempHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
             }
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No hex selected; must select a highlighted hex");
             return (false);
         }
     }
@@ -192,7 +192,7 @@ public class MovementRoutines : MonoBehaviour
             {
                 GlobalDefinitions.unhighlightUnit(selectedUnit);
                 selectedUnit = null;
-                GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not avaiable");
+                GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not avaiable; must select a highlighted replacement hex");
                 return (false);
             }
         }
@@ -205,7 +205,7 @@ public class MovementRoutines : MonoBehaviour
                 GlobalDefinitions.unhighlightHex(hex);
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
             }
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No hex selected; must select a highlighted replacement hex");
             return (false);
         }
     }
@@ -1036,7 +1036,7 @@ public class MovementRoutines : MonoBehaviour
             }
 
         if (!returnState)
-            GlobalDefinitions.guiUpdateStatusMessage("Hexes highlighted in yellow are overstacked.  Units must be moved off the hex or undo movement that placed them there");
+            GlobalDefinitions.guiUpdateStatusMessage("Hexes highlighted in yellow are overstacked.  Units must be moved off the hex or select undo last movement to cancel the movement that placed them there");
 
         return (returnState);
     }
@@ -1188,10 +1188,10 @@ public class MovementRoutines : MonoBehaviour
                         if ((hex.GetComponent<HexDatabaseFields>().alliedControl) && (hexAvailableForUnitTypeReinforcements(hex, unit)))
                         {
                             landingHexes.Add(hex);
-                            //GlobalDefinitions.highlightHexForMovement(hex.gameObject);
                             hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
                         }
                     }
+
                     //  Coastal ports have to be occupied and free of German ZOC
                     else if (hex.GetComponent<HexDatabaseFields>().coastalPort)
                     {
@@ -1200,10 +1200,10 @@ public class MovementRoutines : MonoBehaviour
                                 (hexAvailableForUnitTypeReinforcements(hex, unit)))
                         {
                             landingHexes.Add(hex);
-                            //GlobalDefinitions.highlightHexForMovement(hex);
                             hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
                         }
                     }
+
                     // In addition to the coastal port requirements, inland ports must have their dependent hexes free from German occupation
                     else if (hex.GetComponent<HexDatabaseFields>().inlandPort)
                     {
@@ -1212,7 +1212,6 @@ public class MovementRoutines : MonoBehaviour
                                 (hexAvailableForUnitTypeReinforcements(hex, unit)))
                         {
                             landingHexes.Add(hex);
-                            //GlobalDefinitions.highlightHexForMovement(hex);
                             hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
                         }
                     }
@@ -1274,8 +1273,10 @@ public class MovementRoutines : MonoBehaviour
     public bool hexAvailableForUnitTypeReinforcements(GameObject hex, GameObject unit)
     {
         //GlobalDefinitions.writeToLogFile("hexAvailableForUnitTypeReinforcements: invasion area index = " + hex.GetComponent<HexDatabaseFields>().invasionAreaIndex + " invasion turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].turn + " armor units used this turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].armorUnitsUsedThisTurn + " infantry units used this turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].infantryUnitsUsedThisTurn);
+
         // Need to check for a special case; can't land at the two ports in Germany
-        if ((hex.name != "InlandPort_x2_y29") && (hex.name != "InlandPort_x3_y32"))
+        // Also need to check here that the hex has stacking available
+        if ((hex.name != "InlandPort_x2_y29") && (hex.name != "InlandPort_x3_y32") && GlobalDefinitions.hexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied))
         {
             if (unit.GetComponent<UnitDatabaseFields>().armor)
             {
@@ -1579,7 +1580,7 @@ public class MovementRoutines : MonoBehaviour
         //  Check for valid unit
         if (selectedUnit == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No unit selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No unit selected; Allied unit on the OOB sheet must be selected as a replacement or click End Current Phase button to save remaining replacement points for next turn");
         }
         // The unit must be in the dead pile and can only select armor or infantry units
         else if (selectedUnit.transform.parent.gameObject.name == "Units Eliminated")
@@ -1598,16 +1599,16 @@ public class MovementRoutines : MonoBehaviour
                         selectedUnit.GetComponent<UnitDatabaseFields>().inBritain = true;
                     }
                     else
-                        GlobalDefinitions.guiUpdateStatusMessage("Not enough factors remaining for selected unit");
+                        GlobalDefinitions.guiUpdateStatusMessage("Not enough replacement factors remain for selected unit; select a smaller unit or click End Current Phase button to save remaining replacement points for next turn");
                 }
                 else
-                    GlobalDefinitions.guiUpdateStatusMessage("Can only select infantry or armor for replacement");
+                    GlobalDefinitions.guiUpdateStatusMessage("Can only select infantry or armor units for replacement; select a valid unit or click End Current Phase button to save remaining replacement points for next turn");
             }
             else
-                GlobalDefinitions.guiUpdateStatusMessage("Must select an Allied unit");
+                GlobalDefinitions.guiUpdateStatusMessage("Must select an Allied unit or click End Current Phase button to save remaining replacement points for next turn");
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Unit not on OOB sheet");
+            GlobalDefinitions.guiUpdateStatusMessage("Unit not on OOB sheet; select a valid unit or click End Current Phase button to save remaining replacement points for next turn");
     }
 
     /// <summary>
@@ -1622,7 +1623,7 @@ public class MovementRoutines : MonoBehaviour
         //  Check for valid unit
         if (selectedUnit == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No unit selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No unit selected; German unit on the OOB sheet must be selected as a replacement or click End Current Phase button to save remaining replacement points for next turn");
             return false;
         }
         // The unit must be in the dead pile and can only select armor or infantry units
@@ -1640,25 +1641,25 @@ public class MovementRoutines : MonoBehaviour
                     }
                     else
                     {
-                        GlobalDefinitions.guiUpdateStatusMessage("Not enough factors remaining for selected unit");
+                        GlobalDefinitions.guiUpdateStatusMessage("Not enough replacement factors remain for selected unit; select a smaller unit or click End Current Phase button to save remaining replacement points for next turn");
                         return false;
                     }
                 }
                 else
                 {
-                    GlobalDefinitions.guiUpdateStatusMessage("Cannot select HQ units for replacement");
+                    GlobalDefinitions.guiUpdateStatusMessage("Cannot select HQ units for replacement; select a valid unit or click End Current Phase button to save remaining replacement points for next turn");
                     return false;
                 }
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Must select a German unit");
+                GlobalDefinitions.guiUpdateStatusMessage("Allied unit selected; must select a German unit on the OOB sheet or click End Current Phase button to save remaining replacement points for next turn");
                 return false;
             }
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Unit not on OOB sheet");
+            GlobalDefinitions.guiUpdateStatusMessage("Unit not on OOB sheet; must select a German unit on the OOB sheet or click End Current Phase button to save remaining replacement points for next turn");
             return false;
         }
     }
@@ -1745,7 +1746,8 @@ public class MovementRoutines : MonoBehaviour
         }
         else
             GlobalDefinitions.maxNumberAirborneDropsThisTurn = GlobalDefinitions.NormalAirborneDropLimit;
-        GlobalDefinitions.guiUpdateStatusMessage("Max number of airborne drops this turn = " + GlobalDefinitions.maxNumberAirborneDropsThisTurn);
+        if (GlobalDefinitions.localControl)
+            GlobalDefinitions.guiUpdateStatusMessage("Maximum number of airborne drops this turn = " + GlobalDefinitions.maxNumberAirborneDropsThisTurn);
     }
 
     /// <summary>
@@ -1794,7 +1796,7 @@ public class MovementRoutines : MonoBehaviour
             {
                 if (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
                     GlobalDefinitions.guiDisplayUnitsOnHex(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
-                GlobalDefinitions.guiUpdateStatusMessage("The unit selected is not an airborne unit.  Please select an airborne unit");
+                GlobalDefinitions.guiUpdateStatusMessage("The unit selected is not an airborne unit; please select an airborne unit located in Britain");
             }
 
             else if (GlobalDefinitions.alliedUnitsOnBoard.Contains(selectedUnit) && (selectedUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex == null))
@@ -1829,7 +1831,7 @@ public class MovementRoutines : MonoBehaviour
             }
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("No unit selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No unit selected; select an airborne unit in Britain or click the End Current Phase button to go to the next turn phase");
     }
 
     /// <summary>
@@ -1840,7 +1842,7 @@ public class MovementRoutines : MonoBehaviour
     {
         if (selectedHex == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No valid hex selected");
+            GlobalDefinitions.guiUpdateStatusMessage("No valid hex selected; must select a highlighted hex");
 
             // In movement mode getUnitMoveDestination takes case of a unit not moving (unhighlighting, ect...) 
             // But I can't use it here because I have to not count it against the airborne drop limit
@@ -1873,6 +1875,7 @@ public class MovementRoutines : MonoBehaviour
     /// Wrapper for processing a unit selected for movement
     /// </summary>
     /// <param name="selectedUnit"></param>
+    /// <param name="currentNationality"></param>
     public void processUnitSelectionForMovement(GameObject selectedUnit, GlobalDefinitions.Nationality currentNationality)
     {
         if (selectedUnit != null)
@@ -1892,7 +1895,11 @@ public class MovementRoutines : MonoBehaviour
                 }
             // Check if the unit doesn't occupy a hex (we've already checked for a reinforcement unit)
             else if (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex == null)
+            {
                 GlobalDefinitions.guiUpdateStatusMessage("Unit selected must be on the board");
+                GlobalDefinitions.selectedUnit = null;
+                GlobalDefinitions.startHex = null;
+            }
 
             // Selecting a unit on the board
             else
