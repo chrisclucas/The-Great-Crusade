@@ -729,7 +729,6 @@ public class MovementState : GameState
 
     public void executeSelectUnit(InputMessage inputMessage)
     {
-        GlobalDefinitions.writeToLogFile("executeSelectUnit: executing");
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().processUnitSelectionForMovement(inputMessage.unit, currentNationality);
 
         if (inputMessage.unit != null)
@@ -1200,7 +1199,6 @@ public class AlliedAIState : GameState
 {
     DateTime executeTime;
     bool alliedAIExecuting;
-    InputMessage inputMessageParameter;
     string messageText;
 
     // Use the udpate routine to show the status of the AI executing
@@ -1213,7 +1211,6 @@ public class AlliedAIState : GameState
         }
     }
 
-    //InputMessage inputMessage;
     // There are no modes in this state, all actions get executed by the initialization including the state transition
     public override void initialize()
     {

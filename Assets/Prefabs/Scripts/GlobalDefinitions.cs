@@ -375,9 +375,6 @@ public class GlobalDefinitions : MonoBehaviour
 
         numberOfTurnsWithoutAttack = 0;
 
-        alliedVictory = false;
-        germanVictory = false;
-
         foreach (InvasionArea area in invasionAreas)
         {
             area.airborneUnitsUsedThisTurn = 0;

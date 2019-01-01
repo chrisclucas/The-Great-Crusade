@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class SupplyButtonRoutines : MonoBehaviour
@@ -21,16 +18,16 @@ public class SupplyButtonRoutines : MonoBehaviour
             // The toggle was turned on.  Turn any other toggles that are on off.
             // Don't need to reset highlighting since the highlighting routine called
             // sets all units.
-            GlobalDefinitions.writeToLogFile("checkToggle: number of supply GUI = " + GlobalDefinitions.supplyGUI.Count);
-            GlobalDefinitions.writeToLogFile("checkToggle: this toggle name = " + this.name);
+            //GlobalDefinitions.writeToLogFile("checkToggle: number of supply GUI = " + GlobalDefinitions.supplyGUI.Count);
+            //GlobalDefinitions.writeToLogFile("checkToggle: this toggle name = " + this.name);
             foreach (GameObject supplyGui in GlobalDefinitions.supplyGUI)
                 if (supplyGui.GetComponent<SupplyGUIObject>().supplyToggle.name != this.name)
                 {
-                    GlobalDefinitions.writeToLogFile("checkToggle:      turning off Toggle = " + supplyGui.GetComponent<SupplyGUIObject>().supplyToggle.name);
+                    //GlobalDefinitions.writeToLogFile("checkToggle:      turning off Toggle = " + supplyGui.GetComponent<SupplyGUIObject>().supplyToggle.name);
                     supplyGui.GetComponent<SupplyGUIObject>().supplyToggle.GetComponent<Toggle>().isOn = false;
                 }
 
-            GlobalDefinitions.writeToLogFile(" checkToggle: setting currentSupplySource to " + supplySource.name);
+            //GlobalDefinitions.writeToLogFile("checkToggle: setting currentSupplySource to " + supplySource.name);
             GlobalDefinitions.currentSupplySource = supplySource;
             GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().highlightUnitsAvailableForSupply(supplySource);
         }

@@ -27,9 +27,8 @@ public class GameTypeSelectionButtonRoutines : MonoBehaviour
             if (!GlobalDefinitions.commandFileBeingRead)
                 GlobalDefinitions.deleteCommandFile();
 
-            GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
-
+            GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
         }
         else if (GlobalDefinitions.savedGameToggle.GetComponent<Toggle>().isOn)
         {
@@ -39,8 +38,8 @@ public class GameTypeSelectionButtonRoutines : MonoBehaviour
             if (!GlobalDefinitions.commandFileBeingRead)
                 GlobalDefinitions.deleteCommandFile();
 
-            GameControl.setUpStateInstance.GetComponent<SetUpState>().executeSavedGame();
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
+            GameControl.setUpStateInstance.GetComponent<SetUpState>().executeSavedGame();
         }
         else if (GlobalDefinitions.commandFileToggle.GetComponent<Toggle>().isOn)
         {

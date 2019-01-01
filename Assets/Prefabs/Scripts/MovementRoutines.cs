@@ -1173,6 +1173,8 @@ public class MovementRoutines : MonoBehaviour
     {
         List<GameObject> landingHexes = new List<GameObject>();
 
+        GlobalDefinitions.guiUpdateStatusMessage("Number of reinforcement units landed this turn = " + GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn);
+
         if (GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn < GlobalDefinitions.maxNumberAlliedReinforcementPerTurn)
         {
             // There are available units to be landed this turn.  Go through and highlight all ports and invasion beaches that 
@@ -1276,7 +1278,9 @@ public class MovementRoutines : MonoBehaviour
 
         // Need to check for a special case; can't land at the two ports in Germany
         // Also need to check here that the hex has stacking available
-        if ((hex.name != "InlandPort_x2_y29") && (hex.name != "InlandPort_x3_y32") && GlobalDefinitions.hexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied))
+        //if ((hex.name != "InlandPort_x2_y29") && (hex.name != "InlandPort_x3_y32") && GlobalDefinitions.hexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied))
+        // As can be seen above I used to check for whether a hex was fully stacked in order to land reinforcements, I think this may be due to the AI???
+        if ((hex.name != "InlandPort_x2_y29") && (hex.name != "InlandPort_x3_y32"))
         {
             if (unit.GetComponent<UnitDatabaseFields>().armor)
             {

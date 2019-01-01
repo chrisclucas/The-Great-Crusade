@@ -425,8 +425,8 @@ public class SupplyRoutines : MonoBehaviour
                     GlobalDefinitions.unhighlightUnit(unit);
                 }
         }
-        else
-            GlobalDefinitions.writeToLogFile("assignAlliedSupply:       mostUnassignedSupply = 0 all supply has been allocated");
+        //else
+        //    GlobalDefinitions.writeToLogFile("assignAlliedSupply: mostUnassignedSupply = 0 all supply has been allocated");
 
     }
 
@@ -451,11 +451,21 @@ public class SupplyRoutines : MonoBehaviour
             // if it is out of supply it will be gray
             // if it is out of range of the supply hex it will be red
             if ((unit.GetComponent<UnitDatabaseFields>().inSupply) && (unit.GetComponent<UnitDatabaseFields>().supplySource == supplySource))
-                GlobalDefinitions.highlightUnit(unit);
+            {
+                GlobalDefinitions.writeToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " being supplied by current source - highlight yellow");
+                //GlobalDefinitions.highlightUnit(unit);
+                unit.GetComponent<SpriteRenderer>().material.color = Color.yellow;
+            }
             else if (!unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().supplySources.Contains(supplySource))
+            {
+                GlobalDefinitions.writeToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " could be supplied by current source - highlight red");
                 unit.GetComponent<SpriteRenderer>().material.color = Color.red;
+            }
             else if (!unit.GetComponent<UnitDatabaseFields>().inSupply)
+            {
+                GlobalDefinitions.writeToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " out of supply - highlight gray");
                 unit.GetComponent<SpriteRenderer>().material.color = Color.gray;
+            }
         }
     }
 
@@ -481,7 +491,7 @@ public class SupplyRoutines : MonoBehaviour
         // Only create the gui if there isn't already one active
         if (GlobalDefinitions.guiList.Count > 0)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve currently displayed menu before invoking another");
+            GlobalDefinitions.guiUpdateStatusMessage("Resolve currently displayed menu before invoking another - gui list count = " + GlobalDefinitions.guiList.Count + " name[0] = " + GlobalDefinitions.guiList[0].name);
             return;
         }
 
@@ -767,7 +777,7 @@ public class SupplyRoutines : MonoBehaviour
                         GlobalDefinitions.currentSupplySource.GetComponent<HexDatabaseFields>().unassignedSupply--;
                         updateUnassignedText(GlobalDefinitions.currentSupplySource);
                         // Set the unit to a yellow highlight to indicate it is in supply
-                        GlobalDefinitions.highlightUnit(unit);
+                        unit.GetComponent<SpriteRenderer>().material.color = Color.yellow;
                     }
                     else
                         GlobalDefinitions.guiUpdateStatusMessage("The currently selected supply source is not a supply source for this unit");
