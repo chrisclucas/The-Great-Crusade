@@ -3158,6 +3158,9 @@ public class AIRoutines : MonoBehaviour
                     // attacks the units know that they aren't able to use the hex for an attack.
                     foreach (GameObject unit in newAttack.attackingUnits)
                     {
+
+                        // I had a insidious bug because by moving the units ashore it didn't remove the unit from the occupyingUnit list on the sea hex
+                        unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().occupyingUnit.Remove(unit);
 #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("AIInvasion: moving unopposed unit ashore " + unit.name + " to hex " + newAttack.defendingHexes[0].defendingHex.name + " successfully invaded flag set");
 #endif

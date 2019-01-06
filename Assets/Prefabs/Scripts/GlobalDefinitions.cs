@@ -15,6 +15,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static string britainunitlocationfile = "TGCBritainUnitLocation.txt";
     public static string settingsFile = "TGCSettingsFile.txt";
     public static string commandFile = "TGCOutputFiles\\TGCCommandFile.txt";
+    public static string fullCommandFile = "TGCOutputFiles\\TGCFullCommandFile.txt";
 
     // Configuration settings
     public static int difficultySetting;
@@ -2233,9 +2234,11 @@ public class GlobalDefinitions : MonoBehaviour
         {
             using (StreamWriter writeFile = File.AppendText(GameControl.path + commandFile))
                 writeFile.WriteLine(commandString);
+            using (StreamWriter writeFile = File.AppendText(GameControl.path + fullCommandFile))
+                writeFile.WriteLine(commandString);
 
-            if (localControl && (gameMode == GameModeValues.Network))
-                TransportScript.SendSocketMessage(commandString);
+                if (localControl && (gameMode == GameModeValues.Network))
+                    TransportScript.SendSocketMessage(commandString);
         }
     }
 
@@ -2246,6 +2249,16 @@ public class GlobalDefinitions : MonoBehaviour
     {
         if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
             File.Delete(GameControl.path + GlobalDefinitions.commandFile);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.commandFileHeader);
+    }
+
+    /// <summary>
+    /// Deletes the full command file if it exists and writes the header line to a new version
+    /// </summary>
+    public static void deleteFullCommandFile()
+    {
+        if (File.Exists(GameControl.path + GlobalDefinitions.fullCommandFile))
+            File.Delete(GameControl.path + GlobalDefinitions.fullCommandFile);
         GlobalDefinitions.writeToCommandFile(GlobalDefinitions.commandFileHeader);
     }
 

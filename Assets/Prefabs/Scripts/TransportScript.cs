@@ -34,9 +34,6 @@ public class TransportScript : MonoBehaviour
     public static int dataSize;
     public static byte recError;
 
-    //private static System.DateTime connectionTime;
-    private static System.TimeSpan disconnectionTime;
-
     public static string fileName;
 
     public static void networkInit()
@@ -217,7 +214,10 @@ public class TransportScript : MonoBehaviour
                         // Since at this point we know we are starting a new game and not running the command file, remove the command file
                         if (!GlobalDefinitions.commandFileBeingRead)
                             if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
+                            {
                                 GlobalDefinitions.deleteCommandFile();
+                                GlobalDefinitions.deleteFullCommandFile();
+                            }
 
                         // Set the game state to Setup 
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
@@ -362,7 +362,6 @@ public class TransportScript : MonoBehaviour
             connectionId = NetworkTransport.Connect(clientSocket, opponentIPaddr, socketPort, 0, out error);
 
             GlobalDefinitions.writeToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-            //connectionTime = DateTime.Now;
 
             if (connectionId <= 0)
                 return (false);

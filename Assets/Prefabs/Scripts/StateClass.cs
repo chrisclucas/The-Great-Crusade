@@ -100,10 +100,13 @@ public class SetUpState : GameState
     {
         string turnFileName;
 
-        // Since at this point we know we are starting a new game and not running the command file, remove the command file
+        // Since at this point we know we are starting a saved game and not running the command file, remove the command file
         if (!GlobalDefinitions.commandFileBeingRead)
             if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
+            {
                 GlobalDefinitions.deleteCommandFile();
+                GlobalDefinitions.deleteFullCommandFile();
+            }
 
         // This calls up the file browser
         turnFileName = GlobalDefinitions.guiFileDialog();
@@ -126,6 +129,14 @@ public class SetUpState : GameState
     {
         int fileNumber;
 
+        // Since at this point we know we are starting a new game and not running the command file, remove the command file
+        if (!GlobalDefinitions.commandFileBeingRead)
+            if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
+            {
+                GlobalDefinitions.deleteCommandFile();
+                GlobalDefinitions.deleteFullCommandFile();
+            }
+
         // If the fileNumber is less than 100 the number to be used is being passed as part of a network game
         if (GlobalDefinitions.germanSetupFileUsed == 100)
         {
@@ -143,8 +154,7 @@ public class SetUpState : GameState
         // The network communication is a little different for a new game so I can't use the routine to write to the command file
         // since I don't want it sending a message to the remote computer.
         if (!GlobalDefinitions.commandFileBeingRead)
-            using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
-                writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
+            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
 
         // If this is a game where the computer is playing the Germans then exit out of setup at this point
         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.Allied))
@@ -161,9 +171,17 @@ public class SetUpState : GameState
     }
 
     /// <summary>
-    /// Routine used to load the command file
+    /// wrapper needed to execute IEnumerator
     /// </summary>
     public void readCommandFile()
+    {
+        StartCoroutine("executeFullCommandFile");
+    }
+
+    /// <summary>
+    /// Routine used to load the command file.  Needs to run as a parallel process to account for the fact that the AI runs as a parallel process
+    /// </summary>
+    private IEnumerator executeFullCommandFile()
     {
         char[] delimiterChars = { ' ' };
         string line;
@@ -174,27 +192,16 @@ public class SetUpState : GameState
         StreamReader theReader = new StreamReader(GameControl.path + GlobalDefinitions.commandFile);
         using (theReader)
         {
-            // The first thing we need to do is to read the header and determine if the command file was written playing
-            // the same game type that is currently in play.  If not then the command file will not be read.
-            line = theReader.ReadLine();
-            GlobalDefinitions.writeToLogFile("readCommandFile: reading line - " + line);
-            
-            // At this point the command file header should be constructed for this game.  I need to compare that to the header line in the command file.
-            if (line != GlobalDefinitions.commandFileHeader)
-            {
-                // The game types are not the same.  Inform the user.
-                GlobalDefinitions.guiUpdateStatusMessage("The command file game mode doesn't match the current game mode - cannot execute");
-                GlobalDefinitions.commandFileBeingRead = false;
-                theReader.Close();
-                MainMenuRoutines.getGameModeUI();
-                return;
-            }
-
-
             do
             {
+                // When reading the command file, need to wait if the AI is executing
+                while ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.localControl)
+                {
+                    yield return new WaitForSeconds(1f);
+                }
                 line = theReader.ReadLine();
                 GlobalDefinitions.writeToLogFile("readCommandFile: reading line - " + line);
+                //Debug.Log("readCommandFile: reading line - " + line);
                 if (line != null)
                 {
                     switchEntries = line.Split(delimiterChars);
@@ -204,10 +211,8 @@ public class SetUpState : GameState
                             // A path name with a space in it will cause the name to be split.  Anything after the [0] entry needs to be added back together
                             int a = 3;
                             string fileName = switchEntries[2];
-                            GlobalDefinitions.writeToLogFile("readCommandFile: switchEntries[1] = " + switchEntries[1] + "  loop length = " + switchEntries.Length);
                             while (a < switchEntries.Length)
                             {
-                                GlobalDefinitions.writeToLogFile("readCommandFile: a = " + a + " switchEntries[a] = " + switchEntries[a]);
                                 fileName = fileName + " " + switchEntries[a];
                                 a++;
                             }
@@ -745,20 +750,25 @@ public class MovementState : GameState
 
     public void executeSelectUnitDestination(InputMessage inputMessage)
     {
+        GlobalDefinitions.writeToLogFile("executeSelectUnitDestination: moving " + GlobalDefinitions.selectedUnit.name + " from " + GlobalDefinitions.startHex.name + " to " + inputMessage.hex.name);
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().getUnitMoveDestination(GlobalDefinitions.selectedUnit, GlobalDefinitions.startHex,
                 inputMessage.hex);
+        GlobalDefinitions.writeToLogFile("executeSelectUnitDestination: unit moved to destination");
+
         // Need to make sure the unit didn't move back to Britain
-        if (GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
-        {
-            if (currentNationality == GlobalDefinitions.Nationality.Allied)
-                // If an allied unit stops on a hex mark the hex as being in Allied control
-                GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().alliedControl = true;
-            else
-            {
-                GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().alliedControl = false;
-                GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().successfullyInvaded = false;
-            }
-        }
+        //if (GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
+        //{
+        //    if (currentNationality == GlobalDefinitions.Nationality.Allied)
+        // If an allied unit stops on a hex mark the hex as being in Allied control
+        //        GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().alliedControl = true;
+        //    else
+        //    {
+        //        GlobalDefinitions.writeToLogFile("executeSelectUnitDestination: German unit - setting allied control to false and successfully invaded to false");
+        //        GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().alliedControl = false;
+        //        GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().successfullyInvaded = false;
+        //    }
+        //}
+
         executeMethod = executeSelectUnit;
     }
 

@@ -44,7 +44,7 @@ public class MovementRoutines : MonoBehaviour
         // the invading hex is selected which is a sea hex and sends the unit back to Britain.  While I'm not sure why
         // an invading unit would be selected in movement mode (since it can't move) if I don't account for this the 
         // invading unit is sent back to Britain and it's too late to bring it back (we're in movement mode).
-        // The way I will deal wiht this is to check if start and destination are the same and just unselect the unit.
+        // The way I will deal with this is to check if start and destination are the same and just unselect the unit.
         // This will apply to more than just the scenario listed above but is still valid.
 
         // If the user selects a bridge the logic won't let him move there even though it is highlighted.
@@ -724,7 +724,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="unit"></param>
     public void moveUnit(GameObject destinationHex, GameObject beginningHex, GameObject unit)
     {
-        //GlobalDefinitions.writeToLogFile("moveUnit: moving unit = " + unit.name + " beginning hex = " + beginningHex.name + " destination hex = " + destinationHex.name);
+        GlobalDefinitions.writeToLogFile("moveUnit: moving unit = " + unit.name + " beginning hex = " + beginningHex.name + " destination hex = " + destinationHex.name);
 
         // Need to check if the AI is overstacking units
         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.hexUnderStackingLimit(destinationHex, unit.GetComponent<UnitDatabaseFields>().nationality) &&
@@ -747,6 +747,7 @@ public class MovementRoutines : MonoBehaviour
         // NEED FIX: Note I need to fix the fact that someone who manually moves a unit to a hex and then performs an undo will result in a false setting
         if ((GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.AI) || ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && GlobalDefinitions.localControl))
         {
+            GlobalDefinitions.writeToLogFile("moveUnit: executing hex control");
             // Set the control of the hex
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
                 destinationHex.GetComponent<HexDatabaseFields>().alliedControl = true;
@@ -863,7 +864,6 @@ public class MovementRoutines : MonoBehaviour
             // flag for the current nationality will never be reset here.
             hex.GetComponent<HexDatabaseFields>().inGermanZOC = false;
             hex.GetComponent<HexDatabaseFields>().inAlliedZOC = false;
-
             checkAdjacentHexZOCImpact(hex);
             foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
                 if (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
@@ -883,9 +883,13 @@ public class MovementRoutines : MonoBehaviour
         // Need to check if the hex is occupied
         if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
             if (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
+            {
                 hex.GetComponent<HexDatabaseFields>().inAlliedZOC = true;
+            }
             else
+            {
                 hex.GetComponent<HexDatabaseFields>().inGermanZOC = true;
+            }
 
         foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
         {

@@ -42,7 +42,7 @@ public class PostCombatMovementToggleRoutines : MonoBehaviour
                 }
                 else
                 {
-                    GlobalDefinitions.guiUpdateStatusMessage("Hex is at stacking limit; cannot move unit to the hex selected, select a highlighted hex");
+                    GlobalDefinitions.guiUpdateStatusMessage("Hex is at stacking limit; cannot move unit");
                     GetComponent<Toggle>().isOn = false;
                 }
             }

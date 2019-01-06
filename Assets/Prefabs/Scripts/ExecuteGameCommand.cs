@@ -142,8 +142,8 @@ public class ExecuteGameCommand : MonoBehaviour {
                 break;
             case GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD:
                 // Load the combat results; the die roll is on the Global variable
-                GlobalDefinitions.writeToLogFile("Die Roll 1 = " + GlobalDefinitions.dieRollResult1);
-                GlobalDefinitions.writeToLogFile("Die Roll 2 = " + GlobalDefinitions.dieRollResult2);
+                //GlobalDefinitions.writeToLogFile("Die Roll 1 = " + GlobalDefinitions.dieRollResult1);
+                //GlobalDefinitions.writeToLogFile("Die Roll 2 = " + GlobalDefinitions.dieRollResult2);
                 GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().resolutionSelected();
                 break;
             case GlobalDefinitions.COMBATLOCATIONSELECTEDKEYWORD:
@@ -218,7 +218,6 @@ public class ExecuteGameCommand : MonoBehaviour {
                 break;
 
             case GlobalDefinitions.INVASIONAREASELECTIONKEYWORD:
-                GlobalDefinitions.writeToLogFile("processNetworkMessage: Received INVASIONAREASELECTIONKEYWORD - turning toggle " + switchEntries[1] + " to true");
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
                 break;
 
