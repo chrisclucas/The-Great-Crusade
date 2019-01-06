@@ -42,7 +42,7 @@ public class GameTypeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.writeToLogFile("newSavedGameOK: Executing command file");
 
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
-            GameControl.setUpStateInstance.GetComponent<SetUpState>().readFullCommandFile();            
+            GameControl.setUpStateInstance.GetComponent<SetUpState>().readCommandFile();            
         }
     }
 
