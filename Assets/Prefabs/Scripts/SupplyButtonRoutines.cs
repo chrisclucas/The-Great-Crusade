@@ -65,7 +65,7 @@ public class SupplyButtonRoutines : MonoBehaviour
     /// </summary>
     public void okSupplyWithEndPhase()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.OKSUPPLYKEYWORD + " " + name);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.OKSUPPLYWITHENDPHASEKEYWORD + " " + name);
 
         // Reset all highlighting
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)

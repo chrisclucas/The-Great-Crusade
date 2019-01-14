@@ -179,6 +179,13 @@ public class ExecuteGameCommand : MonoBehaviour {
             case GlobalDefinitions.POSTCOMBATOKKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<PostCombatMovementOkRoutines>().executePostCombatMovement();
                 break;
+            case GlobalDefinitions.DISPLAYALLIEDSUPPLYKEYWORD:
+                GlobalDefinitions.writeToLogFile("processCommand: executing DISPLAYALLIEDSUPPLY");
+                if (switchEntries[1] == "True")
+                    GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().createSupplySourceGUI(true);
+                else
+                    GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().createSupplySourceGUI(false);
+                break;
             case GlobalDefinitions.SETSUPPLYKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
                 break;
@@ -189,12 +196,20 @@ public class ExecuteGameCommand : MonoBehaviour {
                 GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().locateSupplySource();
                 break;
             case GlobalDefinitions.OKSUPPLYKEYWORD:
+                GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().okSupply();
+                break;
+            case GlobalDefinitions.OKSUPPLYWITHENDPHASEKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().okSupplyWithEndPhase();
                 break;
             case GlobalDefinitions.CHANGESUPPLYSTATUSKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
                 break;
-
+            case GlobalDefinitions.YESBUTTONSELECTEDKEYWORD:
+                GameObject.Find("YesButton").GetComponent<YesNoButtonRoutines>().yesButtonSelected();
+                break;
+            case GlobalDefinitions.NOBUTTONSELECTEDKEYWORD:
+                GameObject.Find("NoButton").GetComponent<YesNoButtonRoutines>().noButtonSelected();
+                break;
             case GlobalDefinitions.SAVEFILENAMEKEYWORD:
                 if (File.Exists(GameControl.path + "TGCOutputFiles\\TGCRemoteSaveFile.txt"))
                     File.Delete(GameControl.path + "TGCOutputFiles\\TGCRemoteSaveFile.txt");
@@ -312,9 +327,21 @@ public class ExecuteGameCommand : MonoBehaviour {
                     guiButtonInstance.GetComponent<GUIButtonRoutines>().yesMain();
                     break;
                 }
+            case GlobalDefinitions.ALLIEDREPLACEMENTKEYWORD:
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().selectAlliedReplacementUnit(GameObject.Find(switchEntries[1]));
+                break;
+            case GlobalDefinitions.GERMANREPLACEMENTKEYWORD:
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().selectGermanReplacementUnit(GameObject.Find(switchEntries[1]));
+                break;
+            case GlobalDefinitions.AGGRESSIVESETTINGKEYWORD:
+                GlobalDefinitions.aggressiveSetting = Convert.ToInt32(switchEntries[1]);
+                break;
+            case GlobalDefinitions.DIFFICULTYSETTINGKEYWORD:
+                GlobalDefinitions.difficultySetting = Convert.ToInt32(switchEntries[1]);
+                break;
 
             default:
-                GlobalDefinitions.writeToLogFile("processNetworkMessage: Unknown network command received: " + message);
+                GlobalDefinitions.writeToLogFile("processCommand: Unknown network command received: " + message);
                 break;
         }
     }

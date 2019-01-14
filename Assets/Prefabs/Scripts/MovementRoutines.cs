@@ -724,8 +724,6 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="unit"></param>
     public void moveUnit(GameObject destinationHex, GameObject beginningHex, GameObject unit)
     {
-        GlobalDefinitions.writeToLogFile("moveUnit: moving unit = " + unit.name + " beginning hex = " + beginningHex.name + " destination hex = " + destinationHex.name);
-
         // Need to check if the AI is overstacking units
         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.hexUnderStackingLimit(destinationHex, unit.GetComponent<UnitDatabaseFields>().nationality) &&
                 (beginningHex != destinationHex))
@@ -1577,34 +1575,28 @@ public class MovementRoutines : MonoBehaviour
     /// <returns></returns>
     public void selectAlliedReplacementUnit(GameObject unit)
     {
-        GameObject selectedUnit;
-
-        // During network mode the mouse click isn't sent but the unit is, so check if this is a network game
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (!GlobalDefinitions.localControl))
-            selectedUnit = unit;
-        else
-            selectedUnit = GlobalDefinitions.getUnitWithoutHex(Input.mousePosition);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ALLIEDREPLACEMENTKEYWORD + " " + unit.name);
 
         //  Check for valid unit
-        if (selectedUnit == null)
+        if (unit == null)
         {
             GlobalDefinitions.guiUpdateStatusMessage("No unit selected; Allied unit on the OOB sheet must be selected as a replacement or click End Current Phase button to save remaining replacement points for next turn");
         }
         // The unit must be in the dead pile and can only select armor or infantry units
-        else if (selectedUnit.transform.parent.gameObject.name == "Units Eliminated")
+        else if (unit.transform.parent.gameObject.name == "Units Eliminated")
         {
-            if (selectedUnit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
+            if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
             {
-                if (selectedUnit.GetComponent<UnitDatabaseFields>().armor || selectedUnit.GetComponent<UnitDatabaseFields>().infantry)
+                if (unit.GetComponent<UnitDatabaseFields>().armor || unit.GetComponent<UnitDatabaseFields>().infantry)
                 {
-                    if (selectedUnit.GetComponent<UnitDatabaseFields>().attackFactor <= GlobalDefinitions.alliedReplacementsRemaining)
+                    if (unit.GetComponent<UnitDatabaseFields>().attackFactor <= GlobalDefinitions.alliedReplacementsRemaining)
                     {
-                        GlobalDefinitions.alliedReplacementsRemaining -= selectedUnit.GetComponent<UnitDatabaseFields>().attackFactor;
-                        selectedUnit.transform.position = selectedUnit.GetComponent<UnitDatabaseFields>().locationInBritain;
+                        GlobalDefinitions.alliedReplacementsRemaining -= unit.GetComponent<UnitDatabaseFields>().attackFactor;
+                        unit.transform.position = unit.GetComponent<UnitDatabaseFields>().locationInBritain;
                         //selectedUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex = selectedUnit.GetComponent<UnitDatabaseFields>().locationInBritain;
-                        selectedUnit.GetComponent<UnitDatabaseFields>().unitEliminated = false;
-                        selectedUnit.transform.parent = GameObject.Find("Units In Britain").transform;
-                        selectedUnit.GetComponent<UnitDatabaseFields>().inBritain = true;
+                        unit.GetComponent<UnitDatabaseFields>().unitEliminated = false;
+                        unit.transform.parent = GameObject.Find("Units In Britain").transform;
+                        unit.GetComponent<UnitDatabaseFields>().inBritain = true;
                     }
                     else
                         GlobalDefinitions.guiUpdateStatusMessage("Not enough replacement factors remain for selected unit; select a smaller unit or click End Current Phase button to save remaining replacement points for next turn");
@@ -1625,8 +1617,7 @@ public class MovementRoutines : MonoBehaviour
     /// <returns></returns>
     public bool selectGermanReplacementUnit(GameObject selectedUnit)
     {
-        //GameObject selectedUnit;
-        //selectedUnit = GlobalDefinitions.getUnitWithoutHex();
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.GERMANREPLACEMENTKEYWORD + " " + selectedUnit.name);
 
         //  Check for valid unit
         if (selectedUnit == null)

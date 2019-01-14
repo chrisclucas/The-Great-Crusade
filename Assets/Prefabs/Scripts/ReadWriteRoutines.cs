@@ -56,8 +56,12 @@ public class ReadWriteRoutines : MonoBehaviour
             {
                 if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
                     GlobalDefinitions.deleteCommandFile();
+                if (File.Exists(GameControl.path + GlobalDefinitions.fullCommandFile))
+                    GlobalDefinitions.deleteCommandFile();
                 using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
-                    writeFile.WriteLine("SavedTurnFile " + " " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
+                    writeFile.WriteLine("SavedTurnFile " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
+                using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.fullCommandFile))
+                    writeFile.WriteLine("SavedTurnFile " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
             }
         }
     }

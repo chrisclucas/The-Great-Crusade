@@ -28,6 +28,8 @@ public class SettingGUIButtons : MonoBehaviour
     {
         GlobalDefinitions.aggressiveSetting = (int)GameObject.Find("AgressivenessSlider").GetComponent<Slider>().value;
         GlobalDefinitions.difficultySetting = (int)GameObject.Find("DifficultySlider").GetComponent<Slider>().value;
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + (int)GameObject.Find("AgressivenessSlider").GetComponent<Slider>().value);
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + (int)GameObject.Find("DifficultySlider").GetComponent<Slider>().value);
         // Write out the values of the sliders to the settings file
         GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSettingsFile(GlobalDefinitions.difficultySetting, GlobalDefinitions.aggressiveSetting);
         CombatResolutionRoutines.adjustAggressiveness();

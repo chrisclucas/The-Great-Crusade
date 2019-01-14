@@ -9,6 +9,7 @@ public class YesNoButtonRoutines : MonoBehaviour
     /// </summary>
     public void yesButtonSelected()
     {
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.YESBUTTONSELECTEDKEYWORD);
         GlobalDefinitions.removeGUI(transform.parent.gameObject);
         yesAction();
     }
@@ -18,6 +19,7 @@ public class YesNoButtonRoutines : MonoBehaviour
     /// </summary>
     public void noButtonSelected()
     {
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.NOBUTTONSELECTEDKEYWORD);
         GlobalDefinitions.removeGUI(transform.parent.gameObject);
         noAction();
     }

@@ -120,8 +120,9 @@ public class SetUpState : GameState
 
             // If this is a network game send the file name to the remote computer so it can be requested through the file transfer routines.  It's silly that 
             // I have to tell it what to ask for but I bought the code and that is how it works
-            GlobalDefinitions.writeToLogFile("ExecuteYesResponse: GameMode = " + GlobalDefinitions.gameMode + " localControl" + GlobalDefinitions.localControl);
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
+            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
+                TransportScript.SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
+            //GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
         }
     }
 
@@ -175,13 +176,13 @@ public class SetUpState : GameState
     /// </summary>
     public void readCommandFile()
     {
-        StartCoroutine("executeFullCommandFile");
+        StartCoroutine("executeCommandFile");
     }
 
     /// <summary>
     /// Routine used to load the command file.  Needs to run as a parallel process to account for the fact that the AI runs as a parallel process
     /// </summary>
-    private IEnumerator executeFullCommandFile()
+    private IEnumerator executeCommandFile()
     {
         char[] delimiterChars = { ' ' };
         string line;
@@ -190,50 +191,59 @@ public class SetUpState : GameState
         GlobalDefinitions.commandFileBeingRead = true;
 
         StreamReader theReader = new StreamReader(GameControl.path + GlobalDefinitions.commandFile);
+
         using (theReader)
         {
-            do
+            line = theReader.ReadLine();
+            if (line != GlobalDefinitions.commandFileHeader)
             {
-                // When reading the command file, need to wait if the AI is executing
-                while ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.localControl)
+                GlobalDefinitions.guiUpdateStatusMessage("The game mode selected does not match the game mode of the file\nFile game mode = " + line);
+            }
+            else
+            {
+                do
                 {
-                    yield return new WaitForSeconds(1f);
-                }
-                line = theReader.ReadLine();
-                GlobalDefinitions.writeToLogFile("readCommandFile: reading line - " + line);
-                //Debug.Log("readCommandFile: reading line - " + line);
-                if (line != null)
-                {
-                    switchEntries = line.Split(delimiterChars);
-                    switch (switchEntries[0])
+                    // When reading the command file, need to wait if the AI is executing
+                    while ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.localControl)
                     {
-                        case "SavedTurnFile":
-                            // A path name with a space in it will cause the name to be split.  Anything after the [0] entry needs to be added back together
-                            int a = 3;
-                            string fileName = switchEntries[2];
-                            while (a < switchEntries.Length)
-                            {
-                                fileName = fileName + " " + switchEntries[a];
-                                a++;
-                            }
-                            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(fileName);
-                            break;
-                        case GlobalDefinitions.PLAYNEWGAMEKEYWORD:
-                            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
-                            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+                        yield return new WaitForSeconds(1f);
+                    }
+                    line = theReader.ReadLine();
+                    GlobalDefinitions.writeToLogFile("readCommandFile: reading line - " + line);
+                    Debug.Log("readCommandFile: reading line - " + line);
+                    if (line != null)
+                    {
+                        switchEntries = line.Split(delimiterChars);
+                        switch (switchEntries[0])
+                        {
+                            case "SavedTurnFile":
+                                // A path name with a space in it will cause the name to be split.  Anything after the [0] entry needs to be added back together
+                                int a = 2;
+                                string fileName = switchEntries[1];
+                                while (a < switchEntries.Length)
+                                {
+                                    fileName = fileName + " " + switchEntries[a];
+                                    a++;
+                                }
+                                GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(fileName);
+                                break;
+                            case GlobalDefinitions.PLAYNEWGAMEKEYWORD:
+                                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
+                                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
 
-                            // Set the global parameter on what file to use, can't pass it to the executeNoResponse since it is passed as a method delegate elsewhere
-                            GlobalDefinitions.germanSetupFileUsed = Convert.ToInt32(switchEntries[1]);
+                                // Set the global parameter on what file to use, can't pass it to the executeNoResponse since it is passed as a method delegate elsewhere
+                                GlobalDefinitions.germanSetupFileUsed = Convert.ToInt32(switchEntries[1]);
 
-                            GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
-                            break;
-                        default:
-                            ExecuteGameCommand.processCommand(line);
-                            break;
+                                GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
+                                break;
+                            default:
+                                ExecuteGameCommand.processCommand(line);
+                                break;
+                        }
                     }
                 }
+                while (line != null);
             }
-            while (line != null);
             theReader.Close();
         }
         GlobalDefinitions.commandFileBeingRead = false;
@@ -750,10 +760,8 @@ public class MovementState : GameState
 
     public void executeSelectUnitDestination(InputMessage inputMessage)
     {
-        GlobalDefinitions.writeToLogFile("executeSelectUnitDestination: moving " + GlobalDefinitions.selectedUnit.name + " from " + GlobalDefinitions.startHex.name + " to " + inputMessage.hex.name);
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().getUnitMoveDestination(GlobalDefinitions.selectedUnit, GlobalDefinitions.startHex,
                 inputMessage.hex);
-        GlobalDefinitions.writeToLogFile("executeSelectUnitDestination: unit moved to destination");
 
         // Need to make sure the unit didn't move back to Britain
         //if (GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)

@@ -486,6 +486,8 @@ public class SupplyRoutines : MonoBehaviour
     /// </summary>
     public void createSupplySourceGUI(bool displayOnly)
     {
+        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYALLIEDSUPPLYKEYWORD + " " + displayOnly);
+
         GameObject unassignedTextGameObject;
 
         // Only create the gui if there isn't already one active
@@ -497,14 +499,19 @@ public class SupplyRoutines : MonoBehaviour
 
         if (GlobalDefinitions.supplySources.Count == 0)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No Allied supply sources have been assigned");
+            // When starting off with a saved game the supply status isn't set do regenerate in case we're in this situation.
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().determineAvailableReinforcementPorts();
+            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().setAlliedSupplyStatus(true);
 
-            // Turn the button back on
-            GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
+            if (GlobalDefinitions.supplySources.Count == 0) {
+                GlobalDefinitions.guiUpdateStatusMessage("No Allied supply sources have been assigned");
 
-            return;
+                // Turn the button back on
+                GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
+
+                return;
+            }
         }
-
 
         // Clear out the global variables related to the supply gui
         float yPosition = 0;

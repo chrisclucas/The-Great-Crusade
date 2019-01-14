@@ -96,6 +96,8 @@ public class CombatResolutionRoutines : MonoBehaviour
         Button okButton;
         bool playerControl = true;
 
+        GlobalDefinitions.writeToLogFile("combatResolutionDisplay: executing");
+
         GameObject combatResolutionGuiInstance = new GameObject("combatResolutionGuiInstance");
 
         // I'm going to set a flag to indicate when the display is being presented to resolve the AI's combats.

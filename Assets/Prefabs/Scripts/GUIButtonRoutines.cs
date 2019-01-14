@@ -198,7 +198,9 @@ public class GUIButtonRoutines : MonoBehaviour
 
                 CombatResolutionRoutines.combatResolutionDisplay();
 
-                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD);
+                // When this is called by the AI then the line below end up calling two guis when the command file is being read
+                if (!GlobalDefinitions.AICombat)
+                    GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD);
             }
             else
                 GlobalDefinitions.guiUpdateStatusMessage("No combats have been assigned therefore there is nothing to resolve");
@@ -516,7 +518,7 @@ public class GUIButtonRoutines : MonoBehaviour
                 -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
         cancelButton.gameObject.AddComponent<SettingGUIButtons>();
-        cancelButton.onClick.AddListener(okButton.GetComponent<SettingGUIButtons>().cancelSelected);
+        cancelButton.onClick.AddListener(cancelButton.GetComponent<SettingGUIButtons>().cancelSelected);
     }
 
     public void updateDifficultySettingText(float value)

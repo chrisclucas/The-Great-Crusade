@@ -16,8 +16,6 @@ public class CombatToggleRoutines : MonoBehaviour
     {
         if (GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: Toggle is on for unit " + unit.name);
-
             // Turn on the toggle on the remote computer
             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCOMBATTOGGLEKEYWORD + " " + name);
 
@@ -31,11 +29,7 @@ public class CombatToggleRoutines : MonoBehaviour
                 if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().fortress)
                     addDefendersOfFortressAttack(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
                 else
-                {
-                    GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshDefendersBasedOnAttackers since attacker added " + unit.name);
                     refreshDefendersBasedOnAttackers();
-                    //checkIfDefenderToBeAdded();
-                }
             }
             else
             {
@@ -57,14 +51,11 @@ public class CombatToggleRoutines : MonoBehaviour
                             // to be done because it is on the same hex as the unit being checked already
                             childTransform.GetComponent<Toggle>().isOn = true;
 
-                GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshAttackersBasedOnDefenders since defender added " + unit.name);
                 refreshAttackersBasedOnDefenders();
-                //checkIfDefenderToBeAdded();
             }
         }
         else
         {
-            GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: Toggle is off for unit " + unit.name);
             // Turn off the toggle on the remote computer
             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.RESETCOMBATTOGGLEKEYWORD + " " + name);
 
@@ -81,8 +72,6 @@ public class CombatToggleRoutines : MonoBehaviour
                     bool attackStillTakingPlace = false;
                     foreach (Transform childTransform in transform.parent.transform)
                     {
-                        if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) && (childTransform.GetComponent<CombatToggleRoutines>().unit != null))
-                            GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: checking unit " + childTransform.GetComponent<CombatToggleRoutines>().unit.name);
                         if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) &&
                                 (childTransform.GetComponent<CombatToggleRoutines>().unit != null) &&
                                 (childTransform.GetComponent<CombatToggleRoutines>().unit != unit) &&
@@ -96,16 +85,7 @@ public class CombatToggleRoutines : MonoBehaviour
                         removeDefendersOfFortressAttack(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
                 }
                 else
-                {
-                    GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshDefendersBasedOnAttackers since attacker removed " + unit.name);
                     refreshDefendersBasedOnAttackers();
-                    //checkDefenderToBeRemoved();
-                }
-
-                //if (GlobalDefinitions.hexInEnemyZOC(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality))
-                //{
-                //    GlobalDefinitions.highlightUnit(unit);
-                //}
             }
             else
             {
@@ -127,9 +107,7 @@ public class CombatToggleRoutines : MonoBehaviour
                             // to be done because it is on the same hex as the unit being checked already
                             childTransform.GetComponent<Toggle>().isOn = false;
 
-                GlobalDefinitions.writeToLogFile("addOrDeleteSelectedUnit: calling refreshAttackersBasedOnDefenders since defender removed " + unit.name);
                 refreshAttackersBasedOnDefenders();
-                //checkDefenderToBeRemoved();
             }
         }
 

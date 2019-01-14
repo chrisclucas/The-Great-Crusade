@@ -1672,7 +1672,7 @@ public class GlobalDefinitions : MonoBehaviour
         GameObject tempText;
 
         float panelWidth = 6 * GUIUNITIMAGESIZE;
-        float panelHeight = 5 * GUIUNITIMAGESIZE; 
+        float panelHeight = 5 * GUIUNITIMAGESIZE;
         Canvas getNewSaveGameCanvas = new Canvas();
         createGUICanvas("NewSaveGameCanvas",
                 panelWidth,
@@ -1778,7 +1778,7 @@ public class GlobalDefinitions : MonoBehaviour
         yesButton.gameObject.GetComponent<YesNoButtonRoutines>().yesAction = yesMethod;
         yesButton.onClick.AddListener(yesButton.GetComponent<YesNoButtonRoutines>().yesButtonSelected);
 
-        noButton = createButton("NoButon", "No",
+        noButton = createButton("NoButton", "No",
             1.5f * GUIUNITIMAGESIZE - 0.5f * panelWidth,
             0.5f * GUIUNITIMAGESIZE - 0.5f * panelHeight,
             questionCanvas);
@@ -2151,8 +2151,12 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="message"></param>
     public static void guiUpdateStatusMessage(string message)
     {
-        writeToLogFile("guiUpdateStatusMessage: " + message);
-        GameObject.Find("StatusMessageText").GetComponent<Text>().text = message + "\n\n" + GameObject.Find("StatusMessageText").GetComponent<Text>().text;
+        // During the AI turn do not send status messages
+        if (!((gameMode == GameModeValues.AI) && !localControl))
+        {
+            writeToLogFile("guiUpdateStatusMessage: " + message);
+            GameObject.Find("StatusMessageText").GetComponent<Text>().text = message + "\n\n" + GameObject.Find("StatusMessageText").GetComponent<Text>().text;
+        }
     }
 
     /// <summary>
@@ -2237,8 +2241,8 @@ public class GlobalDefinitions : MonoBehaviour
             using (StreamWriter writeFile = File.AppendText(GameControl.path + fullCommandFile))
                 writeFile.WriteLine(commandString);
 
-                if (localControl && (gameMode == GameModeValues.Network))
-                    TransportScript.SendSocketMessage(commandString);
+            if (localControl && (gameMode == GameModeValues.Network))
+                TransportScript.SendSocketMessage(commandString);
         }
     }
 
@@ -2249,17 +2253,19 @@ public class GlobalDefinitions : MonoBehaviour
     {
         if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
             File.Delete(GameControl.path + GlobalDefinitions.commandFile);
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.commandFileHeader);
+        using (StreamWriter writeFile = File.AppendText(GameControl.path + commandFile))
+            writeFile.WriteLine(commandFileHeader);
     }
 
     /// <summary>
-    /// Deletes the full command file if it exists and writes the header line to a new version
+    /// Deletes the full command file if it exists
     /// </summary>
     public static void deleteFullCommandFile()
     {
         if (File.Exists(GameControl.path + GlobalDefinitions.fullCommandFile))
             File.Delete(GameControl.path + GlobalDefinitions.fullCommandFile);
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.commandFileHeader);
+        using (StreamWriter writeFile = File.AppendText(GameControl.path + fullCommandFile))
+            writeFile.WriteLine(commandFileHeader);
     }
 
     /// <summary>
@@ -2377,7 +2383,7 @@ public class GlobalDefinitions : MonoBehaviour
 
     public static List<GameObject> guiList = new List<GameObject>();
     /// <summary>
-    /// Used to remove a gui.  It resets the active gui flag
+    /// Used to remove a gui element
     /// </summary>
     /// <param name="element"></param>
     public static void removeGUI(GameObject element)
@@ -2385,7 +2391,6 @@ public class GlobalDefinitions : MonoBehaviour
         if (guiList.Contains(element))
             guiList.Remove(element);
         DestroyImmediate(element);
-
     }
 
     public static void removeAllGUIs()
@@ -2462,10 +2467,12 @@ public class GlobalDefinitions : MonoBehaviour
     public const string OKEXCHANGEKEYWORD = "OKExchange";
     public const string REMOVEEXCHANGEKEYWORD = "RemoveExchange";
     public const string POSTCOMBATOKKEYWORD = "PostCombatOK";
+    public const string DISPLAYALLIEDSUPPLYKEYWORD = "DisplayAlliedSupply";
     public const string SETSUPPLYKEYWORD = "SetSupply";
     public const string RESETSUPPLYKEYWORD = "ResetSupply";
     public const string LOCATESUPPLYKEYWORD = "LocateSupply";
     public const string OKSUPPLYKEYWORD = "OkSupply";
+    public const string OKSUPPLYWITHENDPHASEKEYWORD = "OkSupplyWithEndPhase";
     public const string CHANGESUPPLYSTATUSKEYWORD = "ChangeSupplyStatus";
     public const string SENDSAVEFILELINEKEYWORD = "SendSaveFileLine";
     public const string SAVEFILENAMEKEYWORD = "SaveFileName";
@@ -2488,6 +2495,12 @@ public class GlobalDefinitions : MonoBehaviour
     public const string TOGGLECARPETBOMBINGCOMBATTOGGLE = "ToggleCarpetBombingCombatToggle";
     public const string LOADCOMBATKEYWORD = "LoadCombat";
     public const string DISCONNECTFROMREMOTECOMPUTER = "DisconnectFromRemoteComputer";
+    public const string YESBUTTONSELECTEDKEYWORD = "YesButtonSelected";
+    public const string NOBUTTONSELECTEDKEYWORD = "NoButtonSelected";
+    public const string ALLIEDREPLACEMENTKEYWORD = "AlliedReplacement";
+    public const string GERMANREPLACEMENTKEYWORD = "GermanReplacement";
+    public const string AGGRESSIVESETTINGKEYWORD = "AggressiveSetting";
+    public const string DIFFICULTYSETTINGKEYWORD = "DifficultySetting";
 }
 
 public class HexLocation

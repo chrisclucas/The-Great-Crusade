@@ -169,7 +169,6 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
     {
 
         // Write out the name of the toggle being executed in order to send it once the die roll is known
-        //if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
         if (GlobalDefinitions.localControl)
             GlobalDefinitions.CombatResultToggleName = name;
 
@@ -188,7 +187,7 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
                 // All required units are attacking or being attacked
                 GlobalDefinitions.combatResolutionStarted = true;
 
-                // Get rid of the "Continue" button
+                // Get rid of the "Continue" button since combat resolution has started
                 GlobalDefinitions.combatResolutionOKButton.SetActive(false);
 
                 // Once combat resolution starts, canceling an attack is no longer an option so get rid of all cancel buttons
@@ -222,9 +221,11 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
 
             // Get rid of the locate button on the attack being resolved, can't gaurantee that the units are still there after resolution
             DestroyImmediate(curentCombat.GetComponent<Combat>().locateButton.gameObject);
+            //Get rid of the resolve button since the battle has been resolved.  This is also used to determine if all combats have been resolved.
+            GlobalDefinitions.writeToLogFile("resolutionSelected: removing resolve button " + gameObject.name);
+            //DestroyImmediate(GameObject.Find(GlobalDefinitions.CombatResultToggleName));
             GlobalDefinitions.removeGUI(gameObject);
         }
-
 
         // Check if all the attacks have been resolved by seeing if there are any more Resolve buttons left
         bool allAttacksResolved = true;
