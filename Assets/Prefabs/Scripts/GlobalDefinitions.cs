@@ -1732,7 +1732,7 @@ public class GlobalDefinitions : MonoBehaviour
                 GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
                 1.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getNewSaveGameCanvas);
-        tempText = createText("Execute Command File", "CommandFileDescriptionText",
+        tempText = createText("Restart Last Game Played", "CommandFileDescriptionText",
                 4 * GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),

@@ -118,11 +118,19 @@ public class SetUpState : GameState
 
             GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(turnFileName);
 
-            // If this is a network game send the file name to the remote computer so it can be requested through the file transfer routines.  It's silly that 
+            // The normal command file is taken care of in the writeSavedTurnFile() routine since it is upated every time a new turn file is written
+            // The full command file is taken care of here along with writing the difficulty and aggressiveness settings
+            using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.fullCommandFile))
+            {
+                writeFile.WriteLine("SavedTurnFile " + turnFileName);
+                writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
+                writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
+            }
+
+            // If this is a network game send the file name to the remote computer so it can be reSquested through the file transfer routines.  It's silly that 
             // I have to tell it what to ask for but I bought the code and that is how it works
             if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
                 TransportScript.SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
-            //GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
         }
     }
 
@@ -155,7 +163,19 @@ public class SetUpState : GameState
         // The network communication is a little different for a new game so I can't use the routine to write to the command file
         // since I don't want it sending a message to the remote computer.
         if (!GlobalDefinitions.commandFileBeingRead)
+        {
             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
+            using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.fullCommandFile))
+            {
+                writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
+                writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
+            }
+            using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
+            {
+                writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
+                writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
+            }
+        }
 
         // If this is a game where the computer is playing the Germans then exit out of setup at this point
         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.Allied))
@@ -210,7 +230,7 @@ public class SetUpState : GameState
                     }
                     line = theReader.ReadLine();
                     GlobalDefinitions.writeToLogFile("readCommandFile: reading line - " + line);
-                    Debug.Log("readCommandFile: reading line - " + line);
+                    //Debug.Log("readCommandFile: reading line - " + line);
                     if (line != null)
                     {
                         switchEntries = line.Split(delimiterChars);

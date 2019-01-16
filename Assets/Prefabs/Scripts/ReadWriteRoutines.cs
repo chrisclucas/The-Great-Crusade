@@ -56,12 +56,12 @@ public class ReadWriteRoutines : MonoBehaviour
             {
                 if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
                     GlobalDefinitions.deleteCommandFile();
-                if (File.Exists(GameControl.path + GlobalDefinitions.fullCommandFile))
-                    GlobalDefinitions.deleteCommandFile();
                 using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
+                {
                     writeFile.WriteLine("SavedTurnFile " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
-                using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.fullCommandFile))
-                    writeFile.WriteLine("SavedTurnFile " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
+                    writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
+                    writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
+                }
             }
         }
     }
@@ -91,54 +91,34 @@ public class ReadWriteRoutines : MonoBehaviour
                     switch (switchEntries[0])
                     {
                         case "Turn":
-                            GlobalDefinitions.writeToLogFile("readTurnFile: Processing Turn: " + line);
                             GlobalDefinitions.turnNumber = Convert.ToInt32(switchEntries[1]);
-                            GlobalDefinitions.writeToLogFile("readTurnFile: setting global turn number = " + Convert.ToInt32(switchEntries[1]));
                             GlobalDefinitions.guiUpdateTurn();
-                            //if (GlobalDefinitions.localControl && (GlobalDefinitions.GameMode == GlobalDefinitions.GameModeValues.Network))
-                            //(TransportScript.sendInitialGameData(GlobalDefinitions.READTURNKEYWORD + " " + line));
                             break;
                         case "Game_Control":
-                            GlobalDefinitions.writeToLogFile("readTurnFile: Processing Game Control: " + line);
                             GameControl.setGameState(switchEntries[1]);
-                            //if (GlobalDefinitions.localControl && (GlobalDefinitions.GameMode == GlobalDefinitions.GameModeValues.Network))
-                            //StartCoroutine(TransportScript.sendInitialGameData(GlobalDefinitions.SETGAMESTATEKEYWORD + " " + switchEntries[1]));
-                            break;
+                           break;
                         case "Global_Definitions":
-                            GlobalDefinitions.writeToLogFile("readTurnFile: Processing Global Definitions: " + line);
                             readGlobalVariables(switchEntries);
-                            //if (GlobalDefinitions.localControl && (GlobalDefinitions.GameMode == GlobalDefinitions.GameModeValues.Network))
-                            //StartCoroutine(TransportScript.sendInitialGameData(GlobalDefinitions.READSAVEDGLOBALDEFINITIONSPARAMETERSKEYWORD + " " + line));
                             break;
                         case "Hexes":
-                            GlobalDefinitions.writeToLogFile("readTurnFile: Reading Hexes");
                             line = theReader.ReadLine();
                             lineEntries = line.Split(delimiterChars);
                             while (lineEntries[0] != "End")
                             {
-                                //GlobalDefinitions.writeToLogFile("Processing Hex Record: " + line);
                                 string[] entries = line.Split(delimiterChars);
                                 processHexRecord(entries);
-
-                                //if (GlobalDefinitions.localControl && (GlobalDefinitions.GameMode == GlobalDefinitions.GameModeValues.Network))
-                                //StartCoroutine(TransportScript.sendInitialGameData(GlobalDefinitions.READSAVEDHEXKEYWORD + " " + line));
 
                                 line = theReader.ReadLine();
                                 lineEntries = line.Split(delimiterChars);
                             }
                             break;
                         case "Units":
-                            GlobalDefinitions.writeToLogFile("readTurnFile: Reading Units");
                             line = theReader.ReadLine();
                             lineEntries = line.Split(delimiterChars);
                             while (lineEntries[0] != "End")
                             {
-                                //GlobalDefinitions.writeToLogFile("Processing Unit Record: " + line);
                                 string[] entries = line.Split(delimiterChars);
                                 processUnitRecord(entries);
-
-                                //if (GlobalDefinitions.localControl && (GlobalDefinitions.GameMode == GlobalDefinitions.GameModeValues.Network))
-                                //StartCoroutine(TransportScript.sendInitialGameData(GlobalDefinitions.READSAVEDUNITKEYWORK + " " + line));
 
                                 line = theReader.ReadLine();
                                 lineEntries = line.Split(delimiterChars);
@@ -149,8 +129,6 @@ public class ReadWriteRoutines : MonoBehaviour
             }
             while (line != null);
             theReader.Close();
-            //if (GlobalDefinitions.localControl && (GlobalDefinitions.GameMode == GlobalDefinitions.GameModeValues.Network))
-            //StartCoroutine(TransportScript.sendInitialGameData(GlobalDefinitions.SAVEFILETRANSMITCOMPLETEKEYWORD));
 
             GlobalDefinitions.writeToLogFile("readTurnFile: File read complete.  Initialize Game State");
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();

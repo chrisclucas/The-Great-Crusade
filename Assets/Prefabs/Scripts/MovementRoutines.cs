@@ -1727,7 +1727,6 @@ public class MovementRoutines : MonoBehaviour
         // second invasion area.  In other words, if the second invasion areas has a limit of 1 I am not making 2
         // drops availabe outside of the second invasion area.
         // This routine sets the airborne limits for the current turn
-        GlobalDefinitions.writeToLogFile("Executing setAirborneLimits: firstInvasionIndex - " + GlobalDefinitions.firstInvasionAreaIndex);
         if (GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].invaded && (GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].turn < 3))
         {
             if (GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].turn == 1)
