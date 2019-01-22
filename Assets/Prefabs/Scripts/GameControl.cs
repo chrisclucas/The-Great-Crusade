@@ -214,44 +214,47 @@ public class GameControl : MonoBehaviour
         {
             if (GlobalDefinitions.localControl || (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Hotseat))
             {
-                // Left mouse button click
-                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+                if (!GlobalDefinitions.commandFileBeingRead)
                 {
-                    // Check if the user double clicked
-                    if ((Time.time < initialTouch + 0.5f) &&
-                            ((gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
-                            (gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance") ||
-                            (gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "setUpStateInstance")))
+                    // Left mouse button click
+                    if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                     {
-                        // When we have a double click that means that there was already a single click that would have selected a unit
-                        // Unhighlight it and then remove it
-                        if (GlobalDefinitions.selectedUnit != null)
-                            GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
-                        foreach (Transform hex in GameObject.Find("Board").transform)
-                            GlobalDefinitions.unhighlightHex(hex.gameObject);
-                        GlobalDefinitions.selectedUnit = null;
+                        // Check if the user double clicked
+                        if ((Time.time < initialTouch + 0.5f) &&
+                                ((gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
+                                (gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance") ||
+                                (gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "setUpStateInstance")))
+                        {
+                            // When we have a double click that means that there was already a single click that would have selected a unit
+                            // Unhighlight it and then remove it
+                            if (GlobalDefinitions.selectedUnit != null)
+                                GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                            foreach (Transform hex in GameObject.Find("Board").transform)
+                                GlobalDefinitions.unhighlightHex(hex.gameObject);
+                            GlobalDefinitions.selectedUnit = null;
 
-                        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
-                        // I had a bug where double clicking on an off-board unit causes an exception in the following line because it is assuming a hex is being clicked
-                        if (GlobalDefinitions.getHexFromUserInput(Input.mousePosition) != null)
-                            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + GlobalDefinitions.getHexFromUserInput(Input.mousePosition).name + " " + gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+                            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
+                            // I had a bug where double clicking on an off-board unit causes an exception in the following line because it is assuming a hex is being clicked
+                            if (GlobalDefinitions.getHexFromUserInput(Input.mousePosition) != null)
+                                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + GlobalDefinitions.getHexFromUserInput(Input.mousePosition).name + " " + gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
 
-                        movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
-                            gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+                            movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
+                                gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+                        }
+                        // If not double click then process a normal click
+                        else
+                        {
+                            inputMessage.GetComponent<InputMessage>().hex = GlobalDefinitions.getHexFromUserInput(Input.mousePosition);
+                            inputMessage.GetComponent<InputMessage>().unit = GlobalDefinitions.getUnitWithoutHex(Input.mousePosition);
+
+                            recordMouseClick(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
+
+                            gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(inputMessage.GetComponent<InputMessage>());
+
+                        }
+
+                        initialTouch = Time.time;
                     }
-                    // If not double click then process a normal click
-                    else
-                    {
-                        inputMessage.GetComponent<InputMessage>().hex = GlobalDefinitions.getHexFromUserInput(Input.mousePosition);
-                        inputMessage.GetComponent<InputMessage>().unit = GlobalDefinitions.getUnitWithoutHex(Input.mousePosition);
-
-                        recordMouseClick(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
-
-                        gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(inputMessage.GetComponent<InputMessage>());
-
-                    }
-
-                    initialTouch = Time.time;
                 }
 
                 // Note that the EventSystem check is to ensure the mouse isn't clicking a ui button
@@ -356,7 +359,7 @@ public class GameControl : MonoBehaviour
 
             else if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
             {
-                // The user side is controled by the hotseat section above.  The AI doesn't need anything during update since it states don't have input or transitions.
+                // The user side is controled by the hotseat section above.  The AI doesn't need anything during update since its states don't have input or transitions.
             }
 
             else if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.EMail)

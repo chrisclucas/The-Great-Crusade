@@ -251,7 +251,7 @@ public class ReadWriteRoutines : MonoBehaviour
         {
             GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].turn = Convert.ToInt32(entries[11]);
         }
-        GlobalDefinitions.numberOfTurnsWithoutAttack = Convert.ToInt32(entries[12]);
+        GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack = Convert.ToInt32(entries[12]);
 
         GlobalDefinitions.hexesAttackedLastTurn.Clear();
         int loopLimit = Convert.ToInt32(entries[13]);

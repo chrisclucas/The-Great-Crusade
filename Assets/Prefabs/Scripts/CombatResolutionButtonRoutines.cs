@@ -202,10 +202,6 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
                 // Only check for carpet bombing if Allies are attacking.  This is needed to keep the German attacks from being loaded
                 if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
                 {
-                    // Clear out record of previous attacks and hexes attacked last turn only if it is the Allies turn
-                    GlobalDefinitions.hexesAttackedLastTurn.Clear();
-                    GlobalDefinitions.combatResultsFromLastTurn.Clear();
-
                     // Store all hexes being attacked this turn.  Used for carpet bombing availability next turn
                     foreach (GameObject combat in GlobalDefinitions.allCombats)
                         foreach (GameObject defender in combat.GetComponent<Combat>().defendingUnits)

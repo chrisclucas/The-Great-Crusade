@@ -244,7 +244,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static int numberOfCarpetBombingsUsed = 0;
 
     // Used by the AI to determine if it is stuck
-    public static int numberOfTurnsWithoutAttack = 0;
+    public static int numberOfTurnsWithoutSuccessfulAttack = 0;
 
     public static bool invasionsTookPlaceThisTurn = false;
     public static int maxNumberAirborneDropsThisTurn = 3;
@@ -337,7 +337,7 @@ public class GlobalDefinitions : MonoBehaviour
         hexesAttackedLastTurn.Clear();
         numberOfCarpetBombingsUsed = 0;
 
-        numberOfTurnsWithoutAttack = 0;
+        numberOfTurnsWithoutSuccessfulAttack = 0;
 
         invasionsTookPlaceThisTurn = false;
         maxNumberAirborneDropsThisTurn = 3;
@@ -373,8 +373,6 @@ public class GlobalDefinitions : MonoBehaviour
 
         alliedFactorsEliminated = 0;
         germanFactorsEliminated = 0;
-
-        numberOfTurnsWithoutAttack = 0;
 
         foreach (InvasionArea area in invasionAreas)
         {
@@ -673,6 +671,10 @@ public class GlobalDefinitions : MonoBehaviour
                 if ((hex.GetComponent<BoolArrayData>().exertsZOC[(int)hexSide]) && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null))
                     if (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().unitsExertingZOC.Contains(unit))
                         hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().unitsExertingZOC.Remove(unit);
+
+            // Remove the unit from exerting ZOC on the hex it is being removed from
+            if (hex.GetComponent<HexDatabaseFields>().unitsExertingZOC.Contains(unit))
+                hex.GetComponent<HexDatabaseFields>().unitsExertingZOC.Remove(unit);
 
             if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
                 for (int index = 0; index < hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count; index++)
@@ -1087,6 +1089,28 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns true if there were successful attacks last turn
+    /// </summary>
+    /// <returns></returns>
+    public static bool successfulAttacksLastTurn()
+    {
+        if (combatResultsFromLastTurn.Count == 0)
+        {
+            writeToLogFile("successfulAttacksLastTurn: returning false because no combat results");
+            return (false);
+        }
+
+        foreach (CombatResults combatResult in combatResultsFromLastTurn)
+            if ((combatResult == CombatResults.Dback2) || (combatResult == CombatResults.Delim) || (combatResult == CombatResults.Exchange))
+            {
+                writeToLogFile("successfulAttacksLastTurn: returning true - combat result from last turn = " + combatResult);
+                return (true);
+            }
+        writeToLogFile("successfulAttacksLastTurn: returning false as default");
+        return (false);
+    }
+
+    /// <summary>
     /// Returns the opposite nationality passed
     /// </summary>
     /// <param name="nationality"></param>
@@ -1110,14 +1134,18 @@ public class GlobalDefinitions : MonoBehaviour
         // Remove the unit from the hex
         removeUnitFromHex(unit, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
 
+        // The removeUnitFromHex routine takes care of a lot of the fields but we need to remove others because
+        // through testing I have encountered issues when the fields are not reset.
+        unit.GetComponent<UnitDatabaseFields>().beginningTurnHex = null;
+        unit.GetComponent<UnitDatabaseFields>().supplySource = null;
+        if (unit.GetComponent<UnitDatabaseFields>().supplySource != null)
+            unit.GetComponent<UnitDatabaseFields>().supplySource.GetComponent<HexDatabaseFields>().unassignedSupply++;
+
         // Remove the unit from the OnBoard list
         if (unit.GetComponent<UnitDatabaseFields>().nationality == Nationality.Allied)
             alliedUnitsOnBoard.Remove(unit);
         else
-        {
-            writeToLogFile("moveUnitToDeadPile:       unit being removed from germanUnitsOnBoard");
             germanUnitsOnBoard.Remove(unit);
-        }
 
         // Keep track of the number of factors lost
         if (unit.GetComponent<UnitDatabaseFields>().nationality == Nationality.Allied)
@@ -2145,17 +2173,25 @@ public class GlobalDefinitions : MonoBehaviour
         return null;
     }
 
+    // The following strings will be used to store the last five messages.  I used to just keep appending the status text but it 
+    // gets to be too big for the Unity editor.
+    private static string oldMessage1, oldMessage2, oldMessage3, oldMessage4, oldMessage5;
     /// <summary>
     /// Updated the message displayed on the status screen
     /// </summary>
     /// <param name="message"></param>
     public static void guiUpdateStatusMessage(string message)
     {
+        oldMessage1 = oldMessage2;
+        oldMessage2 = oldMessage3;
+        oldMessage3 = oldMessage4;
+        oldMessage4 = oldMessage5;
+        oldMessage5 = message;
         // During the AI turn do not send status messages
-        if (!((gameMode == GameModeValues.AI) && !localControl))
+        if (!((gameMode == GameModeValues.AI) && !localControl) && !commandFileBeingRead)
         {
             writeToLogFile("guiUpdateStatusMessage: " + message);
-            GameObject.Find("StatusMessageText").GetComponent<Text>().text = message + "\n\n" + GameObject.Find("StatusMessageText").GetComponent<Text>().text;
+            GameObject.Find("StatusMessageText").GetComponent<Text>().text = oldMessage5 + "\n\n" + oldMessage4 + "\n\n" + oldMessage3 + "\n\n" + oldMessage2 + "\n\n" + oldMessage1;
         }
     }
 
@@ -2204,7 +2240,7 @@ public class GlobalDefinitions : MonoBehaviour
             fileWriter.Write(invasionAreas[secondInvasionAreaIndex].turn + " ");
         else
             fileWriter.Write("0 ");
-        fileWriter.Write(numberOfTurnsWithoutAttack + " ");
+        fileWriter.Write(numberOfTurnsWithoutSuccessfulAttack + " ");
         fileWriter.Write(hexesAttackedLastTurn.Count + " ");
         for (int index = 0; index < hexesAttackedLastTurn.Count; index++)
             fileWriter.Write(hexesAttackedLastTurn[index].name + " ");

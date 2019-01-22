@@ -208,8 +208,6 @@ public class SetUpState : GameState
         string line;
         string[] switchEntries;
 
-        GlobalDefinitions.commandFileBeingRead = true;
-
         StreamReader theReader = new StreamReader(GameControl.path + GlobalDefinitions.commandFile);
 
         using (theReader)
@@ -218,9 +216,12 @@ public class SetUpState : GameState
             if (line != GlobalDefinitions.commandFileHeader)
             {
                 GlobalDefinitions.guiUpdateStatusMessage("The game mode selected does not match the game mode of the file\nFile game mode = " + line);
+                MainMenuRoutines.getGameModeUI();
             }
             else
             {
+                GlobalDefinitions.guiUpdateStatusMessage("Reading previous game, please wait...");
+                GlobalDefinitions.commandFileBeingRead = true;
                 do
                 {
                     // When reading the command file, need to wait if the AI is executing
@@ -230,7 +231,7 @@ public class SetUpState : GameState
                     }
                     line = theReader.ReadLine();
                     GlobalDefinitions.writeToLogFile("readCommandFile: reading line - " + line);
-                    //Debug.Log("readCommandFile: reading line - " + line);
+                    Debug.Log("readCommandFile: reading line - " + line);
                     if (line != null)
                     {
                         switchEntries = line.Split(delimiterChars);
@@ -264,9 +265,10 @@ public class SetUpState : GameState
                 }
                 while (line != null);
             }
+            GlobalDefinitions.commandFileBeingRead = false;
+            GlobalDefinitions.guiUpdateStatusMessage("Read complete");
             theReader.Close();
-        }
-        GlobalDefinitions.commandFileBeingRead = false;
+        }  
     }
 
     public void executeSelectUnit(InputMessage inputMessage)
@@ -333,6 +335,17 @@ public class TurnInitializationState : GameState
         GlobalDefinitions.writeToLogFile("TurnInitializationState: Initialization");
         GlobalDefinitions.guiClearUnitsOnHex();
         base.initialize();
+
+        // Set flag for tracking how many turns without a successful attack.
+        if (GlobalDefinitions.successfulAttacksLastTurn() && (GlobalDefinitions.turnNumber > 2))
+            GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack = 0;
+        else
+            GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack++;
+        GlobalDefinitions.writeToLogFile("Turn Initialization: number of turns without successful attack = " + GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack);
+
+        // Clear out record of previous attacks and hexes attacked last turn
+        GlobalDefinitions.hexesAttackedLastTurn.Clear();
+        GlobalDefinitions.combatResultsFromLastTurn.Clear();
 
         // Write out an end of turn save file 
         if (GlobalDefinitions.turnNumber == 0)
@@ -1136,8 +1149,7 @@ public class GermanReplacementState : GameState
         if (GlobalDefinitions.turnNumber > 15)
         {
             GlobalDefinitions.germanReplacementsRemaining += 5;
-            GlobalDefinitions.guiUpdateStatusMessage("German replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + " select a German unit from the OOB sheet");
-            GlobalDefinitions.guiUpdateStatusMessage("Select a German replacement unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
+            GlobalDefinitions.guiUpdateStatusMessage("German replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + "\nSelect a German replacement unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
             // Initialized mode
             executeMethod = executeSelectUnit;
         }
@@ -1155,7 +1167,7 @@ public class GermanReplacementState : GameState
             executeMethod = executeSelectUnitDestination;
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Selected unit has to be on the OOB sheet.  Select a German replacement unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
+            GlobalDefinitions.guiUpdateStatusMessage("Selected unit has to be on the OOB sheet.\nGerman replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + "\nSelect a German replacement unit from the OOB sheet\nor click the End Current Phase button to save the factors for next turn");
     }
 
     public void executeSelectUnitDestination(InputMessage inputMessage)
@@ -1352,12 +1364,6 @@ public class AlliedAIState : GameState
         messageText = "Moving Remaining Units";
         yield return new WaitForSeconds(.1f);
         AIRoutines.moveAllUnits(GlobalDefinitions.Nationality.Allied);
-
-        // Set flag for tracking how many turns without an attack.
-        if (GlobalDefinitions.allCombats.Count == 0)
-            GlobalDefinitions.numberOfTurnsWithoutAttack++;
-        else
-            GlobalDefinitions.numberOfTurnsWithoutAttack = 0;
 
         // At this point if there are hq units in an enemy ZOC they are eliminated
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().removeHQInEnemyZOC(GlobalDefinitions.Nationality.Allied);
@@ -1602,8 +1608,8 @@ public class VictoryState : GameState
 
     public void executeSelectUnit(InputMessage inputMessage)
     {
-        // If the hex selected has enemy units on it display them in the gui
-        if (inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
+        // If the hex selected has units on it display them in the gui
+        if ((inputMessage.unit != null) && (inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex != null))
             GlobalDefinitions.guiDisplayUnitsOnHex(inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex);
     }
 }
