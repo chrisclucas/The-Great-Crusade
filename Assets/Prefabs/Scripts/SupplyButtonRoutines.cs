@@ -75,14 +75,14 @@ public class SupplyButtonRoutines : MonoBehaviour
                 unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply = 0;
         }
 
-        // I need to know whether this is the beginning or end of a turn since unsupplied units are only eliminated at the end of a turn
-        // With the implementation of the AI there is no Allied supply state but I think that the check at the end of combat doesn't come through this path... which might not be right
-        //if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState == GameControl.alliedSupplyStateInstance.GetComponent<SupplyState>())
-            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkIfAlliedUnsuppliedUnitsShouldBeEliminated(false);
-        //else
-        //GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkIfAlliedUnsuppliedUnitsShouldBeEliminated(true);
-
+        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkIfAlliedUnsuppliedUnitsShouldBeEliminated(false);
         GlobalDefinitions.removeGUI(GlobalDefinitions.supplySourceGUIInstance);
+
+        // Got rid of the GUI, now get rid of the global copies of the supply gui's
+        //int count = GlobalDefinitions.supplyGUI.Count;
+        //for (int i = 0; i < count; i++)
+        //    DestroyImmediate(GlobalDefinitions.supplyGUI[i]);
+        //GlobalDefinitions.supplyGUI.Clear();
 
         // Turn the button back on
         GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;

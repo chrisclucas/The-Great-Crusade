@@ -771,26 +771,31 @@ public class SupplyRoutines : MonoBehaviour
             }
             else
             {
-                // This unit is out of supply so set it into supply as long as there is unassigned capacity from the source
-                if (GlobalDefinitions.currentSupplySource.GetComponent<HexDatabaseFields>().unassignedSupply > 0)
+                if (GlobalDefinitions.currentSupplySource != null)
                 {
-                    // Now make sure the supply is a source for the hex that the unit occupies
-                    if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().supplySources.Contains(GlobalDefinitions.currentSupplySource))
+                    // This unit is out of supply so set it into supply as long as there is unassigned capacity from the source
+                    if (GlobalDefinitions.currentSupplySource.GetComponent<HexDatabaseFields>().unassignedSupply > 0)
                     {
-                        unit.GetComponent<UnitDatabaseFields>().inSupply = true;
-                        // Remaining movement needs to be set here in preparation for movement
-                        unit.GetComponent<UnitDatabaseFields>().remainingMovement = unit.GetComponent<UnitDatabaseFields>().movementFactor;
-                        unit.GetComponent<UnitDatabaseFields>().supplySource = GlobalDefinitions.currentSupplySource;
-                        GlobalDefinitions.currentSupplySource.GetComponent<HexDatabaseFields>().unassignedSupply--;
-                        updateUnassignedText(GlobalDefinitions.currentSupplySource);
-                        // Set the unit to a yellow highlight to indicate it is in supply
-                        unit.GetComponent<SpriteRenderer>().material.color = Color.yellow;
+                        // Now make sure the supply is a source for the hex that the unit occupies
+                        if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().supplySources.Contains(GlobalDefinitions.currentSupplySource))
+                        {
+                            unit.GetComponent<UnitDatabaseFields>().inSupply = true;
+                            // Remaining movement needs to be set here in preparation for movement
+                            unit.GetComponent<UnitDatabaseFields>().remainingMovement = unit.GetComponent<UnitDatabaseFields>().movementFactor;
+                            unit.GetComponent<UnitDatabaseFields>().supplySource = GlobalDefinitions.currentSupplySource;
+                            GlobalDefinitions.currentSupplySource.GetComponent<HexDatabaseFields>().unassignedSupply--;
+                            updateUnassignedText(GlobalDefinitions.currentSupplySource);
+                            // Set the unit to a yellow highlight to indicate it is in supply
+                            unit.GetComponent<SpriteRenderer>().material.color = Color.yellow;
+                        }
+                        else
+                            GlobalDefinitions.guiUpdateStatusMessage("The currently selected supply source is not a supply source for this unit");
                     }
                     else
-                        GlobalDefinitions.guiUpdateStatusMessage("The currently selected supply source is not a supply source for this unit");
+                        GlobalDefinitions.guiUpdateStatusMessage("The supply source does not have unassigned supply capacity");
                 }
                 else
-                    GlobalDefinitions.guiUpdateStatusMessage("The supply source does not have unassigned supply capacity");
+                    GlobalDefinitions.guiUpdateStatusMessage("No supply source selected.  Select a supply source on the display before selecting a unit.");
             }
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
                     GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<SupplyState>().executeSelectUnit;

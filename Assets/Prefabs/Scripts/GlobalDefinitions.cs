@@ -105,7 +105,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static bool userIsIntiating = false;
     public static bool isServer = false;
     public static bool hasReceivedConfirmation = false;
-    public static Nationality sideControled;
+    public static Nationality sideControled; // Used for network play
 
     // Buttons and Toggles - each UI element that is created that can accept a user input must be referenced in a global since this is what will
     // be used for network games to execute the gui elements
@@ -234,8 +234,8 @@ public class GlobalDefinitions : MonoBehaviour
     public static List<GameObject> hexesAvailableForPostCombatMovement = new List<GameObject>();
     public static GameObject unitSelectedForPostCombatMovement;
 
-    public static GameObject selectedUnit = new GameObject();
-    public static GameObject startHex = new GameObject();
+    public static GameObject selectedUnit = new GameObject("selectedUnit1");
+    public static GameObject startHex = new GameObject("selectedUnit2");
 
     public static List<GameObject> unitsToExchange = new List<GameObject>();
 
@@ -705,7 +705,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static void DrawBlueLineBetweenTwoPoints(Vector3 point1, Vector3 point2)
     {
         Material lineMaterial = Resources.Load("LineMaterial", typeof(Material)) as Material;
-        GameObject river = new GameObject();
+        GameObject river = new GameObject("DrawBlueLineBetweenTwoPoints");
 
         if (lineMaterial == null)
             writeToLogFile("DrawBlueLineBetweenTwoPoints: ERROR - Material returned null from Resources");
@@ -1095,18 +1095,12 @@ public class GlobalDefinitions : MonoBehaviour
     public static bool successfulAttacksLastTurn()
     {
         if (combatResultsFromLastTurn.Count == 0)
-        {
-            writeToLogFile("successfulAttacksLastTurn: returning false because no combat results");
             return (false);
-        }
 
         foreach (CombatResults combatResult in combatResultsFromLastTurn)
             if ((combatResult == CombatResults.Dback2) || (combatResult == CombatResults.Delim) || (combatResult == CombatResults.Exchange))
-            {
-                writeToLogFile("successfulAttacksLastTurn: returning true - combat result from last turn = " + combatResult);
                 return (true);
-            }
-        writeToLogFile("successfulAttacksLastTurn: returning false as default");
+
         return (false);
     }
 
@@ -1178,7 +1172,7 @@ public class GlobalDefinitions : MonoBehaviour
         guiInstance.AddComponent<GraphicRaycaster>();
         canvasObject.renderMode = RenderMode.ScreenSpaceOverlay;
 
-        GameObject guiPanel = new GameObject();
+        GameObject guiPanel = new GameObject("createGUICanvas");
         Image panelImage = guiPanel.AddComponent<Image>();
         panelImage.color = new Color32(0, 44, 255, 220);
         panelImage.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
@@ -1889,6 +1883,7 @@ public class GlobalDefinitions : MonoBehaviour
             GameObject.Find("LossRatioText").GetComponent<Text>().text = ((float)(alliedFactorsEliminated) / ((float)germanFactorsEliminated)).ToString("0.00") + " Allied/German Loss";
     }
 
+
     /// <summary>
     /// Allied victory is achieved when 10 divisions are in supply in Germany for 4 consecutive turns or no German units on the board
     /// </summary>
@@ -1897,6 +1892,28 @@ public class GlobalDefinitions : MonoBehaviour
         //  Only display the victory screen for the first turn victory has been met
         if (alliedVictory)
             return false;
+
+        // If this is a game against the computer and the computer is playing the Germans, check if it resigns
+        if ((gameMode == GameModeValues.AI) && (nationalityUserIsPlaying == Nationality.Allied))
+        {
+            // The computer will resign if the Allies have three times more attack factors on the board than the Germans have defense factors
+            int alliedAttackFactors = 0;
+            int germanDefenseFactors = 0;
+
+            foreach (GameObject unit in alliedUnitsOnBoard)
+                alliedAttackFactors += unit.GetComponent<UnitDatabaseFields>().attackFactor;
+            foreach (GameObject unit in germanUnitsOnBoard)
+                germanDefenseFactors += unit.GetComponent<UnitDatabaseFields>().defenseFactor;
+
+            if (alliedAttackFactors / germanDefenseFactors >= 3)
+            {
+                guiUpdateStatusMessage("The computer is resigning due to the the overwhelming Allied force");
+                alliedVictory = true;
+                displayAlliedVictoryScreen();
+                return true;
+            }
+
+        }
 
         // Units that count for victory have to be non-HQ and in supply
         int count = 0;
@@ -1939,6 +1956,18 @@ public class GlobalDefinitions : MonoBehaviour
         //  Only display the victory screen for the first turn victory has been met
         if (germanVictory)
             return false;
+
+        // If this is a computer game and the computer is playing the Allies, check if the computer resigns
+        if ((gameMode == GameModeValues.AI) && (nationalityUserIsPlaying == Nationality.German))
+        {
+            // The computer resigns if there have been four turns without an Allied victory
+            if ((numberOfTurnsWithoutSuccessfulAttack >= 4) && (turnNumber > 8))
+            {
+                germanVictory = true;
+                displayGermanVictoryScreen();
+                return true;
+            }
+        }
 
         if ((turnNumber > 8) && (alliedUnitsOnBoard.Count == 0))
         {

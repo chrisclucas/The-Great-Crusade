@@ -732,7 +732,7 @@ public class CreateBoard : MonoBehaviour
     {
         char[] delimiterChars = { ' ', ',', ')', '(' };
         string line;
-        GameObject placedUnit = new GameObject();
+        GameObject placedUnit = new GameObject("readBritainPlacement");
 
         int lineNumber = 0;
 
@@ -780,7 +780,7 @@ public class CreateBoard : MonoBehaviour
     {
         char[] delimiterChars = { ' ', ',', ')', '(' };
         string line;
-        GameObject placedUnit = new GameObject();
+        GameObject placedUnit = new GameObject("readGermanPlacement");
 
         int lineNumber = 0;
 

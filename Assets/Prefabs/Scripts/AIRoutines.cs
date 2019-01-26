@@ -261,7 +261,8 @@ public class AIRoutines : MonoBehaviour
     /// <param name="nationality"></param>
     public static void moveAllUnits(GlobalDefinitions.Nationality nationality)
     {
-        GameObject unit = new GameObject();
+        //GameObject unit = new GameObject("moveAllUnits");
+        GameObject unit;
 
         unit = returnNextUnitToMove(nationality);
 
@@ -311,7 +312,8 @@ public class AIRoutines : MonoBehaviour
     public static GameObject returnNextUnitToMove(GlobalDefinitions.Nationality nationality)
     {
         List<GameObject> unitList;
-        GameObject maxValueUnit = new GameObject();
+        //GameObject maxValueUnit = new GameObject("returnNextUnitToMove");
+        GameObject maxValueUnit;
         int globalMaxValue = 0;
         int maxValue = 0;
         int globalMaxDiffernce = 0;
@@ -2428,7 +2430,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     public static void selectAlliedAIReplacementUnits()
     {
-        GameObject replacementUnit = new GameObject();
+        GameObject replacementUnit = new GameObject("selectAlliedAIReplacementUnits");
         List<GameObject> armorReplacements = new List<GameObject>();
         List<GameObject> infantryReplacements = new List<GameObject>();
 
@@ -3924,7 +3926,7 @@ public class AIRoutines : MonoBehaviour
     {
         if (GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn < GlobalDefinitions.maxNumberAlliedReinforcementPerTurn)
         {
-            GameObject reinforcementUnit = new GameObject();
+            GameObject reinforcementUnit = new GameObject("returnReinforcementUnit");
 
             reinforcementUnit = returnAvailableArmorUnit();
             if ((reinforcementUnit != null) &&
@@ -5642,7 +5644,8 @@ public class AIPotentialAttack
 public class AIDefendHex
 {
     // The defending hex
-    public GameObject defendingHex = new GameObject();
+    //public GameObject defendingHex = new GameObject("AIDefendHex");
+    public GameObject defendingHex;
 
     // Hexes that can attack the hex without involving other defending hexes
     public List<AISingleAttackHex> singleAttackHexes;
@@ -5654,7 +5657,8 @@ public class AIDefendHex
 // This class is used by the AI to keep track of the potential attackers for a hex
 public class AISingleAttackHex
 {
-    public GameObject attackHex = new GameObject();
+    //public GameObject attackHex = new GameObject("AISingleAttackHex");
+    public GameObject attackHex;
     public List<GameObject> potentialAttackers = new List<GameObject>();
 }
 

@@ -96,6 +96,9 @@ public class SetUpState : GameState
             GlobalDefinitions.getNewOrSavedGame();
     }
 
+    /// <summary>
+    /// This executes when the Saved Game option is selected
+    /// </summary>
     public void executeSavedGame()
     {
         string turnFileName;
@@ -134,6 +137,9 @@ public class SetUpState : GameState
         }
     }
 
+    /// <summary>
+    /// This executes when the New Game option is selected
+    /// </summary>
     public void executeNewGame()
     {
         int fileNumber;
@@ -163,15 +169,16 @@ public class SetUpState : GameState
         // The network communication is a little different for a new game so I can't use the routine to write to the command file
         // since I don't want it sending a message to the remote computer.
         if (!GlobalDefinitions.commandFileBeingRead)
-        {
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
+        {            
             using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.fullCommandFile))
             {
+                writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
                 writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
                 writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
             }
             using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
             {
+                writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
                 writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
                 writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
             }
@@ -332,7 +339,6 @@ public class TurnInitializationState : GameState
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
         GlobalDefinitions.guiUpdatePhase("Turn initialization");
-        GlobalDefinitions.writeToLogFile("TurnInitializationState: Initialization");
         GlobalDefinitions.guiClearUnitsOnHex();
         base.initialize();
 
@@ -355,6 +361,7 @@ public class TurnInitializationState : GameState
 
         // Increment the turn number
         GlobalDefinitions.turnNumber++;
+        GlobalDefinitions.writeToLogFile("TurnInitialization: Starting turn number " + GlobalDefinitions.turnNumber);
         GlobalDefinitions.guiUpdateTurn();
 
         // Update Allied victory weeks display
@@ -409,8 +416,6 @@ public class TurnInitializationState : GameState
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().initializeUnits();
 
         GlobalDefinitions.writeToLogFile("TurnInitializationState: Number of hexes in Allied control = " + GlobalDefinitions.returnNumberOfAlliedHexes());
-
-        GlobalDefinitions.writeToLogFile("TurnInitializationState: executeQuit");
         executeQuit();
     }
 }

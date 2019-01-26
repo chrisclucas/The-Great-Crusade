@@ -745,7 +745,6 @@ public class MovementRoutines : MonoBehaviour
         // NEED FIX: Note I need to fix the fact that someone who manually moves a unit to a hex and then performs an undo will result in a false setting
         if ((GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.AI) || ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && GlobalDefinitions.localControl))
         {
-            GlobalDefinitions.writeToLogFile("moveUnit: executing hex control");
             // Set the control of the hex
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
                 destinationHex.GetComponent<HexDatabaseFields>().alliedControl = true;

@@ -98,7 +98,8 @@ public class CombatResolutionRoutines : MonoBehaviour
 
         GlobalDefinitions.writeToLogFile("combatResolutionDisplay: executing");
 
-        GameObject combatResolutionGuiInstance = new GameObject("combatResolutionGuiInstance");
+        //GameObject combatResolutionGuiInstance = new GameObject("combatResolutionGuiInstance");
+        GameObject combatResolutionGuiInstance;
 
         // I'm going to set a flag to indicate when the display is being presented to resolve the AI's combats.
         // The air support toggle and cancel button will be disabled since the user should not be able to do anything other than 

@@ -211,7 +211,7 @@ public class CombatRoutines : MonoBehaviour
             return;
         }
 
-        GameObject singleCombat = new GameObject();
+        GameObject singleCombat = new GameObject("prepForCombatDisplay");
         singleCombat.AddComponent<Combat>();
         // Check if the hex has uncommittted units of the right nationality on it and there are adjacent enemies
         if ((hex != null) &&

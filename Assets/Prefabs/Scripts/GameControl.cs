@@ -334,8 +334,6 @@ public class GameControl : MonoBehaviour
                         GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
                         guiButtonInstance.AddComponent<GUIButtonRoutines>();
                         guiButtonInstance.GetComponent<GUIButtonRoutines>().yesMain();
-
-
                         break;
                     case NetworkEventType.DataEvent:
                         Stream stream = new MemoryStream(TransportScript.recBuffer);
