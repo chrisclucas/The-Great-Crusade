@@ -94,6 +94,16 @@ public class GUIButtonRoutines : MonoBehaviour
         foreach (Transform unit in GlobalDefinitions.allUnitsOnBoard.transform)
         {
             unit.GetComponent<UnitDatabaseFields>().unitInterdiction = false;
+            unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
+            unit.GetComponent<UnitDatabaseFields>().hasMoved = false;
+            unit.GetComponent<UnitDatabaseFields>().unitEliminated = false;
+            unit.GetComponent<UnitDatabaseFields>().occupiedHex = null;
+            unit.GetComponent<UnitDatabaseFields>().beginningTurnHex = null;
+            unit.GetComponent<UnitDatabaseFields>().invasionAreaIndex = -1;
+            unit.GetComponent<UnitDatabaseFields>().inSupply = true;
+            unit.GetComponent<UnitDatabaseFields>().supplySource = null;
+            unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply = 0;
+            unit.GetComponent<UnitDatabaseFields>().remainingMovement = unit.GetComponent<UnitDatabaseFields>().movementFactor;
             if (unit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
             {
                 GlobalDefinitions.unhighlightUnit(unit.gameObject);

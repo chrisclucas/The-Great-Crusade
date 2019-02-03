@@ -1419,9 +1419,9 @@ public class AIRoutines : MonoBehaviour
         int targetOdds = GlobalDefinitions.maximumAIOdds;
         int minimumOdds = GlobalDefinitions.minimumAIOdds;
 
-//#if OUTPUTDEBUG
+        //#if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("makeAllCombatAssignments: number of turns without successfulcombat = " + GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack);
-//#endif
+        //#endif
         // Germans don't need to worry about attacking
         if (attackingNationality == GlobalDefinitions.Nationality.Allied)
             switch (GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack)
@@ -1440,23 +1440,43 @@ public class AIRoutines : MonoBehaviour
                     break;
                 case 3:
                     targetOdds = 1;
-                    minimumOdds = -3;
+                    // Anything less than 1:2 odds has no chance of victory so save these attacks for after the second invasion
+                    if (GlobalDefinitions.turnNumber > 9)
+                        minimumOdds = -3;
+                    else
+                        minimumOdds = -2;
                     break;
                 case 4:
                     targetOdds = -1;
-                    minimumOdds = -4;
+                    // Anything less than 1:2 odds has no chance of victory so save these attacks for after the second invasion
+                    if (GlobalDefinitions.turnNumber > 9)
+                        minimumOdds = -4;
+                    else
+                        minimumOdds = -2;
                     break;
                 case 5:
                     targetOdds = -2;
-                    minimumOdds = -5;
+                    // Anything less than 1:2 odds has no chance of victory so save these attacks for after the second invasion
+                    if (GlobalDefinitions.turnNumber > 9)
+                        minimumOdds = -5;
+                    else
+                        minimumOdds = -2;
                     break;
                 case 6:
                     targetOdds = -3;
-                    minimumOdds = -6;
+                    // Anything less than 1:2 odds has no chance of victory so save these attacks for after the second invasion
+                    if (GlobalDefinitions.turnNumber > 9)
+                        minimumOdds = -6;
+                    else
+                        minimumOdds = -2;
                     break;
                 default:
                     targetOdds = 3;
-                    minimumOdds = -6;
+                    // Anything less than 1:2 odds has no chance of victory so save these attacks for after the second invasion
+                    if (GlobalDefinitions.turnNumber > 9)
+                        minimumOdds = -6;
+                    else
+                        minimumOdds = -2;
                     break;
             }
 
@@ -1787,11 +1807,6 @@ public class AIRoutines : MonoBehaviour
 #endif
                     oddsMet = true;
                 }
-                // This executes because the attack was not able to make it to the maximum odds.  Determine if the lower odds are acceptable for the target attack
-                //if ((newPotentialAttack.odds >= (GlobalDefinitions.minimumAIOdds)) && (listOfHexesToBeAttacked[0].GetComponent<HexDatabaseFields>().intrinsicHexValue >= 5))
-                //    oddsMet = true;
-                //else if ((newPotentialAttack.odds >= GlobalDefinitions.minimumAIOdds) && (listOfHexesToBeAttacked[0].GetComponent<HexDatabaseFields>().intrinsicHexValue >= 10))
-                //    oddsMet = true;
             }
 
             if (!oddsMet)
@@ -1880,7 +1895,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("makeAllCombatAssignments:             Adding attack to listPotentialAttacks defending hex = " + newPotentialAttack.defendingHexes[0].defendingHex.name);
 #endif
-                listPotentialAttacks.Add(newPotentialAttack);
+                    listPotentialAttacks.Add(newPotentialAttack);
             }
 
             // It is possible for the cancel of the attack to remove all the hexes so check this before trying to remove anything
@@ -2698,6 +2713,18 @@ public class AIRoutines : MonoBehaviour
     /// <param name="invasionArea"></param>
     private static void sortInvasionHexes(InvasionArea invasionArea)
     {
+#if OUTPUTDEBUG
+        GlobalDefinitions.writeToLogFile("sortInvasionHexes: starting order of invasion hexes");
+        foreach (GameObject hex in invasionArea.invasionHexes)
+            GlobalDefinitions.writeToLogFile("      " + hex.name);
+#endif
+
+        // Note that the scoring used is to take the supply available from a hex and divide by the defense of the hex.  Even after I fixed the fact that the 
+        // "float" comparison was only using integer values (because if you don't cast one of the oprands of an integer division to (float) you end up with an
+        // integer result even if you assign the result to a float) there are a lot of ties.  I have reseeded the invasion hexes for the invasion areas when a 
+        // game is restarting to avoid different results but this still brings up the issue that at some point I probably want a more detailed scoring for the 
+        // best hex in order to avoid having so many ties.
+
         GameObject tempHex;
         // Since the algorithm is going to attempt to invade the hexes in the order they are stored, they need
         // to be stored in order that lists the best hexes first.  This way units aren't wasted on poor hexes 
@@ -2713,10 +2740,13 @@ public class AIRoutines : MonoBehaviour
                     defense1 += returnBaseDefenseFactor(unit);
                 foreach (GameObject unit in invasionArea.invasionHexes[index2].GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().occupyingUnit)
                     defense2 += returnBaseDefenseFactor(unit);
-                float score1 = invasionArea.invasionHexes[index1].GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity / defense1;
-                float score2 = invasionArea.invasionHexes[index2].GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity / defense2;
+                float score1 = (float)invasionArea.invasionHexes[index1].GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity / defense1;
+                float score2 = (float)invasionArea.invasionHexes[index2].GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity / defense2;
                 if (score1 < score2)
                 {
+#if OUTPUTDEBUG
+                    GlobalDefinitions.writeToLogFile("sortInvasionHexes: swapping hexes " + invasionArea.invasionHexes[index1].name + " " + score1.ToString("0.00") + " and " + invasionArea.invasionHexes[index2].name + " " + score2.ToString("0.00"));
+#endif
                     tempHex = invasionArea.invasionHexes[index1];
                     invasionArea.invasionHexes[index1] = invasionArea.invasionHexes[index2];
                     invasionArea.invasionHexes[index2] = tempHex;
@@ -2740,6 +2770,7 @@ public class AIRoutines : MonoBehaviour
         bool oddsMet = false;
 
         GlobalDefinitions.writeToLogFile("determineInvasionSite: executing");
+        GlobalDefinitions.invasionsTookPlaceThisTurn = true;
         foreach (InvasionArea invasionArea in GlobalDefinitions.invasionAreas)
         {
 #if OUTPUTDEBUG
@@ -2749,7 +2780,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("determineInvasionSite: sorted list of invasion hexes");
             foreach (GameObject hex in invasionArea.invasionHexes)
-                GlobalDefinitions.writeToLogFile("determineInvasionSite:    " + hex.GetComponent<HexDatabaseFields>().invasionTarget.name);
+                GlobalDefinitions.writeToLogFile("determineInvasionSite:    invasion hex = " + hex.name + " invasion target = " + hex.GetComponent<HexDatabaseFields>().invasionTarget.name);
 #endif
             // Reset the list of invading units and then reload
             invadingUnits.Clear();
@@ -3245,6 +3276,11 @@ public class AIRoutines : MonoBehaviour
 
         GameObject defendingHex = invadingHex.GetComponent<HexDatabaseFields>().invasionTarget;
 #if OUTPUTDEBUG
+        GlobalDefinitions.writeToLogFile("invasionOdds: invading hex = " + invadingHex.name);
+        GlobalDefinitions.writeToLogFile("invasionOdds: potential invading units list count = " + potentialInvadingUnitsList.Count);
+        GlobalDefinitions.writeToLogFile("invasionOdds: list of potential attacks count = " + listPotentialAttacks.Count);
+        GlobalDefinitions.writeToLogFile("invasionOdds: list of hexes to be attacked count = " + listOfHexesToBeAttacked.Count);
+        GlobalDefinitions.writeToLogFile("invasionOdds: list of new attack hexes added count = " + listOfNewAttackHexesAdded.Count);
         GlobalDefinitions.writeToLogFile("invasionOdds: Processing attack on hex = " + listOfHexesToBeAttacked[0].name);
 #endif
         // Create a new potential attack structure
@@ -3287,20 +3323,15 @@ public class AIRoutines : MonoBehaviour
                     List<GameObject> tempList = new List<GameObject>();
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("invasionOdds:     Unopposed invasion but need to make attack(s) once landed");
+                    GlobalDefinitions.writeToLogFile("invasionOdds: units exerting ZOC to hex " + listOfHexesToBeAttacked[0].name + " count = " + listOfHexesToBeAttacked[0].GetComponent<HexDatabaseFields>().unitsExertingZOC.Count);
+
 #endif
 
                     // If there is more than one hex that has to be attacked after landing, I'll take the first hex and make it the invasion battle
                     // and move the other hexes to the must be attacked hexes.  Note I can only do this if the hexes aren't already under attack.
 
-                    GlobalDefinitions.writeToLogFile("invasionOdds: units exerting ZOC to hex " + listOfHexesToBeAttacked[0].name + " count = " + listOfHexesToBeAttacked[0].GetComponent<HexDatabaseFields>().unitsExertingZOC.Count);
-
                     foreach (GameObject unit in listOfHexesToBeAttacked[0].GetComponent<HexDatabaseFields>().unitsExertingZOC)
                     {
-                        if (unit != null)
-                            GlobalDefinitions.writeToLogFile("invasionOdds:    unit " + unit.name);
-                        else
-                            GlobalDefinitions.writeToLogFile("invasionOdds:    unit is null");
-
                         if (!unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack && !tempList.Contains(unit.GetComponent<UnitDatabaseFields>().occupiedHex))
                         {
 #if OUTPUTDEBUG
@@ -3575,7 +3606,7 @@ public class AIRoutines : MonoBehaviour
         {
             // The unit and the hex are available so move the unit to the hex
 #if OUTPUTDEBUG
-            GlobalDefinitions.writeToLogFile("assignUnitsToAttack: moving unit " + attackingUnit.name + " to hex " + attackHex.name);
+            GlobalDefinitions.writeToLogFile("assignInvasionUnitsToAttack: moving unit " + attackingUnit.name + " to hex " + attackHex.name);
 #endif
             //if (attackHex.GetComponent<HexDatabaseFields>().coast || attackHex.GetComponent<HexDatabaseFields>().coastalPort)
             //{
@@ -3984,13 +4015,13 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("landAllAlliedReinforcementsUnits:     checking for movement from " + reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex.name + " to " + tempHex.name);
 #endif
-                            if (!moved && GlobalDefinitions.hexUnderStackingLimit(tempHex, GlobalDefinitions.Nationality.Allied) &&
-                                    !tempHex.GetComponent<HexDatabaseFields>().sea && !tempHex.GetComponent<HexDatabaseFields>().impassible && !tempHex.GetComponent<HexDatabaseFields>().impassible &&
-                                    (tempHex.GetComponent<HexDatabaseFields>().supplySources.Count > 0))
-                            {
-                                moved = true;
-                                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(tempHex, reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex, reinforcementUnit);
-                            }
+                                if (!moved && GlobalDefinitions.hexUnderStackingLimit(tempHex, GlobalDefinitions.Nationality.Allied) &&
+                                        !tempHex.GetComponent<HexDatabaseFields>().sea && !tempHex.GetComponent<HexDatabaseFields>().impassible && !tempHex.GetComponent<HexDatabaseFields>().impassible &&
+                                        (tempHex.GetComponent<HexDatabaseFields>().supplySources.Count > 0))
+                                {
+                                    moved = true;
+                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(tempHex, reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex, reinforcementUnit);
+                                }
                         }
 
                         // Check if the unit can stay on the landing hex
@@ -5629,6 +5660,27 @@ public class AIRoutines : MonoBehaviour
             return (new Vector2(0, 0));
         else
             return (new Vector2(totalX / totalNumber, totalY / totalNumber));
+    }
+
+    /// <summary>
+    /// This routine adds carpet bombing to AI combats
+    /// </summary>
+    public static void checkForAICarpetBombingShouldBeAdded()
+    {
+        // Go through each of the combats that are pending and see if there are 1:2 combats in place that carpet bombing can be added to
+        // I can make it better but I'm going to stop at the first one I find for now instead of weighing them off
+        foreach (GameObject combat in GlobalDefinitions.allCombats)
+        {
+            if ((GlobalDefinitions.returnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport) == -2) &&
+                    CombatRoutines.checkIfCarpetBombingIsAvailable(combat))
+            {
+                GlobalDefinitions.carpetBombingUsedThisTurn = true;
+                GlobalDefinitions.numberOfCarpetBombingsUsed++;
+                combat.GetComponent<Combat>().defendingUnits[0].GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().carpetBombingActive = true;
+                combat.GetComponent<Combat>().carpetBombing = true;
+                return;
+            }
+        }
     }
 }
 

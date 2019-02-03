@@ -45,7 +45,7 @@ public class CombatGUIOK : MonoBehaviour
         {
             // If the odds or worse than 1:6 then the attackers are eliminated and no battle takes place.  It does not
             // count as an attack on the defending units
-            GlobalDefinitions.askUserYesNoQuestion("Attacking at odds less than 1:6 is useless: do you want to continue?", ref yesButton, ref noButton, yesContinue, noAbort);
+            GlobalDefinitions.askUserYesNoQuestion("Attacking at odds less than 1:6 is useless: do you want to continue?/nNote that the attackers will be eliminated and this will not count as a combat", ref yesButton, ref noButton, yesContinue, noAbort);
         }
 
         else
@@ -74,31 +74,10 @@ public class CombatGUIOK : MonoBehaviour
             {
                 if (GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().isOn)
                 {
-                    bool sameHex = true;
-                    singleCombat.GetComponent<Combat>().carpetBombing = false;
-                    // Need to make sure that all of the defenders are on the same hex
-                    if (singleCombat.GetComponent<Combat>().defendingUnits.Count > 1)
-                        for (int index = 1; index < singleCombat.GetComponent<Combat>().defendingUnits.Count; index++)
-                            if (singleCombat.GetComponent<Combat>().defendingUnits[index].GetComponent<UnitDatabaseFields>().occupiedHex !=
-                                    singleCombat.GetComponent<Combat>().defendingUnits[0].GetComponent<UnitDatabaseFields>().occupiedHex)
-                                sameHex = false;
-
-                    if (sameHex)
-                    {
-                        // Make sure the attack was attacked last turn
-                        if (!GlobalDefinitions.hexesAttackedLastTurn.Contains(singleCombat.GetComponent<Combat>().defendingUnits[0].GetComponent<UnitDatabaseFields>().occupiedHex))
-                        {
-                            GlobalDefinitions.guiUpdateStatusMessage("Carpet bombing not allowed on hex - it was not attacked last turn");
-                        }
-                        else
-                        {
-                            GlobalDefinitions.numberOfCarpetBombingsUsed++;
-                            singleCombat.GetComponent<Combat>().carpetBombing = true;
-                            singleCombat.GetComponent<Combat>().defendingUnits[0].GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().carpetBombingActive = true;
-                        }
-                    }
-                    else
-                        GlobalDefinitions.guiUpdateStatusMessage("Carpet bombing not allowed on hex - all units do not occupy a single hex");
+                    GlobalDefinitions.carpetBombingUsedThisTurn = true;
+                    GlobalDefinitions.numberOfCarpetBombingsUsed++;
+                    singleCombat.GetComponent<Combat>().carpetBombing = true;
+                    singleCombat.GetComponent<Combat>().defendingUnits[0].GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().carpetBombingActive = true;
                 }
                 else
                     singleCombat.GetComponent<Combat>().carpetBombing = false;

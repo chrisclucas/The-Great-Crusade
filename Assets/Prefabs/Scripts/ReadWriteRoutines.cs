@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class ReadWriteRoutines : MonoBehaviour
 {
@@ -48,7 +49,13 @@ public class ReadWriteRoutines : MonoBehaviour
 
             // In network mode the Game Control loads the currentState and it works best if everything is set before it gets called.
             fileWriter.Write("Game_Control ");
-            GameControl.writeGameControlStatusVariables(fileWriter);
+
+            if (saveFileType == "Setup")
+                fileWriter.Write("German");
+            else
+                fileWriter.Write(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+
+            fileWriter.WriteLine();
             fileWriter.Close();
 
             // A new saved file has been written so delete the current command file and load the new turn file
@@ -58,9 +65,9 @@ public class ReadWriteRoutines : MonoBehaviour
                     GlobalDefinitions.deleteCommandFile();
                 using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
                 {
-                    writeFile.WriteLine("SavedTurnFile " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
                     writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
                     writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
+                    writeFile.WriteLine("SavedTurnFile " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
                 }
             }
         }
@@ -96,7 +103,7 @@ public class ReadWriteRoutines : MonoBehaviour
                             break;
                         case "Game_Control":
                             GameControl.setGameState(switchEntries[1]);
-                           break;
+                            break;
                         case "Global_Definitions":
                             readGlobalVariables(switchEntries);
                             break;
@@ -131,7 +138,17 @@ public class ReadWriteRoutines : MonoBehaviour
             theReader.Close();
 
             GlobalDefinitions.writeToLogFile("readTurnFile: File read complete.  Initialize Game State");
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+
+            // If we just read a setup file, put the player into the setup state so that he can update the setup if he wants.
+            if ((GlobalDefinitions.turnNumber == 0) && (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.German))
+            {
+                GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
+                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
+                                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<SetUpState>().executeSelectUnit;
+            }
+            // Otherwise, execute the init for the next state
+            else
+                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
         }
     }
 

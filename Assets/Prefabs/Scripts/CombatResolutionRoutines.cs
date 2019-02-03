@@ -98,7 +98,6 @@ public class CombatResolutionRoutines : MonoBehaviour
 
         GlobalDefinitions.writeToLogFile("combatResolutionDisplay: executing");
 
-        //GameObject combatResolutionGuiInstance = new GameObject("combatResolutionGuiInstance");
         GameObject combatResolutionGuiInstance;
 
         // I'm going to set a flag to indicate when the display is being presented to resolve the AI's combats.
@@ -225,16 +224,18 @@ public class CombatResolutionRoutines : MonoBehaviour
             yPosition = 2 * GlobalDefinitions.GUIUNITIMAGESIZE + GlobalDefinitions.allCombats.IndexOf(combat) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight;
 
             // This creates images of the defenders.  The first three columns are reserved for defending unit images
-            foreach (GameObject defendingUnit in combat.GetComponent<Combat>().defendingUnits)
+            //foreach (GameObject defendingUnit in combat.GetComponent<Combat>().defendingUnits)
+            for (int a = 0; ((a < combat.GetComponent<Combat>().defendingUnits.Count) && (a < 3)); a++)
             {
 #if OUTPUTDEBUG
 
                 GlobalDefinitions.writeToLogFile("combatResolutionDisplay: unit " + defendingUnit.name + "  x = " + (GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE));
                 GlobalDefinitions.writeToLogFile("combatResolutionDisplay: unit index = " + combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit));
 #endif
-                GlobalDefinitions.createUnitImage(defendingUnit,
+                GlobalDefinitions.createUnitImage(combat.GetComponent<Combat>().defendingUnits[a],
                             "UnitImage",
-                            GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE,
+                            //GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE,
+                            GlobalDefinitions.GUIUNITIMAGESIZE * a * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE,
                             yPosition,
                             combatCanvas).transform.SetParent(combatContentPanel.transform, false);
             }
@@ -410,7 +411,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         if ((GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Network) && !GlobalDefinitions.commandFileBeingRead)
         {
             GlobalDefinitions.dieRollResult1 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
-            //GlobalDefinitions.dieRollResult1 = 0;  // REMOVE - FOR TESTING ONLY
+            GlobalDefinitions.dieRollResult1 = 3;  // REMOVE - FOR TESTING ONLY
             // 1:1 odds results 0-Delim 1-Exchange 2-Dback2 3-Aback2 4-Aelim 5-Aelim 
 
             GlobalDefinitions.dieRollResult2 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));

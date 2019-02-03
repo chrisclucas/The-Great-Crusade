@@ -34,6 +34,15 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
         if (curentCombat.GetComponent<Combat>().attackAirSupport)
             GlobalDefinitions.tacticalAirMissionsThisTurn--;
 
+        // Need to check if we need to give back carpet bombing
+        if (curentCombat.GetComponent<Combat>().carpetBombing)
+        {
+            GlobalDefinitions.carpetBombingUsedThisTurn = false;
+            GlobalDefinitions.numberOfCarpetBombingsUsed--;
+            curentCombat.GetComponent<Combat>().carpetBombing = false;
+            curentCombat.GetComponent<Combat>().defendingUnits[0].GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().carpetBombingActive = false;
+        }
+
         GlobalDefinitions.allCombats.Remove(curentCombat);
 
         // Need to get rid of all the buttons and toggles in the remaining combats since they will be regenerated
@@ -46,18 +55,6 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
         }
 
         GlobalDefinitions.removeGUI(GlobalDefinitions.combatResolutionGUIInstance);
-
-        //foreach (GameObject unit in GlobalDefinitions.mustBeAttackedUnits)
-        //     if (!unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
-        //         unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
-
-        // Units that are across a river would have been added to the mustBeAttacked list when being added to this combat.  Remove all units and then rerun the allocation
-        //foreach (GameObject unit in curentCombat.GetComponent<Combat>().defendingUnits)
-        //{
-        //    unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
-        //    if (GlobalDefinitions.mustBeAttackedUnits.Contains(unit))
-        //        GlobalDefinitions.mustBeAttackedUnits.Remove(unit);
-        //}
 
         if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedCombatStateInstance") ||
                 (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanCombatStateInstance") ||
@@ -202,6 +199,8 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
                 // Only check for carpet bombing if Allies are attacking.  This is needed to keep the German attacks from being loaded
                 if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
                 {
+                    GlobalDefinitions.combatResultsFromLastTurn.Clear();
+                    GlobalDefinitions.hexesAttackedLastTurn.Clear();
                     // Store all hexes being attacked this turn.  Used for carpet bombing availability next turn
                     foreach (GameObject combat in GlobalDefinitions.allCombats)
                         foreach (GameObject defender in combat.GetComponent<Combat>().defendingUnits)

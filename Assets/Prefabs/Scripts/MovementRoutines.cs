@@ -7,10 +7,10 @@ using UnityEngine.UI;
 public class MovementRoutines : MonoBehaviour
 {
     /// <summary>
-    /// Returns the unit that is going to be moved of the correct nationality
+    /// Returns the the hex of the selected unit or displays the enemy units 
     /// </summary>
     /// <param name="nationality"></param>
-    public GameObject getUnitToMove(GameObject selectedUnit)
+    public GameObject highlighyHexesForMovement(GameObject selectedUnit)
     {
         List<GameObject> movementHexes = new List<GameObject>();
         // Note that the check for a Null unit has already been done
@@ -172,6 +172,15 @@ public class MovementRoutines : MonoBehaviour
 
                 if (!checkForAdjacentEnemy(selectedHex, selectedUnit) && (selectedUnit.GetComponent<UnitDatabaseFields>().armor || selectedUnit.GetComponent<UnitDatabaseFields>().airborne))
                     selectedUnit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = true;
+
+                // If the unit is being placed within enemy ZOC I need to not allow the unit to move in the movement mode.  If I don't do this here, it will look like the unit is starting
+                // the turn out in an enemy ZOC and in that case it is legal to move away instead of fighting.  When placing a replacement unit in an enemy ZOC is must attack
+                if (GlobalDefinitions.hexInEnemyZOC(selectedHex, GlobalDefinitions.Nationality.German))
+                    selectedUnit.GetComponent<UnitDatabaseFields>().remainingMovement = 0;
+
+                // Now make it look like the unit started the turn out on the hex it is being placed.  Otherwise, if the unit's movement is undone during movement it will go back to
+                // the OOB sheet and no longer be available.
+                selectedUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex = selectedHex;
 
                 // If this is the only unit in the target hex then update ZOC's
                 if (selectedHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count < 2)
@@ -735,8 +744,9 @@ public class MovementRoutines : MonoBehaviour
         // Check if a unit is capturing a hex that yields Allied replacement points
         checkForAlliedCaptureOfStrategicInstallations(destinationHex, unit);
 
-        // Indcate that the unit has moved this turn
-        unit.GetComponent<UnitDatabaseFields>().hasMoved = true;
+        // Indcate that the unit has moved this turn as long as the start and destination hexes aren't the same
+        if (destinationHex != beginningHex)
+            unit.GetComponent<UnitDatabaseFields>().hasMoved = true;
 
         // Take the unit out of the occupyingUnits field of the current hex
         GlobalDefinitions.removeUnitFromHex(unit, beginningHex);
@@ -1876,8 +1886,8 @@ public class MovementRoutines : MonoBehaviour
     public void processUnitSelectionForMovement(GameObject selectedUnit, GlobalDefinitions.Nationality currentNationality)
     {
         if (selectedUnit != null)
-            // Selecting a reinforcing unit from Britain
             if ((currentNationality == GlobalDefinitions.Nationality.Allied) && selectedUnit.GetComponent<UnitDatabaseFields>().inBritain)
+                // Executed when selecting a reinforcing unit from Britain
                 // Check that the unit selected is available for the current turn
                 if (selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable <= GlobalDefinitions.turnNumber)
                 {
@@ -1898,6 +1908,15 @@ public class MovementRoutines : MonoBehaviour
                 GlobalDefinitions.startHex = null;
             }
 
+            else if (selectedUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
+            {
+                GlobalDefinitions.guiUpdateStatusMessage("Unit selected is committed to an attack\nCancel attack if you want to move this unit");
+                GlobalDefinitions.selectedUnit = null;
+                GlobalDefinitions.startHex = null;
+
+                // I need to push the unit down to the bottom of the stack since otherwise uncommitted units beneath it would be inaccessible.
+            }
+
             // Selecting a unit on the board
             else
             {
@@ -1905,7 +1924,7 @@ public class MovementRoutines : MonoBehaviour
                 // AI TESTING: For debugging the AI algorithm I am setting the hex movement values here for the selected unit
                 //AIRoutines.setUnitMovementValues(selectedUnit);
 
-                GlobalDefinitions.startHex = getUnitToMove(selectedUnit);
+                GlobalDefinitions.startHex = highlighyHexesForMovement(selectedUnit);
             }
         else
             GlobalDefinitions.guiUpdateStatusMessage("No unit selected");

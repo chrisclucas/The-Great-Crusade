@@ -242,6 +242,7 @@ public class GlobalDefinitions : MonoBehaviour
     // Used to determine hexes that are available for carpet bombing
     public static List<GameObject> hexesAttackedLastTurn = new List<GameObject>();
     public static int numberOfCarpetBombingsUsed = 0;
+    public static bool carpetBombingUsedThisTurn = false;
 
     // Used by the AI to determine if it is stuck
     public static int numberOfTurnsWithoutSuccessfulAttack = 0;
@@ -250,6 +251,8 @@ public class GlobalDefinitions : MonoBehaviour
     public static int maxNumberAirborneDropsThisTurn = 3;
     public static int numberAlliedReinforcementsLandedThisTurn = 0;
     public static int currentAirborneDropsThisTurn = 0;
+
+    public static int numberOfHexesInAlliedControl = 0;
 
     public static int tacticalAirMissionsThisTurn = 0;
     public static GameObject numberTacticalAirFactorsRemainingText;
@@ -335,7 +338,9 @@ public class GlobalDefinitions : MonoBehaviour
         unitsToExchange.Clear();
 
         hexesAttackedLastTurn.Clear();
+        combatResultsFromLastTurn.Clear();
         numberOfCarpetBombingsUsed = 0;
+        carpetBombingUsedThisTurn = false;
 
         numberOfTurnsWithoutSuccessfulAttack = 0;
 
@@ -379,6 +384,8 @@ public class GlobalDefinitions : MonoBehaviour
             area.airborneUnitsUsedThisTurn = 0;
             area.airborneUnitsUsedThisTurn = 0;
             area.infantryUnitsUsedThisTurn = 0;
+            area.infantryUsedAsArmorThisTurn = 0;
+            area.airborneUsedAsInfantryThisTurn = 0;
             area.invaded = false;
             area.secondInvasionArea = false;
             area.totalUnitsUsedThisTurn = 0;
@@ -398,6 +405,9 @@ public class GlobalDefinitions : MonoBehaviour
         TransportScript.handshakeConfirmed = false;
         TransportScript.opponentComputerConfirmsSync = false;
         TransportScript.gameDataSent = false;
+
+        // When resetting I am going to regenerate the invasion areas.  If I don't the AI will come up with different results based on the arrays being seeded diferently
+        GameControl.createBoardInstance.GetComponent<CreateBoard>().setupInvasionAreas();
 
     }
 
@@ -1960,8 +1970,9 @@ public class GlobalDefinitions : MonoBehaviour
         // If this is a computer game and the computer is playing the Allies, check if the computer resigns
         if ((gameMode == GameModeValues.AI) && (nationalityUserIsPlaying == Nationality.German))
         {
-            // The computer resigns if there have been four turns without an Allied victory
-            if ((numberOfTurnsWithoutSuccessfulAttack >= 4) && (turnNumber > 8))
+            // The computer resigns if there have been four turns without an Allied victory and new hexes aren't being controled
+            // Note that numberOfHexesInAlliedControl contains the number of hexes that were in Allied control at the start of the turn
+            if ((numberOfTurnsWithoutSuccessfulAttack >= 4) && (turnNumber > 8) && (numberOfHexesInAlliedControl >= returnNumberOfHexesInAlliedControl()))
             {
                 germanVictory = true;
                 displayGermanVictoryScreen();
@@ -2061,27 +2072,44 @@ public class GlobalDefinitions : MonoBehaviour
         int strengthOfVictory = calculateStrengthOfVictory();
         string message = "";
 
-        if (nationalityUserIsPlaying == Nationality.Allied)
+        writeToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + strengthOfVictory + " player is " + nationalityUserIsPlaying);
+
+        if (gameMode == GameModeValues.Hotseat)
         {
             if (strengthOfVictory < 1)
-                message = "While you have met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+                message = "While the Allied player has met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
             else if (strengthOfVictory < 3)
-                message = "Congratulations, you have attained a minor victory    strength of victory = " + strengthOfVictory;
+                message = "The Allied player has attained a minor victory    strength of victory = " + strengthOfVictory;
             else if (strengthOfVictory < 5)
-                message = "Congratulations you have attained a victory    strength of victory = " + strengthOfVictory;
+                message = "The Allied player has attained a victory    strength of victory = " + strengthOfVictory;
             else
-                message = "Congratulations you have attained a decisive victory    strength of victory = " + strengthOfVictory;
+                message = "The Allied player has attained a decisive victory    strength of victory = " + strengthOfVictory;
         }
+
         else
         {
-            if (strengthOfVictory < 1)
-                message = "While your opponent has met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
-            else if (strengthOfVictory < 3)
-                message = "You have suffered a minor defeat    strength of victory = " + strengthOfVictory;
-            else if (strengthOfVictory < 5)
-                message = "You have suffered a defeat    strength of victory = " + strengthOfVictory;
+            if (nationalityUserIsPlaying == Nationality.Allied)
+            {
+                if (strengthOfVictory < 1)
+                    message = "While you have met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+                else if (strengthOfVictory < 3)
+                    message = "Congratulations, you have attained a minor victory    strength of victory = " + strengthOfVictory;
+                else if (strengthOfVictory < 5)
+                    message = "Congratulations you have attained a victory    strength of victory = " + strengthOfVictory;
+                else
+                    message = "Congratulations you have attained a decisive victory    strength of victory = " + strengthOfVictory;
+            }
             else
-                message = "You have suffered a decisive defeat    strength of victory = " + strengthOfVictory;
+            {
+                if (strengthOfVictory < 1)
+                    message = "While your opponent has met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+                else if (strengthOfVictory < 3)
+                    message = "You have suffered a minor defeat    strength of victory = " + strengthOfVictory;
+                else if (strengthOfVictory < 5)
+                    message = "You have suffered a defeat    strength of victory = " + strengthOfVictory;
+                else
+                    message = "You have suffered a decisive defeat    strength of victory = " + strengthOfVictory;
+            }
         }
 
         victoryScreen(message);
@@ -2096,29 +2124,43 @@ public class GlobalDefinitions : MonoBehaviour
 
         writeToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + strengthOfVictory + " player is " + nationalityUserIsPlaying);
 
-        if (nationalityUserIsPlaying == Nationality.German)
+        if (gameMode == GameModeValues.Hotseat)
         {
             if (strengthOfVictory < 1)
-                message = "While you have met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+                message = "While the German player has met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
             else if (strengthOfVictory < 3)
-                message = "Congratulations, you have attained a minor victory    strength of victory = " + strengthOfVictory;
+                message = "The German player has attained a minor victory    strength of victory = " + strengthOfVictory;
             else if (strengthOfVictory < 5)
-                message = "Congratulations you have attained a victory    strength of victory = " + strengthOfVictory;
+                message = "The German player has attained a victory    strength of victory = " + strengthOfVictory;
             else
-                message = "Congratulations you have attained a decisive victory    strength of victory = " + strengthOfVictory;
+                message = "The German player has attained a decisive victory    strength of victory = " + strengthOfVictory;
         }
+
         else
         {
-            if (strengthOfVictory < 1)
-                message = "While your opponent has met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
-            else if (strengthOfVictory < 3)
-                message = "You have suffered a minor defeat    strength of victory = " + strengthOfVictory;
-            else if (strengthOfVictory < 5)
-                message = "You have suffered a defeat    strength of victory = " + strengthOfVictory;
+            if (nationalityUserIsPlaying == Nationality.German)
+            {
+                if (strengthOfVictory < 1)
+                    message = "While you have met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+                else if (strengthOfVictory < 3)
+                    message = "Congratulations, you have attained a minor victory    strength of victory = " + strengthOfVictory;
+                else if (strengthOfVictory < 5)
+                    message = "Congratulations you have attained a victory    strength of victory = " + strengthOfVictory;
+                else
+                    message = "Congratulations you have attained a decisive victory    strength of victory = " + strengthOfVictory;
+            }
             else
-                message = "You have suffered a decisive defeat    strength of victory = " + strengthOfVictory;
+            {
+                if (strengthOfVictory < 1)
+                    message = "While your opponent has met the victory conditions the results are considered a draw    strength of victory = " + strengthOfVictory;
+                else if (strengthOfVictory < 3)
+                    message = "You have suffered a minor defeat    strength of victory = " + strengthOfVictory;
+                else if (strengthOfVictory < 5)
+                    message = "You have suffered a defeat    strength of victory = " + strengthOfVictory;
+                else
+                    message = "You have suffered a decisive defeat    strength of victory = " + strengthOfVictory;
+            }
         }
-        writeToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + calculateStrengthOfVictory() + " message = " + message);
         victoryScreen(message);
     }
 
@@ -2429,12 +2471,16 @@ public class GlobalDefinitions : MonoBehaviour
     /// Returns the number of hexes in Allied control
     /// </summary>
     /// <returns></returns>
-    public static int returnNumberOfAlliedHexes()
+    public static int returnNumberOfHexesInAlliedControl()
     {
         int returnNumber = 0;
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             if (hex.GetComponent<HexDatabaseFields>().alliedControl)
+            {
+                //GlobalDefinitions.writeToLogFile("returnNumberOfHexesInAlliedControl:       "+ hex.name);
+
                 returnNumber++;
+            }
         return (returnNumber);
     }
 
@@ -2616,6 +2662,8 @@ public class InvasionArea
     public int armorUnitsUsedThisTurn;
     public int infantryUnitsUsedThisTurn;
     public int airborneUnitsUsedThisTurn;
+    public int infantryUsedAsArmorThisTurn;
+    public int airborneUsedAsInfantryThisTurn;
 
     public List<GameObject> invasionHexes = new List<GameObject>();
 }

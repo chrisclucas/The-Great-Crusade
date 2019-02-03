@@ -398,29 +398,59 @@ public class GameControl : MonoBehaviour
     }
 
     /// <summary>
-    /// Writes out the current state, used for writing to save files
+    /// This routine sets the game state to the side who is in control
     /// </summary>
-    /// <param name="fileWriter"></param>
-    public static void writeGameControlStatusVariables(StreamWriter fileWriter)
-    {
-        fileWriter.Write(gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
-        fileWriter.WriteLine();
-    }
-
-    /// <summary>
-    /// This routine initializes to the side who is in control
-    /// </summary>
-    /// <param name="entries"></param>
+    /// <param name="currentSide"></param> this is the side that is passed in the saved game file that should be in control
     public static void setGameState(string currentSide)
     {
         if (Convert.ToString(currentSide) == "German")
         {
+            // This executes when the German side is in control after the saved file is read in
             if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
             {
                 if (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.Allied)
                 {
-                    GlobalDefinitions.writeToLogFile("setGameState: setting game state to germanAIStateInstance");
-                    gameStateControlInstance.GetComponent<gameStateControl>().currentState = germanAIStateInstance.GetComponent<GermanAIState>();
+                    // Check if this is a setup file that was read in.  The control will be for the German to play for when the player is
+                    // playing the German side in order to give him a chance to update the setup.  But if the AI is playing the German then
+                    // just go to the Allied invasion state
+                    if (GlobalDefinitions.turnNumber == 0)
+                    {
+                        GlobalDefinitions.writeToLogFile("setGameState: setting game state to turnInitializationStateInstance");
+                        gameStateControlInstance.GetComponent<gameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
+                    }
+                    else
+                    {
+                        GlobalDefinitions.writeToLogFile("setGameState: setting game state to germanAIStateInstance");
+                        gameStateControlInstance.GetComponent<gameStateControl>().currentState = germanAIStateInstance.GetComponent<GermanAIState>();
+                    }
+                }
+                else
+                {
+                    GlobalDefinitions.writeToLogFile("setGameState: setting game state to germanIsolationStateInstance  turn number = " + GlobalDefinitions.turnNumber);
+                    // Check if this is a setup file in order to allow the player to update the setup if he wants to
+                    if (GlobalDefinitions.turnNumber == 0)
+                    {
+                        GlobalDefinitions.writeToLogFile("setGameState: setting game state to setUpStateInstance");
+                        gameStateControlInstance.GetComponent<gameStateControl>().currentState = setUpStateInstance.GetComponent<SetUpState>();
+                    }
+
+                    else
+                    {
+                        GlobalDefinitions.writeToLogFile("setGameState: setting game state to germanIsolationStateInstance");
+                        gameStateControlInstance.GetComponent<gameStateControl>().currentState = germanIsolationStateInstance.GetComponent<GermanIsolationState>();
+                    }
+                }
+            }
+            else
+            {
+                // Do not set the currentSidePlaying variable if it is an AI game since it will already have been set during the game selection
+                // This is being set for network play since it has no meaning in hotseat
+                GlobalDefinitions.nationalityUserIsPlaying = GlobalDefinitions.Nationality.German;
+                // Check if this is a setup file in order to allow the player to update the setup if he wants to
+                if (GlobalDefinitions.turnNumber == 0)
+                {
+                    GlobalDefinitions.writeToLogFile("setGameState: setting game state to setUpStateInstance");
+                    gameStateControlInstance.GetComponent<gameStateControl>().currentState = setUpStateInstance.GetComponent<SetUpState>();
                 }
                 else
                 {
@@ -428,37 +458,17 @@ public class GameControl : MonoBehaviour
                     gameStateControlInstance.GetComponent<gameStateControl>().currentState = germanIsolationStateInstance.GetComponent<GermanIsolationState>();
                 }
             }
-            else
-            {
-                // Do not set the currentSidePlaying variable if it is an AI game since it will already have been set
-                GlobalDefinitions.nationalityUserIsPlaying = GlobalDefinitions.Nationality.German;
-                GlobalDefinitions.writeToLogFile("setGameState: setting game state to germanIsolationStateInstance");
-                gameStateControlInstance.GetComponent<gameStateControl>().currentState = germanIsolationStateInstance.GetComponent<GermanIsolationState>();
-            }
         }
         else
         {
-            if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
-            {
-                if (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.German)
-                {
-                    GlobalDefinitions.writeToLogFile("setGameState: setting game state to alliedAIStateInstance");
-                    gameStateControlInstance.GetComponent<gameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
-                    //gameStateControlInstance.GetComponent<gameStateControl>().currentState = alliedAIStateInstance.GetComponent<AlliedAIState>();
-                }
-                else
-                {
-                    GlobalDefinitions.writeToLogFile("setGameState: setting game state to turnInitializationStateInstance");
-                    gameStateControlInstance.GetComponent<gameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
-                }
-            }
-            else
-            {
-                // Do not set the currentSidePlaying variable if it is an AI game since it will already have been set
+            // The game state is for the Allied player to be in control
+            // Note we don't need to check for a setup file here since that would indicate that the German side is in control
+            GlobalDefinitions.writeToLogFile("setGameState: Allied in control, setting game state to turnInitializationStateInstance");
+            gameStateControlInstance.GetComponent<gameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
+            if (GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.AI)
+                // Do not set the currentSidePlaying variable if it is an AI game since it will already have been set during the game selection
+                // This is being set for network play since it has no meaning in hotseat
                 GlobalDefinitions.nationalityUserIsPlaying = GlobalDefinitions.Nationality.Allied;
-                GlobalDefinitions.writeToLogFile("setGameState: setting game state to turnInitializationStateInstance");
-                gameStateControlInstance.GetComponent<gameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
-            }
         }
     }
 

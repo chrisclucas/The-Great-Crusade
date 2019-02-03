@@ -16,6 +16,8 @@ public class InvasionRoutines : MonoBehaviour
             targetArea.armorUnitsUsedThisTurn = 0;
             targetArea.infantryUnitsUsedThisTurn = 0;
             targetArea.totalUnitsUsedThisTurn = 0;
+            targetArea.infantryUsedAsArmorThisTurn = 0;
+            targetArea.airborneUsedAsInfantryThisTurn = 0;
         }
 
         GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn = 0;
@@ -96,6 +98,7 @@ public class InvasionRoutines : MonoBehaviour
     /// <returns></returns>
     public GameObject getInvadingUnit(GameObject selectedUnit)
     {
+        GlobalDefinitions.writeToLogFile("getInvadingUnit: executing for unit = " + selectedUnit.name);
 
         //  Check for valid unit
         if (selectedUnit == null)
@@ -105,7 +108,7 @@ public class InvasionRoutines : MonoBehaviour
 
         // Check if the unit is on a sea hex, this would make it a unit that has already been deployed for an invasion
         // The user may be picking it in order to undo the selection.
-        if ((selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null) && 
+        else if ((selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null) &&
                 (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().sea))
         {
             // Hghlight the unit
@@ -133,8 +136,8 @@ public class InvasionRoutines : MonoBehaviour
 
             if (GlobalDefinitions.turnNumber == 1)
             {
-                //GlobalDefinitions.writeToLogFile("getInvadingUnit: total units used this turn = " + GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].totalUnitsUsedThisTurn);
-                //GlobalDefinitions.writeToLogFile("getInvadingUnit: max total unit for invasion area this turn = " + returnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]));
+                GlobalDefinitions.writeToLogFile("getInvadingUnit: total units used this turn = " + GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].totalUnitsUsedThisTurn);
+                GlobalDefinitions.writeToLogFile("getInvadingUnit: max total unit for invasion area this turn = " + returnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]));
 
                 if (GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].totalUnitsUsedThisTurn <
                         returnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]))
@@ -319,14 +322,15 @@ public class InvasionRoutines : MonoBehaviour
                 GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn++;
                 GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn++;
             }
-            // Note airborne counts against the infantry limit if brought in through the beach
-            else if (unit.GetComponent<UnitDatabaseFields>().infantry || unit.GetComponent<UnitDatabaseFields>().airborne)
+            else if (unit.GetComponent<UnitDatabaseFields>().infantry)
             {
-                // Check if infantry is using the armor limit on this turn
+                //  First check if infantry should be used against the armor limits
                 if (GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUnitsUsedThisTurn ==
-                        returnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[invasionAreaIndex]))
+                            returnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[invasionAreaIndex]))
                 {
+                    // If so then increment the armor and the decrement the infantry used as armor
                     GlobalDefinitions.invasionAreas[invasionAreaIndex].armorUnitsUsedThisTurn++;
+                    GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUsedAsArmorThisTurn++;
                     GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn++;
                     GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn++;
                 }
@@ -336,6 +340,14 @@ public class InvasionRoutines : MonoBehaviour
                     GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn++;
                     GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn++;
                 }
+            }
+            else if (unit.GetComponent<UnitDatabaseFields>().airborne)
+            {
+                //  Airborne landed over a beach counts against the infantry limits
+                GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUnitsUsedThisTurn++;
+                GlobalDefinitions.invasionAreas[invasionAreaIndex].airborneUsedAsInfantryThisTurn++;
+                GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn++;
+                GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn++;
             }
             else
             {
@@ -356,51 +368,71 @@ public class InvasionRoutines : MonoBehaviour
     /// <param name="unit"></param>
     public void decrementInvasionUnitLimits(GameObject unit)
     {
+        // When returning a unit back to Britain, it only impacts the limits if it is being returned on the turn that it was landed.
+        // Otherwise sending units back will allow the player to replace them with other units and still bring in the full 
+        // complement of units available for that turn.  The way that I can determine if the unit is being returned on the same turn
+        // that it was landed is whetehr or not it has a beginning hex set.  If it does that means it started the turn on the board.
+        if (unit.GetComponent<UnitDatabaseFields>().beginningTurnHex != null)
+            // No limits should be adjusted for landing this turn since the unit started the turn on the board
+            return;
+
+        // The otehr special case I have to check for is an airborne unit being returned to Britain that did an airborne drop this turn.
+        // The way that I can tell this is the case is that the airborne unit will not have an invasion index set to -1
+        if (unit.GetComponent<UnitDatabaseFields>().airborne && (unit.GetComponent<UnitDatabaseFields>().invasionAreaIndex == -1))
+        {
+            GlobalDefinitions.currentAirborneDropsThisTurn--;
+            return;
+        }
+
+        // Now the only units left are ones that were landed by land this turn
+
         int invasionAreaIndex = unit.GetComponent<UnitDatabaseFields>().invasionAreaIndex;
 
-        // Haven't figured out how to set the invasion index on an airborne drop yet.  The invasion index should be set
-        // based on the unit that the airborne unit is dropping from... that's a lot of code for this one specific issue.
-        // For the time being I'll ignore it.
-        if (!unit.GetComponent<UnitDatabaseFields>().airborne)
+        if ((GlobalDefinitions.invasionAreas[invasionAreaIndex].invaded) &&
+                ((GlobalDefinitions.invasionAreas[invasionAreaIndex].turn == 1) || (GlobalDefinitions.invasionAreas[invasionAreaIndex].turn == 2)))
         {
-            if ((GlobalDefinitions.invasionAreas[invasionAreaIndex].invaded) &&
-                    ((GlobalDefinitions.invasionAreas[invasionAreaIndex].turn == 1) || (GlobalDefinitions.invasionAreas[invasionAreaIndex].turn == 2)))
+            if (unit.GetComponent<UnitDatabaseFields>().armor)
             {
-                if (unit.GetComponent<UnitDatabaseFields>().armor)
-                {
-                    GlobalDefinitions.invasionAreas[invasionAreaIndex].armorUnitsUsedThisTurn--;
-                    GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn--;
-                    GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn--;
-                }
-                // Note airborne counts against the infantry limit if brought in through the beach
-                else if (unit.GetComponent<UnitDatabaseFields>().infantry || unit.GetComponent<UnitDatabaseFields>().airborne)
-                {
-                    // Check if infantry is using the armor limit on this turn
-                    if (GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUnitsUsedThisTurn ==
-                            returnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[invasionAreaIndex]))
-                    {
-                        GlobalDefinitions.invasionAreas[invasionAreaIndex].armorUnitsUsedThisTurn--;
-                        GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn--;
-                        GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn--;
-                    }
-                    else
-                    {
-                        GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUnitsUsedThisTurn--;
-                        GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn--;
-                        GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn--;
-                    }
-                }
-                else
-                {
-                    GlobalDefinitions.writeToLogFile("decrementInvasionUnitLimits: ERROR - Most likely due to an HQ being landed during the first two turns.. This should never be executed");
-                }
-            }
-            else
-            {
-                // This is a unit being landed in a non-invasion area so use the turn three limits
+                GlobalDefinitions.invasionAreas[invasionAreaIndex].armorUnitsUsedThisTurn--;
                 GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn--;
                 GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn--;
             }
+            // Note airborne counts against the infantry limit if brought in through the beach - which is silly because I've weeded out airborne units before this point
+            else if (unit.GetComponent<UnitDatabaseFields>().infantry)
+            {
+                // First check if the infantry used armor limits to land this turn
+                if (GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUsedAsArmorThisTurn > 0)
+                {
+                    GlobalDefinitions.invasionAreas[invasionAreaIndex].armorUnitsUsedThisTurn--;
+                    GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUsedAsArmorThisTurn--;
+                    GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn--;
+                    GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn--;
+                }
+                else
+                {
+                    GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUnitsUsedThisTurn--;
+                    GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn--;
+                    GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn--;
+                }
+            }
+            else if (unit.GetComponent<UnitDatabaseFields>().airborne)
+            {
+                // We've already taken care of airborne units that were dropped this turn so this unit has to have been landed
+                GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUnitsUsedThisTurn--;
+                GlobalDefinitions.invasionAreas[invasionAreaIndex].airborneUsedAsInfantryThisTurn--;
+                GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn--;
+                GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn--;
+            }
+            else
+            {
+                GlobalDefinitions.writeToLogFile("decrementInvasionUnitLimits: ERROR - Most likely due to an HQ being landed during the first two turns.. This should never be executed");
+            }
+        }
+        else
+        {
+            // This is a unit being landed in a non-invasion area so use the turn three limits
+            GlobalDefinitions.invasionAreas[invasionAreaIndex].totalUnitsUsedThisTurn--;
+            GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn--;
         }
     }
 

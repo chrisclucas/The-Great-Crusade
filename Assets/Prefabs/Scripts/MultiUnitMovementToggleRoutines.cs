@@ -13,31 +13,39 @@ public class MultiUnitMovementToggleRoutines : MonoBehaviour
         List<GameObject> movementHexes = new List<GameObject>();
         if (GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.highlightUnit(unit);
-            GlobalDefinitions.selectedUnit = unit;
-            GlobalDefinitions.startHex = unit.GetComponent<UnitDatabaseFields>().occupiedHex;
-
-            // We don't want to highlight the movement hexes if we're in setup mode
-            if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name != "setUpStateInstance")
+            if (unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
             {
-                movementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(GlobalDefinitions.startHex, GlobalDefinitions.selectedUnit);
-
-                foreach (GameObject hex in movementHexes)
-                    GlobalDefinitions.highlightHexForMovement(hex);
+                GlobalDefinitions.guiUpdateStatusMessage("Unit selected is committed to an attack\nCancel attack if you want to move this unit");
+                GetComponent<Toggle>().isOn = false;
             }
+            else
+            {
+                GlobalDefinitions.highlightUnit(unit);
+                GlobalDefinitions.selectedUnit = unit;
+                GlobalDefinitions.startHex = unit.GetComponent<UnitDatabaseFields>().occupiedHex;
 
-            GlobalDefinitions.removeGUI(transform.parent.gameObject);
+                // We don't want to highlight the movement hexes if we're in setup mode
+                if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name != "setUpStateInstance")
+                {
+                    movementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(GlobalDefinitions.startHex, GlobalDefinitions.selectedUnit);
 
-            if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
-                    (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance"))
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<MovementState>().executeSelectUnitDestination;
-            else if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "setUpStateInstance")
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<SetUpState>().executeSelectUnitDestination;
+                    foreach (GameObject hex in movementHexes)
+                        GlobalDefinitions.highlightHexForMovement(hex);
+                }
 
-            //if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
-            //    GameControl.sendMouseClickToNetwork(GlobalDefinitions.selectedUnit, GlobalDefinitions.startHex);
+                GlobalDefinitions.removeGUI(transform.parent.gameObject);
+
+                if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
+                        (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance"))
+                    GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
+                            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<MovementState>().executeSelectUnitDestination;
+                else if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "setUpStateInstance")
+                    GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
+                            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<SetUpState>().executeSelectUnitDestination;
+
+                //if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+                //    GameControl.sendMouseClickToNetwork(GlobalDefinitions.selectedUnit, GlobalDefinitions.startHex);
+            }
         }
 
         else

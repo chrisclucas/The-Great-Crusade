@@ -111,6 +111,20 @@ public class CombatToggleRoutines : MonoBehaviour
             }
         }
 
+        // Check if carpet bombing is available with the current set of defenders
+        // When the game sets the state of a defender or an attacker it is executing this before the gui is finished and the code 
+        // below will cause an exception.  Need to check that the toggle is there.
+        if (GlobalDefinitions.combatCarpetBombingToggle != null)
+        {
+            if (CombatRoutines.checkIfCarpetBombingIsAvailable(currentCombat))
+                GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().interactable = true;
+            else
+            {
+                GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().isOn = false;
+                GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().interactable = false;
+            }
+        }
+
         updateOddsText();
     }
 

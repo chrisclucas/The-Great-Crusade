@@ -12,6 +12,7 @@ public class CarpetBombingOKRoutines : MonoBehaviour
                 {
                     childTransform.gameObject.GetComponent<CarpetBombingToggleRoutines>().hex.GetComponent<HexDatabaseFields>().carpetBombingActive = true;
                     GlobalDefinitions.numberOfCarpetBombingsUsed++;
+                    GlobalDefinitions.carpetBombingUsedThisTurn = true;
                 }
         GlobalDefinitions.removeGUI(transform.parent.gameObject);
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod = GameControl.alliedCombatStateInstance.GetComponent<CombatState>().executeSelectUnit;

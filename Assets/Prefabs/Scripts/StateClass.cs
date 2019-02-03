@@ -125,9 +125,9 @@ public class SetUpState : GameState
             // The full command file is taken care of here along with writing the difficulty and aggressiveness settings
             using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.fullCommandFile))
             {
-                writeFile.WriteLine("SavedTurnFile " + turnFileName);
                 writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
                 writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
+                writeFile.WriteLine("SavedTurnFile " + turnFileName);
             }
 
             // If this is a network game send the file name to the remote computer so it can be reSquested through the file transfer routines.  It's silly that 
@@ -172,15 +172,15 @@ public class SetUpState : GameState
         {            
             using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.fullCommandFile))
             {
-                writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
                 writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
                 writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
+                writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
             }
             using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
             {
-                writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
                 writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
                 writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
+                writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
             }
         }
 
@@ -349,10 +349,6 @@ public class TurnInitializationState : GameState
             GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack++;
         GlobalDefinitions.writeToLogFile("Turn Initialization: number of turns without successful attack = " + GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack);
 
-        // Clear out record of previous attacks and hexes attacked last turn
-        GlobalDefinitions.hexesAttackedLastTurn.Clear();
-        GlobalDefinitions.combatResultsFromLastTurn.Clear();
-
         // Write out an end of turn save file 
         if (GlobalDefinitions.turnNumber == 0)
             GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSaveTurnFile("Setup");
@@ -415,7 +411,8 @@ public class TurnInitializationState : GameState
 
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().initializeUnits();
 
-        GlobalDefinitions.writeToLogFile("TurnInitializationState: Number of hexes in Allied control = " + GlobalDefinitions.returnNumberOfAlliedHexes());
+        GlobalDefinitions.numberOfHexesInAlliedControl = GlobalDefinitions.returnNumberOfHexesInAlliedControl();
+        GlobalDefinitions.writeToLogFile("TurnInitializationState: Number of hexes in Allied control = " + GlobalDefinitions.numberOfHexesInAlliedControl);
         executeQuit();
     }
 }
@@ -571,6 +568,7 @@ public class AlliedInvasionState : GameState
     public void executeSecondInvasion()
     {
         GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().selectInvasionArea();
+        GlobalDefinitions.invasionsTookPlaceThisTurn = true;
         // Initialize mode state - note this is the state that will be executed after the gui selection is made in the call above
         executeMethod = executeSelectUnit;
     }
@@ -801,20 +799,6 @@ public class MovementState : GameState
         GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().getUnitMoveDestination(GlobalDefinitions.selectedUnit, GlobalDefinitions.startHex,
                 inputMessage.hex);
 
-        // Need to make sure the unit didn't move back to Britain
-        //if (GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
-        //{
-        //    if (currentNationality == GlobalDefinitions.Nationality.Allied)
-        // If an allied unit stops on a hex mark the hex as being in Allied control
-        //        GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().alliedControl = true;
-        //    else
-        //    {
-        //        GlobalDefinitions.writeToLogFile("executeSelectUnitDestination: German unit - setting allied control to false and successfully invaded to false");
-        //        GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().alliedControl = false;
-        //        GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().successfullyInvaded = false;
-        //    }
-        //}
-
         executeMethod = executeSelectUnit;
     }
 
@@ -1019,7 +1003,10 @@ public class CombatState : GameState
             // If there were no combat resolutions this turn clear out the hexesAttackedLastTurn
             // This is used for carpet bombing so only pertains to Allies
             if ((!GlobalDefinitions.combatResolutionStarted) && (currentNationality == GlobalDefinitions.Nationality.Allied))
+            {
                 GlobalDefinitions.hexesAttackedLastTurn.Clear();
+                GlobalDefinitions.combatResultsFromLastTurn.Clear();
+            }
 
             GlobalDefinitions.combatResolutionStarted = false;
 
@@ -1271,7 +1258,6 @@ public class AlliedAIState : GameState
     {
         GlobalDefinitions.AIExecuting = true;
         alliedAIExecuting = true;
-        //inputMessageParameter = inputMessage; // Used to pass the input message to the Coroutine
 
         GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = false;
         GlobalDefinitions.undoButton.GetComponent<Button>().interactable = false;
@@ -1413,6 +1399,9 @@ public class AlliedAIState : GameState
         else
         {
             GlobalDefinitions.guiUpdateStatusMessage("Resolve Allied combats");
+
+            AIRoutines.checkForAICarpetBombingShouldBeAdded();
+
             // Call up the resolution gui to resolve combats
             GameControl.GUIButtonRoutinesInstance.GetComponent<GUIButtonRoutines>().executeCombatResolution();
         }

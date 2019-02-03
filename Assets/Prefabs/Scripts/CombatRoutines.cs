@@ -112,7 +112,7 @@ public class CombatRoutines : MonoBehaviour
                                     // Get all friendly units that are in the ZOC of the defender
                                     foreach (GameObject unit in returnFriendlyUnitsInZOC(defendingUnit))
                                         // Now check if any of the units are adjacent to the attacker with a river between them.  If so, add it to must be attacked.
-                                        if (adjacentUnits.Contains(unit) && 
+                                        if (adjacentUnits.Contains(unit) &&
                                                 GlobalDefinitions.checkForRiverBetweenTwoHexes(attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex) &&
                                                 !unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
                                         {
@@ -395,7 +395,7 @@ public class CombatRoutines : MonoBehaviour
             carpetToggle.gameObject.AddComponent<CombatToggleRoutines>();
             carpetToggle.gameObject.GetComponent<CombatToggleRoutines>().currentCombat = singleCombat;
             carpetToggle.onValueChanged.AddListener((bool value) => carpetToggle.GetComponent<CombatToggleRoutines>().toggleCarpetBombing());
-            if ((GlobalDefinitions.currentAirborneDropsThisTurn == 0) && checkForCarpetBombing())
+            if (checkIfCarpetBombingIsAvailable(singleCombat))
                 carpetToggle.GetComponent<Toggle>().interactable = true;
             else
                 carpetToggle.GetComponent<Toggle>().interactable = false;
@@ -429,34 +429,54 @@ public class CombatRoutines : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if there are carpet bombing hexes available.  Returns false if there are no hexes available
+    /// Routine checks if carpet bombing is avaibale for the combat passed and returns true if it is
     /// </summary>
+    /// <param name="GameObject"></param>
     /// <returns></returns>
-    public static bool checkForCarpetBombing()
+    public static bool checkIfCarpetBombingIsAvailable(GameObject singleCombat)
     {
-        // This list is used to determine if there are hexes that were attacked last turn that are not available for carpet bombing this turn
-        List<GameObject> removeHexes = new List<GameObject>();
-        if ((GlobalDefinitions.numberOfCarpetBombingsUsed < GlobalDefinitions.maxNumberOfCarpetBombings) && !GlobalDefinitions.invasionsTookPlaceThisTurn && (GlobalDefinitions.currentAirborneDropsThisTurn == 0))
-        {
-            // See what hexes are not valid for carpet bombing from the list of hexes attacked last turn
-            foreach (GameObject hex in GlobalDefinitions.hexesAttackedLastTurn)
-                if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0)
-                    removeHexes.Add(hex);
-                else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
-                    removeHexes.Add(hex);
+        // The criteria for having carpet bombing available on a combat is that:
+        //      * only four in a game
+        //      * can only execute a maximum of one per turn
+        //      * can't execute on a turn an invasion is taking place
+        //      * can't execute on a turn in which ariborne units have dropped
+        //      * all defenders must be on a single hex
+        //      * the hex must have been attacked last turn
+        //      * carpet bombing is in effect for all attacks on the single hex
 
-            // This is the only routine using the hexesAttackedLastTurn list so it will be updated here to represent the hexes that are valid
-            foreach (GameObject hex in removeHexes)
-                if (GlobalDefinitions.hexesAttackedLastTurn.Contains(hex))
-                    GlobalDefinitions.hexesAttackedLastTurn.Remove(hex);
+        if (GlobalDefinitions.numberOfCarpetBombingsUsed == GlobalDefinitions.maxNumberOfCarpetBombings)
+            return false;
 
-            if (GlobalDefinitions.hexesAttackedLastTurn.Count > 0)
-                return (true);
-            else
-                return (false);
-        }
+        if (GlobalDefinitions.carpetBombingUsedThisTurn)
+            return false;
 
-        return (false);
+        if (GlobalDefinitions.currentAirborneDropsThisTurn > 0)
+            return false;
+
+        if (GlobalDefinitions.invasionsTookPlaceThisTurn)
+            return false;
+
+        // Check that all defenders are on a single hex.  Since this is called from the combat gui, only count defenders if they are committed to an attack
+        List<GameObject> defenders = new List<GameObject>();
+
+        foreach (GameObject unit in singleCombat.GetComponent<Combat>().defendingUnits)
+            if (unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
+                defenders.Add(unit);
+
+        if (defenders.Count == 0)
+            return false;
+
+        GameObject defendingHex = defenders[0].GetComponent<UnitDatabaseFields>().occupiedHex;
+        foreach (GameObject unit in defenders)
+            if (unit.GetComponent<UnitDatabaseFields>().occupiedHex != defendingHex)
+                return false;
+
+        // The last check is if the defending hex was attacked last turn
+        if (!GlobalDefinitions.hexesAttackedLastTurn.Contains(defendingHex))
+            return false;
+
+        // All checks have been met if the code reaches here so return a true
+        return true;
     }
 
     /// <summary>
