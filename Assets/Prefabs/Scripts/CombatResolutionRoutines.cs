@@ -411,7 +411,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         if ((GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Network) && !GlobalDefinitions.commandFileBeingRead)
         {
             GlobalDefinitions.dieRollResult1 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
-            GlobalDefinitions.dieRollResult1 = 3;  // REMOVE - FOR TESTING ONLY
+            //GlobalDefinitions.dieRollResult1 = 3;  // REMOVE - FOR TESTING ONLY
             // 1:1 odds results 0-Delim 1-Exchange 2-Dback2 3-Aback2 4-Aelim 5-Aelim 
 
             GlobalDefinitions.dieRollResult2 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
