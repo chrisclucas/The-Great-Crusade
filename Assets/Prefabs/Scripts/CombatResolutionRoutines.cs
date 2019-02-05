@@ -441,75 +441,96 @@ public class CombatResolutionRoutines : MonoBehaviour
         }
         else
         {
-            // Carpet bombing is active for the hex being attacked so present the user with the two options for selection
+            // If this is being resolved during AI combat then the computer will select the lowest die roll
 
-            // Get rid off the combat result gui
-            GlobalDefinitions.combatResolutionGUIInstance.SetActive(false);
+            if (GlobalDefinitions.AICombat)
+            {
+                if (GlobalDefinitions.dieRollResult1 < GlobalDefinitions.dieRollResult2)
+                {
+                    executeCombatResults(currentCombat.GetComponent<Combat>().defendingUnits, currentCombat.GetComponent<Combat>().attackingUnits,
+                        combatOdds, GlobalDefinitions.dieRollResult1, 
+                        GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1], buttonLocation);
+                }
+                else
+                {
+                    executeCombatResults(currentCombat.GetComponent<Combat>().defendingUnits, currentCombat.GetComponent<Combat>().attackingUnits,
+                            combatOdds, GlobalDefinitions.dieRollResult2,
+                            GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2], buttonLocation);
+                }
+            }
 
-            GlobalDefinitions.guiUpdateStatusMessage("Combat Results2: Odds " + combatOdds + "  Die Roll " + (GlobalDefinitions.dieRollResult2 + 1) + "   which translates to " + GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]);
+            else
+            {
+                // Carpet bombing is active for the hex being attacked so present the user with the two options for selection
 
-            // Create a GUI and present the user with the two die roll results for selection.  The toggle routine will call executeCombatResults once the user selects the result so need to load up all the
-            // variables it will need to pass
+                // Get rid off the combat result gui
+                GlobalDefinitions.combatResolutionGUIInstance.SetActive(false);
 
-            float panelWidth = 5 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            float panelHeight = 3 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            GlobalDefinitions.createGUICanvas("CarpetBombingResultSelectionGUIInstance",
-                    panelWidth,
-                    panelHeight,
-                    ref carpetBombingCanvasInstance);
+                GlobalDefinitions.guiUpdateStatusMessage("Combat Results2: Odds " + combatOdds + "  Die Roll " + (GlobalDefinitions.dieRollResult2 + 1) + "   which translates to " + GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]);
 
-            GlobalDefinitions.createText("Select a Result", "CarpetBombingGUIHeaderText",
-                    3 * GlobalDefinitions.GUIUNITIMAGESIZE,
-                    GlobalDefinitions.GUIUNITIMAGESIZE,
-                    2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
-                    2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    carpetBombingCanvasInstance);
+                // Create a GUI and present the user with the two die roll results for selection.  The toggle routine will call executeCombatResults once the user selects the result so need to load up all the
+                // variables it will need to pass
 
-            tempToggle1 = GlobalDefinitions.createToggle("CarpetBombingToggle1",
-                    1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
-                    GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    carpetBombingCanvasInstance).GetComponent<Toggle>();
-            GlobalDefinitions.createText(convertResultsToString(GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]), "CarpetBombingResultText",
-                    2 * GlobalDefinitions.GUIUNITIMAGESIZE,
-                    GlobalDefinitions.GUIUNITIMAGESIZE,
-                    1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
-                    2 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    carpetBombingCanvasInstance);
+                float panelWidth = 5 * GlobalDefinitions.GUIUNITIMAGESIZE;
+                float panelHeight = 3 * GlobalDefinitions.GUIUNITIMAGESIZE;
+                GlobalDefinitions.createGUICanvas("CarpetBombingResultSelectionGUIInstance",
+                        panelWidth,
+                        panelHeight,
+                        ref carpetBombingCanvasInstance);
 
-            tempToggle2 = GlobalDefinitions.createToggle("CarpetBombingToggle2",
-                    4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
-                    GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    carpetBombingCanvasInstance).GetComponent<Toggle>();
-            GlobalDefinitions.createText(convertResultsToString(GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]), "CarpetBombingResultText",
-                    2 * GlobalDefinitions.GUIUNITIMAGESIZE,
-                    GlobalDefinitions.GUIUNITIMAGESIZE,
-                    4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
-                    2 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    carpetBombingCanvasInstance);
+                GlobalDefinitions.createText("Select a Result", "CarpetBombingGUIHeaderText",
+                        3 * GlobalDefinitions.GUIUNITIMAGESIZE,
+                        GlobalDefinitions.GUIUNITIMAGESIZE,
+                        2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
+                        2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
+                        carpetBombingCanvasInstance);
 
-            tempToggle1.gameObject.AddComponent<CarpetBombingSelectionToggleRoutines>();
-            tempToggle2.gameObject.AddComponent<CarpetBombingSelectionToggleRoutines>();
+                tempToggle1 = GlobalDefinitions.createToggle("CarpetBombingToggle1",
+                        1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
+                        GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
+                        carpetBombingCanvasInstance).GetComponent<Toggle>();
+                GlobalDefinitions.createText(convertResultsToString(GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]), "CarpetBombingResultText",
+                        2 * GlobalDefinitions.GUIUNITIMAGESIZE,
+                        GlobalDefinitions.GUIUNITIMAGESIZE,
+                        1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
+                        2 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
+                        carpetBombingCanvasInstance);
 
-            tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().defendingUnits = currentCombat.GetComponent<Combat>().defendingUnits;
-            tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().defendingUnits = currentCombat.GetComponent<Combat>().defendingUnits;
+                tempToggle2 = GlobalDefinitions.createToggle("CarpetBombingToggle2",
+                        4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
+                        GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
+                        carpetBombingCanvasInstance).GetComponent<Toggle>();
+                GlobalDefinitions.createText(convertResultsToString(GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]), "CarpetBombingResultText",
+                        2 * GlobalDefinitions.GUIUNITIMAGESIZE,
+                        GlobalDefinitions.GUIUNITIMAGESIZE,
+                        4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
+                        2 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
+                        carpetBombingCanvasInstance);
 
-            tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().attackingUnits = currentCombat.GetComponent<Combat>().attackingUnits;
-            tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().attackingUnits = currentCombat.GetComponent<Combat>().attackingUnits;
+                tempToggle1.gameObject.AddComponent<CarpetBombingSelectionToggleRoutines>();
+                tempToggle2.gameObject.AddComponent<CarpetBombingSelectionToggleRoutines>();
 
-            tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().combatOdds = combatOdds;
-            tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().combatOdds = combatOdds;
+                tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().defendingUnits = currentCombat.GetComponent<Combat>().defendingUnits;
+                tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().defendingUnits = currentCombat.GetComponent<Combat>().defendingUnits;
 
-            tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().dieRollResult = GlobalDefinitions.dieRollResult1;
-            tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().dieRollResult = GlobalDefinitions.dieRollResult2;
+                tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().attackingUnits = currentCombat.GetComponent<Combat>().attackingUnits;
+                tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().attackingUnits = currentCombat.GetComponent<Combat>().attackingUnits;
 
-            tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().combatResults = GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1];
-            tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().combatResults = GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2];
+                tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().combatOdds = combatOdds;
+                tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().combatOdds = combatOdds;
 
-            tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().buttonLocation = buttonLocation;
-            tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().buttonLocation = buttonLocation;
+                tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().dieRollResult = GlobalDefinitions.dieRollResult1;
+                tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().dieRollResult = GlobalDefinitions.dieRollResult2;
 
-            tempToggle1.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().carpetBombingResultsSelected());
-            tempToggle2.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().carpetBombingResultsSelected());
+                tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().combatResults = GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1];
+                tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().combatResults = GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2];
+
+                tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().buttonLocation = buttonLocation;
+                tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().buttonLocation = buttonLocation;
+
+                tempToggle1.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().carpetBombingResultsSelected());
+                tempToggle2.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().carpetBombingResultsSelected());
+            }
         }
     }
 
