@@ -178,17 +178,19 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     public static void executeConnect()
     {
         if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
-        {
             GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
-            if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
-            {
-                TransportScript.channelEstablished = true;
-                GlobalDefinitions.guiUpdateStatusMessage("Channel Established");
-            }
-            else
-                GlobalDefinitions.guiUpdateStatusMessage("Connection Failed");
-        }
-        else
-            GlobalDefinitions.guiUpdateStatusMessage("No IP address entered");
+        //if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
+        //{
+        //    GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+        //    if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
+        //    {
+        //        TransportScript.channelEstablished = true;
+        //        GlobalDefinitions.guiUpdateStatusMessage("Channel Established");
+        //    }
+        //    else
+        //        GlobalDefinitions.guiUpdateStatusMessage("Connection Failed");
+        //}
+        //else
+        //    GlobalDefinitions.guiUpdateStatusMessage("No IP address entered");
     }
 }

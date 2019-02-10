@@ -30,7 +30,7 @@ public class ExecuteGameCommand : MonoBehaviour {
                     GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.Allied;
                 break;
             case GlobalDefinitions.PASSCONTROLKEYWORK:
-                GlobalDefinitions.localControl = true;
+                GlobalDefinitions.switchLocalControl(true);
                 GlobalDefinitions.writeToLogFile("processNetworkMessage: Message received to set local control");
                 break;
             case GlobalDefinitions.SETCAMERAPOSITIONKEYWORD:

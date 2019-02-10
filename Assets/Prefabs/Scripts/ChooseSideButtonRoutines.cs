@@ -12,7 +12,7 @@ public class ChooseSideButtonRoutines : MonoBehaviour
         GameControl.createStatesForAI(GlobalDefinitions.Nationality.Allied);
         GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
         GlobalDefinitions.gameStarted = true;
-        GlobalDefinitions.localControl = true;
+        GlobalDefinitions.switchLocalControl(true);
         GlobalDefinitions.removeGUI(transform.parent.gameObject);
 
         // Call the setup routine.  The user will indicate whether they are playing a saved or new game there.
@@ -31,7 +31,7 @@ public class ChooseSideButtonRoutines : MonoBehaviour
         GameControl.createStatesForAI(GlobalDefinitions.Nationality.German);
         GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
         GlobalDefinitions.gameStarted = true;
-        GlobalDefinitions.localControl = true;
+        GlobalDefinitions.switchLocalControl(true);
         GlobalDefinitions.removeGUI(transform.parent.gameObject);
 
         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();

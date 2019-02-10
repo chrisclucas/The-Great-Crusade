@@ -36,6 +36,9 @@ public class TransportScript : MonoBehaviour
 
     public static string fileName;
 
+    /// <summary>
+    /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
+    /// </summary>
     public static void networkInit()
     {
         byte error;
@@ -58,19 +61,24 @@ public class TransportScript : MonoBehaviour
 
         NetworkTransport.Init(globalConfig);
 
+        // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
         if (serverSocket != -1)
         {
+            GlobalDefinitions.writeToLogFile("networkInit: server socket set to " + serverSocket + " - disconnecting and resetting to -1");
             NetworkTransport.Disconnect(serverSocket, connectionId, out error);
             serverSocket = -1;
         }
         if (clientSocket != -1)
         {
+            GlobalDefinitions.writeToLogFile("networkInit: client socket set to " + clientSocket + " - disconnecting and resetting to -1");
             NetworkTransport.Disconnect(clientSocket, connectionId, out error);
             clientSocket = -1;
         }
 
         serverSocket = NetworkTransport.AddHost(topology, socketPort);
         clientSocket = NetworkTransport.AddHost(topology);
+        GlobalDefinitions.writeToLogFile("networkInit: set server socket = " + serverSocket);
+        GlobalDefinitions.writeToLogFile("networkInit: set client socket = " + clientSocket);
     }
 
     void Start()
@@ -223,12 +231,11 @@ public class TransportScript : MonoBehaviour
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
                         GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
                         GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
-                        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                         GlobalDefinitions.gameStarted = true;
 
                         if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
                         {
-                            GlobalDefinitions.localControl = true;
+                            GlobalDefinitions.switchLocalControl(true);
                             SendSocketMessage(GlobalDefinitions.PLAYSIDEKEYWORD + " Allied");
                         }
                         else
@@ -237,14 +244,16 @@ public class TransportScript : MonoBehaviour
                             SendSocketMessage(GlobalDefinitions.PLAYSIDEKEYWORD + " German");
                             GlobalDefinitions.writeToLogFile("TransportScript update()3: passing control to remote computer");
                             SendSocketMessage(GlobalDefinitions.PASSCONTROLKEYWORK);
-                            GlobalDefinitions.localControl = false;
+                            GlobalDefinitions.switchLocalControl(false);
                         }
+
+                        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                     }
                     // Playing a saved game
                     else
                     {
                         string savedFileName = "";
-                        GlobalDefinitions.localControl = true;
+                        GlobalDefinitions.switchLocalControl(true);
                         savedFileName = GlobalDefinitions.guiFileDialog();
                         fileName = savedFileName;
 
@@ -276,7 +285,7 @@ public class TransportScript : MonoBehaviour
                     GlobalDefinitions.writeToLogFile("TransportScript Update()3:Computer is not initiating game - setting gameStarted to true and localControl to false");
                     // The non-initiating computer will move on to game mode since the read of the game data is conducted with gameStarted set
                     GlobalDefinitions.gameStarted = true;
-                    GlobalDefinitions.localControl = false;
+                    GlobalDefinitions.switchLocalControl(false);
                 }
             }
 
@@ -322,12 +331,12 @@ public class TransportScript : MonoBehaviour
                             GlobalDefinitions.gameStarted = true;
                             if (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.sideControled)
                             {
-                                GlobalDefinitions.localControl = true;
+                                GlobalDefinitions.switchLocalControl(true);
                             }
                             else
                             {
                                 SendSocketMessage(GlobalDefinitions.PASSCONTROLKEYWORK);
-                                GlobalDefinitions.localControl = false;
+                                GlobalDefinitions.switchLocalControl(false);
                             }
                         }
                         else
@@ -358,7 +367,11 @@ public class TransportScript : MonoBehaviour
         if (!channelEstablished)
         {
             byte error;
+
             NetworkTransport.Init();
+
+            GlobalDefinitions.writeToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = )" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+
             connectionId = NetworkTransport.Connect(clientSocket, opponentIPaddr, socketPort, 0, out error);
 
             GlobalDefinitions.writeToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
@@ -467,7 +480,7 @@ public class TransportScript : MonoBehaviour
         // Send a disconnect command to the remote computer
         SendSocketMessage(GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER);
 
-        GlobalDefinitions.localControl = false;
+        GlobalDefinitions.switchLocalControl(false);
         GlobalDefinitions.opponentIPAddress = "";
         GlobalDefinitions.userIsIntiating = false;
         GlobalDefinitions.isServer = false;

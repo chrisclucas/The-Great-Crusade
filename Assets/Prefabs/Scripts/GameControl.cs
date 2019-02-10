@@ -216,6 +216,7 @@ public class GameControl : MonoBehaviour
             {
                 if (!GlobalDefinitions.commandFileBeingRead)
                 {
+                    GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
                     // Left mouse button click
                     if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                     {
@@ -233,7 +234,8 @@ public class GameControl : MonoBehaviour
                                 GlobalDefinitions.unhighlightHex(hex.gameObject);
                             GlobalDefinitions.selectedUnit = null;
 
-                            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
+                            //GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
+
                             // I had a bug where double clicking on an off-board unit causes an exception in the following line because it is assuming a hex is being clicked
                             if (GlobalDefinitions.getHexFromUserInput(Input.mousePosition) != null)
                                 GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + GlobalDefinitions.getHexFromUserInput(Input.mousePosition).name + " " + gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
@@ -381,7 +383,6 @@ public class GameControl : MonoBehaviour
         if (hex != null)
         {
             hexName = hex.name;
-            //GlobalDefinitions.writeToLogFile("sendMoustClickToNetwork: processing with hex = " + hex.name);
         }
         else
             hexName = "null";
@@ -389,7 +390,6 @@ public class GameControl : MonoBehaviour
         if (unit != null)
         {
             unitName = unit.name;
-            //GlobalDefinitions.writeToLogFile("sendMoustClickToNetwork: processing with unit = " + unit.name);
         }
         else
             unitName = "null";

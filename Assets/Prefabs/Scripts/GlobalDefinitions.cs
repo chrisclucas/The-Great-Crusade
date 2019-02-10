@@ -131,6 +131,9 @@ public class GlobalDefinitions : MonoBehaviour
     public static GameObject AlliedSupplyRangeToggle = GameObject.Find("AlliedSupplyToggle");
     public static GameObject GermanSupplyRangeToggle = GameObject.Find("GermanSupplyToggle");
     public static GameObject AlliedSupplySourcesButton = GameObject.Find("SupplySourcesButton");
+    public static GameObject SettingsButton = GameObject.Find("SettingsButton");
+    public static GameObject HideUnitsToggle = GameObject.Find("HideUnitsToggle");
+    public static GameObject HistoricalProgressToggle = GameObject.Find("ShowHistoryToggle");
 
     public const int GermanStackingLimit = 3;
     public const int AlliedStackingLimit = 2;
@@ -2341,7 +2344,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="commandString"></param>
     public static void writeToCommandFile(string commandString)
     {
-        if (!GlobalDefinitions.commandFileBeingRead)
+        if (!commandFileBeingRead)
         {
             using (StreamWriter writeFile = File.AppendText(GameControl.path + commandFile))
                 writeFile.WriteLine(commandString);
@@ -2349,7 +2352,9 @@ public class GlobalDefinitions : MonoBehaviour
                 writeFile.WriteLine(commandString);
 
             if (localControl && (gameMode == GameModeValues.Network))
+            {
                 TransportScript.SendSocketMessage(commandString);
+            }
         }
     }
 
@@ -2411,6 +2416,44 @@ public class GlobalDefinitions : MonoBehaviour
     {
         writeToLogFile("addChatMessage: received message " + messageText);
         GameObject.Find("ChatText").GetComponent<Text>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<Text>().text;
+    }
+
+    /// <summary>
+    /// Used to switch the local control variable and adjusting access to the gui buttons
+    /// </summary>
+    /// <param name="localControlValue"></param>
+    public static void switchLocalControl(bool localControlValue)
+    {
+        localControl = localControlValue;
+
+        if (localControlValue)
+        {
+            nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            undoButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            MustAttackToggle.GetComponent<Toggle>().interactable = true;
+            AssignCombatButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            DisplayAllCombatsButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
+            GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
+            AlliedSupplySourcesButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            SettingsButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            HideUnitsToggle.GetComponent<Toggle>().interactable = true;
+            HistoricalProgressToggle.GetComponent<Toggle>().interactable = true;
+        }
+        else
+        {
+            nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+            undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+            MustAttackToggle.GetComponent<Toggle>().interactable = false;
+            AssignCombatButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+            DisplayAllCombatsButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+            AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
+            GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
+            AlliedSupplySourcesButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+            SettingsButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+            HideUnitsToggle.GetComponent<Toggle>().interactable = false;
+            HistoricalProgressToggle.GetComponent<Toggle>().interactable = false;
+        }
     }
 
     /// <summary>

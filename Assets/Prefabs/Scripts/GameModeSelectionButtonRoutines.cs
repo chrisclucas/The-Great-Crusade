@@ -30,7 +30,7 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
             GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
             GlobalDefinitions.gameStarted = true;
-            GlobalDefinitions.localControl = true;
+            GlobalDefinitions.switchLocalControl(true);
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
 
         }

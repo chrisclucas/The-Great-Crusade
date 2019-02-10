@@ -326,7 +326,7 @@ public class TurnInitializationState : GameState
         {
             GlobalDefinitions.writeToLogFile("TurnInitializationState: passing control to remote computer");
             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
-            GlobalDefinitions.localControl = false;
+            GlobalDefinitions.switchLocalControl(false);
         }
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -1092,7 +1092,7 @@ public class GermanIsolationState : GameState
         {
             GlobalDefinitions.writeToLogFile("GermanIsolationState: passing control to remote computer");
             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
-            GlobalDefinitions.localControl = false;
+            GlobalDefinitions.switchLocalControl(false);
         }
 
         GlobalDefinitions.guiUpdatePhase("German Isolation Check Mode");
@@ -1268,7 +1268,7 @@ public class AlliedAIState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
-        GlobalDefinitions.localControl = false;
+        GlobalDefinitions.switchLocalControl(false);
         executeTime = DateTime.Now;
         GlobalDefinitions.writeToLogFile("Starting Allied AI at: " + DateTime.Now);
         GlobalDefinitions.guiUpdatePhase("Allied AI Mode");
@@ -1376,7 +1376,7 @@ public class AlliedAIState : GameState
 
         GlobalDefinitions.writeToLogFile("Ending Allied AI at: " + DateTime.Now + " AI ran for " + (DateTime.Now - executeTime));
         GlobalDefinitions.AICombat = true;
-        GlobalDefinitions.localControl = true;
+        GlobalDefinitions.switchLocalControl(true);
 
         // Get rid of the last status message
         GlobalDefinitions.removeAllGUIs();
@@ -1413,7 +1413,7 @@ public class AlliedAITacticalAirState : GameState
 {
     public override void initialize()
     {
-        GlobalDefinitions.localControl = false;
+        GlobalDefinitions.switchLocalControl(false);
         GlobalDefinitions.guiUpdatePhase("Allied AI Tactical Air Mode");
         GlobalDefinitions.guiClearUnitsOnHex();
         base.initialize();
@@ -1436,7 +1436,7 @@ public class AlliedAITacticalAirState : GameState
             AIRoutines.assignAlliedAirMissions();
         }
 
-        GlobalDefinitions.localControl = true;
+        GlobalDefinitions.switchLocalControl(true);
 
         executeQuit();
     }
@@ -1464,7 +1464,7 @@ public class GermanAIState : GameState
     {
         GlobalDefinitions.AIExecuting = true;
         germanAIExecuting = true;
-        GlobalDefinitions.localControl = false;
+        GlobalDefinitions.switchLocalControl(false);
         executeTime = DateTime.Now;
         GlobalDefinitions.writeToLogFile("Starting German AI at: " + DateTime.Now);
         GlobalDefinitions.guiUpdatePhase("German AI Mode");
@@ -1548,7 +1548,7 @@ public class GermanAIState : GameState
 
         GlobalDefinitions.writeToLogFile("Ending German AI at: " + DateTime.Now + " AI ran for " + (DateTime.Now - executeTime));
         GlobalDefinitions.AICombat = true;
-        GlobalDefinitions.localControl = true;
+        GlobalDefinitions.switchLocalControl(true);
 
         // Get rid of the last status gui
         GlobalDefinitions.removeAllGUIs();
@@ -1582,7 +1582,7 @@ public class VictoryState : GameState
     public override void initialize()
     {
         // Set the play to be in local control we're not looking to keep the two computers in sync anymore
-        GlobalDefinitions.localControl = true;
+        GlobalDefinitions.switchLocalControl(true);
 
         GlobalDefinitions.guiUpdatePhase("Victory Mode");
         GlobalDefinitions.guiClearUnitsOnHex();
