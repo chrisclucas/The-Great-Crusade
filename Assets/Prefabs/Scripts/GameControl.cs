@@ -216,7 +216,6 @@ public class GameControl : MonoBehaviour
             {
                 if (!GlobalDefinitions.commandFileBeingRead)
                 {
-                    GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
                     // Left mouse button click
                     if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                     {
@@ -234,7 +233,7 @@ public class GameControl : MonoBehaviour
                                 GlobalDefinitions.unhighlightHex(hex.gameObject);
                             GlobalDefinitions.selectedUnit = null;
 
-                            //GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
+                            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
 
                             // I had a bug where double clicking on an off-board unit causes an exception in the following line because it is assuming a hex is being clicked
                             if (GlobalDefinitions.getHexFromUserInput(Input.mousePosition) != null)
