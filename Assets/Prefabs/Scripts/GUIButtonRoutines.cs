@@ -34,7 +34,7 @@ public class GUIButtonRoutines : MonoBehaviour
     {
 
         // If this is a network game and the player isn't in control do not allow to reset.  Player has to quit to exit in this case.
-        if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+        if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
         {
             GlobalDefinitions.guiUpdateStatusMessage("Cannot reset game when not in control");
             return;
@@ -75,7 +75,7 @@ public class GUIButtonRoutines : MonoBehaviour
         List<GameObject> removeUnitList = new List<GameObject>();
 
         // If this is a network game I've already checked that the player is in control
-        if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network)
+        if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
         {
             TransportScript.resetConnection(TransportScript.recHostId);
         }

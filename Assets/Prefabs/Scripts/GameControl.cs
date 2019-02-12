@@ -271,7 +271,7 @@ public class GameControl : MonoBehaviour
                 //}
 
                 // Even though this is for when the player is in control, still need to check for chat messages
-                if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network)
+                if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
                 {
                     NetworkEventType recNetworkEvent = NetworkTransport.Receive(out TransportScript.recHostId, out TransportScript.recConnectionId, out TransportScript.recChannelId, TransportScript.recBuffer, TransportScript.BUFFERSIZE, out TransportScript.dataSize, out TransportScript.recError);
 
@@ -319,7 +319,7 @@ public class GameControl : MonoBehaviour
                 //}
             }
 
-            else if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+            else if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
             {
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out TransportScript.recHostId, out TransportScript.recConnectionId, out TransportScript.recChannelId, TransportScript.recBuffer, TransportScript.BUFFERSIZE, out TransportScript.dataSize, out TransportScript.recError);
 

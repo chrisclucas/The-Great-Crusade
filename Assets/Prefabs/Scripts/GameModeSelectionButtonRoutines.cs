@@ -11,8 +11,12 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
                 MainMenuRoutines.hotseatToggle.GetComponent<Toggle>().isOn = false;
             if (GetComponent<Toggle>() != MainMenuRoutines.AIToggle.GetComponent<Toggle>())
                 MainMenuRoutines.AIToggle.GetComponent<Toggle>().isOn = false;
-            if (GetComponent<Toggle>() != MainMenuRoutines.networkToggle.GetComponent<Toggle>())
-                MainMenuRoutines.networkToggle.GetComponent<Toggle>().isOn = false;
+            if (GetComponent<Toggle>() != MainMenuRoutines.peerToPeerNetworkToggle.GetComponent<Toggle>())
+                MainMenuRoutines.peerToPeerNetworkToggle.GetComponent<Toggle>().isOn = false;
+            if (GetComponent<Toggle>() != MainMenuRoutines.clientServerNetworkToggle.GetComponent<Toggle>())
+                MainMenuRoutines.clientServerNetworkToggle.GetComponent<Toggle>().isOn = false;
+            if (GetComponent<Toggle>() != MainMenuRoutines.serverNetworkToggle.GetComponent<Toggle>())
+                MainMenuRoutines.serverNetworkToggle.GetComponent<Toggle>().isOn = false;
             //if (GetComponent<Toggle>() != MainMenuRoutines.emailToggle.GetComponent<Toggle>())
             //    MainMenuRoutines.emailToggle.GetComponent<Toggle>().isOn = false;
         }
@@ -43,14 +47,35 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.askUserWhichSideToPlay();
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
         }
-        else if (MainMenuRoutines.networkToggle.GetComponent<Toggle>().isOn)
+        else if (MainMenuRoutines.peerToPeerNetworkToggle.GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToLogFile("okGameMode: Setting up Network mode");
-            GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.Network;
-            GlobalDefinitions.commandFileHeader = "Network";
+            GlobalDefinitions.writeToLogFile("okGameMode: Setting up Peer to Peer Network mode");
+            GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.Peer2PeerNetwork;
+            GlobalDefinitions.commandFileHeader = "Peer2PeerNetwork";
             GameControl.createStatesForHotSeatOrNetwork();
             GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
-            MainMenuRoutines.networkSettingsUI();
+            MainMenuRoutines.PeerToPeerNetworkSettingsUI();
+
+            GlobalDefinitions.removeGUI(transform.parent.gameObject);
+        }
+        else if (MainMenuRoutines.clientServerNetworkToggle.GetComponent<Toggle>().isOn)
+        {
+            GlobalDefinitions.writeToLogFile("okGameMode: Setting up Client Server Network mode");
+            GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.ClientServerNetwork;
+            GlobalDefinitions.commandFileHeader = "ClientServerNetwork";
+            GameControl.createStatesForHotSeatOrNetwork();
+            GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
+            ClientServerRoutines.initiateServerConnection();
+
+            GlobalDefinitions.removeGUI(transform.parent.gameObject);
+        }
+        else if (MainMenuRoutines.serverNetworkToggle.GetComponent<Toggle>().isOn)
+        {
+            GlobalDefinitions.writeToLogFile("okGameMode: Setting up Server Network mode");
+            GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.Server;
+            GlobalDefinitions.commandFileHeader = "Server";
+            GameControl.createStatesForHotSeatOrNetwork();
+            GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
 
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
         }
@@ -60,5 +85,7 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.EMail;
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
         }
+        else
+            GlobalDefinitions.guiUpdateStatusMessage("You must select a game mode before selecting OK");
     }
 }

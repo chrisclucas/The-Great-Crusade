@@ -3,8 +3,6 @@ using UnityEngine.Networking;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Collections;
-
 
 public class TransportScript : MonoBehaviour
 {
@@ -77,8 +75,6 @@ public class TransportScript : MonoBehaviour
 
         serverSocket = NetworkTransport.AddHost(topology, socketPort);
         clientSocket = NetworkTransport.AddHost(topology);
-        GlobalDefinitions.writeToLogFile("networkInit: set server socket = " + serverSocket);
-        GlobalDefinitions.writeToLogFile("networkInit: set client socket = " + clientSocket);
     }
 
     void Start()
@@ -270,7 +266,7 @@ public class TransportScript : MonoBehaviour
                         // If this is a network game send the file name to the remote computer so it can be requested through the file transfer routines.  It's silly that 
                         // I have to tell it what to ask for but I bought the code and that is how it works
                         GlobalDefinitions.writeToLogFile("TransportScript Update()3: GameMode = " + GlobalDefinitions.gameMode + " localControl" + GlobalDefinitions.localControl);
-                        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+                        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
                         {
                             GlobalDefinitions.writeToLogFile("TransportScript Update()3: Sending file name to remote computer");
                             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
@@ -362,8 +358,6 @@ public class TransportScript : MonoBehaviour
     /// <returns></returns>
     public static bool Connect(string opponentIPaddr)
     {
-        //if (!FirewallRoutines.IsPortOpen(socketPort))
-        //    FirewallRoutines.OpenPort(socketPort, "TGC Network Communication");
         if (!channelEstablished)
         {
             byte error;
@@ -501,7 +495,7 @@ public class TransportScript : MonoBehaviour
         {
             NetworkTransport.Disconnect(clientSocket, connectionId, out error);
             GlobalDefinitions.writeToLogFile("resetConnection: NetworkTransport.Disconnect(clientSocket=" + clientSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-            MainMenuRoutines.networkSettingsUI();
+            MainMenuRoutines.PeerToPeerNetworkSettingsUI();
         }
         else
             GlobalDefinitions.writeToLogFile("resetConnectin: Request recieved to disconnect unknown host - " + hostId);

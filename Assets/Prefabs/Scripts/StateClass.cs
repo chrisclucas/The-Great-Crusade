@@ -74,7 +74,7 @@ public class SetUpState : GameState
         base.initialize();
 
         // If this is a network game the state will be handeled directly
-        if (GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Network)
+        if (GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
             executeMethod = executeTypeOfGame;
 
         GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = false;
@@ -132,7 +132,7 @@ public class SetUpState : GameState
 
             // If this is a network game send the file name to the remote computer so it can be reSquested through the file transfer routines.  It's silly that 
             // I have to tell it what to ask for but I bought the code and that is how it works
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (GlobalDefinitions.localControl))
+            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && (GlobalDefinitions.localControl))
                 TransportScript.SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
         }
     }
@@ -322,7 +322,8 @@ public class TurnInitializationState : GameState
     public override void initialize()
     {
         // If this is a network game the control needs to be swapped here
-        if (GlobalDefinitions.localControl && GlobalDefinitions.gameStarted && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German) && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+        if (GlobalDefinitions.localControl && GlobalDefinitions.gameStarted && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German) && 
+                (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
         {
             GlobalDefinitions.writeToLogFile("TurnInitializationState: passing control to remote computer");
             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
@@ -1088,7 +1089,8 @@ public class GermanIsolationState : GameState
     public override void initialize()
     {
         // If this is a network game the control needs to be swapped here
-        if (GlobalDefinitions.localControl && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.Allied) && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+        if (GlobalDefinitions.localControl && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.Allied) && 
+                (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
         {
             GlobalDefinitions.writeToLogFile("GermanIsolationState: passing control to remote computer");
             GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);

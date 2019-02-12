@@ -15,7 +15,7 @@ public class CarpetBombingSelectionToggleRoutines : MonoBehaviour
     {
         if (gameObject.GetComponent<Toggle>().isOn)
         {
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network) && (!GlobalDefinitions.localControl))
+            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && (!GlobalDefinitions.localControl))
             {
                 GlobalDefinitions.removeGUI(transform.parent.gameObject);
                 CombatResolutionRoutines.executeCombatResults(defendingUnits, attackingUnits, combatOdds, dieRollResult, combatResults, buttonLocation);

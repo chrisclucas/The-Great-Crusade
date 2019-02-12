@@ -408,7 +408,7 @@ public class CombatResolutionRoutines : MonoBehaviour
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("Combat Results: Odds " + combatOdds);
 #endif
-        if ((GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Network) && !GlobalDefinitions.commandFileBeingRead)
+        if ((GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && !GlobalDefinitions.commandFileBeingRead)
         {
             GlobalDefinitions.dieRollResult1 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
             //GlobalDefinitions.dieRollResult1 = 3;  // REMOVE - FOR TESTING ONLY

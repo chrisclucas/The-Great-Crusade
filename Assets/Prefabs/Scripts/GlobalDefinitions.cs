@@ -88,7 +88,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static int turnsAlliedMetVictoryCondition = 0;
 
     // Contains the current game mode
-    public enum GameModeValues { Hotseat, AI, Network, EMail }
+    public enum GameModeValues { Hotseat, AI, Peer2PeerNetwork, ClientServerNetwork, Server, EMail }
     public static GameModeValues gameMode;
     public static string commandFileHeader; // Used to log what type of game the command file was generated with
     public static bool gameStarted = false;
@@ -285,6 +285,7 @@ public class GlobalDefinitions : MonoBehaviour
 
     public static InputField fileBrowserSelectionLabel;
     public static string opponentIPAddress;
+    public static string serverIPAddress;
 
     public static bool displayAlliedSupplyStatus = false;
     public static bool displayGermanSupplyStatus = false;
@@ -2351,7 +2352,7 @@ public class GlobalDefinitions : MonoBehaviour
             using (StreamWriter writeFile = File.AppendText(GameControl.path + fullCommandFile))
                 writeFile.WriteLine(commandString);
 
-            if (localControl && (gameMode == GameModeValues.Network))
+            if (localControl && (gameMode == GameModeValues.Peer2PeerNetwork))
             {
                 TransportScript.SendSocketMessage(commandString);
             }
