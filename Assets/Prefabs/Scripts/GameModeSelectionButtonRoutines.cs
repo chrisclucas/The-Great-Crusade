@@ -65,7 +65,7 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.commandFileHeader = "ClientServerNetwork";
             GameControl.createStatesForHotSeatOrNetwork();
             GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
-            AsynchronousClient.StartClient();
+            ClientServerRoutines.initiateServerConnection();
 
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
         }
@@ -76,7 +76,6 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.commandFileHeader = "Server";
             GameControl.createStatesForHotSeatOrNetwork();
             GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
-            AsynchronousSocketListener.StartListening();
 
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
         }
