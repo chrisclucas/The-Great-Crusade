@@ -286,6 +286,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static InputField fileBrowserSelectionLabel;
     public static string opponentIPAddress;
     public static string serverIPAddress;
+    public static int port = 5016;
 
     public static bool displayAlliedSupplyStatus = false;
     public static bool displayGermanSupplyStatus = false;

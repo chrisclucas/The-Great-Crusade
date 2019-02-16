@@ -65,7 +65,7 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.commandFileHeader = "ClientServerNetwork";
             GameControl.createStatesForHotSeatOrNetwork();
             GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
-            ClientServerRoutines.initiateServerConnection();
+            AsynchronousClient.StartClient();
 
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
         }
@@ -76,16 +76,9 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.commandFileHeader = "Server";
             GameControl.createStatesForHotSeatOrNetwork();
             GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
+            AsynchronousSocketListener.StartListening();
 
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
         }
-        else if (MainMenuRoutines.emailToggle.GetComponent<Toggle>().isOn)
-        {
-            GlobalDefinitions.writeToLogFile("okGameMode: Setting up eMail mode");
-            GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.EMail;
-            GlobalDefinitions.removeGUI(transform.parent.gameObject);
-        }
-        else
-            GlobalDefinitions.guiUpdateStatusMessage("You must select a game mode before selecting OK");
     }
 }
