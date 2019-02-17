@@ -30,45 +30,44 @@ public class ClientServerRoutines : MonoBehaviour
 
     public static string fileName;
 
-    private static bool serverConnectionEstablished = false;
-
     private byte error;
 
     void Update()
     {
-        NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
-
-        switch (recNetworkEvent)
+        if ((channelRequested) && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.ClientServerNetwork))
         {
-            case NetworkEventType.ConnectEvent:
-                GlobalDefinitions.writeToLogFile("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                //GlobalDefinitions.communicationSocket = recHostId;
-                //GlobalDefinitions.communicationChannel = recConnectionId;
+            NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
-                channelEstablished = true;
-                SendServerMessage("InControl");
+            switch (recNetworkEvent)
+            {
+                case NetworkEventType.ConnectEvent:
+                    GlobalDefinitions.writeToLogFile("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
-                break;
+                    channelEstablished = true;
+                    SendServerMessage("PlayerID: cbc");
 
-            case NetworkEventType.DisconnectEvent:
-                GlobalDefinitions.guiUpdateStatusMessage("ClientServerRoutines update: Disconnect event received from remote computer - resetting connection");
-                TransportScript.resetConnection(recHostId);
-                break;
+                    break;
 
-            case NetworkEventType.DataEvent:
-                GlobalDefinitions.writeToLogFile("ClientServerRoutines update: data event");
-                Stream stream = new MemoryStream(recBuffer);
-                BinaryFormatter formatter = new BinaryFormatter();
-                string message = formatter.Deserialize(stream) as string;
-                TransportScript.OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
+                case NetworkEventType.DisconnectEvent:
+                    GlobalDefinitions.guiUpdateStatusMessage("ClientServerRoutines update: Disconnect event received from remote computer - resetting connection");
+                    TransportScript.resetConnection(recHostId);
+                    break;
 
-                break;
+                case NetworkEventType.DataEvent:
+                    GlobalDefinitions.writeToLogFile("ClientServerRoutines update: data event");
+                    Stream stream = new MemoryStream(recBuffer);
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    string message = formatter.Deserialize(stream) as string;
+                    TransportScript.OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
 
-            case NetworkEventType.Nothing:
-                break;
-            default:
-                GlobalDefinitions.writeToLogFile("ClientServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                break;
+                    break;
+
+                case NetworkEventType.Nothing:
+                    break;
+                default:
+                    GlobalDefinitions.writeToLogFile("ClientServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    break;
+            }
         }
     }
 
@@ -106,6 +105,7 @@ public class ClientServerRoutines : MonoBehaviour
 
         if (ConnectToServer())
         {
+            channelRequested = true;
             GlobalDefinitions.guiUpdateStatusMessage("initiateServerConnection: Channel requested");
         }
         else

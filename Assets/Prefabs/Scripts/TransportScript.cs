@@ -514,7 +514,7 @@ public class TransportScript : MonoBehaviour
     /// <param name="error"></param>
     public static void OnData(int hostId, int connectionId, int channelId, string message, int size, NetworkError error)
     {
-        GlobalDefinitions.writeToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
+        GlobalDefinitions.writeToLogFile("Data Event Received: (hostId = " + hostId + ", connectionId = "
             + connectionId + ", channelId = " + channelId + ", data = "
             + message + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
     }

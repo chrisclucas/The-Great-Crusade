@@ -101,8 +101,9 @@ public class GlobalDefinitions : MonoBehaviour
     public static int communicationChannel;
 
     // Communication information for client/server network games
-    public static int clientCommunicationSocket;
-    public static int clientCommunicationChannel;
+    public static int clientHostID;
+    public static int clientConnectionID;
+    public static int clientChannelID;
 
     // During network and AI games this determines when the player is in control
     public static bool localControl = false;
