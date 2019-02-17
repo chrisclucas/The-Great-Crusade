@@ -56,10 +56,8 @@ public class ServerRoutines : MonoBehaviour
         }
     }
 
-    public static void StartListening()
+    public void StartListening()
     {
-        byte error;
-
         GlobalDefinitions.writeToLogFile("StartListening: executing");
 
         GlobalConfig globalConfig = new GlobalConfig();

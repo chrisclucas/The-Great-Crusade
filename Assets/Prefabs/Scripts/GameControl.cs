@@ -21,6 +21,8 @@ public class GameControl : MonoBehaviour
     public static GameObject readWriteRoutinesInstance;
     public static GameObject GUIButtonRoutinesInstance;
     public static GameObject AIRoutinesInstance;
+    public static GameObject clientServerRoutinesInstance;
+    public static GameObject serverRoutinesInstance;
 
     // These are the objects that contain the different game states
     public static GameObject gameStateControlInstance;
@@ -361,7 +363,7 @@ public class GameControl : MonoBehaviour
                 // The user side is controled by the hotseat section above.  The AI doesn't need anything during update since its states don't have input or transitions.
             }
 
-            else if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.EMail)
+            else if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.ClientServerNetwork)
             {
 
             }
@@ -508,6 +510,12 @@ public class GameControl : MonoBehaviour
 
         AIRoutinesInstance = new GameObject("AIRoutinesInstance");
         AIRoutinesInstance.AddComponent<AIRoutines>();
+
+        clientServerRoutinesInstance = new GameObject("ClientServerRoutinesInstance");
+        clientServerRoutinesInstance.AddComponent<ClientServerRoutines>();
+
+        serverRoutinesInstance = new GameObject("ServerRoutinesInstance");
+        serverRoutinesInstance.AddComponent<ServerRoutines>();
     }
 
     /// <summary>

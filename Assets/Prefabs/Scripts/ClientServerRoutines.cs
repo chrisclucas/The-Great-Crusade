@@ -36,13 +36,6 @@ public class ClientServerRoutines : MonoBehaviour
 
     void Update()
     {
-        // If communcation hasn't been established yet keep sending out a connection request
-        if (!channelEstablished)
-        {
-            connectionId = NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error);
-            GlobalDefinitions.writeToLogFile("ClientServerRoutines update: ConnectionID set to " + connectionId + " hostId = " + hostId + ", IP addr = " + GlobalDefinitions.serverIPAddress + ", port = " + GlobalDefinitions.port + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-        }
-
         NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
         switch (recNetworkEvent)
@@ -82,7 +75,7 @@ public class ClientServerRoutines : MonoBehaviour
     /// <summary>
     /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
     /// </summary>
-    public static void initiateServerConnection()
+    public void initiateServerConnection()
     {
         //byte error;
 
