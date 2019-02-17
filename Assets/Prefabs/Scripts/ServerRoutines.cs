@@ -41,7 +41,7 @@ public class ServerRoutines : MonoBehaviour
                 case NetworkEventType.DisconnectEvent:
                     GlobalDefinitions.guiUpdateStatusMessage("ServerRoutines update: Disconnect event received from remote computer - resetting connection");
                     GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));
-                    TransportScript.resetConnection(recHostId);
+                    // Need to add code here to drop the specific client that is sending a disconnect event
                     break;
 
                 case NetworkEventType.DataEvent:
