@@ -32,6 +32,8 @@ public class ClientServerRoutines : MonoBehaviour
 
     private static bool serverConnectionEstablished = false;
 
+    private byte error;
+
     void Update()
     {
         // If communcation hasn't been established yet keep sending out a connection request
