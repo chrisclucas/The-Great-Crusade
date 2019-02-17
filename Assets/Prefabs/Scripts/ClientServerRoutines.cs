@@ -41,12 +41,6 @@ public class ClientServerRoutines : MonoBehaviour
         {
             connectionId = NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error);
             GlobalDefinitions.writeToLogFile("ClientServerRoutines update: ConnectionID set to " + connectionId + " hostId = " + hostId + ", IP addr = " + GlobalDefinitions.serverIPAddress + ", port = " + GlobalDefinitions.port + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-            if (connectionId > 0)
-            {
-                GlobalDefinitions.guiUpdateStatusMessage("ClientServerRoutines update: Channel requested");
-            }
-            else
-                GlobalDefinitions.guiUpdateStatusMessage("ClientServerRoutines update: Connection request failed");
         }
 
         NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
@@ -58,7 +52,7 @@ public class ClientServerRoutines : MonoBehaviour
                 //GlobalDefinitions.communicationSocket = recHostId;
                 //GlobalDefinitions.communicationChannel = recConnectionId;
 
-                serverConnectionEstablished = true;
+                channelEstablished = true;
                 SendServerMessage("InControl");
 
                 break;

@@ -84,9 +84,11 @@ public class ServerRoutines : MonoBehaviour
 
         hostId = NetworkTransport.AddHost(topology, GlobalDefinitions.port);
 
-        if (NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error) <= 0)
-            GlobalDefinitions.guiUpdateStatusMessage("StartListening: Server connection request failed");
-        else
-            GlobalDefinitions.guiUpdateStatusMessage("StartListening: Server connection request successful");
+        NetworkServer.Listen(GlobalDefinitions.port);
+
+        //if (NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error) <= 0)
+        //    GlobalDefinitions.guiUpdateStatusMessage("StartListening: Server connection request failed");
+        //else
+        //    GlobalDefinitions.guiUpdateStatusMessage("StartListening: Server connection request successful");
     }
 }
