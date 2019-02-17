@@ -26,8 +26,8 @@ public class ServerRoutines : MonoBehaviour
         {
             case NetworkEventType.ConnectEvent:
                 GlobalDefinitions.writeToLogFile("ServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                GlobalDefinitions.communicationSocket = recHostId;
-                GlobalDefinitions.communicationChannel = recConnectionId;
+                GlobalDefinitions.clientCommunicationSocket = recHostId;
+                GlobalDefinitions.clientCommunicationChannel = recConnectionId;
 
                 TransportScript.SendSocketMessage("ConfirmSync");
 
@@ -60,7 +60,7 @@ public class ServerRoutines : MonoBehaviour
     {
         byte error;
 
-        GlobalDefinitions.writeToLogFile("initiateServerConnection: executing");
+        GlobalDefinitions.writeToLogFile("StartListening: executing");
 
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
@@ -70,7 +70,7 @@ public class ServerRoutines : MonoBehaviour
 
 
         reliableChannelId = config.AddChannel(QosType.AllCostDelivery);
-        GlobalDefinitions.writeToLogFile("initiateServerConnection: ReliableChannelID set to " + reliableChannelId);
+        GlobalDefinitions.writeToLogFile("StartListening: ReliableChannelID set to " + reliableChannelId);
 
         config.PacketSize = 1400;
         config.MaxConnectionAttempt = Byte.MaxValue;
@@ -85,8 +85,8 @@ public class ServerRoutines : MonoBehaviour
         hostId = NetworkTransport.AddHost(topology, GlobalDefinitions.port);
 
         if (NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error) <= 0)
-            GlobalDefinitions.guiUpdateStatusMessage("Connection Failed");
+            GlobalDefinitions.guiUpdateStatusMessage("StartListening: Server connection request failed");
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Connection Established");
+            GlobalDefinitions.guiUpdateStatusMessage("StartListening: Server connection request successful");
     }
 }

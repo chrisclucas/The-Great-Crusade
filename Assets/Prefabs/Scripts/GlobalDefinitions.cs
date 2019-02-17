@@ -96,9 +96,13 @@ public class GlobalDefinitions : MonoBehaviour
     //  Use to determine if Combat Assignment is available
     public static bool AICombat = false;
 
-    // Communication information for network games
+    // Communication information for peer-peer network games
     public static int communicationSocket;
     public static int communicationChannel;
+
+    // Communication information for client/server network games
+    public static int clientCommunicationSocket;
+    public static int clientCommunicationChannel;
 
     // During network and AI games this determines when the player is in control
     public static bool localControl = false;

@@ -15,11 +15,8 @@ public class ClientServerRoutines : MonoBehaviour
 
     public static int hostId;
 
-    public static bool channelEstablished = false;
-    public static bool connectionConfirmed = false;
-    public static bool handshakeConfirmed = false;
-    public static bool serverConfirmsSync = false;
-    public static bool gameDataSent = false;
+    private static bool channelRequested = false;
+    private static bool channelEstablished = false;
 
     static byte sendError;
     static byte[] sendBuffer = new byte[BUFFERSIZE];
@@ -37,14 +34,27 @@ public class ClientServerRoutines : MonoBehaviour
 
     void Update()
     {
+        // If communcation hasn't been established yet keep sending out a connection request
+        if (!channelEstablished)
+        {
+            connectionId = NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error);
+            GlobalDefinitions.writeToLogFile("ClientServerRoutines update: ConnectionID set to " + connectionId + " hostId = " + hostId + ", IP addr = " + GlobalDefinitions.serverIPAddress + ", port = " + GlobalDefinitions.port + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            if (connectionId > 0)
+            {
+                GlobalDefinitions.guiUpdateStatusMessage("ClientServerRoutines update: Channel requested");
+            }
+            else
+                GlobalDefinitions.guiUpdateStatusMessage("ClientServerRoutines update: Connection request failed");
+        }
+
         NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
         switch (recNetworkEvent)
         {
             case NetworkEventType.ConnectEvent:
                 GlobalDefinitions.writeToLogFile("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                GlobalDefinitions.communicationSocket = recHostId;
-                GlobalDefinitions.communicationChannel = recConnectionId;
+                //GlobalDefinitions.communicationSocket = recHostId;
+                //GlobalDefinitions.communicationChannel = recConnectionId;
 
                 serverConnectionEstablished = true;
                 SendServerMessage("InControl");
@@ -107,11 +117,10 @@ public class ClientServerRoutines : MonoBehaviour
 
         if (ConnectToServer())
         {
-            channelEstablished = true;
-            GlobalDefinitions.guiUpdateStatusMessage("initiateServerConnection: Channel Established");
+            GlobalDefinitions.guiUpdateStatusMessage("initiateServerConnection: Channel requested");
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Connection Failed");
+            GlobalDefinitions.guiUpdateStatusMessage("initiateServerConnection: Connection request failed");
     }
 
     /// <summary>
