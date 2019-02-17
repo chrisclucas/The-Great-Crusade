@@ -84,6 +84,9 @@ public class ServerRoutines : MonoBehaviour
 
         hostId = NetworkTransport.AddHost(topology, GlobalDefinitions.port);
 
-        NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error);
+        if (NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error) <= 0)
+            GlobalDefinitions.guiUpdateStatusMessage("Connection Failed");
+        else
+            GlobalDefinitions.guiUpdateStatusMessage("Connection Established");
     }
 }
