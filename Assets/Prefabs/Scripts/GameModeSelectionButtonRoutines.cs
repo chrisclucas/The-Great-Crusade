@@ -76,6 +76,7 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.commandFileHeader = "Server";
             GameControl.createStatesForHotSeatOrNetwork();
             GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
+            ServerRoutines.
 
             GlobalDefinitions.removeGUI(transform.parent.gameObject);
         }

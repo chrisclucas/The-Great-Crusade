@@ -14,6 +14,9 @@ public class ServerRoutines : MonoBehaviour
     public static int dataSize;
     public static byte recError;
 
+    public static int hostId;
+    public static int reliableChannelId;
+
     // Update is called once per frame
     void Update ()
     {
@@ -51,5 +54,36 @@ public class ServerRoutines : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("ServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                 break;
         }
+    }
+
+    public static void StartListening()
+    {
+        byte error;
+
+        GlobalDefinitions.writeToLogFile("initiateServerConnection: executing");
+
+        GlobalConfig globalConfig = new GlobalConfig();
+        globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
+        globalConfig.MaxPacketSize = 1500;
+
+        ConnectionConfig config = new ConnectionConfig();
+
+
+        reliableChannelId = config.AddChannel(QosType.AllCostDelivery);
+        GlobalDefinitions.writeToLogFile("initiateServerConnection: ReliableChannelID set to " + reliableChannelId);
+
+        config.PacketSize = 1400;
+        config.MaxConnectionAttempt = Byte.MaxValue;
+
+        int maxConnections = 2;
+        HostTopology topology = new HostTopology(config, maxConnections);
+        topology.ReceivedMessagePoolSize = 128;
+        topology.SentMessagePoolSize = 1024; // Default 128
+
+        NetworkTransport.Init(globalConfig);
+
+        hostId = NetworkTransport.AddHost(topology, GlobalDefinitions.port);
+
+        NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error);
     }
 }
