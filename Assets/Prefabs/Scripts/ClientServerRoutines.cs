@@ -33,6 +33,46 @@ public class ClientServerRoutines : MonoBehaviour
 
     public static string fileName;
 
+    private static bool serverConnectionEstablished = false;
+
+    void Update()
+    {
+        NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
+
+        switch (recNetworkEvent)
+        {
+            case NetworkEventType.ConnectEvent:
+                GlobalDefinitions.writeToLogFile("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                GlobalDefinitions.communicationSocket = recHostId;
+                GlobalDefinitions.communicationChannel = recConnectionId;
+
+                serverConnectionEstablished = true;
+                SendServerMessage("InControl");
+
+                break;
+
+            case NetworkEventType.DisconnectEvent:
+                GlobalDefinitions.guiUpdateStatusMessage("ClientServerRoutines update: Disconnect event received from remote computer - resetting connection");
+                TransportScript.resetConnection(recHostId);
+                break;
+
+            case NetworkEventType.DataEvent:
+                GlobalDefinitions.writeToLogFile("ClientServerRoutines update: data event");
+                Stream stream = new MemoryStream(recBuffer);
+                BinaryFormatter formatter = new BinaryFormatter();
+                string message = formatter.Deserialize(stream) as string;
+                TransportScript.OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
+
+                break;
+
+            case NetworkEventType.Nothing:
+                break;
+            default:
+                GlobalDefinitions.writeToLogFile("ClientServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                break;
+        }
+    }
+
     /// <summary>
     /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
     /// </summary>
@@ -69,7 +109,6 @@ public class ClientServerRoutines : MonoBehaviour
         {
             channelEstablished = true;
             GlobalDefinitions.guiUpdateStatusMessage("initiateServerConnection: Channel Established");
-            SendServerMessage("InControl");
         }
         else
             GlobalDefinitions.guiUpdateStatusMessage("Connection Failed");
