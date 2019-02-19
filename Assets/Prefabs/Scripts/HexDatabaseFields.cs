@@ -204,15 +204,15 @@ public class HexDatabaseFields : MonoBehaviour
     /// <summary>
     /// This routine will write out the fields of the hex
     /// </summary>
-    public void writeHexFields(StreamWriter fileWriter)
+    public void WriteHexFields(StreamWriter fileWriter)
     {
         fileWriter.Write(name + " ");
-        fileWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(inGermanZOC) + " ");
-        fileWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(inAlliedZOC) + " ");
-        fileWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(alliedControl) + " ");
-        fileWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(successfullyInvaded) + " ");
-        fileWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(closeDefenseSupport) + " ");
-        fileWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(riverInterdiction) + " ");
+        fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(inGermanZOC) + " ");
+        fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(inAlliedZOC) + " ");
+        fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(alliedControl) + " ");
+        fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(successfullyInvaded) + " ");
+        fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(closeDefenseSupport) + " ");
+        fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(riverInterdiction) + " ");
         fileWriter.WriteLine();
     }
 

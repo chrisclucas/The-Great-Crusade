@@ -8,34 +8,34 @@ public class TacticalAirToggleRoutines : MonoBehaviour
     public GameObject hex;
     public GameObject unit;
 
-    public void addCloseDefenseHex()
+    public void AddCloseDefenseHex()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDCLOSEDEFENSEKEYWORD);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDCLOSEDEFENSEKEYWORD);
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().executeCloseDefenseSelection;
-        GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteCloseDefenseSelection;
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
     }
 
-    public void cancelCloseDefense()
+    public void CancelCloseDefense()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CANCELCLOSEDEFENSEKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CANCELCLOSEDEFENSEKEYWORD + " " + name);
 
         for (int index = 0; index < GlobalDefinitions.closeDefenseHexes.Count; index++)
             if (GlobalDefinitions.closeDefenseHexes[index] == hex)
             {
                 GlobalDefinitions.closeDefenseHexes[index].GetComponent<HexDatabaseFields>().closeDefenseSupport = false;
-                GlobalDefinitions.unhighlightHex(GlobalDefinitions.closeDefenseHexes[index]);
+                GlobalDefinitions.UnhighlightHex(GlobalDefinitions.closeDefenseHexes[index]);
                 GlobalDefinitions.closeDefenseHexes.Remove(hex);
             }
         GlobalDefinitions.tacticalAirMissionsThisTurn--;
-        GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
-        CombatResolutionRoutines.createTacticalAirGUI();
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        CombatResolutionRoutines.CreateTacticalAirGUI();
     }
 
-    public void locateCloseDefense()
+    public void LocateCloseDefense()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOCATECLOSEDEFENSEKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATECLOSEDEFENSEKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // This centers the camera on the hex
@@ -47,18 +47,18 @@ public class TacticalAirToggleRoutines : MonoBehaviour
                 mainCamera.transform.position.z);
     }
 
-    public void addInterdictedUnit()
+    public void AddInterdictedUnit()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDUNITINTERDICTIONKEYWORD);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDUNITINTERDICTIONKEYWORD);
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().executeUnitInterdictionSelection;
-        GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteUnitInterdictionSelection;
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
     }
 
-    public void cancelInterdictedUnit()
+    public void CancelInterdictedUnit()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CANCELUNITINTERDICTIONKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CANCELUNITINTERDICTIONKEYWORD + " " + name);
 
         for (int index = 0; index < GlobalDefinitions.interdictedUnits.Count; index++)
             if (GlobalDefinitions.interdictedUnits[index] == unit)
@@ -67,13 +67,13 @@ public class TacticalAirToggleRoutines : MonoBehaviour
                 GlobalDefinitions.interdictedUnits.Remove(unit);
             }
         GlobalDefinitions.tacticalAirMissionsThisTurn--;
-        GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
-        CombatResolutionRoutines.createTacticalAirGUI();
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        CombatResolutionRoutines.CreateTacticalAirGUI();
     }
 
-    public void locateInterdictedUnit()
+    public void LocateInterdictedUnit()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOCATEUNITINTERDICTIONKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATEUNITINTERDICTIONKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // This centers the camera on the unit
@@ -85,34 +85,34 @@ public class TacticalAirToggleRoutines : MonoBehaviour
                 mainCamera.transform.position.z);
     }
 
-    public void addRiverInterdiction()
+    public void AddRiverInterdiction()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDRIVERINTERDICTIONKEYWORD);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDRIVERINTERDICTIONKEYWORD);
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().executeRiverInterdictionSelection;
-        GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteRiverInterdictionSelection;
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
     }
 
-    public void cancelRiverInterdiction()
+    public void CancelRiverInterdiction()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CANCELRIVERINTERDICTIONKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CANCELRIVERINTERDICTIONKEYWORD + " " + name);
 
         for (int index = 0; index < GlobalDefinitions.riverInderdictedHexes.Count; index++)
             if (GlobalDefinitions.riverInderdictedHexes[index] == hex)
             {
                 GlobalDefinitions.riverInderdictedHexes[index].GetComponent<HexDatabaseFields>().riverInterdiction = false;
-                GlobalDefinitions.unhighlightHex(GlobalDefinitions.riverInderdictedHexes[index]);
+                GlobalDefinitions.UnhighlightHex(GlobalDefinitions.riverInderdictedHexes[index]);
                 GlobalDefinitions.riverInderdictedHexes.Remove(hex);
             }
         GlobalDefinitions.tacticalAirMissionsThisTurn--;
-        GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
-        CombatResolutionRoutines.createTacticalAirGUI();
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        CombatResolutionRoutines.CreateTacticalAirGUI();
     }
 
-    public void locateRiverInterdiction()
+    public void LocateRiverInterdiction()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOCATERIVERINTERDICTIONKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATERIVERINTERDICTIONKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // This centers the camera on the hex
@@ -124,20 +124,20 @@ public class TacticalAirToggleRoutines : MonoBehaviour
                 mainCamera.transform.position.z);
     }
 
-    public void multiUnitSelection()
+    public void MultiUnitSelection()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD + " " + name);
 
-        GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
-        CombatResolutionRoutines.addInterdictedUnitToList(unit);
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        CombatResolutionRoutines.AddInterdictedUnitToList(unit);
     }
 
-    public static void tacticalAirOK()
+    public static void TacticalAirOK()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD);
 
-        GlobalDefinitions.removeGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
     }
 }

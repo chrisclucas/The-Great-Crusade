@@ -12,24 +12,24 @@ public class CombatToggleRoutines : MonoBehaviour
     /// <summary>
     /// This routine is called whenever an unit selection toggle on the combat gui is changed
     /// </summary>
-    public void addOrDeleteSelectedUnit()
+    public void AddOrDeleteSelectedUnit()
     {
         if (GetComponent<Toggle>().isOn)
         {
             // Turn on the toggle on the remote computer
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCOMBATTOGGLEKEYWORD + " " + name);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.SETCOMBATTOGGLEKEYWORD + " " + name);
 
             unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = true;
-            GlobalDefinitions.highlightUnit(unit);
+            GlobalDefinitions.HighlightUnit(unit);
             if (attackingUnitFlag)
             {
                 // An attacking unit was added
 
                 // Need to check for adding an attack from a fortress.
                 if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().fortress)
-                    addDefendersOfFortressAttack(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                    AddDefendersOfFortressAttack(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
                 else
-                    refreshDefendersBasedOnAttackers();
+                    RefreshDefendersBasedOnAttackers();
             }
             else
             {
@@ -51,15 +51,15 @@ public class CombatToggleRoutines : MonoBehaviour
                             // to be done because it is on the same hex as the unit being checked already
                             childTransform.GetComponent<Toggle>().isOn = true;
 
-                refreshAttackersBasedOnDefenders();
+                RefreshAttackersBasedOnDefenders();
             }
         }
         else
         {
             // Turn off the toggle on the remote computer
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.RESETCOMBATTOGGLEKEYWORD + " " + name);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.RESETCOMBATTOGGLEKEYWORD + " " + name);
 
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
             unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
             if (attackingUnitFlag)
             {
@@ -82,10 +82,10 @@ public class CombatToggleRoutines : MonoBehaviour
                     }
 
                     if (!attackStillTakingPlace)
-                        removeDefendersOfFortressAttack(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                        RemoveDefendersOfFortressAttack(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
                 }
                 else
-                    refreshDefendersBasedOnAttackers();
+                    RefreshDefendersBasedOnAttackers();
             }
             else
             {
@@ -107,7 +107,7 @@ public class CombatToggleRoutines : MonoBehaviour
                             // to be done because it is on the same hex as the unit being checked already
                             childTransform.GetComponent<Toggle>().isOn = false;
 
-                refreshAttackersBasedOnDefenders();
+                RefreshAttackersBasedOnDefenders();
             }
         }
 
@@ -116,7 +116,7 @@ public class CombatToggleRoutines : MonoBehaviour
         // below will cause an exception.  Need to check that the toggle is there.
         if (GlobalDefinitions.combatCarpetBombingToggle != null)
         {
-            if (CombatRoutines.checkIfCarpetBombingIsAvailable(currentCombat))
+            if (CombatRoutines.CheckIfCarpetBombingIsAvailable(currentCombat))
                 GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().interactable = true;
             else
             {
@@ -125,13 +125,13 @@ public class CombatToggleRoutines : MonoBehaviour
             }
         }
 
-        updateOddsText();
+        UpdateOddsText();
     }
 
     /// <summary>
     /// This routine executes when a new attacker is committed to attacking
     /// </summary>
-    private void refreshDefendersBasedOnAttackers()
+    private void RefreshDefendersBasedOnAttackers()
     {
         // First go through and enable all the defending units since if I don't, once a unit is disabled it will never be enabled again and this way 
         // I don't have to explicitly check for adjacency to all attackers
@@ -142,7 +142,7 @@ public class CombatToggleRoutines : MonoBehaviour
                 if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) &&
                         (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == defendingUnit))
                     // if an invasion is taking place don't turn the toogle back on
-                    if (!GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().checkForInvasionDefense(
+                    if (!GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().CheckForInvasionDefense(
                             childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit, currentCombat))
                         childTransform.gameObject.GetComponent<Toggle>().interactable = true;
 
@@ -165,13 +165,13 @@ public class CombatToggleRoutines : MonoBehaviour
 
             if (attackerIsCommitted)
                 foreach (GameObject defendingUnit in currentCombat.GetComponent<Combat>().defendingUnits)
-                    if (!GlobalDefinitions.twoUnitsAdjacent(attackingUnit, defendingUnit))
+                    if (!GlobalDefinitions.TwoUnitsAdjacent(attackingUnit, defendingUnit))
                         // The defending unit is not adjacent to the attacking unit so it needs to be greyed out and disabled in the display
                         foreach (Transform childTransform in transform.parent.transform)
                             if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) &&
                                     (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == defendingUnit))
                             {
-                                GlobalDefinitions.unhighlightUnit(defendingUnit);
+                                GlobalDefinitions.UnhighlightUnit(defendingUnit);
                                 defendingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
                                 childTransform.gameObject.GetComponent<Toggle>().isOn = false;
                                 childTransform.gameObject.GetComponent<Toggle>().interactable = false;
@@ -182,7 +182,7 @@ public class CombatToggleRoutines : MonoBehaviour
     /// <summary>
     /// This routine is called when a new defender is added to the attack and updates the toggles on the combat gui
     /// </summary>
-    private void refreshAttackersBasedOnDefenders()
+    private void RefreshAttackersBasedOnDefenders()
     {
         // First go through and enable all the attacking units since if I don't once a unit is disabled it will never be enabled again and this way 
         // I don't have to explicitly check for adjacency to all defenders
@@ -194,7 +194,7 @@ public class CombatToggleRoutines : MonoBehaviour
                 if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) && (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == attackingUnit))
                 {
                     // check if there is an invasion taking place and if so do not turn the check back on.
-                    if (!GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().checkForInvadingAttacker(childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit))
+                    if (!GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().CheckForInvadingAttacker(childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit))
                         childTransform.gameObject.GetComponent<Toggle>().interactable = true;
                 }
             }
@@ -221,15 +221,15 @@ public class CombatToggleRoutines : MonoBehaviour
             {
                 foreach (GameObject attackingUnit in currentCombat.GetComponent<Combat>().attackingUnits)
                 {
-                    if (!GlobalDefinitions.twoUnitsAdjacent(attackingUnit, defendingUnit))
+                    if (!GlobalDefinitions.TwoUnitsAdjacent(attackingUnit, defendingUnit))
                     {
                         // The attacking unit is not adjacent to the defending unit so it needs to be greyed out and disabled in the display
                         foreach (Transform childTransform in transform.parent.transform)
                         {
                             if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) && (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == attackingUnit))
                             {
-                                GlobalDefinitions.writeToLogFile("refreshAttackersBasedOnDefenders: decommitting attacker and making non-interactable " + attackingUnit.name);
-                                GlobalDefinitions.unhighlightUnit(attackingUnit);
+                                GlobalDefinitions.WriteToLogFile("refreshAttackersBasedOnDefenders: decommitting attacker and making non-interactable " + attackingUnit.name);
+                                GlobalDefinitions.UnhighlightUnit(attackingUnit);
                                 attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
                                 childTransform.gameObject.GetComponent<Toggle>().isOn = false;
                                 childTransform.gameObject.GetComponent<Toggle>().interactable = false;
@@ -300,7 +300,7 @@ public class CombatToggleRoutines : MonoBehaviour
     /// <summary>
     /// this routine will reset the defenders that are in the mustBeAttackedUnits list
     /// </summary>
-    public void checkDefenderToBeRemoved()
+    public void CheckDefenderToBeRemoved()
     {
         // The easiest thing to do is to remove all current defenders from the mustBeAttackedUnts list and then go through and add the units that need to be added
         //foreach (GameObject defendingUnit in currentCombat.GetComponent<Combat>().defendingUnits)
@@ -311,11 +311,11 @@ public class CombatToggleRoutines : MonoBehaviour
         //    }
         if (currentCombat.GetComponent<Combat>().attackingUnits.Count > 0)
         {
-            if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedCombatStateInstance") ||
-                    (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanCombatStateInstance"))
-                CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, true);
+            if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
+                    (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance"))
+                CombatRoutines.CheckIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality, true);
             else
-                CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, false);
+                CombatRoutines.CheckIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality, false);
 
             //checkIfDefenderToBeAdded();
         }
@@ -325,7 +325,7 @@ public class CombatToggleRoutines : MonoBehaviour
     /// This routine is called when a unit decides to attack from a fortress.   It toggles all units that would be in the unit's ZOC if it wasn't in a fortress.
     /// </summary>
     /// <param name="fortressHex"></param>
-    public void addDefendersOfFortressAttack(GameObject fortressHex)
+    public void AddDefendersOfFortressAttack(GameObject fortressHex)
     {
         foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
             if (fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
@@ -338,12 +338,12 @@ public class CombatToggleRoutines : MonoBehaviour
                         // If we get here then the unit should be highlighted since it is adjacent and isn't separated by a river or it isn't a fortress
                         foreach (GameObject unit in fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit)
                         {
-                            GlobalDefinitions.highlightUnit(unit);
+                            GlobalDefinitions.HighlightUnit(unit);
                             foreach (Transform childTransform in transform.parent.transform)
                                 if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) && (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == unit))
                                 {
                                     // Turn on the defenders toggle to show that the unit must be attacked
-                                    GlobalDefinitions.writeToLogFile("addDefendersOfFortressAttack: adding unit " + unit.name + " as defender of attack from fortress");
+                                    GlobalDefinitions.WriteToLogFile("addDefendersOfFortressAttack: adding unit " + unit.name + " as defender of attack from fortress");
                                     childTransform.GetComponent<Toggle>().isOn = true;
                                     // The only way to turn the toggle off will be to click off the attacking unit
                                     childTransform.GetComponent<Toggle>().interactable = false;
@@ -356,7 +356,7 @@ public class CombatToggleRoutines : MonoBehaviour
     /// This routine is called when attacking from a fortress is removed.  It toggles off the adjacent units
     /// </summary>
     /// <param name="fortressHex"></param>
-    public void removeDefendersOfFortressAttack(GameObject fortressHex)
+    public void RemoveDefendersOfFortressAttack(GameObject fortressHex)
     {
         foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
             if (fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
@@ -369,7 +369,7 @@ public class CombatToggleRoutines : MonoBehaviour
                             foreach (Transform childTransform in transform.parent.transform)
                                 if ((childTransform.gameObject.GetComponent<CombatToggleRoutines>() != null) && (childTransform.gameObject.GetComponent<CombatToggleRoutines>().unit == unit))
                                 {
-                                    GlobalDefinitions.unhighlightUnit(unit);
+                                    GlobalDefinitions.UnhighlightUnit(unit);
                                     unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
                                     // Turn off the selection of the unit
                                     childTransform.GetComponent<Toggle>().isOn = false;
@@ -381,21 +381,21 @@ public class CombatToggleRoutines : MonoBehaviour
     /// <summary>
     /// Used to toggle the air support option on the combat gui in network games
     /// </summary>
-    public void toggleAirSupport()
+    public void ToggleAirSupport()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.TOGGLEAIRSUPPORTCOMBATTOGGLE + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.TOGGLEAIRSUPPORTCOMBATTOGGLE + " " + name);
 
         if (this.GetComponent<Toggle>().isOn)
         {
             if (GlobalDefinitions.tacticalAirMissionsThisTurn < GlobalDefinitions.maxNumberOfTacticalAirMissions)
             {
                 currentCombat.GetComponent<Combat>().attackAirSupport = true;
-                GlobalDefinitions.writeToLogFile("toggleAirSupport: incrementing GlobalDefinitions.tacticalAirMissionsThisTurn");
+                GlobalDefinitions.WriteToLogFile("toggleAirSupport: incrementing GlobalDefinitions.tacticalAirMissionsThisTurn");
                 GlobalDefinitions.tacticalAirMissionsThisTurn++;
             }
             else
             {
-                GlobalDefinitions.writeToLogFile("No more air missions available");
+                GlobalDefinitions.WriteToLogFile("No more air missions available");
                 this.GetComponent<Toggle>().isOn = false;
             }
         }
@@ -404,12 +404,12 @@ public class CombatToggleRoutines : MonoBehaviour
             currentCombat.GetComponent<Combat>().attackAirSupport = false;
             GlobalDefinitions.tacticalAirMissionsThisTurn--;
         }
-        updateOddsText();
+        UpdateOddsText();
     }
 
-    public void toggleCarpetBombing()
+    public void ToggleCarpetBombing()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.TOGGLECARPETBOMBINGCOMBATTOGGLE + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.TOGGLECARPETBOMBINGCOMBATTOGGLE + " " + name);
 
         if (this.GetComponent<Toggle>().isOn)
         {
@@ -421,18 +421,18 @@ public class CombatToggleRoutines : MonoBehaviour
         }
     }
 
-    private void updateOddsText()
+    private void UpdateOddsText()
     {
         // Update the text displaying the combat odds
         GameObject.Find("OddsText").GetComponent<Text>().text = "Combat Odds " +
-                GlobalDefinitions.convertOddsToString(
-                GlobalDefinitions.returnCombatOdds(
+                GlobalDefinitions.ConvertOddsToString(
+                GlobalDefinitions.ReturnCombatOdds(
                 currentCombat.GetComponent<Combat>().defendingUnits,
                 currentCombat.GetComponent<Combat>().attackingUnits, currentCombat.GetComponent<Combat>().attackAirSupport)) + "\nDefense = " +
-                GlobalDefinitions.calculateDefenseFactor(
+                GlobalDefinitions.CalculateDefenseFactor(
                 currentCombat.GetComponent<Combat>().defendingUnits,
                 currentCombat.GetComponent<Combat>().attackingUnits) + "\nAttack = " +
-                GlobalDefinitions.calculateAttackFactor(
+                GlobalDefinitions.CalculateAttackFactor(
                 currentCombat.GetComponent<Combat>().attackingUnits, currentCombat.GetComponent<Combat>().attackAirSupport);
     }
 }

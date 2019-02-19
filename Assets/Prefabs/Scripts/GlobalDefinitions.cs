@@ -303,7 +303,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// Goes through and resets all variables 
     /// </summary>
-    public static void resetAllGlobalDefinitions()
+    public static void ResetAllGlobalDefinitions()
     {
         alliedGroups.Clear();
         germanGroups.Clear();
@@ -417,7 +417,7 @@ public class GlobalDefinitions : MonoBehaviour
         TransportScript.gameDataSent = false;
 
         // When resetting I am going to regenerate the invasion areas.  If I don't the AI will come up with different results based on the arrays being seeded diferently
-        GameControl.createBoardInstance.GetComponent<CreateBoard>().setupInvasionAreas();
+        GameControl.createBoardInstance.GetComponent<CreateBoard>().SetupInvasionAreas();
 
     }
 
@@ -425,7 +425,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// This routine will get a hex selected by the user
     /// </summary>
     /// <returns></returns>
-    public static GameObject getHexFromUserInput(Vector2 mousePosition)
+    public static GameObject GetHexFromUserInput(Vector2 mousePosition)
     {
         RaycastHit selectionHit = new RaycastHit();
 
@@ -441,7 +441,12 @@ public class GlobalDefinitions : MonoBehaviour
         else return (null);
     }
 
-    public static GameObject getHexFromRightButtonUserInput(Vector3 inputSelection)
+    /// <summary>
+    /// Not used - used to pull up muti-hex selection
+    /// </summary>
+    /// <param name="inputSelection"></param>
+    /// <returns></returns>
+    public static GameObject GetHexFromRightButtonUserInput(Vector3 inputSelection)
     {
         RaycastHit selectionHit = new RaycastHit();
 
@@ -469,7 +474,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="inputSelection"></param>
     /// <returns></returns>
-    public static GameObject getHexFromUserInput(Vector3 inputSelection)
+    public static GameObject GetHexFromUserInput(Vector3 inputSelection)
     {
         RaycastHit selectionHit = new RaycastHit();
 
@@ -498,7 +503,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="hex"></param>
     /// <returns></returns>
-    public static GameObject getUnitOnHex(GameObject hex)
+    public static GameObject GetUnitOnHex(GameObject hex)
     {
         if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
             return (hex.GetComponent<HexDatabaseFields>().occupyingUnit[hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count - 1]);
@@ -510,7 +515,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// This routine is the standard routine for selecting a unit since many of the times the user has the option of chosing off board units
     /// </summary>
     /// <returns></returns>
-    public static GameObject getUnitWithoutHex(Vector2 mousePosition)
+    public static GameObject GetUnitWithoutHex(Vector2 mousePosition)
     {
         RaycastHit selectionHit = new RaycastHit();
         GameObject unit;
@@ -539,7 +544,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="xCoor"></param>
     /// <param name="yCoor"></param>
     /// <returns></returns>
-    public static GameObject getHexAtXY(int xCoor, int yCoor)
+    public static GameObject GetHexAtXY(int xCoor, int yCoor)
     {
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             if ((hex.GetComponent<HexDatabaseFields>().xMapCoor == xCoor) &&
@@ -553,7 +558,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// Zero's out the remaining movement fields
     /// </summary>
-    public static void resetMovementAvailableFields()
+    public static void ResetMovementAvailableFields()
     {
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         {
@@ -568,7 +573,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static bool hexUnderStackingLimit(GameObject hex, Nationality nationality)
+    public static bool HexUnderStackingLimit(GameObject hex, Nationality nationality)
     {
         // The AI is using this routine so this routine now needs to check if the unit is already on the hex.  Otherwise it causes units on max stacked hexes to move.
         //if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Contains(unit))
@@ -610,7 +615,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static bool stackingLimitExceeded(GameObject hex, GlobalDefinitions.Nationality nationality)
+    public static bool StackingLimitExceeded(GameObject hex, GlobalDefinitions.Nationality nationality)
     {
         bool hqPresent;
         if ((nationality == Nationality.German) && (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > GermanStackingLimit))
@@ -641,7 +646,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <param name="hex"></param>
-    public static void putUnitOnHex(GameObject unit, GameObject hex)
+    public static void PutUnitOnHex(GameObject unit, GameObject hex)
     {
         float offset = 0.5f;
 
@@ -678,7 +683,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <param name="hex"></param>
-    public static void removeUnitFromHex(GameObject unit, GameObject hex)
+    public static void RemoveUnitFromHex(GameObject unit, GameObject hex)
     {
         if ((unit != null) && (hex != null))
         {
@@ -705,15 +710,15 @@ public class GlobalDefinitions : MonoBehaviour
 
             // Need to update the ZOC of the hex since the unit that was removed was the last unit on the hex
             else
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().updateZOC(hex);
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().UpdateZOC(hex);
         }
         else
         {
             // Not sure why but I keep getting null exceptions in this routine
             if (unit == null)
-                writeToLogFile("removeUnitFromHex: unit passed is null");
+                WriteToLogFile("removeUnitFromHex: unit passed is null");
             if (hex == null)
-                writeToLogFile("removeUnitFromHex: hex passed is null");
+                WriteToLogFile("removeUnitFromHex: hex passed is null");
         }
     }
 
@@ -728,7 +733,7 @@ public class GlobalDefinitions : MonoBehaviour
         GameObject river = new GameObject("DrawBlueLineBetweenTwoPoints");
 
         if (lineMaterial == null)
-            writeToLogFile("DrawBlueLineBetweenTwoPoints: ERROR - Material returned null from Resources");
+            WriteToLogFile("DrawBlueLineBetweenTwoPoints: ERROR - Material returned null from Resources");
 
         river.layer = LayerMask.NameToLayer("River");
         river.name = "River";
@@ -756,7 +761,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="side"></param>
     /// <returns></returns>
-    public static int returnHexSideCounterClockwise(int side)
+    public static int ReturnHexSideCounterClockwise(int side)
     {
         if (side == 0)
             return (5);
@@ -769,7 +774,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="side"></param>
     /// <returns></returns>
-    public static int returnHexSide2CounterClockwise(int side)
+    public static int ReturnHexSide2CounterClockwise(int side)
     {
         if (side == 0)
             return (4);
@@ -784,7 +789,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="side"></param>
     /// <returns></returns>
-    public static int returnHexSideClockwise(int side)
+    public static int ReturnHexSideClockwise(int side)
     {
         if (side == 5)
             return (0);
@@ -797,7 +802,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="side"></param>
     /// <returns></returns>
-    public static int returnHex2SideClockwise(int side)
+    public static int ReturnHex2SideClockwise(int side)
     {
         if (side == 5)
             return (1);
@@ -812,7 +817,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="side"></param>
     /// <returns></returns>
-    public static int returnHexSideOpposide(int side)
+    public static int ReturnHexSideOpposide(int side)
     {
         if (side < 3)
             return (side + 3);
@@ -825,7 +830,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="side"></param>
     /// <returns></returns>
-    public static int returnHex4SideClockwise(int side)
+    public static int ReturnHex4SideClockwise(int side)
     {
         if (side == 5)
             return (3);
@@ -845,7 +850,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="hex1"></param>
     /// <param name="hex2"></param>
     /// <returns></returns>
-    public static bool twoHexesAdjacent(GameObject hex1, GameObject hex2)
+    public static bool TwoHexesAdjacent(GameObject hex1, GameObject hex2)
     {
         foreach (HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
             if (hex1.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides] != null)
@@ -860,7 +865,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="unit1"></param>
     /// <param name="unit2"></param>
     /// <returns></returns>
-    public static bool twoUnitsAdjacent(GameObject unit1, GameObject unit2)
+    public static bool TwoUnitsAdjacent(GameObject unit1, GameObject unit2)
     {
         foreach (HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
         {
@@ -885,13 +890,13 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="attackingUnits"></param>
     /// <param name="arrayIndex"></param>
     /// <returns></returns>
-    public static float calculateAttackFactor(List<GameObject> attackingUnits, bool addCombatAirSupport)
+    public static float CalculateAttackFactor(List<GameObject> attackingUnits, bool addCombatAirSupport)
     {
         float totalAttackFactors = 0f;
 
         foreach (GameObject unit in attackingUnits)
             if (unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
-                totalAttackFactors += returnAttackFactor(unit);
+                totalAttackFactors += ReturnAttackFactor(unit);
 
         // Check if this attack has air support for the attacker
         if (addCombatAirSupport)
@@ -905,13 +910,13 @@ public class GlobalDefinitions : MonoBehaviour
         return (totalAttackFactors);
     }
 
-    public static float calculateAttackFactorWithoutAirSupport(List<GameObject> attackingUnits)
+    public static float CalculateAttackFactorWithoutAirSupport(List<GameObject> attackingUnits)
     {
         float totalAttackFactors = 0f;
 
         foreach (GameObject unit in attackingUnits)
             if (unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
-                totalAttackFactors += returnAttackFactor(unit);
+                totalAttackFactors += ReturnAttackFactor(unit);
 
         // Check if the total factors is 0 (this is due to a static unit out of supply that must attack).  If it is return 1 since 
         // accomodating a 0 attack factor isn't worth it
@@ -922,14 +927,14 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
 
-    public static int calculateDefenseFactorWithoutAirSupport(List<GameObject> defendingUnits, List<GameObject> attackingUnits)
+    public static int CalculateDefenseFactorWithoutAirSupport(List<GameObject> defendingUnits, List<GameObject> attackingUnits)
     {
         int totalDefendFactors = 0;
 
         foreach (GameObject unit in defendingUnits)
         {
             if (unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
-                totalDefendFactors += calculateUnitDefendingFactor(unit, attackingUnits);
+                totalDefendFactors += CalculateUnitDefendingFactor(unit, attackingUnits);
         }
         return (totalDefendFactors);
     }
@@ -940,7 +945,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="defendingUnits"></param>
     /// <param name="attackingUnits"></param>
     /// <returns></returns>
-    public static int calculateDefenseFactor(List<GameObject> defendingUnits, List<GameObject> attackingUnits)
+    public static int CalculateDefenseFactor(List<GameObject> defendingUnits, List<GameObject> attackingUnits)
     {
         int totalDefendFactors = 0;
 
@@ -949,7 +954,7 @@ public class GlobalDefinitions : MonoBehaviour
             //GlobalDefinitions.writeToLogFile("calculateDefenseFactor: defending unit " + unit.name + " isCommittedToAnAttack = " + unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack);
             //GlobalDefinitions.writeToLogFile("calculateDefenseFactor:   calculateUnitDefendingFactor returns = " + calculateUnitDefendingFactor(unit, attackingUnits));
             if (unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
-                totalDefendFactors += calculateUnitDefendingFactor(unit, attackingUnits);
+                totalDefendFactors += CalculateUnitDefendingFactor(unit, attackingUnits);
         }
         foreach (GameObject unit in defendingUnits)
             if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().closeDefenseSupport)
@@ -963,7 +968,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="unit"></param>
     /// <param name="attackingUnits"></param>
     /// <returns></returns>
-    public static int calculateUnitDefendingFactor(GameObject unit, List<GameObject> attackingUnits)
+    public static int CalculateUnitDefendingFactor(GameObject unit, List<GameObject> attackingUnits)
     {
         bool onlyCrossRiverAttack = true;
         int commttedAttackerNumber = 0;
@@ -1016,27 +1021,27 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="attackingUnits"></param>
     /// <param name="addCombatAirSupport"></param>
     /// <returns></returns>
-    public static int returnCombatOdds(List<GameObject> defendingUnits, List<GameObject> attackingUnits, bool attackAirSupport)
+    public static int ReturnCombatOdds(List<GameObject> defendingUnits, List<GameObject> attackingUnits, bool attackAirSupport)
     {
         // This routine returns a positive integer when the attackers are stronger than the defender and a negative number when the defenders are stronger than the attackers
         int odds;
         // Odds are always rounded to the defenders advantage.  For example an attack 4 to defender 7 is 1:2
         // while an attack 7 to a defender 4 is 1:1
-        if ((calculateAttackFactor(attackingUnits, attackAirSupport) == 0) || (calculateDefenseFactor(defendingUnits, attackingUnits) == 0))
+        if ((CalculateAttackFactor(attackingUnits, attackAirSupport) == 0) || (CalculateDefenseFactor(defendingUnits, attackingUnits) == 0))
         {
-            writeToLogFile(
+            WriteToLogFile(
                     "returnCombatOdds: returning 0 - attackFactor = " +
-                    calculateAttackFactor(attackingUnits, attackAirSupport) +
-                    " - defense factor = " + calculateDefenseFactor(defendingUnits, attackingUnits));
+                    CalculateAttackFactor(attackingUnits, attackAirSupport) +
+                    " - defense factor = " + CalculateDefenseFactor(defendingUnits, attackingUnits));
             return (0);
         }
-        if (calculateDefenseFactor(defendingUnits, attackingUnits) >
-                calculateAttackFactor(attackingUnits, attackAirSupport))
+        if (CalculateDefenseFactor(defendingUnits, attackingUnits) >
+                CalculateAttackFactor(attackingUnits, attackAirSupport))
         {
-            if ((calculateDefenseFactor(defendingUnits, attackingUnits) % calculateAttackFactor(attackingUnits, attackAirSupport)) > 0)
-                odds = (calculateDefenseFactor(defendingUnits, attackingUnits) / (int)calculateAttackFactor(attackingUnits, attackAirSupport)) + 1;
+            if ((CalculateDefenseFactor(defendingUnits, attackingUnits) % CalculateAttackFactor(attackingUnits, attackAirSupport)) > 0)
+                odds = (CalculateDefenseFactor(defendingUnits, attackingUnits) / (int)CalculateAttackFactor(attackingUnits, attackAirSupport)) + 1;
             else
-                odds = (calculateDefenseFactor(defendingUnits, attackingUnits) / (int)calculateAttackFactor(attackingUnits, attackAirSupport));
+                odds = (CalculateDefenseFactor(defendingUnits, attackingUnits) / (int)CalculateAttackFactor(attackingUnits, attackAirSupport));
             // 1:6 is the worst odds avaialble.  All odds greater than this will be returned as 7:1.
             if (odds > 6)
                 odds = 7;
@@ -1045,7 +1050,7 @@ public class GlobalDefinitions : MonoBehaviour
         }
         else
         {
-            odds = (int)calculateAttackFactor(attackingUnits, attackAirSupport) / calculateDefenseFactor(defendingUnits, attackingUnits);
+            odds = (int)CalculateAttackFactor(attackingUnits, attackAirSupport) / CalculateDefenseFactor(defendingUnits, attackingUnits);
             if (odds > 6)
                 odds = 7;
             return (odds);
@@ -1058,20 +1063,20 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="defendingUnits"></param>
     /// <param name="attackingUnits"></param>
     /// <returns></returns>
-    public static int returnCombatGUICombatOdds(List<GameObject> defendingUnits, List<GameObject> attackingUnits)
+    public static int ReturnCombatGUICombatOdds(List<GameObject> defendingUnits, List<GameObject> attackingUnits)
     {
         // This routine returns a positive integer when the attackers are stronger than the defender and a negative number when the defenders are stronger than the attackers
         int odds;
         // Odds are always rounded to the defenders advantage.  For example an attack 4 to defender 7 is 1:2
         // while an attack 7 to a defender 4 is 1:1
-        if ((calculateAttackFactorWithoutAirSupport(attackingUnits) == 0) || (calculateDefenseFactor(defendingUnits, attackingUnits) == 0))
+        if ((CalculateAttackFactorWithoutAirSupport(attackingUnits) == 0) || (CalculateDefenseFactor(defendingUnits, attackingUnits) == 0))
             return (0);
-        if (calculateDefenseFactor(defendingUnits, attackingUnits) > calculateAttackFactorWithoutAirSupport(attackingUnits))
+        if (CalculateDefenseFactor(defendingUnits, attackingUnits) > CalculateAttackFactorWithoutAirSupport(attackingUnits))
         {
-            if ((calculateDefenseFactor(defendingUnits, attackingUnits) % calculateAttackFactorWithoutAirSupport(attackingUnits)) > 0)
-                odds = (calculateDefenseFactor(defendingUnits, attackingUnits) / (int)calculateAttackFactorWithoutAirSupport(attackingUnits)) + 1;
+            if ((CalculateDefenseFactor(defendingUnits, attackingUnits) % CalculateAttackFactorWithoutAirSupport(attackingUnits)) > 0)
+                odds = (CalculateDefenseFactor(defendingUnits, attackingUnits) / (int)CalculateAttackFactorWithoutAirSupport(attackingUnits)) + 1;
             else
-                odds = (calculateDefenseFactor(defendingUnits, attackingUnits) / (int)calculateAttackFactorWithoutAirSupport(attackingUnits));
+                odds = (CalculateDefenseFactor(defendingUnits, attackingUnits) / (int)CalculateAttackFactorWithoutAirSupport(attackingUnits));
             // 1:6 is the worst odds avaialble.  All odds greater than this will be returned as 1:7.
             if (odds > 6)
                 odds = 7;
@@ -1080,7 +1085,7 @@ public class GlobalDefinitions : MonoBehaviour
         }
         else
         {
-            odds = (int)calculateAttackFactorWithoutAirSupport(attackingUnits) / calculateDefenseFactor(defendingUnits, attackingUnits);
+            odds = (int)CalculateAttackFactorWithoutAirSupport(attackingUnits) / CalculateDefenseFactor(defendingUnits, attackingUnits);
             if (odds > 6)
                 odds = 7;
             return (odds);
@@ -1092,7 +1097,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="odds"></param>
     /// <returns></returns>
-    public static string convertOddsToString(int odds)
+    public static string ConvertOddsToString(int odds)
     {
         if (odds == 0)
             return (" ");
@@ -1112,7 +1117,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// Returns true if there were successful attacks last turn
     /// </summary>
     /// <returns></returns>
-    public static bool successfulAttacksLastTurn()
+    public static bool SuccessfulAttacksLastTurn()
     {
         if (combatResultsFromLastTurn.Count == 0)
             return (false);
@@ -1129,7 +1134,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="nationality"></param>
     /// <returns></returns>
-    public static Nationality returnOppositeNationality(Nationality nationality)
+    public static Nationality ReturnOppositeNationality(Nationality nationality)
     {
         if (nationality == Nationality.Allied)
             return (Nationality.German);
@@ -1141,12 +1146,12 @@ public class GlobalDefinitions : MonoBehaviour
     /// Takes a unit from the board and moves it to the OOB sheet (the dead pile)
     /// </summary>
     /// <param name="unit"></param>
-    public static void moveUnitToDeadPile(GameObject unit)
+    public static void MoveUnitToDeadPile(GameObject unit)
     {
-        writeToLogFile("moveUnitToDeadPile: unit " + unit.name + " is being eliminated");
+        WriteToLogFile("moveUnitToDeadPile: unit " + unit.name + " is being eliminated");
 
         // Remove the unit from the hex
-        removeUnitFromHex(unit, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+        RemoveUnitFromHex(unit, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
 
         // The removeUnitFromHex routine takes care of a lot of the fields but we need to remove others because
         // through testing I have encountered issues when the fields are not reset.
@@ -1168,7 +1173,7 @@ public class GlobalDefinitions : MonoBehaviour
             germanFactorsEliminated += (unit.GetComponent<UnitDatabaseFields>().attackFactor + unit.GetComponent<UnitDatabaseFields>().defenseFactor);
 
         // Move the unit to the order of battle sheet
-        returnUnitToOOBShet(unit);
+        ReturnUnitToOOBShet(unit);
 
         // Reset flags
         unit.GetComponent<UnitDatabaseFields>().inSupply = true;
@@ -1177,13 +1182,21 @@ public class GlobalDefinitions : MonoBehaviour
         unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
 
         // Make sure highlighting is turned off on the unit
-        unhighlightUnit(unit);
+        UnhighlightUnit(unit);
 
         // Set the flag to indicate the unit is eliminated
         unit.GetComponent<UnitDatabaseFields>().unitEliminated = true;
     }
 
-    public static GameObject createGUICanvas(string name, float panelWidth, float panelHeight, ref Canvas canvasObject)
+    /// <summary>
+    /// Sets up a canvas - not suitable for scrolling
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="panelWidth"></param>
+    /// <param name="panelHeight"></param>
+    /// <param name="canvasObject"></param>
+    /// <returns></returns>
+    public static GameObject CreateGUICanvas(string name, float panelWidth, float panelHeight, ref Canvas canvasObject)
     {
         GameObject guiInstance = new GameObject(name);
         guiList.Add(guiInstance);
@@ -1204,15 +1217,24 @@ public class GlobalDefinitions : MonoBehaviour
         return (guiInstance);
     }
 
-    public static GameObject createScrollingGUICanvas(string name, float panelWidth, float panelHeight, ref GameObject scrollContentPanel, ref Canvas canvasObject)
+    /// <summary>
+    /// Creates a canvas that is setup for scrolling
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="panelWidth"></param>
+    /// <param name="panelHeight"></param>
+    /// <param name="scrollContentPanel"></param>
+    /// <param name="canvasObject"></param>
+    /// <returns></returns>
+    public static GameObject CreateScrollingGUICanvas(string name, float panelWidth, float panelHeight, ref GameObject scrollContentPanel, ref Canvas canvasObject)
     {
-        writeToLogFile("createScrollingGUICanvas: screen height = " + UnityEngine.Screen.height);
+        WriteToLogFile("createScrollingGUICanvas: screen height = " + UnityEngine.Screen.height);
 
         if (panelHeight < (UnityEngine.Screen.height - 50))
         {
-            writeToLogFile("createScrollingGUICanvas: panel height = " + panelHeight);
+            WriteToLogFile("createScrollingGUICanvas: panel height = " + panelHeight);
             // The height is small enough that scrolling isn't needed
-            return createGUICanvas(name, panelWidth, panelHeight, ref canvasObject);
+            return CreateGUICanvas(name, panelWidth, panelHeight, ref canvasObject);
         }
 
         GameObject squareImage = (GameObject)Resources.Load("SquareObject");
@@ -1286,7 +1308,16 @@ public class GlobalDefinitions : MonoBehaviour
         return (guiInstance);
     }
 
-    public static UnityEngine.UI.Button createButton(string name, string buttonText, float xPosition, float yPosition, Canvas canvasInstance)
+    /// <summary>
+    /// Creates a button for a gui
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="buttonText"></param>
+    /// <param name="xPosition"></param>
+    /// <param name="yPosition"></param>
+    /// <param name="canvasInstance"></param>
+    /// <returns></returns>
+    public static UnityEngine.UI.Button CreateButton(string name, string buttonText, float xPosition, float yPosition, Canvas canvasInstance)
     {
         GameObject tempPrefab;
         UnityEngine.UI.Button tempButton;
@@ -1304,7 +1335,16 @@ public class GlobalDefinitions : MonoBehaviour
         return (tempButton);
     }
 
-    public static Slider createSlider(string name, string sliderType, float xPosition, float yPosition, Canvas canvasInstance)
+    /// <summary>
+    /// Creates a slider for a scrolling canvas
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="sliderType"></param>
+    /// <param name="xPosition"></param>
+    /// <param name="yPosition"></param>
+    /// <param name="canvasInstance"></param>
+    /// <returns></returns>
+    public static Slider CreateSlider(string name, string sliderType, float xPosition, float yPosition, Canvas canvasInstance)
     {
         GameObject tempPrefab;
         Slider tempSlider;
@@ -1319,7 +1359,18 @@ public class GlobalDefinitions : MonoBehaviour
         return (tempSlider);
     }
 
-    public static GameObject createText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, Canvas canvasInstance)
+    /// <summary>
+    /// Creates a text box for a gui
+    /// </summary>
+    /// <param name="textMessage"></param>
+    /// <param name="name"></param>
+    /// <param name="textWidth"></param>
+    /// <param name="textHeight"></param>
+    /// <param name="textX"></param>
+    /// <param name="textY"></param>
+    /// <param name="canvasInstance"></param>
+    /// <returns></returns>
+    public static GameObject CreateText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, Canvas canvasInstance)
     {
         GameObject textGameObject = new GameObject(name);
         textGameObject.transform.SetParent(canvasInstance.transform, false);
@@ -1334,7 +1385,17 @@ public class GlobalDefinitions : MonoBehaviour
         return (textGameObject);
     }
 
-    public static void createHexValueText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, Canvas canvasInstance)
+    /// <summary>
+    /// Used for debugging AI, creates a text value on top of the hexes
+    /// </summary>
+    /// <param name="textMessage"></param>
+    /// <param name="name"></param>
+    /// <param name="textWidth"></param>
+    /// <param name="textHeight"></param>
+    /// <param name="textX"></param>
+    /// <param name="textY"></param>
+    /// <param name="canvasInstance"></param>
+    public static void CreateHexValueText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, Canvas canvasInstance)
     {
         GameObject textGameObject = new GameObject(name);
         textGameObject.transform.SetParent(canvasInstance.transform, false);
@@ -1349,14 +1410,26 @@ public class GlobalDefinitions : MonoBehaviour
         tempText.color = Color.black;
     }
 
-    public static void updateHexValueText(GameObject hex)
+    /// <summary>
+    /// Updates the hex value shown - for AI debugging
+    /// </summary>
+    /// <param name="hex"></param>
+    public static void UpdateHexValueText(GameObject hex)
     {
         GameObject textGameObject = GameObject.Find(hex.name + "HexValueText");
         textGameObject.GetComponent<Text>().text = Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexValue);
 
     }
 
-    public static InputField createInputField(string name, float xPosition, float yPosition, Canvas canvasInstance)
+    /// <summary>
+    /// Creates an input filed for a gui
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="xPosition"></param>
+    /// <param name="yPosition"></param>
+    /// <param name="canvasInstance"></param>
+    /// <returns></returns>
+    public static InputField CreateInputField(string name, float xPosition, float yPosition, Canvas canvasInstance)
     {
         GameObject tempPrefab;
         InputField tempInputField;
@@ -1373,19 +1446,37 @@ public class GlobalDefinitions : MonoBehaviour
         return (tempInputField);
     }
 
-    public static Toggle createUnitTogglePair(string name, float xPosition, float yPosition, Canvas canvasInstance, GameObject unit)
+    /// <summary>
+    /// Creates a unit with a toggle - for selection in a gui
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="xPosition"></param>
+    /// <param name="yPosition"></param>
+    /// <param name="canvasInstance"></param>
+    /// <param name="unit"></param>
+    /// <returns></returns>
+    public static Toggle CreateUnitTogglePair(string name, float xPosition, float yPosition, Canvas canvasInstance, GameObject unit)
     {
         GameObject tempToggle;
 
-        createUnitImage(unit, name + "Image", xPosition, yPosition, canvasInstance);
-        tempToggle = createToggle(name, xPosition, yPosition - GUIUNITIMAGESIZE, canvasInstance);
+        CreateUnitImage(unit, name + "Image", xPosition, yPosition, canvasInstance);
+        tempToggle = CreateToggle(name, xPosition, yPosition - GUIUNITIMAGESIZE, canvasInstance);
 
         tempToggle.name = name;
 
         return (tempToggle.GetComponent<Toggle>());
     }
 
-    public static GameObject createUnitImage(GameObject unit, string name, float xPosition, float yPosition, Canvas canvasInstance)
+    /// <summary>
+    /// Creates an image of a specific unit for a gui
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="name"></param>
+    /// <param name="xPosition"></param>
+    /// <param name="yPosition"></param>
+    /// <param name="canvasInstance"></param>
+    /// <returns></returns>
+    public static GameObject CreateUnitImage(GameObject unit, string name, float xPosition, float yPosition, Canvas canvasInstance)
     {
         GameObject tempPrefab;
         Image tempImage;
@@ -1399,7 +1490,15 @@ public class GlobalDefinitions : MonoBehaviour
         return (tempImage.gameObject);
     }
 
-    public static GameObject createToggle(string name, float xPosition, float yPosition, Canvas canvasInstance)
+    /// <summary>
+    /// Creates a toggle for a gui
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="xPosition"></param>
+    /// <param name="yPosition"></param>
+    /// <param name="canvasInstance"></param>
+    /// <returns></returns>
+    public static GameObject CreateToggle(string name, float xPosition, float yPosition, Canvas canvasInstance)
     {
         GameObject tempPrefab;
         Toggle tempToggle;
@@ -1416,7 +1515,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// Highlights the hex yellow - used for movement
     /// </summary>
     /// <param name="hex"></param>
-    public static void highlightHexForMovement(GameObject hex)
+    public static void HighlightHexForMovement(GameObject hex)
     {
         Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
         hex.transform.localScale = new Vector2(0.75f, 0.75f);
@@ -1425,7 +1524,11 @@ public class GlobalDefinitions : MonoBehaviour
         targetRenderer.sortingOrder = 2;
     }
 
-    public static void highlightOverstackedHex(GameObject hex)
+    /// <summary>
+    /// Used to highlight a hex passed that is overstacked
+    /// </summary>
+    /// <param name="hex"></param>
+    public static void HighlightOverstackedHex(GameObject hex)
     {
         Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
         hex.transform.localScale = new Vector2(0.75f, 0.75f);
@@ -1438,7 +1541,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// Highlights the hex blue - used for supply
     /// </summary>
     /// <param name="hex"></param>
-    public static void highlightHexInSupply(GameObject hex)
+    public static void HighlightHexInSupply(GameObject hex)
     {
         // Don't highlight a hex as in supply if a unit is on the hex - looks bad and isn't needed
         // If a unit is on a hex and it's out of supply it is highlighted black
@@ -1455,10 +1558,10 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
     /// <summary>
-    /// Takes away the highlight of a hex that was highlighted
+    /// Takes away all the highlights that should be removed of a hex
     /// </summary>
     /// <param name="hex"></param>
-    public static void unhighlightHex(GameObject hex)
+    public static void UnhighlightHex(GameObject hex)
     {
         Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
 
@@ -1469,8 +1572,8 @@ public class GlobalDefinitions : MonoBehaviour
 
         // Check for highlights that need to remain - air targets and supply
 
-        if (displayAlliedSupplyStatus && hexInAlliedSupply(hex))
-            highlightHexInSupply(hex);
+        if (displayAlliedSupplyStatus && HexInAlliedSupply(hex))
+            HighlightHexInSupply(hex);
 
         else if (hex.GetComponent<HexDatabaseFields>().successfullyInvaded)
         {
@@ -1494,9 +1597,9 @@ public class GlobalDefinitions : MonoBehaviour
             targetRenderer.sortingOrder = 2;
         }
         // If it is an Allied repalcement hex it is highlighted green - Rotterdam 8,23 Boulogne 14,16 Brest 22,1
-        else if (((hex == getHexAtXY(22, 1)) && !alliedCapturedBrest) ||
-                ((hex == getHexAtXY(14, 16)) && !alliedCapturedBoulogne) ||
-                ((hex == getHexAtXY(8, 23)) && !alliedCapturedRotterdam))
+        else if (((hex == GetHexAtXY(22, 1)) && !alliedCapturedBrest) ||
+                ((hex == GetHexAtXY(14, 16)) && !alliedCapturedBoulogne) ||
+                ((hex == GetHexAtXY(8, 23)) && !alliedCapturedRotterdam))
         {
             hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";
@@ -1510,7 +1613,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// a user turns off the supply highlight in the middle of a move.
     /// </summary>
     /// <param name="hex"></param>
-    public static void unhighlightHexSupplyRange(GameObject hex)
+    public static void UnhighlightHexSupplyRange(GameObject hex)
     {
 
         // Only change the highlighting if the hex is highlighted for supply
@@ -1525,8 +1628,8 @@ public class GlobalDefinitions : MonoBehaviour
 
             // Check for highlights that need to remain - air targets and supply
 
-            if (displayAlliedSupplyStatus && hexInAlliedSupply(hex))
-                highlightHexInSupply(hex);
+            if (displayAlliedSupplyStatus && HexInAlliedSupply(hex))
+                HighlightHexInSupply(hex);
 
             else if (hex.GetComponent<HexDatabaseFields>().successfullyInvaded)
             {
@@ -1550,9 +1653,9 @@ public class GlobalDefinitions : MonoBehaviour
                 targetRenderer.sortingOrder = 2;
             }
             // If it is an Allied repalcement hex it is highlighted green - Rotterdam 8,23 Boulogne 14,16 Brest 22,1
-            else if (((hex == getHexAtXY(22, 1)) && !alliedCapturedBrest) ||
-                ((hex == getHexAtXY(14, 16)) && !alliedCapturedBoulogne) ||
-                ((hex == getHexAtXY(8, 23)) && !alliedCapturedRotterdam))
+            else if (((hex == GetHexAtXY(22, 1)) && !alliedCapturedBrest) ||
+                ((hex == GetHexAtXY(14, 16)) && !alliedCapturedBoulogne) ||
+                ((hex == GetHexAtXY(8, 23)) && !alliedCapturedRotterdam))
             {
                 hex.transform.localScale = new Vector2(0.75f, 0.75f);
                 targetRenderer.sortingLayerName = "Hex";
@@ -1568,7 +1671,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="friendlyNationality"></param>
     /// <returns></returns>
-    public static bool hexInEnemyZOC(GameObject hex, Nationality friendlyNationality)
+    public static bool HexInEnemyZOC(GameObject hex, Nationality friendlyNationality)
     {
         if (friendlyNationality == Nationality.Allied)
         {
@@ -1584,12 +1687,12 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
     /// <summary>
-    /// This routine will return true if the hex is in the ZOC of the opposite nationality passed
+    /// This routine will return true if the hex is in the ZOC of the nationality passed
     /// </summary>
     /// <param name="hex"></param>
     /// <param name="nationality"></param>
     /// <returns></returns>
-    public static bool hexInFriendlyZOC(GameObject hex, Nationality nationality)
+    public static bool HexInFriendlyZOC(GameObject hex, Nationality nationality)
     {
         if (nationality == Nationality.Allied)
         {
@@ -1610,7 +1713,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="attackingHex"></param>
     /// <param name="defendingHex"></param>
     /// <returns></returns>
-    public static bool checkForRiverBetweenTwoHexes(GameObject attackingHex, GameObject defendingHex)
+    public static bool CheckForRiverBetweenTwoHexes(GameObject attackingHex, GameObject defendingHex)
     {
         // Note that this routine does not assume that the two hexes are neighbors but if they aren't a false will be returned
         foreach (HexSides hexSide in Enum.GetValues(typeof(HexSides)))
@@ -1623,8 +1726,12 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
 
-
-    public static bool hexInAlliedSupply(GameObject hex)
+    /// <summary>
+    /// Returns true if Allied supply available on the hex passed
+    /// </summary>
+    /// <param name="hex"></param>
+    /// <returns></returns>
+    public static bool HexInAlliedSupply(GameObject hex)
     {
         if (hex.GetComponent<HexDatabaseFields>().supplySources.Count > 0)
             return true;
@@ -1638,7 +1745,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static float returnAttackFactor(GameObject unit)
+    public static float ReturnAttackFactor(GameObject unit)
     {
         if (unit.GetComponent<UnitDatabaseFields>().inSupply)
         {
@@ -1657,7 +1764,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// to determine if it should be white or gray
     /// </summary>
     /// <param name="unit"></param>
-    public static void unhighlightUnit(GameObject unit)
+    public static void UnhighlightUnit(GameObject unit)
     {
         if (unit.GetComponent<UnitDatabaseFields>().inSupply)
             unit.GetComponent<SpriteRenderer>().material.color = Color.white;
@@ -1669,7 +1776,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// Highlights unit based on whether it is a German or Allied unit since they need different colors
     /// </summary>
     /// <param name="unit"></param>
-    public static void highlightUnit(GameObject unit)
+    public static void HighlightUnit(GameObject unit)
     {
         if (unit.GetComponent<UnitDatabaseFields>().nationality == Nationality.Allied)
             unit.GetComponent<SpriteRenderer>().material.color = Color.red;
@@ -1682,7 +1789,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="hex"></param>
     /// <returns></returns>
-    public static int numberHQOnHex(GameObject hex)
+    public static int NumberHQOnHex(GameObject hex)
     {
         int numberOnHex = 0;
         for (int index = 0; index < hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count; index++)
@@ -1696,7 +1803,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="inlandPort"></param>
     /// <returns></returns>
-    public static bool checkIfInlandPortClear(GameObject inlandPort)
+    public static bool CheckIfInlandPortClear(GameObject inlandPort)
     {
         foreach (GameObject hex in inlandPort.GetComponent<HexDatabaseFields>().controlHexes)
             if ((hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
@@ -1708,7 +1815,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// Pulls up gui for the player to select new or saved game or run the command file
     /// </summary>
-    public static void getNewOrSavedGame()
+    public static void GetNewOrSavedGame()
     {
         UnityEngine.UI.Button okButton;
         GameObject tempText;
@@ -1716,13 +1823,13 @@ public class GlobalDefinitions : MonoBehaviour
         float panelWidth = 6 * GUIUNITIMAGESIZE;
         float panelHeight = 5 * GUIUNITIMAGESIZE;
         Canvas getNewSaveGameCanvas = new Canvas();
-        createGUICanvas("NewSaveGameCanvas",
+        CreateGUICanvas("NewSaveGameCanvas",
                 panelWidth,
                 panelHeight,
                 ref getNewSaveGameCanvas);
 
         // This gui has two columns, selection toggles and desription
-        tempText = createText("Select", "NewSaveGameSelectText",
+        tempText = CreateText("Select", "NewSaveGameSelectText",
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
@@ -1730,7 +1837,7 @@ public class GlobalDefinitions : MonoBehaviour
                 getNewSaveGameCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
 
-        tempText = createText("Game Type", "NewSaveGameDescriptionText",
+        tempText = CreateText("Game Type", "NewSaveGameDescriptionText",
                 4 * GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
@@ -1739,12 +1846,12 @@ public class GlobalDefinitions : MonoBehaviour
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
 
         // Now list the four game modes
-        newGameToggle = createToggle("NewGameToggle",
+        newGameToggle = CreateToggle("NewGameToggle",
                 GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
                 3.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getNewSaveGameCanvas);
 
-        tempText = createText("New Game", "NewGameDescriptionText",
+        tempText = CreateText("New Game", "NewGameDescriptionText",
                 4 * GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
@@ -1752,14 +1859,14 @@ public class GlobalDefinitions : MonoBehaviour
                 getNewSaveGameCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
         newGameToggle.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
-        newGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => newGameToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().toggleChange());
+        newGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => newGameToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().ToggleChange());
 
-        savedGameToggle = createToggle("SavedGameToggle",
+        savedGameToggle = CreateToggle("SavedGameToggle",
                 GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
                 2.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getNewSaveGameCanvas);
 
-        tempText = createText("Saved Game", "SavedGameDescriptionText",
+        tempText = CreateText("Saved Game", "SavedGameDescriptionText",
                 4 * GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
@@ -1767,14 +1874,14 @@ public class GlobalDefinitions : MonoBehaviour
                 getNewSaveGameCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
         savedGameToggle.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
-        savedGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => savedGameToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().toggleChange());
+        savedGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => savedGameToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().ToggleChange());
 
 
-        commandFileToggle = createToggle("commandFileToggle",
+        commandFileToggle = CreateToggle("commandFileToggle",
                 GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
                 1.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getNewSaveGameCanvas);
-        tempText = createText("Restart Last Game Played", "CommandFileDescriptionText",
+        tempText = CreateText("Restart Last Game Played", "CommandFileDescriptionText",
                 4 * GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
@@ -1782,15 +1889,15 @@ public class GlobalDefinitions : MonoBehaviour
                 getNewSaveGameCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
         commandFileToggle.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
-        commandFileToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => commandFileToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().toggleChange());
+        commandFileToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => commandFileToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().ToggleChange());
 
         // Add an OK button
-        okButton = createButton("getNewSaveGameOKButton", "OK",
+        okButton = CreateButton("getNewSaveGameOKButton", "OK",
                 GUIUNITIMAGESIZE * 3 - (0.5f * panelWidth),
                 0.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getNewSaveGameCanvas);
         okButton.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
-        okButton.onClick.AddListener(okButton.GetComponent<GameTypeSelectionButtonRoutines>().newSavedGameOK);
+        okButton.onClick.AddListener(okButton.GetComponent<GameTypeSelectionButtonRoutines>().NewSavedGameOK);
     }
 
     /// <summary>
@@ -1798,47 +1905,50 @@ public class GlobalDefinitions : MonoBehaviour
     /// This version takes two delegates passed for execution when a button is clicked
     /// </summary>
     /// <param name="question"></param>
-    /// <returns></returns>
-    public static void askUserYesNoQuestion(string question, ref UnityEngine.UI.Button yesButton, ref UnityEngine.UI.Button noButton, UnityEngine.Events.UnityAction yesMethod, UnityEngine.Events.UnityAction noMethod)
+    /// <param name="yesButton"></param>
+    /// <param name="noButton"></param>
+    /// <param name="yesMethod"></param>
+    /// <param name="noMethod"></param>
+    public static void AskUserYesNoQuestion(string question, ref UnityEngine.UI.Button yesButton, ref UnityEngine.UI.Button noButton, UnityEngine.Events.UnityAction yesMethod, UnityEngine.Events.UnityAction noMethod)
     {
         Canvas questionCanvas = new Canvas();
         float panelWidth = 2 * GUIUNITIMAGESIZE;
         float panelHeight = 3 * GUIUNITIMAGESIZE;
-        createGUICanvas("YesNoCanvas", panelWidth, panelHeight, ref questionCanvas);
-        createText(question, "YesNoQuestionText",
+        CreateGUICanvas("YesNoCanvas", panelWidth, panelHeight, ref questionCanvas);
+        CreateText(question, "YesNoQuestionText",
             2 * GUIUNITIMAGESIZE,
             2 * GUIUNITIMAGESIZE,
             GUIUNITIMAGESIZE - 0.5f * panelWidth,
             2 * GUIUNITIMAGESIZE - 0.5f * panelHeight,
             questionCanvas);
 
-        yesButton = createButton("YesButton", "Yes",
+        yesButton = CreateButton("YesButton", "Yes",
             0.5f * GUIUNITIMAGESIZE - 0.5f * panelWidth,
             0.5f * GUIUNITIMAGESIZE - 0.5f * panelHeight,
             questionCanvas);
         yesButton.gameObject.AddComponent<YesNoButtonRoutines>();
         yesButton.gameObject.GetComponent<YesNoButtonRoutines>().yesAction = yesMethod;
-        yesButton.onClick.AddListener(yesButton.GetComponent<YesNoButtonRoutines>().yesButtonSelected);
+        yesButton.onClick.AddListener(yesButton.GetComponent<YesNoButtonRoutines>().YesButtonSelected);
 
-        noButton = createButton("NoButton", "No",
+        noButton = CreateButton("NoButton", "No",
             1.5f * GUIUNITIMAGESIZE - 0.5f * panelWidth,
             0.5f * GUIUNITIMAGESIZE - 0.5f * panelHeight,
             questionCanvas);
         noButton.gameObject.AddComponent<YesNoButtonRoutines>();
         noButton.gameObject.GetComponent<YesNoButtonRoutines>().noAction = noMethod;
-        noButton.onClick.AddListener(noButton.GetComponent<YesNoButtonRoutines>().noButtonSelected);
+        noButton.onClick.AddListener(noButton.GetComponent<YesNoButtonRoutines>().NoButtonSelected);
     }
 
     /// <summary>
     /// Pulls up a gui for the user to select which side to play - German or Ally
     /// </summary>
-    public static void askUserWhichSideToPlay()
+    public static void AskUserWhichSideToPlay()
     {
         Canvas questionCanvas = new Canvas();
         float panelWidth = 2 * GUIUNITIMAGESIZE;
         float panelHeight = 3 * GUIUNITIMAGESIZE;
-        createGUICanvas("ChooseSideCanvas", panelWidth, panelHeight, ref questionCanvas);
-        createText("Which side are you playing?", "ChooseSideText",
+        CreateGUICanvas("ChooseSideCanvas", panelWidth, panelHeight, ref questionCanvas);
+        CreateText("Which side are you playing?", "ChooseSideText",
             2 * GUIUNITIMAGESIZE,
             2 * GUIUNITIMAGESIZE,
             GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1846,56 +1956,62 @@ public class GlobalDefinitions : MonoBehaviour
             questionCanvas);
 
         UnityEngine.UI.Button allyButton;
-        allyButton = createButton("AllyButton", "Ally",
+        allyButton = CreateButton("AllyButton", "Ally",
             0.5f * GUIUNITIMAGESIZE - 0.5f * panelWidth,
             0.5f * GUIUNITIMAGESIZE - 0.5f * panelHeight,
             questionCanvas);
         allyButton.gameObject.AddComponent<ChooseSideButtonRoutines>();
-        allyButton.onClick.AddListener(allyButton.GetComponent<ChooseSideButtonRoutines>().allyButtonSelected);
+        allyButton.onClick.AddListener(allyButton.GetComponent<ChooseSideButtonRoutines>().AllyButtonSelected);
 
         UnityEngine.UI.Button germanButton;
-        germanButton = createButton("GermanButon", "German",
+        germanButton = CreateButton("GermanButon", "German",
             1.5f * GUIUNITIMAGESIZE - 0.5f * panelWidth,
             0.5f * GUIUNITIMAGESIZE - 0.5f * panelHeight,
             questionCanvas);
         germanButton.gameObject.AddComponent<ChooseSideButtonRoutines>();
-        germanButton.onClick.AddListener(germanButton.GetComponent<ChooseSideButtonRoutines>().germanButtonSelected);
+        germanButton.onClick.AddListener(germanButton.GetComponent<ChooseSideButtonRoutines>().GermanButtonSelected);
     }
 
     /// <summary>
     /// This routine displays the units on the passed hex in the static gui display
     /// </summary>
     /// <param name="hex"></param>
-    public static void guiDisplayUnitsOnHex(GameObject hex)
+    public static void GuiDisplayUnitsOnHex(GameObject hex)
     {
         // First need to wipe out any units currently displayed
-        guiClearUnitsOnHex();
+        GuiClearUnitsOnHex();
 
         GameObject.Find("UnitDisplayPanel").GetComponent<CanvasGroup>().alpha = 1;
         if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
-            guiDisplayUnit(hex, "guiHexDisplayFirstUnit", "UnitDisplayImage1", 0, 90);
+            GuiDisplayUnit(hex, "guiHexDisplayFirstUnit", "UnitDisplayImage1", 0, 90);
         if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 1)
-            guiDisplayUnit(hex, "guiHexDisplaySecondUnit", "UnitDisplayImage2", 1, 150);
+            GuiDisplayUnit(hex, "guiHexDisplaySecondUnit", "UnitDisplayImage2", 1, 150);
         if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 2)
-            guiDisplayUnit(hex, "guiHexDisplayThirdUnit", "UnitDisplayImage3", 2, 210);
+            GuiDisplayUnit(hex, "guiHexDisplayThirdUnit", "UnitDisplayImage3", 2, 210);
 
         //GameObject.Find("UnitDisplayPanel").GetComponent<RectTransform>().position = new Vector2(-50, -(panelHeight / 2));
     }
 
     /// <summary>
-    /// This routine updates the gui display that shows how many weeks the allied have met victory conditions
+    /// Updates the static gui display that shows how many weeks the allied have met victory conditions
     /// </summary>
-    public static void guiDisplayAlliedVictoryStatus()
+    public static void GuiDisplayAlliedVictoryStatus()
     {
         GameObject.Find("AlliedVictoryText").GetComponent<Text>().text = turnsAlliedMetVictoryCondition + " Allied Victory Weeks";
     }
 
-    public static void guiDisplayAlliedVictoryUnits()
+    /// <summary>
+    /// Updates the static gui with the number of Allied units on victory hexes
+    /// </summary>
+    public static void GuiDisplayAlliedVictoryUnits()
     {
-        GameObject.Find("AlliedUnitVictoryText").GetComponent<Text>().text = returnNumberAlliedVictoryUnits() + " Units on Victory Hexes";
+        GameObject.Find("AlliedUnitVictoryText").GetComponent<Text>().text = ReturnNumberAlliedVictoryUnits() + " Units on Victory Hexes";
     }
 
-    public static void guiUpdateLossRatioText()
+    /// <summary>
+    /// Updates the static gui with the current loss ratio
+    /// </summary>
+    public static void GuiUpdateLossRatioText()
     {
         if ((alliedFactorsEliminated == 0) || (germanFactorsEliminated == 0))
             GameObject.Find("LossRatioText").GetComponent<Text>().text = "0 Allied/German Loss";
@@ -1903,11 +2019,10 @@ public class GlobalDefinitions : MonoBehaviour
             GameObject.Find("LossRatioText").GetComponent<Text>().text = ((float)(alliedFactorsEliminated) / ((float)germanFactorsEliminated)).ToString("0.00") + " Allied/German Loss";
     }
 
-
     /// <summary>
     /// Allied victory is achieved when 10 divisions are in supply in Germany for 4 consecutive turns or no German units on the board
     /// </summary>
-    public static bool checkForAlliedVictory()
+    public static bool CheckForAlliedVictory()
     {
         //  Only display the victory screen for the first turn victory has been met
         if (alliedVictory)
@@ -1927,9 +2042,9 @@ public class GlobalDefinitions : MonoBehaviour
 
             if (alliedAttackFactors / germanDefenseFactors >= 3)
             {
-                guiUpdateStatusMessage("The computer is resigning due to the the overwhelming Allied force");
+                GuiUpdateStatusMessage("The computer is resigning due to the the overwhelming Allied force");
                 alliedVictory = true;
-                displayAlliedVictoryScreen();
+                DisplayAlliedVictoryScreen();
                 return true;
             }
 
@@ -1942,7 +2057,7 @@ public class GlobalDefinitions : MonoBehaviour
                     unit.GetComponent<UnitDatabaseFields>().inSupply && !unit.GetComponent<UnitDatabaseFields>().HQ)
                 count++;
 
-        writeToLogFile(count + " - number of allied units meeting victory conditions");
+        WriteToLogFile(count + " - number of allied units meeting victory conditions");
         if (count > 9)
             turnsAlliedMetVictoryCondition++;
         else
@@ -1951,16 +2066,16 @@ public class GlobalDefinitions : MonoBehaviour
         if (turnsAlliedMetVictoryCondition == 4)
         {
             // Update the number of weeks otherwise it will be showing 3 which will be confusing
-            guiDisplayAlliedVictoryStatus();
+            GuiDisplayAlliedVictoryStatus();
             alliedVictory = true;
-            displayAlliedVictoryScreen();
+            DisplayAlliedVictoryScreen();
             return true;
         }
 
         if (germanUnitsOnBoard.Count == 0)
         {
             alliedVictory = true;
-            displayAlliedVictoryScreen();
+            DisplayAlliedVictoryScreen();
             return true;
         }
 
@@ -1971,7 +2086,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// German victory is decided by there being no Allied units on the board anytime after the second invasion has taken place or after turn 16.  
     /// The German also wins if the Allied player hasn't achieved victory by the 50th turn.
     /// </summary>
-    public static bool checkForGermanVictory()
+    public static bool CheckForGermanVictory()
     {
         //  Only display the victory screen for the first turn victory has been met
         if (germanVictory)
@@ -1982,10 +2097,10 @@ public class GlobalDefinitions : MonoBehaviour
         {
             // The computer resigns if there have been four turns without an Allied victory and new hexes aren't being controled
             // Note that numberOfHexesInAlliedControl contains the number of hexes that were in Allied control at the start of the turn
-            if ((numberOfTurnsWithoutSuccessfulAttack >= 4) && (turnNumber > 8) && (numberOfHexesInAlliedControl >= returnNumberOfHexesInAlliedControl()))
+            if ((numberOfTurnsWithoutSuccessfulAttack >= 4) && (turnNumber > 8) && (numberOfHexesInAlliedControl >= ReturnNumberOfHexesInAlliedControl()))
             {
                 germanVictory = true;
-                displayGermanVictoryScreen();
+                DisplayGermanVictoryScreen();
                 return true;
             }
         }
@@ -1993,24 +2108,23 @@ public class GlobalDefinitions : MonoBehaviour
         if ((turnNumber > 8) && (alliedUnitsOnBoard.Count == 0))
         {
             germanVictory = true;
-            displayGermanVictoryScreen();
+            DisplayGermanVictoryScreen();
             return true;
         }
         else if ((turnNumber >= 50) && !alliedVictory)
         {
             germanVictory = true;
-            displayGermanVictoryScreen();
+            DisplayGermanVictoryScreen();
             return true;
         }
         else
             return false;
-
     }
 
     /// <summary>
     /// Returns the strength of victory.  Note this returns a score for whichever side has the victory.
     /// </summary>
-    public static int calculateStrengthOfVictory()
+    public static int CalculateStrengthOfVictory()
     {
         int strengthOfVictory = 1;
         float lossRatio;
@@ -2031,9 +2145,9 @@ public class GlobalDefinitions : MonoBehaviour
         else if (easiestDifficultySettingUsed == 0)
             strengthOfVictory -= 3;
 
-        writeToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " easiestDifficultySettingUsed = " + easiestDifficultySettingUsed);
+        WriteToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " easiestDifficultySettingUsed = " + easiestDifficultySettingUsed);
 
-        writeToLogFile("calculateStrengthOfVictory: alliedFactorsEliminated = " + alliedFactorsEliminated + " germanFactorsEliminated = " + germanFactorsEliminated);
+        WriteToLogFile("calculateStrengthOfVictory: alliedFactorsEliminated = " + alliedFactorsEliminated + " germanFactorsEliminated = " + germanFactorsEliminated);
         if (germanVictory)
             lossRatio = ((float)alliedFactorsEliminated) / ((float)germanFactorsEliminated);
         else
@@ -2054,7 +2168,7 @@ public class GlobalDefinitions : MonoBehaviour
         else if (lossRatio == 0)
             strengthOfVictory += 3; // In the unlikely event that no losses were suffered...
 
-        writeToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " lossRatio = " + lossRatio);
+        WriteToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " lossRatio = " + lossRatio);
 
         if (germanVictory)
         {
@@ -2070,19 +2184,22 @@ public class GlobalDefinitions : MonoBehaviour
             else if (turnNumber <= 41)
                 strengthOfVictory++;
         }
-        writeToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " turnNumber = " + turnNumber);
+        WriteToLogFile("calculateStrengthOfVictory: strengthOfVictory = " + strengthOfVictory + " turnNumber = " + turnNumber);
 
         return (strengthOfVictory);
     }
 
-    public static void displayAlliedVictoryScreen()
+    /// <summary>
+    /// Sets the message that will be displayed on the victory screen for an Allied victory
+    /// </summary>
+    public static void DisplayAlliedVictoryScreen()
     {
-        guiUpdateStatusMessage("Allied victory conditions have been met");
+        GuiUpdateStatusMessage("Allied victory conditions have been met");
 
-        int strengthOfVictory = calculateStrengthOfVictory();
+        int strengthOfVictory = CalculateStrengthOfVictory();
         string message = "";
 
-        writeToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + strengthOfVictory + " player is " + nationalityUserIsPlaying);
+        WriteToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + strengthOfVictory + " player is " + nationalityUserIsPlaying);
 
         if (gameMode == GameModeValues.Hotseat)
         {
@@ -2122,17 +2239,20 @@ public class GlobalDefinitions : MonoBehaviour
             }
         }
 
-        victoryScreen(message);
+        VictoryScreen(message);
     }
 
-    public static void displayGermanVictoryScreen()
+    /// <summary>
+    /// Sets the message that will be displayed on the victory screen for a German victory
+    /// </summary>
+    public static void DisplayGermanVictoryScreen()
     {
-        guiUpdateStatusMessage("German victory conditions have been met");
+        GuiUpdateStatusMessage("German victory conditions have been met");
 
-        int strengthOfVictory = calculateStrengthOfVictory();
+        int strengthOfVictory = CalculateStrengthOfVictory();
         string message = "";
 
-        writeToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + strengthOfVictory + " player is " + nationalityUserIsPlaying);
+        WriteToLogFile("displayGermanVictoryScreen: strengthOfVicory = " + strengthOfVictory + " player is " + nationalityUserIsPlaying);
 
         if (gameMode == GameModeValues.Hotseat)
         {
@@ -2171,30 +2291,34 @@ public class GlobalDefinitions : MonoBehaviour
                     message = "You have suffered a decisive defeat    strength of victory = " + strengthOfVictory;
             }
         }
-        victoryScreen(message);
+        VictoryScreen(message);
     }
 
-    public static void victoryScreen(string message)
+    /// <summary>
+    /// Creates the victory gui
+    /// </summary>
+    /// <param name="message"></param>
+    public static void VictoryScreen(string message)
     {
         UnityEngine.UI.Button okButton;
-        writeToLogFile("victoryScreen: executing with message = " + message);
-        removeAllGUIs();
+        WriteToLogFile("victoryScreen: executing with message = " + message);
+        RemoveAllGUIs();
         Canvas victoryCanvas = null;
-        createGUICanvas("AlliedVictoryMessage", 1000, 200, ref victoryCanvas);
-        createText("..." + message + " ...", "VictoryMessageText", 1000, 200, 0, 0, victoryCanvas);
-        okButton = createButton("VictoryOKButton", "OK",
+        CreateGUICanvas("AlliedVictoryMessage", 1000, 200, ref victoryCanvas);
+        CreateText("..." + message + " ...", "VictoryMessageText", 1000, 200, 0, 0, victoryCanvas);
+        okButton = CreateButton("VictoryOKButton", "OK",
                 0,
                 -30,
                 victoryCanvas);
         okButton.gameObject.AddComponent<GUIButtonRoutines>();
-        okButton.onClick.AddListener(okButton.GetComponent<GUIButtonRoutines>().victoryOK);
+        okButton.onClick.AddListener(okButton.GetComponent<GUIButtonRoutines>().VictoryOK);
     }
 
     /// <summary>
     /// Returns number of Allied units on victory hexes
     /// </summary>
     /// <returns></returns>
-    private static int returnNumberAlliedVictoryUnits()
+    private static int ReturnNumberAlliedVictoryUnits()
     {
         int count = 0;
         foreach (GameObject unit in alliedUnitsOnBoard)
@@ -2205,12 +2329,14 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
     /// <summary>
-    /// This routine displays a single unit in the correct position on the gui panel
+    /// Displays a single unit in the correct position on the gui panel
     /// </summary>
+    /// <param name="hex"></param>
     /// <param name="gameObjectName"></param>
     /// <param name="findGameObjectName"></param>
     /// <param name="unitNumber"></param>
-    private static void guiDisplayUnit(GameObject hex, string gameObjectName, string findGameObjectName, int unitNumber, int panelHeight)
+    /// <param name="panelHeight"></param>
+    private static void GuiDisplayUnit(GameObject hex, string gameObjectName, string findGameObjectName, int unitNumber, int panelHeight)
     {
         GameObject tempPrefab;
         Image tempImage;
@@ -2228,8 +2354,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// This routine clears the units displayed in the gui
     /// </summary>
-    /// <param name="hex"></param>
-    public static void guiClearUnitsOnHex()
+    public static void GuiClearUnitsOnHex()
     {
         // First need to wipe out any units currently displayed
         DestroyImmediate(GameObject.Find("guiHexDisplayFirstUnit"));
@@ -2242,7 +2367,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// This routine shows the file dialog for loading a saved game
     /// </summary>
     /// <returns></returns>
-    public static string guiFileDialog()
+    public static string GuiFileDialog()
     {
         OpenFileDialog dialog = new OpenFileDialog();
         dialog.InitialDirectory = GameControl.path + "\\TGCOutputFiles";
@@ -2261,7 +2386,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// Updated the message displayed on the status screen
     /// </summary>
     /// <param name="message"></param>
-    public static void guiUpdateStatusMessage(string message)
+    public static void GuiUpdateStatusMessage(string message)
     {
         oldMessage1 = oldMessage2;
         oldMessage2 = oldMessage3;
@@ -2271,7 +2396,7 @@ public class GlobalDefinitions : MonoBehaviour
         // During the AI turn do not send status messages
         if (!((gameMode == GameModeValues.AI) && !localControl) && !commandFileBeingRead)
         {
-            writeToLogFile("guiUpdateStatusMessage: " + message);
+            WriteToLogFile("guiUpdateStatusMessage: " + message);
             GameObject.Find("StatusMessageText").GetComponent<Text>().text = oldMessage5 + "\n\n" + oldMessage4 + "\n\n" + oldMessage3 + "\n\n" + oldMessage2 + "\n\n" + oldMessage1;
         }
     }
@@ -2279,7 +2404,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// Updates the turn number displayed on the status screen
     /// </summary>
-    public static void guiUpdateTurn()
+    public static void GuiUpdateTurn()
     {
         DateTime dday = new DateTime(1944, 6, 6);
         DateTime weekStart = dday.AddDays((turnNumber - 1) * 7);
@@ -2289,20 +2414,20 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the phase displayed on the status screen
+    /// Updates the phase displayed on the static gui
     /// </summary>
     /// <param name="currentPhase"></param>
-    public static void guiUpdatePhase(string currentPhase)
+    public static void GuiUpdatePhase(string currentPhase)
     {
         GameObject.Find("GUIPhaseTextObject").GetComponent<Text>().text = currentPhase;
-        writeToLogFile("Changing to " + currentPhase + " Phase");
+        WriteToLogFile("Changing to " + currentPhase + " Phase");
     }
 
     /// <summary>
     /// This routine writes out all of the values of the variables stored in Global Definitions that are needed for saving
     /// </summary>
     /// <param name="fileWriter"></param>
-    public static void writeGlobalVariables(StreamWriter fileWriter)
+    public static void WriteGlobalVariables(StreamWriter fileWriter)
     {
         fileWriter.Write(numberOfCarpetBombingsUsed + " ");
         fileWriter.Write(numberInvasionsExecuted + " ");
@@ -2339,7 +2464,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// Writes message to the log file
     /// </summary>
     /// <param name="logEntry"></param>
-    public static void writeToLogFile(string logEntry)
+    public static void WriteToLogFile(string logEntry)
     {
         using (StreamWriter writeFile = File.AppendText(GameControl.path + logfile))
             writeFile.WriteLine(logEntry);
@@ -2349,7 +2474,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// Writes a command to the command file. Also sends socket message if network game
     /// </summary>
     /// <param name="commandString"></param>
-    public static void writeToCommandFile(string commandString)
+    public static void WriteToCommandFile(string commandString)
     {
         if (!commandFileBeingRead)
         {
@@ -2368,7 +2493,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// Deletes the current command file if it exists and writes the header line to a new version
     /// </summary>
-    public static void deleteCommandFile()
+    public static void DeleteCommandFile()
     {
         if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
             File.Delete(GameControl.path + GlobalDefinitions.commandFile);
@@ -2379,7 +2504,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// Deletes the full command file if it exists
     /// </summary>
-    public static void deleteFullCommandFile()
+    public static void DeleteFullCommandFile()
     {
         if (File.Exists(GameControl.path + GlobalDefinitions.fullCommandFile))
             File.Delete(GameControl.path + GlobalDefinitions.fullCommandFile);
@@ -2391,7 +2516,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// This routine returns the local public ip address
     /// </summary>
     /// <returns></returns>
-    public static string getLocalPublicIPAddress()
+    public static string GetLocalPublicIPAddress()
     {
         string url = "http://checkip.dyndns.org";
         System.Net.WebRequest req = System.Net.WebRequest.Create(url);
@@ -2408,7 +2533,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// This routine sends a chat message
     /// </summary>
-    public static void executeChatMessage()
+    public static void ExecuteChatMessage()
     {
         string messageText = GameObject.Find("ChatInputField").GetComponent<InputField>().text;
         GameObject.Find("ChatText").GetComponent<Text>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<Text>().text;
@@ -2419,9 +2544,9 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// This routine executes when receiving a chat message
     /// </summary>
-    public static void addChatMessage(string messageText)
+    public static void AddChatMessage(string messageText)
     {
-        writeToLogFile("addChatMessage: received message " + messageText);
+        WriteToLogFile("addChatMessage: received message " + messageText);
         GameObject.Find("ChatText").GetComponent<Text>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<Text>().text;
     }
 
@@ -2429,7 +2554,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// Used to switch the local control variable and adjusting access to the gui buttons
     /// </summary>
     /// <param name="localControlValue"></param>
-    public static void switchLocalControl(bool localControlValue)
+    public static void SwitchLocalControl(bool localControlValue)
     {
         localControl = localControlValue;
 
@@ -2468,7 +2593,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static byte writeBooleanToSaveFormat(bool value)
+    public static byte WriteBooleanToSaveFormat(bool value)
     {
         if (value == true)
             return (1);
@@ -2476,7 +2601,7 @@ public class GlobalDefinitions : MonoBehaviour
             return (0);
     }
 
-    public static bool returnBoolFromSaveFormat(string value)
+    public static bool ReturnBoolFromSaveFormat(string value)
     {
         if (value == "1")
             return (true);
@@ -2489,7 +2614,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     /// <param name="nationality"></param>
     /// <returns></returns>
-    public static List<GameObject> returnNationUnitsOnBoard(Nationality nationality)
+    public static List<GameObject> ReturnNationUnitsOnBoard(Nationality nationality)
     {
         //writeToLogFile("returnNationUnitsOnBoard: executing ... nationality = " + nationality);
         List<GameObject> returnList = new List<GameObject>();
@@ -2502,7 +2627,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <summary>
     /// Returns the list passed sorted by highest attack factor to smallest
     /// </summary>
-    public static void sortUnitListByAttackFactor(List<GameObject> unitList)
+    public static void SortUnitListByAttackFactor(List<GameObject> unitList)
     {
         GameObject tempUnit;
         for (int index = 0; index < (unitList.Count - 1); index++)
@@ -2521,7 +2646,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// Returns the number of hexes in Allied control
     /// </summary>
     /// <returns></returns>
-    public static int returnNumberOfHexesInAlliedControl()
+    public static int ReturnNumberOfHexesInAlliedControl()
     {
         int returnNumber = 0;
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
@@ -2534,11 +2659,11 @@ public class GlobalDefinitions : MonoBehaviour
         return (returnNumber);
     }
 
-    public static void guiDisplayAIStatus(string message)
+    public static void GuiDisplayAIStatus(string message)
     {
         Canvas aiStatusCanvas = null;
-        createGUICanvas("AIStatusMessage", 1000, 200, ref aiStatusCanvas);
-        createText("..." + message + " ...", "AIStatusMessageText", 1000, 200, 0, 0, aiStatusCanvas);
+        CreateGUICanvas("AIStatusMessage", 1000, 200, ref aiStatusCanvas);
+        CreateText("..." + message + " ...", "AIStatusMessageText", 1000, 200, 0, 0, aiStatusCanvas);
     }
 
 
@@ -2547,14 +2672,17 @@ public class GlobalDefinitions : MonoBehaviour
     /// Used to remove a gui element
     /// </summary>
     /// <param name="element"></param>
-    public static void removeGUI(GameObject element)
+    public static void RemoveGUI(GameObject element)
     {
         if (guiList.Contains(element))
             guiList.Remove(element);
         DestroyImmediate(element);
     }
 
-    public static void removeAllGUIs()
+    /// <summary>
+    /// Gets rid of all displayed gui's
+    /// </summary>
+    public static void RemoveAllGUIs()
     {
         // Get rid of any gui that is present
         // Copy list so the guis can be removed
@@ -2565,19 +2693,19 @@ public class GlobalDefinitions : MonoBehaviour
 
         // Get rid of all active guis
         foreach (GameObject gui in removeList)
-            removeGUI(gui);
+            RemoveGUI(gui);
     }
 
     /// <summary>
     /// Returns the passed unit to the OOB sheet
     /// </summary>
     /// <param name="unit"></param>
-    public static void returnUnitToOOBShet(GameObject unit)
+    public static void ReturnUnitToOOBShet(GameObject unit)
     {
         unit.transform.position = unit.GetComponent<UnitDatabaseFields>().OOBLocation;
         unit.GetComponent<UnitDatabaseFields>().inSupply = true;
         unit.GetComponent<UnitDatabaseFields>().remainingMovement = unit.GetComponent<UnitDatabaseFields>().movementFactor;
-        unhighlightUnit(unit.gameObject);
+        UnhighlightUnit(unit.gameObject);
 
         unit.transform.parent = GameObject.Find("Units Eliminated").transform;
         unit.GetComponent<UnitDatabaseFields>().occupiedHex = null;

@@ -10,9 +10,9 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
     /// <summary>
     /// Called from the combat resolution gui to cancel a combat - determined by the combatResoultionArrayIndex loaded
     /// </summary>
-    public void cancelAttack()
+    public void CancelAttack()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATCANCELKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.COMBATCANCELKEYWORD + " " + name);
 
         // Since we are going to reset the mustBeAttackedUnits list I need to clear out all the highlighting since 
         // there are cases where units were added to the list because of cross river attacks but haven't been assigned
@@ -21,13 +21,13 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
         foreach (GameObject unit in curentCombat.GetComponent<Combat>().defendingUnits)
         {
             unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
         }
 
         foreach (GameObject unit in curentCombat.GetComponent<Combat>().attackingUnits)
         {
             unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
         }
 
         // Check if we need to give a air mission back
@@ -54,18 +54,18 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
             DestroyImmediate(combat.GetComponent<Combat>().airSupportToggle);
         }
 
-        GlobalDefinitions.removeGUI(GlobalDefinitions.combatResolutionGUIInstance);
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatResolutionGUIInstance);
 
-        if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedCombatStateInstance") ||
-                (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanCombatStateInstance") ||
+        if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
+                (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance") ||
                 GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().isOn)
-            CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, true);
+            CombatRoutines.CheckIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality, true);
         else
-            CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, false);
+            CombatRoutines.CheckIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality, false);
 
         if (GlobalDefinitions.allCombats.Count > 0)
         {
-            CombatResolutionRoutines.combatResolutionDisplay();
+            CombatResolutionRoutines.CombatResolutionDisplay();
         }
         else
         {
@@ -77,44 +77,44 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
     /// <summary>
     /// Executes when the OK button on the combat resolution screen is clicked
     /// </summary>
-    public void ok()
+    public void Ok()
     {
         // If network game notify the remote system to execute OK
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATOKKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.COMBATOKKEYWORD + " " + name);
 
         if (GetComponentInChildren<Text>().text == "Continue")
         {
-            GlobalDefinitions.removeGUI(GlobalDefinitions.combatResolutionGUIInstance);
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatResolutionGUIInstance);
 
             // Turn the button back on
             GameObject.Find("ResolveCombatButton").GetComponent<Button>().interactable = true;
 
             // Determine what state we are in and set the next executeMethod
-            if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
-                    (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance"))
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<MovementState>().executeSelectUnit;
-            if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedCombatStateInstance") ||
-                    (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanCombatStateInstance"))
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<CombatState>().executeSelectUnit;
-            if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedInvasionStateInstance")
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedInvasionState>().executeSelectUnit;
-            if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedAirborneStateInstance")
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedAirborneState>().executeSelectUnit;
+            if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedMovementStateInstance") ||
+                    (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanMovementStateInstance"))
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<MovementState>().ExecuteSelectUnit;
+            if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
+                    (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance"))
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<CombatState>().ExecuteSelectUnit;
+            if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedInvasionStateInstance")
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedInvasionState>().ExecuteSelectUnit;
+            if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedAirborneStateInstance")
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedAirborneState>().ExecuteSelectUnit;
         }
         else
         {
             // Turn the button back on
             GameObject.Find("ResolveCombatButton").GetComponent<Button>().interactable = true;
 
-            GlobalDefinitions.removeGUI(GlobalDefinitions.combatResolutionGUIInstance);
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatResolutionGUIInstance);
 
             GlobalDefinitions.allCombats.Clear();
 
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<CombatState>().executeQuit();
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<CombatState>().ExecuteQuit();
         }
     }
 
@@ -141,9 +141,9 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
         return worldPosition;
     }
 
-    public void locateAttack()
+    public void LocateAttack()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATLOCATIONSELECTEDKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.COMBATLOCATIONSELECTEDKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 
@@ -162,7 +162,7 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
     /// <summary>
     /// This routine is called when the user selects the Resolve button for a combat
     /// </summary>
-    public void resolutionSelected()
+    public void ResolutionSelected()
     {
 
         // Write out the name of the toggle being executed in order to send it once the die roll is known
@@ -172,9 +172,9 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
         // If combat resolution hasn't started then check to make sure all required combats have been created
         if (!GlobalDefinitions.combatResolutionStarted)
         {
-            if (CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, true))
+            if (CombatRoutines.CheckIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality, true))
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Cannot start combat resolution, highlighted units must be committed to combat first.");
+                GlobalDefinitions.GuiUpdateStatusMessage("Cannot start combat resolution, highlighted units must be committed to combat first.");
 
 
             }
@@ -191,13 +191,13 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
                 // Also can't assign any more air support so make those toggles non-interactive
                 foreach (GameObject combat in GlobalDefinitions.allCombats)
                 {
-                    if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
+                    if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
                         combat.GetComponent<Combat>().airSupportToggle.interactable = false;
                     DestroyImmediate(combat.GetComponent<Combat>().cancelButton.gameObject);
                 }
 
                 // Only check for carpet bombing if Allies are attacking.  This is needed to keep the German attacks from being loaded
-                if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
+                if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
                 {
                     GlobalDefinitions.combatResultsFromLastTurn.Clear();
                     GlobalDefinitions.hexesAttackedLastTurn.Clear();
@@ -212,14 +212,14 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
 
         if (GlobalDefinitions.combatResolutionStarted)
         {
-            CombatResolutionRoutines.determineCombatResults(curentCombat, gameObject.GetComponent<RectTransform>().anchoredPosition);
+            CombatResolutionRoutines.DetermineCombatResults(curentCombat, gameObject.GetComponent<RectTransform>().anchoredPosition);
 
             // Get rid of the locate button on the attack being resolved, can't gaurantee that the units are still there after resolution
             DestroyImmediate(curentCombat.GetComponent<Combat>().locateButton.gameObject);
             //Get rid of the resolve button since the battle has been resolved.  This is also used to determine if all combats have been resolved.
-            GlobalDefinitions.writeToLogFile("resolutionSelected: removing resolve button " + gameObject.name);
+            GlobalDefinitions.WriteToLogFile("resolutionSelected: removing resolve button " + gameObject.name);
             //DestroyImmediate(GameObject.Find(GlobalDefinitions.CombatResultToggleName));
-            GlobalDefinitions.removeGUI(gameObject);
+            GlobalDefinitions.RemoveGUI(gameObject);
         }
 
         // Check if all the attacks have been resolved by seeing if there are any more Resolve buttons left
@@ -237,46 +237,46 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
     }
 
     // Called when the user select to change the status of air support on the combat resolution gui
-    public void addAttackAirSupport()
+    public void AddAttackAirSupport()
     {
         if (GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDCOMBATAIRSUPPORTKEYWORD + " " + name);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDCOMBATAIRSUPPORTKEYWORD + " " + name);
 
             if (GlobalDefinitions.tacticalAirMissionsThisTurn < GlobalDefinitions.maxNumberOfTacticalAirMissions)
             {
                 curentCombat.GetComponent<Combat>().attackAirSupport = true;
-                GlobalDefinitions.writeToLogFile("addAttackAirSupport: incrementing GlobalDefinitions.tacticalAirMissionsThisTurn");
+                GlobalDefinitions.WriteToLogFile("addAttackAirSupport: incrementing GlobalDefinitions.tacticalAirMissionsThisTurn");
                 GlobalDefinitions.tacticalAirMissionsThisTurn++;
                 attackFactorTextGameObject.GetComponent<Text>().text =
-                        GlobalDefinitions.calculateAttackFactor(
+                        GlobalDefinitions.CalculateAttackFactor(
                         curentCombat.GetComponent<Combat>().attackingUnits,
                         curentCombat.GetComponent<Combat>().attackAirSupport).ToString();
                 oddsTextGameObject.GetComponent<Text>().text =
-                        GlobalDefinitions.convertOddsToString(
-                        GlobalDefinitions.returnCombatOdds(curentCombat.GetComponent<Combat>().defendingUnits,
+                        GlobalDefinitions.ConvertOddsToString(
+                        GlobalDefinitions.ReturnCombatOdds(curentCombat.GetComponent<Combat>().defendingUnits,
                         curentCombat.GetComponent<Combat>().attackingUnits,
                         curentCombat.GetComponent<Combat>().attackAirSupport));
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("No more air support missions left to assign");
+                GlobalDefinitions.GuiUpdateStatusMessage("No more air support missions left to assign");
                 GetComponent<Toggle>().isOn = false;
             }
         }
         else
         {
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.REMOVECOMBATAIRSUPPORTKEYWORD + " " + name);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.REMOVECOMBATAIRSUPPORTKEYWORD + " " + name);
 
             curentCombat.GetComponent<Combat>().attackAirSupport = false;
             GlobalDefinitions.tacticalAirMissionsThisTurn--;
             attackFactorTextGameObject.GetComponent<Text>().text =
-                    GlobalDefinitions.calculateAttackFactor(
+                    GlobalDefinitions.CalculateAttackFactor(
                     curentCombat.GetComponent<Combat>().attackingUnits,
                     curentCombat.GetComponent<Combat>().attackAirSupport).ToString();
             oddsTextGameObject.GetComponent<Text>().text =
-                    GlobalDefinitions.convertOddsToString(
-                    GlobalDefinitions.returnCombatOdds(
+                    GlobalDefinitions.ConvertOddsToString(
+                    GlobalDefinitions.ReturnCombatOdds(
                     curentCombat.GetComponent<Combat>().defendingUnits,
                     curentCombat.GetComponent<Combat>().attackingUnits,
                     curentCombat.GetComponent<Combat>().attackAirSupport));

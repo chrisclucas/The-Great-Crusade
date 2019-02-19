@@ -2,10 +2,10 @@
 
 public class PostCombatMovementOkRoutines : MonoBehaviour
 {
-    public void executePostCombatMovement()
+    public void ExecutePostCombatMovement()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.POSTCOMBATOKKEYWORD + " " + name);
-        GlobalDefinitions.removeGUI(transform.parent.gameObject);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.POSTCOMBATOKKEYWORD + " " + name);
+        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         GlobalDefinitions.hexesAvailableForPostCombatMovement.Clear();
         GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
     }

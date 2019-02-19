@@ -10,16 +10,16 @@ public class MovementRoutines : MonoBehaviour
     /// Returns the the hex of the selected unit or displays the enemy units 
     /// </summary>
     /// <param name="nationality"></param>
-    public GameObject highlighyHexesForMovement(GameObject selectedUnit)
+    public GameObject HighlighyHexesForMovement(GameObject selectedUnit)
     {
         List<GameObject> movementHexes = new List<GameObject>();
         // Note that the check for a Null unit has already been done
-        if (selectedUnit.GetComponent<UnitDatabaseFields>().nationality == GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality)
+        if (selectedUnit.GetComponent<UnitDatabaseFields>().nationality == GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality)
         {
-            GlobalDefinitions.highlightUnit(selectedUnit);
-            movementHexes = returnAvailableMovementHexes(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex, selectedUnit);
+            GlobalDefinitions.HighlightUnit(selectedUnit);
+            movementHexes = ReturnAvailableMovementHexes(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex, selectedUnit);
             foreach (GameObject hex in movementHexes)
-                GlobalDefinitions.highlightHexForMovement(hex);
+                GlobalDefinitions.HighlightHexForMovement(hex);
 
             return (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
         }
@@ -27,7 +27,7 @@ public class MovementRoutines : MonoBehaviour
         {
             // If the hex selected has enemy units on it display them in the gui
             if (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
-                GlobalDefinitions.guiDisplayUnitsOnHex(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                GlobalDefinitions.GuiDisplayUnitsOnHex(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
             return (null);
         }
     }
@@ -38,7 +38,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="selectedUnit"></param>
     /// <param name="startHex"></param>
     /// <param name="destinationHex"></param>
-    public void getUnitMoveDestination(GameObject selectedUnit, GameObject startHex, GameObject destinationHex)
+    public void GetUnitMoveDestination(GameObject selectedUnit, GameObject startHex, GameObject destinationHex)
     {
         // I have an issue where an invading unit on a sea hex is selected during movement, in order to deselect it
         // the invading hex is selected which is a sea hex and sends the unit back to Britain.  While I'm not sure why
@@ -50,7 +50,7 @@ public class MovementRoutines : MonoBehaviour
         // If the user selects a bridge the logic won't let him move there even though it is highlighted.
         // Write out a message so the user knows what is going on
         if ((destinationHex != null) && (destinationHex.GetComponent<HexDatabaseFields>().bridge))
-            GlobalDefinitions.guiUpdateStatusMessage("Cannot stop movement on the dyke");
+            GlobalDefinitions.GuiUpdateStatusMessage("Cannot stop movement on the dyke");
 
         if ((destinationHex != null) && (startHex != destinationHex))
         {
@@ -58,25 +58,25 @@ public class MovementRoutines : MonoBehaviour
             {
                 // If the hex selected is a sea hex than that means the unit is going back to Britain
                 if (destinationHex.GetComponent<HexDatabaseFields>().sea)
-                    moveUnitBackToBritain(startHex, selectedUnit, true);
+                    MoveUnitBackToBritain(startHex, selectedUnit, true);
                 // Otherwise it is a normal move
                 else
-                    moveUnit(destinationHex, startHex, selectedUnit);
+                    MoveUnit(destinationHex, startHex, selectedUnit);
             }
             else
             {
                 // if an invalid hex is selected "move" the object to where it already is (resets all hexes)
-                moveUnit(startHex, startHex, selectedUnit);
+                MoveUnit(startHex, startHex, selectedUnit);
             }
         }
         else
         {
             if (startHex != null)
                 // If a hex isn't hit, leave the unit where it is
-                moveUnit(startHex, startHex, selectedUnit);
+                MoveUnit(startHex, startHex, selectedUnit);
         }
 
-        GlobalDefinitions.unhighlightUnit(selectedUnit);
+        GlobalDefinitions.UnhighlightUnit(selectedUnit);
     }
 
     /// <summary>
@@ -87,20 +87,20 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="unit"></param>
     /// <param name="hex"></param>
     /// <returns></returns>
-    public bool landAlliedUnitFromOffBoard(GameObject unit, GameObject hex, bool highlight)
+    public bool LandAlliedUnitFromOffBoard(GameObject unit, GameObject hex, bool highlight)
     {
         List<GameObject> movementHexes = new List<GameObject>();
         if (hex != null)
         {
             if (hex.GetComponent<HexDatabaseFields>().availableForMovement)
             {
-                GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().assignAvailableSupplyCapacity(hex, unit);
-                moveUnitFromBritain(hex, unit);
-                GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().incrementInvasionUnitLimits(unit);
+                GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().AssignAvailableSupplyCapacity(hex, unit);
+                MoveUnitFromBritain(hex, unit);
+                GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().IncrementInvasionUnitLimits(unit);
 
                 foreach (GameObject tempHex in GlobalDefinitions.allHexesOnBoard)
                 {
-                    GlobalDefinitions.unhighlightHex(tempHex);
+                    GlobalDefinitions.UnhighlightHex(tempHex);
                     tempHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
                 }
 
@@ -108,20 +108,20 @@ public class MovementRoutines : MonoBehaviour
                 if (!hex.GetComponent<HexDatabaseFields>().inGermanZOC)
                 {
                     unit.GetComponent<UnitDatabaseFields>().remainingMovement = unit.GetComponent<UnitDatabaseFields>().movementFactor - 1;
-                    movementHexes = returnAvailableMovementHexes(hex, unit);
+                    movementHexes = ReturnAvailableMovementHexes(hex, unit);
                     if (highlight)
                         foreach (GameObject tempHex in movementHexes)
-                            GlobalDefinitions.highlightHexForMovement(tempHex);
+                            GlobalDefinitions.HighlightHexForMovement(tempHex);
                     else
                         unit.GetComponent<UnitDatabaseFields>().availableMovementHexes = movementHexes;
                 }
                 else
                 {
-                    GlobalDefinitions.unhighlightUnit(unit);
+                    GlobalDefinitions.UnhighlightUnit(unit);
                     unit = null;
                     foreach (GameObject tempHex in GlobalDefinitions.allHexesOnBoard)
                     {
-                        GlobalDefinitions.unhighlightHex(tempHex);
+                        GlobalDefinitions.UnhighlightHex(tempHex);
                         tempHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
                     }
                 }
@@ -129,22 +129,22 @@ public class MovementRoutines : MonoBehaviour
             }
             else
             {
-                GlobalDefinitions.unhighlightUnit(unit);
+                GlobalDefinitions.UnhighlightUnit(unit);
                 unit = null;
-                GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not avaiable; must select a highlighted hex");
+                GlobalDefinitions.GuiUpdateStatusMessage("Hex selected is not avaiable; must select a highlighted hex");
                 return (false);
             }
         }
         else
         {
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
             unit = null;
             foreach (GameObject tempHex in GlobalDefinitions.allHexesOnBoard)
             {
-                GlobalDefinitions.unhighlightHex(tempHex);
+                GlobalDefinitions.UnhighlightHex(tempHex);
                 tempHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
             }
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected; must select a highlighted hex");
+            GlobalDefinitions.GuiUpdateStatusMessage("No hex selected; must select a highlighted hex");
             return (false);
         }
     }
@@ -155,7 +155,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="selectedUnit"></param>
     /// <param name="selectedHex"></param>
     /// <returns></returns>
-    public bool landGermanUnitFromOffBoard(GameObject selectedUnit, GameObject selectedHex)
+    public bool LandGermanUnitFromOffBoard(GameObject selectedUnit, GameObject selectedHex)
     {
         if (selectedHex != null)
         {
@@ -167,15 +167,15 @@ public class MovementRoutines : MonoBehaviour
                 GlobalDefinitions.germanUnitsOnBoard.Add(selectedUnit);
 
                 // Change the unit's location to the target hex
-                GlobalDefinitions.putUnitOnHex(selectedUnit, selectedHex);
+                GlobalDefinitions.PutUnitOnHex(selectedUnit, selectedHex);
                 selectedUnit.GetComponent<UnitDatabaseFields>().unitEliminated = false;
 
-                if (!checkForAdjacentEnemy(selectedHex, selectedUnit) && (selectedUnit.GetComponent<UnitDatabaseFields>().armor || selectedUnit.GetComponent<UnitDatabaseFields>().airborne))
+                if (!CheckForAdjacentEnemy(selectedHex, selectedUnit) && (selectedUnit.GetComponent<UnitDatabaseFields>().armor || selectedUnit.GetComponent<UnitDatabaseFields>().airborne))
                     selectedUnit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = true;
 
                 // If the unit is being placed within enemy ZOC I need to not allow the unit to move in the movement mode.  If I don't do this here, it will look like the unit is starting
                 // the turn out in an enemy ZOC and in that case it is legal to move away instead of fighting.  When placing a replacement unit in an enemy ZOC is must attack
-                if (GlobalDefinitions.hexInEnemyZOC(selectedHex, GlobalDefinitions.Nationality.German))
+                if (GlobalDefinitions.HexInEnemyZOC(selectedHex, GlobalDefinitions.Nationality.German))
                     selectedUnit.GetComponent<UnitDatabaseFields>().remainingMovement = 0;
 
                 // Now make it look like the unit started the turn out on the hex it is being placed.  Otherwise, if the unit's movement is undone during movement it will go back to
@@ -184,12 +184,12 @@ public class MovementRoutines : MonoBehaviour
 
                 // If this is the only unit in the target hex then update ZOC's
                 if (selectedHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count < 2)
-                    updateZOC(selectedHex);
+                    UpdateZOC(selectedHex);
 
                 // Finally remove all of the highlighting from hexes that were availabe for movement and reset the availableForMovement and remainingMovement fields
                 foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
                 {
-                    GlobalDefinitions.unhighlightHex(hex.gameObject);
+                    GlobalDefinitions.UnhighlightHex(hex.gameObject);
                     hex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
                     hex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = 0;
                     hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
@@ -199,22 +199,22 @@ public class MovementRoutines : MonoBehaviour
             }
             else
             {
-                GlobalDefinitions.unhighlightUnit(selectedUnit);
+                GlobalDefinitions.UnhighlightUnit(selectedUnit);
                 selectedUnit = null;
-                GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not avaiable; must select a highlighted replacement hex");
+                GlobalDefinitions.GuiUpdateStatusMessage("Hex selected is not avaiable; must select a highlighted replacement hex");
                 return (false);
             }
         }
         else
         {
-            GlobalDefinitions.unhighlightUnit(selectedUnit);
+            GlobalDefinitions.UnhighlightUnit(selectedUnit);
             selectedUnit = null;
             foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             {
-                GlobalDefinitions.unhighlightHex(hex);
+                GlobalDefinitions.UnhighlightHex(hex);
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
             }
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected; must select a highlighted replacement hex");
+            GlobalDefinitions.GuiUpdateStatusMessage("No hex selected; must select a highlighted replacement hex");
             return (false);
         }
     }
@@ -224,7 +224,7 @@ public class MovementRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private bool checkUnitLimits(GameObject hex, GameObject unit)
+    private bool CheckUnitLimits(GameObject hex, GameObject unit)
     {
         //GlobalDefinitions.writeToLogFile("MovementRoutines.checkUnitLimits: checking limits for index = " + hex.GetComponent<HexDatabaseFields>().invasionAreaIndex);
         //GlobalDefinitions.writeToLogFile("MovementRoutines.checkUnitLimits:     turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].turn);
@@ -327,7 +327,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="destinationHex"></param>
     /// <param name="selectedUnit"></param>
     /// <returns></returns>
-    private bool checkForMovementAvailable(GameObject beginningHex, GameObject destinationHex, GameObject selectedUnit)
+    private bool CheckForMovementAvailable(GameObject beginningHex, GameObject destinationHex, GameObject selectedUnit)
     {
         // First check if there is any remaining movement cost available from the start hex
         if (beginningHex.GetComponent<HexDatabaseFields>().remainingMovement == 0)
@@ -355,7 +355,7 @@ public class MovementRoutines : MonoBehaviour
         // During interactive play the user can over-stack with the idea that they would fix the over-stack before moving to the next phase
         // If the AI is moving it needs to not be allowed to over-stack since there is no process to resolve issues before going to the next phase
         if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) &&
-                !GlobalDefinitions.hexUnderStackingLimit(destinationHex, selectedUnit.GetComponent<UnitDatabaseFields>().nationality) &&
+                !GlobalDefinitions.HexUnderStackingLimit(destinationHex, selectedUnit.GetComponent<UnitDatabaseFields>().nationality) &&
                 (destinationHex.GetComponent<HexDatabaseFields>().remainingMovement == 0))
         {
             //GlobalDefinitions.writeToLogFile("checkForMovementAvailable: movement not available - overstacked");
@@ -381,7 +381,7 @@ public class MovementRoutines : MonoBehaviour
             }
         }
 
-        if ((movementCost(beginningHex, destinationHex, selectedUnit) <= beginningHex.GetComponent<HexDatabaseFields>().remainingMovement))
+        if ((MovementCost(beginningHex, destinationHex, selectedUnit) <= beginningHex.GetComponent<HexDatabaseFields>().remainingMovement))
         {
             // A unit can pass over a hex that has reached it's stacking limit but it can't end there.  I can't check it here because theoretically I could have enough movement available to get
             // to the current overstacked hex with movement remaining but I can't be gauranteed that the movement remaining is enough to allow the unit to move off the overstacked hex.  My original
@@ -397,8 +397,8 @@ public class MovementRoutines : MonoBehaviour
             }
 
             // The if statement below is needed to see if the current path takes less moves to get to the target hex
-            if ((beginningHex.GetComponent<HexDatabaseFields>().remainingMovement - movementCost(beginningHex, destinationHex, selectedUnit)) > destinationHex.GetComponent<HexDatabaseFields>().remainingMovement)
-                destinationHex.GetComponent<HexDatabaseFields>().remainingMovement = beginningHex.GetComponent<HexDatabaseFields>().remainingMovement - movementCost(beginningHex, destinationHex, selectedUnit);
+            if ((beginningHex.GetComponent<HexDatabaseFields>().remainingMovement - MovementCost(beginningHex, destinationHex, selectedUnit)) > destinationHex.GetComponent<HexDatabaseFields>().remainingMovement)
+                destinationHex.GetComponent<HexDatabaseFields>().remainingMovement = beginningHex.GetComponent<HexDatabaseFields>().remainingMovement - MovementCost(beginningHex, destinationHex, selectedUnit);
             //GlobalDefinitions.writeToLogFile("checkForMovementAvailable: movement available");
             return (true);
         }
@@ -416,7 +416,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="destinationHex"></param>
     /// <param name="selectedUnit"></param>
     /// <returns></returns>
-    private bool checkForStrategicMovementAvailable(GameObject beginningHex, GameObject destinationHex, GameObject selectedUnit)
+    private bool CheckForStrategicMovementAvailable(GameObject beginningHex, GameObject destinationHex, GameObject selectedUnit)
     {
         // Note that in checking for strategic movement I don't have to do a special check for HQs like in normal movement to make sure they don't enter an enemy ZOC since strategic is more restrictive
 
@@ -434,15 +434,15 @@ public class MovementRoutines : MonoBehaviour
             return (false);
 
         // Need to check if the starting hex (this is really only useful for the intial check only) and the destination hex are not adjacent to an enemy unit
-        if (checkForAdjacentEnemy(beginningHex, selectedUnit) || checkForAdjacentEnemy(destinationHex, selectedUnit))
+        if (CheckForAdjacentEnemy(beginningHex, selectedUnit) || CheckForAdjacentEnemy(destinationHex, selectedUnit))
             return (false);
 
         // During interactive play the user can over-stack with the idea that they would fix the over-stack before moving to the next phase
         // If the AI is moving it needs to not be allowed to over-stack since there is no process to resolve issues before going to the next phase
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.localControl && !GlobalDefinitions.hexUnderStackingLimit(destinationHex, selectedUnit.GetComponent<UnitDatabaseFields>().nationality))
+        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.localControl && !GlobalDefinitions.HexUnderStackingLimit(destinationHex, selectedUnit.GetComponent<UnitDatabaseFields>().nationality))
             return (false);
 
-        if ((strategicMovementCost(beginningHex, destinationHex, selectedUnit) <= beginningHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement))
+        if ((StrategicMovementCost(beginningHex, destinationHex, selectedUnit) <= beginningHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement))
         {
             // A unit can pass over a hex that has reached it's stacking limit but it can't end there.  I can't check it here because theoretically I could have enough movement available to get
             // to the current overstacked hex with movement remaining but I can't be gauranteed that the movement remaining is enough to allow the unit to move off the overstacked hex.  My original
@@ -455,8 +455,8 @@ public class MovementRoutines : MonoBehaviour
                 destinationHex.GetComponent<HexDatabaseFields>().availableForMovement = true;
 
             // The if statement below is needed to see if the current path takes less moves to get to the target hex
-            if ((beginningHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement - strategicMovementCost(beginningHex, destinationHex, selectedUnit)) > destinationHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement)
-                destinationHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = beginningHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement - strategicMovementCost(beginningHex, destinationHex, selectedUnit);
+            if ((beginningHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement - StrategicMovementCost(beginningHex, destinationHex, selectedUnit)) > destinationHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement)
+                destinationHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = beginningHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement - StrategicMovementCost(beginningHex, destinationHex, selectedUnit);
 
             return (true);
         }
@@ -470,7 +470,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="selectedUnit"></param>
     /// <returns></returns>
-    public bool checkForAdjacentEnemy(GameObject hex, GameObject selectedUnit)
+    public bool CheckForAdjacentEnemy(GameObject hex, GameObject selectedUnit)
     {
         foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
         {
@@ -490,7 +490,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="destinationHex"></param>
     /// <param name="selectedUnit"></param>
     /// <returns></returns>
-    private int movementCost(GameObject beginningHex, GameObject destinationHex, GameObject selectedUnit)
+    private int MovementCost(GameObject beginningHex, GameObject destinationHex, GameObject selectedUnit)
     {
         bool checkNeeded = false;
         GlobalDefinitions.Nationality nationalityToCheck = new GlobalDefinitions.Nationality();
@@ -522,17 +522,17 @@ public class MovementRoutines : MonoBehaviour
                     if ((beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null) &&
                         (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                         (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == nationalityToCheck) &&
-                        (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.returnHexSideOpposide((int)hexSide)]))
+                        (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.ReturnHexSideOpposide((int)hexSide)]))
                     {
                         // The current hexSide exerts ZOC into the beginning hex
 
                         // Check if the hex exerting ZOC also projects ZOC into the hexSide + 2 hex or the hexSide + 4 hex
-                        if ((((beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().Neighbors[GlobalDefinitions.returnHex2SideClockwise((int)hexSide)] != null) &&
-                                (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.returnHex2SideClockwise((int)hexSide)]) &&
-                                (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().Neighbors[GlobalDefinitions.returnHex2SideClockwise((int)hexSide)] == destinationHex))) ||
-                                ((beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().Neighbors[GlobalDefinitions.returnHex4SideClockwise((int)hexSide)] != null) &&
-                                (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.returnHex4SideClockwise((int)hexSide)]) &&
-                                (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().Neighbors[GlobalDefinitions.returnHex4SideClockwise((int)hexSide)] == destinationHex)))
+                        if ((((beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().Neighbors[GlobalDefinitions.ReturnHex2SideClockwise((int)hexSide)] != null) &&
+                                (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.ReturnHex2SideClockwise((int)hexSide)]) &&
+                                (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().Neighbors[GlobalDefinitions.ReturnHex2SideClockwise((int)hexSide)] == destinationHex))) ||
+                                ((beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().Neighbors[GlobalDefinitions.ReturnHex4SideClockwise((int)hexSide)] != null) &&
+                                (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.ReturnHex4SideClockwise((int)hexSide)]) &&
+                                (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().Neighbors[GlobalDefinitions.ReturnHex4SideClockwise((int)hexSide)] == destinationHex)))
                         {
                             //  The same unit has ZOC in both hexes so return a movement cost of the unit's movementFactor + 1
                             //  Note, I don't have to keep checking since it doesn't matter if there are more units with the same condition so I return immediately
@@ -590,7 +590,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="destinationHex"></param>
     /// <param name="selectedUnit"></param>
     /// <returns></returns>
-    private int strategicMovementCost(GameObject beginningHex, GameObject destinationHex, GameObject selectedUnit)
+    private int StrategicMovementCost(GameObject beginningHex, GameObject destinationHex, GameObject selectedUnit)
     {
 
         // Check if the target hex is an enemy ZOC.  If so then the cost to enter will be all remaining movement + 1
@@ -641,7 +641,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="intialHexToCheck"></param>
     /// <param name="selectedUnit"></param>
     /// <returns></returns>
-    public List<GameObject> returnAvailableMovementHexes(GameObject initialHexToCheck, GameObject selectedUnit)
+    public List<GameObject> ReturnAvailableMovementHexes(GameObject initialHexToCheck, GameObject selectedUnit)
     {
         // Reset hex values
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
@@ -670,9 +670,9 @@ public class MovementRoutines : MonoBehaviour
         // The first thing to do is to determine if the unit is an allied unit starting on a hex that allows for a return to Britain
         // If it is the sea hex associated with the hex will be highlighted
         if ((selectedUnit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied) && !selectedUnit.GetComponent<UnitDatabaseFields>().hasMoved)
-            if (checkForUnitReturnToBritainBeginningOfTurn(initialHexToCheck))
-                if ((getBritainReturnHex(initialHexToCheck) != null) && !availableMovementHexes.Contains(getBritainReturnHex(initialHexToCheck)))
-                    availableMovementHexes.Add(getBritainReturnHex(initialHexToCheck));
+            if (CheckForUnitReturnToBritainBeginningOfTurn(initialHexToCheck))
+                if ((GetBritainReturnHex(initialHexToCheck) != null) && !availableMovementHexes.Contains(GetBritainReturnHex(initialHexToCheck)))
+                    availableMovementHexes.Add(GetBritainReturnHex(initialHexToCheck));
 
         while (hexesToCheck.Count > 0)
         {
@@ -685,13 +685,13 @@ public class MovementRoutines : MonoBehaviour
                     storeHex = false;
 
                     // Check for normal movement
-                    if (checkForMovementAvailable(hexesToCheck[0], hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], selectedUnit))
+                    if (CheckForMovementAvailable(hexesToCheck[0], hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], selectedUnit))
                     {
                         // See if this hex will allow the unit to return to Britain (for allied units only obviously)
                         if (selectedUnit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied &&
-                                checkForUnitReturnToBritain(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]))
-                            if ((getBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]) != null) && !availableMovementHexes.Contains(getBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide])))
-                                availableMovementHexes.Add(getBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]));
+                                CheckForUnitReturnToBritain(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]))
+                            if ((GetBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]) != null) && !availableMovementHexes.Contains(GetBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide])))
+                                availableMovementHexes.Add(GetBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]));
                         storeHex = true;
                     }
 
@@ -700,13 +700,13 @@ public class MovementRoutines : MonoBehaviour
                             !selectedUnit.GetComponent<UnitDatabaseFields>().unitInterdiction &&
                             !selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().mountain &&
                             selectedUnit.GetComponent<UnitDatabaseFields>().inSupply &&
-                            checkForStrategicMovementAvailable(hexesToCheck[0], hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], selectedUnit))
+                            CheckForStrategicMovementAvailable(hexesToCheck[0], hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], selectedUnit))
                     {
                         // See if this hex will allow the unit to return to Britain (for allied units only obviously)
                         if (selectedUnit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied &&
-                                checkForUnitReturnToBritain(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]))
-                            if ((getBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]) != null) && !availableMovementHexes.Contains(getBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide])))
-                                availableMovementHexes.Add(getBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]));
+                                CheckForUnitReturnToBritain(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]))
+                            if ((GetBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]) != null) && !availableMovementHexes.Contains(GetBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide])))
+                                availableMovementHexes.Add(GetBritainReturnHex(hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]));
                         storeHex = true;
                     }
 
@@ -731,25 +731,25 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="destinationHex"></param>
     /// <param name="beginningHex"></param>
     /// <param name="unit"></param>
-    public void moveUnit(GameObject destinationHex, GameObject beginningHex, GameObject unit)
+    public void MoveUnit(GameObject destinationHex, GameObject beginningHex, GameObject unit)
     {
         // Need to check if the AI is overstacking units
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.hexUnderStackingLimit(destinationHex, unit.GetComponent<UnitDatabaseFields>().nationality) &&
+        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.HexUnderStackingLimit(destinationHex, unit.GetComponent<UnitDatabaseFields>().nationality) &&
                 (beginningHex != destinationHex))
         {
-            GlobalDefinitions.writeToLogFile("moveUnit: ERROR AI is trying to overstack a hex - moving unit " + unit.name + " being moved from " + beginningHex.name + " to " + destinationHex.name);
+            GlobalDefinitions.WriteToLogFile("moveUnit: ERROR AI is trying to overstack a hex - moving unit " + unit.name + " being moved from " + beginningHex.name + " to " + destinationHex.name);
         }
 
 
         // Check if a unit is capturing a hex that yields Allied replacement points
-        checkForAlliedCaptureOfStrategicInstallations(destinationHex, unit);
+        CheckForAlliedCaptureOfStrategicInstallations(destinationHex, unit);
 
         // Indcate that the unit has moved this turn as long as the start and destination hexes aren't the same
         if (destinationHex != beginningHex)
             unit.GetComponent<UnitDatabaseFields>().hasMoved = true;
 
         // Take the unit out of the occupyingUnits field of the current hex
-        GlobalDefinitions.removeUnitFromHex(unit, beginningHex);
+        GlobalDefinitions.RemoveUnitFromHex(unit, beginningHex);
 
         // If this is the AI moving units don't change control of hexes since the AI moves units all over the place to test odds for attacking and then moves them back
         // NEED FIX: Note I need to fix the fact that someone who manually moves a unit to a hex and then performs an undo will result in a false setting
@@ -766,27 +766,27 @@ public class MovementRoutines : MonoBehaviour
         }
 
         // Change the unit's location to the target hex
-        GlobalDefinitions.putUnitOnHex(unit, destinationHex);
+        GlobalDefinitions.PutUnitOnHex(unit, destinationHex);
         unit.GetComponent<UnitDatabaseFields>().remainingMovement = destinationHex.GetComponent<HexDatabaseFields>().remainingMovement;
 
         // If this is the only unit in the target hex then update ZOC's
         if (destinationHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count < 2)
         {
-            updateZOC(destinationHex);
+            UpdateZOC(destinationHex);
         }
 
         // Finally remove all of the highlighting from hexes that were availabe for movement and reset the availableForMovement and remainingMovement fields
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             if (hex.GetComponent<HexDatabaseFields>().availableForMovement)
             {
-                GlobalDefinitions.unhighlightHex(hex.gameObject);
+                GlobalDefinitions.UnhighlightHex(hex.gameObject);
                 hex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
                 hex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = 0;
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
             }
         // By default we will always clear the bridge hex since is not available for movement but it is highlighted
         GameObject bridgeHex = GameObject.Find("Bridge_x5_y24");
-        GlobalDefinitions.unhighlightHex(bridgeHex.gameObject);
+        GlobalDefinitions.UnhighlightHex(bridgeHex.gameObject);
         bridgeHex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
         bridgeHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = 0;
         bridgeHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
@@ -796,13 +796,13 @@ public class MovementRoutines : MonoBehaviour
     /// This routine is for moving from Britain to the board.  There is no beginning hex.
     /// </summary>
     /// <param name="destinationHex"></param>
-    /// <param name="beginningHex"></param>
-    public void moveUnitFromBritain(GameObject destinationHex, GameObject selectedUnit)
+    /// <param name="selectedUnit"></param>
+    public void MoveUnitFromBritain(GameObject destinationHex, GameObject selectedUnit)
     {
         //GlobalDefinitions.writeToLogFile("moveUnitFromBritain: executing with unit = " + selectedUnit.name + " hex = " + destinationHex.name);
         // Indcate that the unit has moved this turn
         selectedUnit.GetComponent<UnitDatabaseFields>().hasMoved = true;
-        checkForAlliedCaptureOfStrategicInstallations(destinationHex, selectedUnit);
+        CheckForAlliedCaptureOfStrategicInstallations(destinationHex, selectedUnit);
 
         selectedUnit.transform.parent = GlobalDefinitions.allUnitsOnBoard.transform;
         GlobalDefinitions.alliedUnitsOnBoard.Add(selectedUnit); // Add the unit to the OnBoardList
@@ -810,20 +810,20 @@ public class MovementRoutines : MonoBehaviour
         selectedUnit.GetComponent<UnitDatabaseFields>().invasionAreaIndex = destinationHex.GetComponent<HexDatabaseFields>().invasionAreaIndex;
 
         // Change the unit's location to the target hex
-        GlobalDefinitions.putUnitOnHex(selectedUnit, destinationHex);
+        GlobalDefinitions.PutUnitOnHex(selectedUnit, destinationHex);
         selectedUnit.GetComponent<UnitDatabaseFields>().remainingMovement = destinationHex.GetComponent<HexDatabaseFields>().remainingMovement;
 
         // If this is the only unit in the target hex then update ZOC's
         if (destinationHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count < 2)
         {
-            updateZOC(destinationHex);
+            UpdateZOC(destinationHex);
         }
 
         // Finally remove all of the highlighting from hexes that were availabe for movement and reset the availableForMovement and remainingMovement fields
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             if (hex.GetComponent<HexDatabaseFields>().availableForMovement)
             {
-                GlobalDefinitions.unhighlightHex(hex.gameObject);
+                GlobalDefinitions.UnhighlightHex(hex.gameObject);
                 hex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
                 hex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = 0;
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
@@ -834,7 +834,7 @@ public class MovementRoutines : MonoBehaviour
     /// Udpates the ZOC flags on the hex passed and its neighbors
     /// </summary>
     /// <param name="hex"></param>
-    public void updateZOC(GameObject hex)
+    public void UpdateZOC(GameObject hex)
     {
         if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
         {
@@ -871,10 +871,10 @@ public class MovementRoutines : MonoBehaviour
             // flag for the current nationality will never be reset here.
             hex.GetComponent<HexDatabaseFields>().inGermanZOC = false;
             hex.GetComponent<HexDatabaseFields>().inAlliedZOC = false;
-            checkAdjacentHexZOCImpact(hex);
+            CheckAdjacentHexZOCImpact(hex);
             foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
                 if (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
-                    checkAdjacentHexZOCImpact(hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]);
+                    CheckAdjacentHexZOCImpact(hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]);
         }
     }
 
@@ -882,7 +882,7 @@ public class MovementRoutines : MonoBehaviour
     /// This is called when a hex has been vacated, it is used to reset the ZOC on the adjacent hexes from the hex that was vacated.
     /// </summary>
     /// <param name="hex"></param>
-    public static void checkAdjacentHexZOCImpact(GameObject hex)
+    public static void CheckAdjacentHexZOCImpact(GameObject hex)
     {
         hex.GetComponent<HexDatabaseFields>().inGermanZOC = false;
         hex.GetComponent<HexDatabaseFields>().inAlliedZOC = false;
@@ -901,7 +901,7 @@ public class MovementRoutines : MonoBehaviour
         foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
         {
             if ((hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
-                    && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.returnHexSideOpposide((int)hexSide)])
+                    && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.ReturnHexSideOpposide((int)hexSide)])
                     && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0))
             {
                 if (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German)
@@ -921,7 +921,7 @@ public class MovementRoutines : MonoBehaviour
     /// </summary>
     /// <param name="hex"></param>
     /// <param name="nationality"></param>
-    public void callMultiUnitDisplay(GameObject hex, GlobalDefinitions.Nationality nationality)
+    public void CallMultiUnitDisplay(GameObject hex, GlobalDefinitions.Nationality nationality)
     {
         // Check if the hex has units of the right nationality on it
         if ((hex != null) && (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
@@ -931,11 +931,11 @@ public class MovementRoutines : MonoBehaviour
             Button cancelButton;
             float panelWidth = (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
             float panelHeight = 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            GlobalDefinitions.createGUICanvas("MultiUnitMovementGUIInstance",
+            GlobalDefinitions.CreateGUICanvas("MultiUnitMovementGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref movementCanvas);
-            GlobalDefinitions.createText("Select a unit", "multiUnitMovementText",
+            GlobalDefinitions.CreateText("Select a unit", "multiUnitMovementText",
                     (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -948,7 +948,7 @@ public class MovementRoutines : MonoBehaviour
             {
                 Toggle tempToggle;
 
-                tempToggle = GlobalDefinitions.createUnitTogglePair("multiUnitMovementUnitToggle" + index,
+                tempToggle = GlobalDefinitions.CreateUnitTogglePair("multiUnitMovementUnitToggle" + index,
                     index * xSeperation + xOffset - 0.5f * panelWidth,
                     2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     movementCanvas,
@@ -956,35 +956,35 @@ public class MovementRoutines : MonoBehaviour
 
                 tempToggle.gameObject.AddComponent<MultiUnitMovementToggleRoutines>();
                 tempToggle.GetComponent<MultiUnitMovementToggleRoutines>().unit = hex.GetComponent<HexDatabaseFields>().occupyingUnit[index];
-                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<MultiUnitMovementToggleRoutines>().selectUnitToMove());
+                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<MultiUnitMovementToggleRoutines>().SelectUnitToMove());
             }
-            cancelButton = GlobalDefinitions.createButton("CancelButton", "Cancel",
+            cancelButton = GlobalDefinitions.CreateButton("CancelButton", "Cancel",
                     (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
                     0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     movementCanvas);
             cancelButton.gameObject.AddComponent<MultiUnitMovementToggleRoutines>();
-            cancelButton.onClick.AddListener(cancelButton.GetComponent<MultiUnitMovementToggleRoutines>().cancelGui);
+            cancelButton.onClick.AddListener(cancelButton.GetComponent<MultiUnitMovementToggleRoutines>().CancelGui);
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No unit found on hex selected");
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                    GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<MovementState>().executeSelectUnit;
+            GlobalDefinitions.GuiUpdateStatusMessage("No unit found on hex selected");
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                    GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<MovementState>().ExecuteSelectUnit;
         }
     }
 
     /// <summary>
     /// Executes the step to reset unit fields for the start of a new turn
     /// </summary>
-    public void initializeUnits()
+    public void InitializeUnits()
     {
         // At first I only initialized a singe nationality at a time.  This doesn't work for isCommittedToAnAttack since at the end of one sides
         // turn they all need to be reset otherwise units that attacked in their turn would be committed in the opposing players turn.
         // The reality is that there is no reason to limit this to a nationality.
 
         // Load the units on the board into their respective global lists
-        GlobalDefinitions.alliedUnitsOnBoard = GlobalDefinitions.returnNationUnitsOnBoard(GlobalDefinitions.Nationality.Allied);
-        GlobalDefinitions.germanUnitsOnBoard = GlobalDefinitions.returnNationUnitsOnBoard(GlobalDefinitions.Nationality.German);
+        GlobalDefinitions.alliedUnitsOnBoard = GlobalDefinitions.ReturnNationUnitsOnBoard(GlobalDefinitions.Nationality.Allied);
+        GlobalDefinitions.germanUnitsOnBoard = GlobalDefinitions.ReturnNationUnitsOnBoard(GlobalDefinitions.Nationality.German);
 
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
         {
@@ -996,7 +996,7 @@ public class MovementRoutines : MonoBehaviour
             // Since I'm going to allow a user to perform his moves in multiple sections, I can't use a static flag for strategic movement available.  If I do this,
             // a unit that starts off adjacent to an enemy unit could move 1 unit and then the next section would make strategic movement available which is wrong.
             // So I will check every unit here if it is available for strategic movement in this turn.
-            if (checkForAdjacentEnemy(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit))
+            if (CheckForAdjacentEnemy(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit))
                 unit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = false;
             else
                 unit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = true;
@@ -1010,7 +1010,7 @@ public class MovementRoutines : MonoBehaviour
             unit.GetComponent<UnitDatabaseFields>().hasMoved = false;
 
             if (unit.GetComponent<UnitDatabaseFields>().armor || unit.GetComponent<UnitDatabaseFields>().airborne)
-                if (checkForAdjacentEnemy(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit) ||
+                if (CheckForAdjacentEnemy(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit) ||
                         unit.GetComponent<UnitDatabaseFields>().unitInterdiction)
                     unit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = false;
                 else
@@ -1026,7 +1026,7 @@ public class MovementRoutines : MonoBehaviour
         }
     }
 
-    public static bool checkIfMovementDone(GlobalDefinitions.Nationality nationality)
+    public static bool CheckIfMovementDone(GlobalDefinitions.Nationality nationality)
     {
         bool returnState = true;
         List<GameObject> onBoardList;
@@ -1038,16 +1038,16 @@ public class MovementRoutines : MonoBehaviour
 
         // Note: executing for all units so that messages will be displayed for all overstacked hexes.  That is why I'm waiting to return after the loop.
         foreach (GameObject unit in onBoardList)
-            if (GlobalDefinitions.stackingLimitExceeded(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality))
+            if (GlobalDefinitions.StackingLimitExceeded(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality))
             {
-                GlobalDefinitions.highlightOverstackedHex(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                GlobalDefinitions.HighlightOverstackedHex(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
                 //GlobalDefinitions.guiUpdateStatusMessage("Hex at(" + unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().xMapCoor + "," +
                 //        unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().yMapCoor + ") is overstacked");
                 returnState = false;
             }
 
         if (!returnState)
-            GlobalDefinitions.guiUpdateStatusMessage("Hexes highlighted in yellow are overstacked.  Units must be moved off the hex or select undo last movement to cancel the movement that placed them there");
+            GlobalDefinitions.GuiUpdateStatusMessage("Hexes highlighted in yellow are overstacked.  Units must be moved off the hex or select undo last movement to cancel the movement that placed them there");
 
         return (returnState);
     }
@@ -1056,7 +1056,7 @@ public class MovementRoutines : MonoBehaviour
     /// Returns the hexes that are currently available for airborne drops
     /// </summary>
     /// <returns></returns>
-    public List<GameObject> getAirborneDropHexes()
+    public List<GameObject> GetAirborneDropHexes()
     {
         List<GameObject> dropHexes = new List<GameObject>();
         List<GameObject> airborneHexesToCheck = new List<GameObject>();
@@ -1132,13 +1132,13 @@ public class MovementRoutines : MonoBehaviour
         return (dropHexes);
     }
 
-    public void removeHexHighlighting()
+    public void RemoveHexHighlighting()
     {
         // Finally remove all of the highlighting from hexes that were availabe for movement and reset the availableForMovement and remainingMovement fields
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             if (hex.GetComponent<HexDatabaseFields>().availableForMovement)
             {
-                GlobalDefinitions.unhighlightHex(hex.gameObject);
+                GlobalDefinitions.UnhighlightHex(hex.gameObject);
                 hex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
                 hex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = 0;
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
@@ -1154,12 +1154,12 @@ public class MovementRoutines : MonoBehaviour
     /// This routine loads the availableReinforcementPorts list with ports and inland ports that are occucpied by Allied units.
     /// These can be used for landing reinforcements.
     /// </summary>
-    public void determineAvailableReinforcementPorts()
+    public void DetermineAvailableReinforcementPorts()
     {
         GlobalDefinitions.availableReinforcementPorts.Clear();
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         {
-            if (hex.GetComponent<HexDatabaseFields>().inlandPort && GlobalDefinitions.checkIfInlandPortClear(hex.gameObject) &&
+            if (hex.GetComponent<HexDatabaseFields>().inlandPort && GlobalDefinitions.CheckIfInlandPortClear(hex.gameObject) &&
                     (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                     (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied))
                 GlobalDefinitions.availableReinforcementPorts.Add(hex.gameObject);
@@ -1180,25 +1180,25 @@ public class MovementRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public List<GameObject> returnReinforcementLandingHexes(GameObject unit)
+    public List<GameObject> ReturnReinforcementLandingHexes(GameObject unit)
     {
         List<GameObject> landingHexes = new List<GameObject>();
 
-        GlobalDefinitions.guiUpdateStatusMessage("Number of reinforcement units landed this turn = " + GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn);
+        GlobalDefinitions.GuiUpdateStatusMessage("Number of reinforcement units landed this turn = " + GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn);
 
         if (GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn < GlobalDefinitions.maxNumberAlliedReinforcementPerTurn)
         {
             // There are available units to be landed this turn.  Go through and highlight all ports and invasion beaches that 
             // can still accept the type of unit selected this turn and has supply capacity available
             foreach (GameObject hex in GlobalDefinitions.availableReinforcementPorts)
-                if (GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkForAvailableSupplyCapacity(hex))
+                if (GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CheckForAvailableSupplyCapacity(hex))
                 {
                     // Invasion hexes don't need to be free of enemy ZOC and they don't need to be occupied.
                     if (hex.GetComponent<HexDatabaseFields>().successfullyInvaded)
                     {
                         //GlobalDefinitions.writeToLogFile("returnReinforcementLandingHexes: unit " + unit.name + " hex " + hex.name + " allied control = " + hex.GetComponent<HexDatabaseFields>().alliedControl + " hex available = " + hexAvailableForUnitTypeReinforcements(hex, unit)); 
                         // The hex cannot have been in German hands in order to be able to land
-                        if ((hex.GetComponent<HexDatabaseFields>().alliedControl) && (hexAvailableForUnitTypeReinforcements(hex, unit)))
+                        if ((hex.GetComponent<HexDatabaseFields>().alliedControl) && (HexAvailableForUnitTypeReinforcements(hex, unit)))
                         {
                             landingHexes.Add(hex);
                             hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
@@ -1210,7 +1210,7 @@ public class MovementRoutines : MonoBehaviour
                     {
                         if ((!hex.GetComponent<HexDatabaseFields>().inGermanZOC) && (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                                 (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied) &&
-                                (hexAvailableForUnitTypeReinforcements(hex, unit)))
+                                (HexAvailableForUnitTypeReinforcements(hex, unit)))
                         {
                             landingHexes.Add(hex);
                             hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
@@ -1222,7 +1222,7 @@ public class MovementRoutines : MonoBehaviour
                     {
                         if ((!hex.GetComponent<HexDatabaseFields>().inGermanZOC) && (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                                 (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied) &&
-                                (hexAvailableForUnitTypeReinforcements(hex, unit)))
+                                (HexAvailableForUnitTypeReinforcements(hex, unit)))
                         {
                             landingHexes.Add(hex);
                             hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
@@ -1239,20 +1239,20 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="unit"></param>
     /// <param name="hex"></param>
     /// <returns></returns>
-    public bool returnHexAvailabilityForLanding(GameObject unit, GameObject hex)
+    public bool ReturnHexAvailabilityForLanding(GameObject unit, GameObject hex)
     {
         if (GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn < GlobalDefinitions.maxNumberAlliedReinforcementPerTurn)
         {
             // There are available units to be landed this turn.  
             // Check if the hex can still accept the type of unit selected this turn and has supply capacity available
-            if (GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkForAvailableSupplyCapacity(hex))
+            if (GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CheckForAvailableSupplyCapacity(hex))
             {
                 // Invasion hexes don't need to be free of enemy ZOC and they don't need to be occupied.
                 if (hex.GetComponent<HexDatabaseFields>().successfullyInvaded)
                 {
                     //GlobalDefinitions.writeToLogFile("returnHexAvailabilityForLanding: unit " + unit.name + " hex " + hex.name + " allied control = " + hex.GetComponent<HexDatabaseFields>().alliedControl + " hex available = " + hexAvailableForUnitTypeReinforcements(hex, unit)); 
                     // The hex cannot have been in German hands in order to be able to land
-                    if ((hex.GetComponent<HexDatabaseFields>().alliedControl) && (hexAvailableForUnitTypeReinforcements(hex, unit)))
+                    if ((hex.GetComponent<HexDatabaseFields>().alliedControl) && (HexAvailableForUnitTypeReinforcements(hex, unit)))
                         return (true);
                 }
 
@@ -1261,7 +1261,7 @@ public class MovementRoutines : MonoBehaviour
                 {
                     if ((!hex.GetComponent<HexDatabaseFields>().inGermanZOC) && (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                             (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied) &&
-                            (hexAvailableForUnitTypeReinforcements(hex, unit)))
+                            (HexAvailableForUnitTypeReinforcements(hex, unit)))
                         return (true);
                 }
                 // In addition to the coastal port requirements, inland ports must have their dependent hexes free from German occupation
@@ -1269,7 +1269,7 @@ public class MovementRoutines : MonoBehaviour
                 {
                     if ((!hex.GetComponent<HexDatabaseFields>().inGermanZOC) && (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                             (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied) &&
-                            (hexAvailableForUnitTypeReinforcements(hex, unit)))
+                            (HexAvailableForUnitTypeReinforcements(hex, unit)))
                         return (true);
                 }
             }
@@ -1283,7 +1283,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public bool hexAvailableForUnitTypeReinforcements(GameObject hex, GameObject unit)
+    public bool HexAvailableForUnitTypeReinforcements(GameObject hex, GameObject unit)
     {
         //GlobalDefinitions.writeToLogFile("hexAvailableForUnitTypeReinforcements: invasion area index = " + hex.GetComponent<HexDatabaseFields>().invasionAreaIndex + " invasion turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].turn + " armor units used this turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].armorUnitsUsedThisTurn + " infantry units used this turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].infantryUnitsUsedThisTurn);
 
@@ -1365,7 +1365,7 @@ public class MovementRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private bool checkForUnitReturnToBritain(GameObject targetHex)
+    private bool CheckForUnitReturnToBritain(GameObject targetHex)
     {
         if (targetHex.GetComponent<HexDatabaseFields>().successfullyInvaded ||
                 targetHex.GetComponent<HexDatabaseFields>().coastalPort ||
@@ -1399,7 +1399,7 @@ public class MovementRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private bool checkForUnitReturnToBritainBeginningOfTurn(GameObject targetHex)
+    private bool CheckForUnitReturnToBritainBeginningOfTurn(GameObject targetHex)
     {
         if (targetHex.GetComponent<HexDatabaseFields>().successfullyInvaded ||
                 targetHex.GetComponent<HexDatabaseFields>().coastalPort ||
@@ -1433,7 +1433,7 @@ public class MovementRoutines : MonoBehaviour
     /// </summary>
     /// <param name="targetHex"></param>
     /// <returns></returns>
-    private GameObject getBritainReturnHex(GameObject targetHex)
+    private GameObject GetBritainReturnHex(GameObject targetHex)
     {
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             if (hex.GetComponent<HexDatabaseFields>().invasionTarget == targetHex)
@@ -1446,8 +1446,8 @@ public class MovementRoutines : MonoBehaviour
         if ((targetHex.GetComponent<HexDatabaseFields>().xMapCoor == 7) &&
                 (targetHex.GetComponent<HexDatabaseFields>().xMapCoor == 21))
         {
-            GlobalDefinitions.getHexAtXY(7, 21).GetComponent<HexDatabaseFields>().availableForMovement = true;
-            return (GlobalDefinitions.getHexAtXY(7, 21));
+            GlobalDefinitions.GetHexAtXY(7, 21).GetComponent<HexDatabaseFields>().availableForMovement = true;
+            return (GlobalDefinitions.GetHexAtXY(7, 21));
         }
 
         // If we get here return a null since the hex isn't available to return to Britain
@@ -1458,13 +1458,13 @@ public class MovementRoutines : MonoBehaviour
     ///  This routine is called when a unit is selected that can return back to Britain.  To signify this the sea hex for the hex will be highlighted.
     /// </summary>
     /// <param name="hex"></param>
-    private void highlightBritainReturnHex(GameObject targetHex)
+    private void HighlightBritainReturnHex(GameObject targetHex)
     {
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             if (hex.GetComponent<HexDatabaseFields>().invasionTarget == targetHex)
             {
                 //storedHexes.Add(hex.gameObject);
-                GlobalDefinitions.highlightHexForMovement(hex.gameObject);
+                GlobalDefinitions.HighlightHexForMovement(hex.gameObject);
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
             }
 
@@ -1472,8 +1472,8 @@ public class MovementRoutines : MonoBehaviour
         if ((targetHex.GetComponent<HexDatabaseFields>().xMapCoor == 7) &&
                 (targetHex.GetComponent<HexDatabaseFields>().xMapCoor == 21))
         {
-            GlobalDefinitions.highlightHexForMovement(GlobalDefinitions.getHexAtXY(7, 21));
-            GlobalDefinitions.getHexAtXY(7, 21).GetComponent<HexDatabaseFields>().availableForMovement = true;
+            GlobalDefinitions.HighlightHexForMovement(GlobalDefinitions.GetHexAtXY(7, 21));
+            GlobalDefinitions.GetHexAtXY(7, 21).GetComponent<HexDatabaseFields>().availableForMovement = true;
             //storedHexes.Add(GlobalDefinitions.getHexAtXY(7, 21));
         }
     }
@@ -1484,7 +1484,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="beginningHex"></param>
     /// <param name="unit"></param>
     /// <param name="resultOfMovement"></param>
-    public void moveUnitBackToBritain(GameObject beginningHex, GameObject unit, bool resultOfMovement)
+    public void MoveUnitBackToBritain(GameObject beginningHex, GameObject unit, bool resultOfMovement)
     {
         //GlobalDefinitions.writeToLogFile("moveUnitBackToBritain: unit = " + unit.name + " hex = " + beginningHex.name + " result of movement = " + resultOfMovement);
         // If the unit is being placed back in Britain by an undo then the turn available shouldn't change.  If it's
@@ -1493,7 +1493,7 @@ public class MovementRoutines : MonoBehaviour
             unit.GetComponent<UnitDatabaseFields>().turnAvailable = GlobalDefinitions.turnNumber + 1;
 
         // Take the unit out of the occupyingUnits field of the current hex
-        GlobalDefinitions.removeUnitFromHex(unit, beginningHex);
+        GlobalDefinitions.RemoveUnitFromHex(unit, beginningHex);
 
         // Check if the unit was on a sea hex.  If not then it needs to give back it's supply
         if (!unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().sea)
@@ -1527,7 +1527,7 @@ public class MovementRoutines : MonoBehaviour
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             if (hex.GetComponent<HexDatabaseFields>().availableForMovement)
             {
-                GlobalDefinitions.unhighlightHex(hex.gameObject);
+                GlobalDefinitions.UnhighlightHex(hex.gameObject);
                 hex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
                 hex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = 0;
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
@@ -1538,31 +1538,31 @@ public class MovementRoutines : MonoBehaviour
     /// This routine is used to determine if an Allied unit has ended its movement on a strategic installation
     /// </summary>
     /// <param name="hex"></param>
-    public void checkForAlliedCaptureOfStrategicInstallations(GameObject hex, GameObject unit)
+    public void CheckForAlliedCaptureOfStrategicInstallations(GameObject hex, GameObject unit)
     {
         // Note that once a hex is captured it counts for replacements regardless if it is recaptured
         // Brest
-        if (hex == GlobalDefinitions.getHexAtXY(22, 1))
+        if (hex == GlobalDefinitions.GetHexAtXY(22, 1))
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
             {
                 GlobalDefinitions.alliedCapturedBrest = true;
-                GlobalDefinitions.unhighlightHex(hex);
+                GlobalDefinitions.UnhighlightHex(hex);
             }
 
         // Rotterdam
-        if (hex == GlobalDefinitions.getHexAtXY(8, 23))
+        if (hex == GlobalDefinitions.GetHexAtXY(8, 23))
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
             {
                 GlobalDefinitions.alliedCapturedRotterdam = true;
-                GlobalDefinitions.unhighlightHex(hex);
+                GlobalDefinitions.UnhighlightHex(hex);
             }
 
         // Boulogne
-        if (hex == GlobalDefinitions.getHexAtXY(14, 16))
+        if (hex == GlobalDefinitions.GetHexAtXY(14, 16))
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
             {
                 GlobalDefinitions.alliedCapturedBoulogne = true;
-                GlobalDefinitions.unhighlightHex(hex);
+                GlobalDefinitions.UnhighlightHex(hex);
             }
     }
 
@@ -1570,7 +1570,7 @@ public class MovementRoutines : MonoBehaviour
     /// This routine will return true if there are infantry or armor units in the dead pile
     /// </summary>
     /// <returns></returns>
-    public bool checkIfAlliedReplacementsAvailable()
+    public bool CheckIfAlliedReplacementsAvailable()
     {
         foreach (Transform unit in GameObject.Find("Units Eliminated").transform)
             if (unit.GetComponent<UnitDatabaseFields>().armor || unit.GetComponent<UnitDatabaseFields>().infantry)
@@ -1581,15 +1581,15 @@ public class MovementRoutines : MonoBehaviour
     /// <summary>
     /// This routine will select an allied unit from the dead pile and move it to its location in Britain
     /// </summary>
-    /// <returns></returns>
-    public void selectAlliedReplacementUnit(GameObject unit)
+    /// <param name="unit"></param>
+    public void SelectAlliedReplacementUnit(GameObject unit)
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ALLIEDREPLACEMENTKEYWORD + " " + unit.name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ALLIEDREPLACEMENTKEYWORD + " " + unit.name);
 
         //  Check for valid unit
         if (unit == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No unit selected; Allied unit on the OOB sheet must be selected as a replacement or click End Current Phase button to save remaining replacement points for next turn");
+            GlobalDefinitions.GuiUpdateStatusMessage("No unit selected; Allied unit on the OOB sheet must be selected as a replacement or click End Current Phase button to save remaining replacement points for next turn");
         }
         // The unit must be in the dead pile and can only select armor or infantry units
         else if (unit.transform.parent.gameObject.name == "Units Eliminated")
@@ -1608,30 +1608,31 @@ public class MovementRoutines : MonoBehaviour
                         unit.GetComponent<UnitDatabaseFields>().inBritain = true;
                     }
                     else
-                        GlobalDefinitions.guiUpdateStatusMessage("Not enough replacement factors remain for selected unit; select a smaller unit or click End Current Phase button to save remaining replacement points for next turn");
+                        GlobalDefinitions.GuiUpdateStatusMessage("Not enough replacement factors remain for selected unit; select a smaller unit or click End Current Phase button to save remaining replacement points for next turn");
                 }
                 else
-                    GlobalDefinitions.guiUpdateStatusMessage("Can only select infantry or armor units for replacement; select a valid unit or click End Current Phase button to save remaining replacement points for next turn");
+                    GlobalDefinitions.GuiUpdateStatusMessage("Can only select infantry or armor units for replacement; select a valid unit or click End Current Phase button to save remaining replacement points for next turn");
             }
             else
-                GlobalDefinitions.guiUpdateStatusMessage("Must select an Allied unit or click End Current Phase button to save remaining replacement points for next turn");
+                GlobalDefinitions.GuiUpdateStatusMessage("Must select an Allied unit or click End Current Phase button to save remaining replacement points for next turn");
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Unit not on OOB sheet; select a valid unit or click End Current Phase button to save remaining replacement points for next turn");
+            GlobalDefinitions.GuiUpdateStatusMessage("Unit not on OOB sheet; select a valid unit or click End Current Phase button to save remaining replacement points for next turn");
     }
 
     /// <summary>
     /// This routine will select an German unit from the dead pile
     /// </summary>
+    /// <param name="selectedUnit"></param>
     /// <returns></returns>
-    public bool selectGermanReplacementUnit(GameObject selectedUnit)
+    public bool SelectGermanReplacementUnit(GameObject selectedUnit)
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.GERMANREPLACEMENTKEYWORD + " " + selectedUnit.name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.GERMANREPLACEMENTKEYWORD + " " + selectedUnit.name);
 
         //  Check for valid unit
         if (selectedUnit == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No unit selected; German unit on the OOB sheet must be selected as a replacement or click End Current Phase button to save remaining replacement points for next turn");
+            GlobalDefinitions.GuiUpdateStatusMessage("No unit selected; German unit on the OOB sheet must be selected as a replacement or click End Current Phase button to save remaining replacement points for next turn");
             return false;
         }
         // The unit must be in the dead pile and can only select armor or infantry units
@@ -1649,25 +1650,25 @@ public class MovementRoutines : MonoBehaviour
                     }
                     else
                     {
-                        GlobalDefinitions.guiUpdateStatusMessage("Not enough replacement factors remain for selected unit; select a smaller unit or click End Current Phase button to save remaining replacement points for next turn");
+                        GlobalDefinitions.GuiUpdateStatusMessage("Not enough replacement factors remain for selected unit; select a smaller unit or click End Current Phase button to save remaining replacement points for next turn");
                         return false;
                     }
                 }
                 else
                 {
-                    GlobalDefinitions.guiUpdateStatusMessage("Cannot select HQ units for replacement; select a valid unit or click End Current Phase button to save remaining replacement points for next turn");
+                    GlobalDefinitions.GuiUpdateStatusMessage("Cannot select HQ units for replacement; select a valid unit or click End Current Phase button to save remaining replacement points for next turn");
                     return false;
                 }
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Allied unit selected; must select a German unit on the OOB sheet or click End Current Phase button to save remaining replacement points for next turn");
+                GlobalDefinitions.GuiUpdateStatusMessage("Allied unit selected; must select a German unit on the OOB sheet or click End Current Phase button to save remaining replacement points for next turn");
                 return false;
             }
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Unit not on OOB sheet; must select a German unit on the OOB sheet or click End Current Phase button to save remaining replacement points for next turn");
+            GlobalDefinitions.GuiUpdateStatusMessage("Unit not on OOB sheet; must select a German unit on the OOB sheet or click End Current Phase button to save remaining replacement points for next turn");
             return false;
         }
     }
@@ -1675,7 +1676,7 @@ public class MovementRoutines : MonoBehaviour
     /// <summary>
     /// Used during turn initialization to add any additional factors to the number of allied replacement factors
     /// </summary>
-    public void calculateAlliedRelacementFactors()
+    public void CalculateAlliedRelacementFactors()
     {
         if (GlobalDefinitions.alliedCapturedBoulogne)
             GlobalDefinitions.alliedReplacementsRemaining++;
@@ -1683,18 +1684,18 @@ public class MovementRoutines : MonoBehaviour
             GlobalDefinitions.alliedReplacementsRemaining++;
         if (GlobalDefinitions.alliedCapturedRotterdam)
             GlobalDefinitions.alliedReplacementsRemaining++;
-        GlobalDefinitions.writeToLogFile("calculateAlliedReplacementFactors: Turn " + GlobalDefinitions.turnNumber + "  Allied Replacement Factor Total = " + GlobalDefinitions.alliedReplacementsRemaining);
+        GlobalDefinitions.WriteToLogFile("calculateAlliedReplacementFactors: Turn " + GlobalDefinitions.turnNumber + "  Allied Replacement Factor Total = " + GlobalDefinitions.alliedReplacementsRemaining);
     }
 
     /// <summary>
     /// This routine will highlight the German replacment hexes that aren't in Allied control
     /// </summary>
-    public void highlightGermanReplacementHexes()
+    public void HighlightGermanReplacementHexes()
     {
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             if (!hex.GetComponent<HexDatabaseFields>().alliedControl && hex.GetComponent<HexDatabaseFields>().germanRepalcement)
             {
-                GlobalDefinitions.highlightHexForMovement(hex.gameObject);
+                GlobalDefinitions.HighlightHexForMovement(hex.gameObject);
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
             }
     }
@@ -1703,7 +1704,7 @@ public class MovementRoutines : MonoBehaviour
     /// This routine is called at the end of a movement phase.  Any HQ units in an enemy ZOC are eliminated
     /// </summary>
     /// <param name="nationality"></param>
-    public void removeHQInEnemyZOC(GlobalDefinitions.Nationality nationality)
+    public void RemoveHQInEnemyZOC(GlobalDefinitions.Nationality nationality)
     {
         // I can't remove units from the list while checking so strore them away and remove later
         // Can't get a count fromt the GameObject.Find result so can't index the search
@@ -1712,13 +1713,13 @@ public class MovementRoutines : MonoBehaviour
         foreach (Transform unitTransform in GlobalDefinitions.allUnitsOnBoard.transform)
             if ((unitTransform.GetComponent<UnitDatabaseFields>().nationality == nationality) &&
                     unitTransform.GetComponent<UnitDatabaseFields>().HQ &&
-                    (GlobalDefinitions.hexInEnemyZOC(unitTransform.GetComponent<UnitDatabaseFields>().occupiedHex, nationality)))
+                    (GlobalDefinitions.HexInEnemyZOC(unitTransform.GetComponent<UnitDatabaseFields>().occupiedHex, nationality)))
                 unitsToDelete.Add(unitTransform.gameObject);
 
         for (int index = 0; index < unitsToDelete.Count; index++)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("HQ unit " + unitsToDelete[index].name + " ended its turn in enemy ZOC so it is eliminated");
-            GlobalDefinitions.moveUnitToDeadPile(unitsToDelete[index]);
+            GlobalDefinitions.GuiUpdateStatusMessage("HQ unit " + unitsToDelete[index].name + " ended its turn in enemy ZOC so it is eliminated");
+            GlobalDefinitions.MoveUnitToDeadPile(unitsToDelete[index]);
         }
 
     }
@@ -1728,7 +1729,7 @@ public class MovementRoutines : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     /// </summary>
-    public void setAirborneLimits()
+    public void SetAirborneLimits()
     {
         // Set the maximum number of airborne drops available this turn.
         // The maximum is usually 3, but this can be limited if this is the first or second turn after an invasion.
@@ -1754,14 +1755,14 @@ public class MovementRoutines : MonoBehaviour
         else
             GlobalDefinitions.maxNumberAirborneDropsThisTurn = GlobalDefinitions.NormalAirborneDropLimit;
         if (GlobalDefinitions.localControl)
-            GlobalDefinitions.guiUpdateStatusMessage("Maximum number of airborne drops this turn = " + GlobalDefinitions.maxNumberAirborneDropsThisTurn);
+            GlobalDefinitions.GuiUpdateStatusMessage("Maximum number of airborne drops this turn = " + GlobalDefinitions.maxNumberAirborneDropsThisTurn);
     }
 
     /// <summary>
     /// This routine returns true if airborne units are available in Britain for the current turn
     /// </summary>
     /// <returns></returns>
-    public bool airborneUnitsAvaialbleInBritain()
+    public bool AirborneUnitsAvaialbleInBritain()
     {
         foreach (Transform unitTransform in GameObject.Find("Units In Britain").transform)
             if ((unitTransform.GetComponent<UnitDatabaseFields>().airborne) && (unitTransform.GetComponent<UnitDatabaseFields>().turnAvailable <= GlobalDefinitions.turnNumber))
@@ -1773,7 +1774,7 @@ public class MovementRoutines : MonoBehaviour
     /// This routine takes the passed unit and determies if it is a valid unit for airborne drop and then processes it
     /// </summary>
     /// <param name="selectedUnit"></param>
-    public void processAirborneUnitSelection(GameObject selectedUnit)
+    public void ProcessAirborneUnitSelection(GameObject selectedUnit)
     {
         List<GameObject> dropHexes = new List<GameObject>();
 
@@ -1792,78 +1793,78 @@ public class MovementRoutines : MonoBehaviour
                 {
                     // This is an aiborne unit already on the board that was just dropped (because the beginning turn hex is null).
                     // Highight this in case the user wants to undo the drop
-                    GlobalDefinitions.highlightUnit(selectedUnit);
+                    GlobalDefinitions.HighlightUnit(selectedUnit);
                     GlobalDefinitions.selectedUnit = selectedUnit;
                 }
                 else
-                    GlobalDefinitions.guiUpdateStatusMessage("No more airborne drops are available this turn");
+                    GlobalDefinitions.GuiUpdateStatusMessage("No more airborne drops are available this turn");
             }
 
             else if (!selectedUnit.GetComponent<UnitDatabaseFields>().airborne)
             {
                 if (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
-                    GlobalDefinitions.guiDisplayUnitsOnHex(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
-                GlobalDefinitions.guiUpdateStatusMessage("The unit selected is not an airborne unit; please select an airborne unit located in Britain");
+                    GlobalDefinitions.GuiDisplayUnitsOnHex(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                GlobalDefinitions.GuiUpdateStatusMessage("The unit selected is not an airborne unit; please select an airborne unit located in Britain");
             }
 
             else if (GlobalDefinitions.alliedUnitsOnBoard.Contains(selectedUnit) && (selectedUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex == null))
             {
                 // This is an aiborne unit already on the board that was just dropped (because the beginning turn hex is null).
                 // Highight this in case the user wants to undo the drop
-                GlobalDefinitions.highlightUnit(selectedUnit);
+                GlobalDefinitions.HighlightUnit(selectedUnit);
                 GlobalDefinitions.selectedUnit = selectedUnit;
             }
 
             else if (!selectedUnit.GetComponent<UnitDatabaseFields>().inBritain)
             {
                 if (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
-                    GlobalDefinitions.guiDisplayUnitsOnHex(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
-                GlobalDefinitions.guiUpdateStatusMessage("Only airborne units in Britain can use airborne drop");
+                    GlobalDefinitions.GuiDisplayUnitsOnHex(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                GlobalDefinitions.GuiUpdateStatusMessage("Only airborne units in Britain can use airborne drop");
             }
 
             // Check if it is available this turn
             else if (selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable > GlobalDefinitions.turnNumber)
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Airborne unit not availabe until turn " + selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable);
+                GlobalDefinitions.GuiUpdateStatusMessage("Airborne unit not availabe until turn " + selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable);
             }
 
             else
             {
-                GlobalDefinitions.highlightUnit(selectedUnit);
+                GlobalDefinitions.HighlightUnit(selectedUnit);
                 GlobalDefinitions.selectedUnit = selectedUnit;
-                dropHexes = getAirborneDropHexes();  // Note that the selected hex doesn't have any impact on drop hexes
+                dropHexes = GetAirborneDropHexes();  // Note that the selected hex doesn't have any impact on drop hexes
                 foreach (GameObject hex in dropHexes)
-                    GlobalDefinitions.highlightHexForMovement(hex);
+                    GlobalDefinitions.HighlightHexForMovement(hex);
 
             }
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("No unit selected; select an airborne unit in Britain or click the End Current Phase button to go to the next turn phase");
+            GlobalDefinitions.GuiUpdateStatusMessage("No unit selected; select an airborne unit in Britain or click the End Current Phase button to go to the next turn phase");
     }
 
     /// <summary>
     /// This routine processes the hex selected to drop an airborne unit on
     /// </summary>
     /// <param name="selectedHex"></param>
-    public void processAirborneDrop(GameObject selectedHex)
+    public void ProcessAirborneDrop(GameObject selectedHex)
     {
         if (selectedHex == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No valid hex selected; must select a highlighted hex");
+            GlobalDefinitions.GuiUpdateStatusMessage("No valid hex selected; must select a highlighted hex");
 
             // In movement mode getUnitMoveDestination takes case of a unit not moving (unhighlighting, ect...) 
             // But I can't use it here because I have to not count it against the airborne drop limit
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().removeHexHighlighting();
-            GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().RemoveHexHighlighting();
+            GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
             GlobalDefinitions.selectedUnit = null;
         }
 
         else if (selectedHex.GetComponent<HexDatabaseFields>().availableForMovement)
         {
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitFromBritain(selectedHex, GlobalDefinitions.selectedUnit);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitFromBritain(selectedHex, GlobalDefinitions.selectedUnit);
             selectedHex.GetComponent<HexDatabaseFields>().alliedControl = true;
-            GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().removeHexHighlighting();
+            GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().RemoveHexHighlighting();
             //GlobalDefinitions.airborneDropsTookPlaceThisTurn = true;
             GlobalDefinitions.currentAirborneDropsThisTurn++;
             GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().remainingMovement = 0;
@@ -1872,8 +1873,8 @@ public class MovementRoutines : MonoBehaviour
         {
             // In movement mode getUnitMoveDestination takes case of a unit not moving (unhighlighting, ect...) 
             // But I can't use it here because I have to not count it against the airborne drop limit
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().removeHexHighlighting();
-            GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().RemoveHexHighlighting();
+            GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
             GlobalDefinitions.selectedUnit = null;
         }
     }
@@ -1883,7 +1884,7 @@ public class MovementRoutines : MonoBehaviour
     /// </summary>
     /// <param name="selectedUnit"></param>
     /// <param name="currentNationality"></param>
-    public void processUnitSelectionForMovement(GameObject selectedUnit, GlobalDefinitions.Nationality currentNationality)
+    public void ProcessUnitSelectionForMovement(GameObject selectedUnit, GlobalDefinitions.Nationality currentNationality)
     {
         if (selectedUnit != null)
             if ((currentNationality == GlobalDefinitions.Nationality.Allied) && selectedUnit.GetComponent<UnitDatabaseFields>().inBritain)
@@ -1891,26 +1892,26 @@ public class MovementRoutines : MonoBehaviour
                 // Check that the unit selected is available for the current turn
                 if (selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable <= GlobalDefinitions.turnNumber)
                 {
-                    GlobalDefinitions.highlightUnit(selectedUnit);
+                    GlobalDefinitions.HighlightUnit(selectedUnit);
                     // Get the landing hexes and highlight them
-                    foreach (GameObject hex in returnReinforcementLandingHexes(selectedUnit))
-                        GlobalDefinitions.highlightHexForMovement(hex);
+                    foreach (GameObject hex in ReturnReinforcementLandingHexes(selectedUnit))
+                        GlobalDefinitions.HighlightHexForMovement(hex);
                 }
                 else
                 {
-                    GlobalDefinitions.guiUpdateStatusMessage("Unit selected is not available until turn " + selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable);
+                    GlobalDefinitions.GuiUpdateStatusMessage("Unit selected is not available until turn " + selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable);
                 }
             // Check if the unit doesn't occupy a hex (we've already checked for a reinforcement unit)
             else if (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex == null)
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Unit selected must be on the board");
+                GlobalDefinitions.GuiUpdateStatusMessage("Unit selected must be on the board");
                 GlobalDefinitions.selectedUnit = null;
                 GlobalDefinitions.startHex = null;
             }
 
             else if (selectedUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Unit selected is committed to an attack\nCancel attack if you want to move this unit");
+                GlobalDefinitions.GuiUpdateStatusMessage("Unit selected is committed to an attack\nCancel attack if you want to move this unit");
                 GlobalDefinitions.selectedUnit = null;
                 GlobalDefinitions.startHex = null;
 
@@ -1924,9 +1925,9 @@ public class MovementRoutines : MonoBehaviour
                 // AI TESTING: For debugging the AI algorithm I am setting the hex movement values here for the selected unit
                 //AIRoutines.setUnitMovementValues(selectedUnit);
 
-                GlobalDefinitions.startHex = highlighyHexesForMovement(selectedUnit);
+                GlobalDefinitions.startHex = HighlighyHexesForMovement(selectedUnit);
             }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("No unit selected");
+            GlobalDefinitions.GuiUpdateStatusMessage("No unit selected");
     }
 }

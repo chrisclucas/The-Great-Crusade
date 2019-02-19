@@ -8,7 +8,7 @@ public class ReadWriteRoutines : MonoBehaviour
     /// <summary>
     /// This is the routine called to write out the save turn file
     /// </summary>
-    public void writeSaveTurnFile(string saveFileType)
+    public void WriteSaveTurnFile(string saveFileType)
     {
         // There are three types of saved files: setup, end of Allied turn, and end of German turn.  The name of the file reflects this using the string passed
         string turnString;
@@ -18,32 +18,32 @@ public class ReadWriteRoutines : MonoBehaviour
             turnString = GlobalDefinitions.turnNumber.ToString();
         StreamWriter fileWriter = new StreamWriter(GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
         if (fileWriter == null)
-            GlobalDefinitions.guiUpdateStatusMessage("Unable to open save file " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
+            GlobalDefinitions.GuiUpdateStatusMessage("Unable to open save file " + GameControl.path + "TGCOutputFiles\\TGCSaveFile_Turn" + turnString + "_" + saveFileType + ".txt");
         else
         {
             fileWriter.WriteLine("Turn " + GlobalDefinitions.turnNumber);
 
             fileWriter.Write("Global_Definitions ");
-            GlobalDefinitions.writeGlobalVariables(fileWriter);
+            GlobalDefinitions.WriteGlobalVariables(fileWriter);
 
             fileWriter.WriteLine("Hexes");
             foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             {
-                hex.GetComponent<HexDatabaseFields>().writeHexFields(fileWriter);
+                hex.GetComponent<HexDatabaseFields>().WriteHexFields(fileWriter);
             }
             fileWriter.WriteLine("End");
             fileWriter.WriteLine("Units");
             foreach (Transform unit in GameObject.Find("Units Eliminated").transform)
             {
-                unit.GetComponent<UnitDatabaseFields>().writeUnitFields(fileWriter);
+                unit.GetComponent<UnitDatabaseFields>().WriteUnitFields(fileWriter);
             }
             foreach (Transform unit in GlobalDefinitions.allUnitsOnBoard.transform)
             {
-                unit.GetComponent<UnitDatabaseFields>().writeUnitFields(fileWriter);
+                unit.GetComponent<UnitDatabaseFields>().WriteUnitFields(fileWriter);
             }
             foreach (Transform unit in GameObject.Find("Units In Britain").transform)
             {
-                unit.GetComponent<UnitDatabaseFields>().writeUnitFields(fileWriter);
+                unit.GetComponent<UnitDatabaseFields>().WriteUnitFields(fileWriter);
             }
             fileWriter.WriteLine("End");
 
@@ -53,7 +53,7 @@ public class ReadWriteRoutines : MonoBehaviour
             if (saveFileType == "Setup")
                 fileWriter.Write("German");
             else
-                fileWriter.Write(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+                fileWriter.Write(GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality);
 
             fileWriter.WriteLine();
             fileWriter.Close();
@@ -62,7 +62,7 @@ public class ReadWriteRoutines : MonoBehaviour
             if (!GlobalDefinitions.commandFileBeingRead)
             {
                 if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
-                    GlobalDefinitions.deleteCommandFile();
+                    GlobalDefinitions.DeleteCommandFile();
                 using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.commandFile))
                 {
                     writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
@@ -77,14 +77,14 @@ public class ReadWriteRoutines : MonoBehaviour
     /// This routine reads the contents of a save file
     /// </summary>
     /// <param name="fileName"></param>
-    public void readTurnFile(string fileName)
+    public void ReadTurnFile(string fileName)
     {
         char[] delimiterChars = { ' ' };
         string line;
         string[] lineEntries;
         string[] switchEntries;
 
-        GlobalDefinitions.writeToLogFile("readTurnFile: executing - passed file = " + fileName);
+        GlobalDefinitions.WriteToLogFile("readTurnFile: executing - passed file = " + fileName);
 
         StreamReader theReader = new StreamReader(fileName);
         using (theReader)
@@ -99,13 +99,13 @@ public class ReadWriteRoutines : MonoBehaviour
                     {
                         case "Turn":
                             GlobalDefinitions.turnNumber = Convert.ToInt32(switchEntries[1]);
-                            GlobalDefinitions.guiUpdateTurn();
+                            GlobalDefinitions.GuiUpdateTurn();
                             break;
                         case "Game_Control":
-                            GameControl.setGameState(switchEntries[1]);
+                            GameControl.SetGameState(switchEntries[1]);
                             break;
                         case "Global_Definitions":
-                            readGlobalVariables(switchEntries);
+                            ReadGlobalVariables(switchEntries);
                             break;
                         case "Hexes":
                             line = theReader.ReadLine();
@@ -113,7 +113,7 @@ public class ReadWriteRoutines : MonoBehaviour
                             while (lineEntries[0] != "End")
                             {
                                 string[] entries = line.Split(delimiterChars);
-                                processHexRecord(entries);
+                                ProcessHexRecord(entries);
 
                                 line = theReader.ReadLine();
                                 lineEntries = line.Split(delimiterChars);
@@ -125,7 +125,7 @@ public class ReadWriteRoutines : MonoBehaviour
                             while (lineEntries[0] != "End")
                             {
                                 string[] entries = line.Split(delimiterChars);
-                                processUnitRecord(entries);
+                                ProcessUnitRecord(entries);
 
                                 line = theReader.ReadLine();
                                 lineEntries = line.Split(delimiterChars);
@@ -137,18 +137,18 @@ public class ReadWriteRoutines : MonoBehaviour
             while (line != null);
             theReader.Close();
 
-            GlobalDefinitions.writeToLogFile("readTurnFile: File read complete.  Initialize Game State");
+            GlobalDefinitions.WriteToLogFile("readTurnFile: File read complete.  Initialize Game State");
 
             // If we just read a setup file, put the player into the setup state so that he can update the setup if he wants.
             if ((GlobalDefinitions.turnNumber == 0) && (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.German))
             {
                 GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<SetUpState>().executeSelectUnit;
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<SetUpState>().ExecuteSelectUnit;
             }
             // Otherwise, execute the init for the next state
             else
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
         }
     }
 
@@ -156,29 +156,29 @@ public class ReadWriteRoutines : MonoBehaviour
     /// This routine reads a single record for a hex
     /// </summary>
     /// <param name="entries"></param>
-    public void processHexRecord(string[] entries)
+    public void ProcessHexRecord(string[] entries)
     {
         GameObject hex;
 
         hex = GameObject.Find(entries[0]);
 
-        hex.GetComponent<HexDatabaseFields>().inGermanZOC = GlobalDefinitions.returnBoolFromSaveFormat(entries[1]);
-        hex.GetComponent<HexDatabaseFields>().inAlliedZOC = GlobalDefinitions.returnBoolFromSaveFormat(entries[2]);
-        hex.GetComponent<HexDatabaseFields>().alliedControl = GlobalDefinitions.returnBoolFromSaveFormat(entries[3]);
-        hex.GetComponent<HexDatabaseFields>().successfullyInvaded = GlobalDefinitions.returnBoolFromSaveFormat(entries[4]);
-        hex.GetComponent<HexDatabaseFields>().closeDefenseSupport = GlobalDefinitions.returnBoolFromSaveFormat(entries[5]);
-        hex.GetComponent<HexDatabaseFields>().riverInterdiction = GlobalDefinitions.returnBoolFromSaveFormat(entries[6]);
+        hex.GetComponent<HexDatabaseFields>().inGermanZOC = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[1]);
+        hex.GetComponent<HexDatabaseFields>().inAlliedZOC = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[2]);
+        hex.GetComponent<HexDatabaseFields>().alliedControl = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[3]);
+        hex.GetComponent<HexDatabaseFields>().successfullyInvaded = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[4]);
+        hex.GetComponent<HexDatabaseFields>().closeDefenseSupport = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[5]);
+        hex.GetComponent<HexDatabaseFields>().riverInterdiction = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[6]);
 
         // By calling the unhighlight rouitne (no hexes should be highlighted at this point) it will 
         // turn close defense and interdicted river hexes the correct color
-        GlobalDefinitions.unhighlightHex(GameObject.Find(entries[0]));
+        GlobalDefinitions.UnhighlightHex(GameObject.Find(entries[0]));
     }
 
     /// <summary>
     /// This routine reads a single record for a unit
     /// </summary>
     /// <param name="entries"></param>
-    public void processUnitRecord(string[] entries)
+    public void ProcessUnitRecord(string[] entries)
     {
         GameObject unit;
 
@@ -191,24 +191,24 @@ public class ReadWriteRoutines : MonoBehaviour
             unit.GetComponent<UnitDatabaseFields>().beginningTurnHex = null;
         else
             unit.GetComponent<UnitDatabaseFields>().beginningTurnHex = GameObject.Find(entries[2]);
-        unit.GetComponent<UnitDatabaseFields>().inBritain = GlobalDefinitions.returnBoolFromSaveFormat(entries[3]);
-        unit.GetComponent<UnitDatabaseFields>().unitInterdiction = GlobalDefinitions.returnBoolFromSaveFormat(entries[4]);
+        unit.GetComponent<UnitDatabaseFields>().inBritain = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[3]);
+        unit.GetComponent<UnitDatabaseFields>().unitInterdiction = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[4]);
         unit.GetComponent<UnitDatabaseFields>().invasionAreaIndex = Convert.ToInt32(entries[5]);
-        unit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = GlobalDefinitions.returnBoolFromSaveFormat(entries[6]);
-        unit.GetComponent<UnitDatabaseFields>().inSupply = GlobalDefinitions.returnBoolFromSaveFormat(entries[7]);
+        unit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[6]);
+        unit.GetComponent<UnitDatabaseFields>().inSupply = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[7]);
         // Need to adjust the highlighting of the unit if it is out of supply
-        GlobalDefinitions.unhighlightUnit(unit);
+        GlobalDefinitions.UnhighlightUnit(unit);
         if (entries[8] == "null")
             unit.GetComponent<UnitDatabaseFields>().supplySource = null;
         else
             unit.GetComponent<UnitDatabaseFields>().supplySource = GameObject.Find(entries[8]);
         unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply = Convert.ToInt32(entries[9]);
-        unit.GetComponent<UnitDatabaseFields>().unitEliminated = GlobalDefinitions.returnBoolFromSaveFormat(entries[10]);
+        unit.GetComponent<UnitDatabaseFields>().unitEliminated = GlobalDefinitions.ReturnBoolFromSaveFormat(entries[10]);
 
 
         if (unit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
         {
-            GlobalDefinitions.putUnitOnHex(unit, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+            GlobalDefinitions.PutUnitOnHex(unit, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
             unit.transform.parent = GlobalDefinitions.allUnitsOnBoard.transform;
         }
         else if (unit.GetComponent<UnitDatabaseFields>().unitEliminated)
@@ -223,7 +223,7 @@ public class ReadWriteRoutines : MonoBehaviour
         }
         else
         {
-            GlobalDefinitions.writeToLogFile("processUnitRecord: Unit read error - " + entries[1] + ": found no location to place this unit");
+            GlobalDefinitions.WriteToLogFile("processUnitRecord: Unit read error - " + entries[1] + ": found no location to place this unit");
         }
 
         if (!unit.GetComponent<UnitDatabaseFields>().unitEliminated && !unit.GetComponent<UnitDatabaseFields>().inBritain)
@@ -241,7 +241,7 @@ public class ReadWriteRoutines : MonoBehaviour
     /// This routine reads the record on a saved file that contains the Global Definition values
     /// </summary>
     /// <param name="entries"></param>
-    public void readGlobalVariables(string[] entries)
+    public void ReadGlobalVariables(string[] entries)
     {
         GlobalDefinitions.numberOfCarpetBombingsUsed = Convert.ToInt32(entries[1]);
         GlobalDefinitions.numberInvasionsExecuted = Convert.ToInt32(entries[2]);
@@ -315,14 +315,14 @@ public class ReadWriteRoutines : MonoBehaviour
         entryIndex++;
         GlobalDefinitions.easiestDifficultySettingUsed = Convert.ToInt32(entries[entryIndex]);
 
-        GlobalDefinitions.guiUpdateLossRatioText();
-        GlobalDefinitions.guiDisplayAlliedVictoryStatus();
+        GlobalDefinitions.GuiUpdateLossRatioText();
+        GlobalDefinitions.GuiDisplayAlliedVictoryStatus();
     }
 
     /// <summary>
     /// Reads the configuration settings from the configuration file
     /// </summary>
-    public void readSettingsFile()
+    public void ReadSettingsFile()
     {
         char[] delimiterChars = { ' ' };
         string line;
@@ -340,11 +340,11 @@ public class ReadWriteRoutines : MonoBehaviour
                     switch (switchEntries[0])
                     {
                         case "Difficulty":
-                            GlobalDefinitions.writeToLogFile("readSettingsFile: " + line);
+                            GlobalDefinitions.WriteToLogFile("readSettingsFile: " + line);
                             GlobalDefinitions.difficultySetting = Convert.ToInt32(switchEntries[1]);
                             break;
                         case "Aggressive":
-                            GlobalDefinitions.writeToLogFile("readSettingsFile: " + line);
+                            GlobalDefinitions.WriteToLogFile("readSettingsFile: " + line);
                             GlobalDefinitions.aggressiveSetting = Convert.ToInt32(switchEntries[1]);
                             break;
 
@@ -361,23 +361,23 @@ public class ReadWriteRoutines : MonoBehaviour
     /// </summary>
     /// <param name="difficultySetting"></param>
     /// <param name="aggresivenessSetting"></param>
-    public void writeSettingsFile(int difficultySetting, int aggressiveSetting)
+    public void WriteSettingsFile(int difficultySetting, int aggressiveSetting)
     {
         if (File.Exists(GlobalDefinitions.settingsFile))
             File.Delete(GlobalDefinitions.settingsFile);
         StreamWriter fileWriter = new StreamWriter(GlobalDefinitions.settingsFile);
-        GlobalDefinitions.writeToLogFile("writeSettingsFile: creating file = " + GlobalDefinitions.settingsFile);
+        GlobalDefinitions.WriteToLogFile("writeSettingsFile: creating file = " + GlobalDefinitions.settingsFile);
         if (fileWriter == null)
-            GlobalDefinitions.guiUpdateStatusMessage("Unable to create the settings file " + GameControl.path + "TGCSettingsFile.txt");
+            GlobalDefinitions.GuiUpdateStatusMessage("Unable to create the settings file " + GameControl.path + "TGCSettingsFile.txt");
         else
         {
             GlobalDefinitions.difficultySetting = Convert.ToInt32(difficultySetting);
             GlobalDefinitions.aggressiveSetting = Convert.ToInt32(aggressiveSetting);
 
             fileWriter.WriteLine("Difficulty " + difficultySetting);
-            GlobalDefinitions.writeToLogFile("writeSettingsFile: Difficulty = " + difficultySetting);
+            GlobalDefinitions.WriteToLogFile("writeSettingsFile: Difficulty = " + difficultySetting);
             fileWriter.WriteLine("Aggressive " + aggressiveSetting);
-            GlobalDefinitions.writeToLogFile("writeSettingsFile: Aggressive = " + aggressiveSetting);
+            GlobalDefinitions.WriteToLogFile("writeSettingsFile: Aggressive = " + aggressiveSetting);
             fileWriter.Close();
         }
     }

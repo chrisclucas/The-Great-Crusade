@@ -76,10 +76,10 @@ public class GameControl : MonoBehaviour
         catch
         {
             MessageBox.Show("ERROR: Cannot access log file - cannot continue");
-            GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Cannot access log file - cannot continue");
+            GlobalDefinitions.GuiUpdateStatusMessage("Internal Error - Cannot access log file - cannot continue");
         }
 
-        GlobalDefinitions.writeToLogFile("Game Version " + GlobalDefinitions.releaseVersion);
+        GlobalDefinitions.WriteToLogFile("Game Version " + GlobalDefinitions.releaseVersion);
 
         // There are three files that should have been installed with the game.  Note, I could get rid of all three of these and just have the
         // board and the units built into the game rather than reading them.  But I haven't done this based on a somewhat vauge idea that this will
@@ -123,21 +123,21 @@ public class GameControl : MonoBehaviour
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
 
         // Hide the chat screen.  We will turn it back on if the user selects a network game
-        GameObject.Find("ChatInputField").GetComponent<InputField>().onEndEdit.AddListener(delegate { GlobalDefinitions.executeChatMessage(); });
+        GameObject.Find("ChatInputField").GetComponent<InputField>().onEndEdit.AddListener(delegate { GlobalDefinitions.ExecuteChatMessage(); });
         GlobalDefinitions.chatPanel = GameObject.Find("ChatPanel");
         GlobalDefinitions.chatPanel.SetActive(false);
 
         // The first thing that needs to be done is store the locations of the units.  They 
         // are sitting on the order of battle sheet and this will be their "dead" location
-        GlobalDefinitions.writeToLogFile("Setting unit OOB locations");
+        GlobalDefinitions.WriteToLogFile("Setting unit OOB locations");
         foreach (Transform unit in GameObject.Find("Units Eliminated").transform)
             unit.GetComponent<UnitDatabaseFields>().OOBLocation = unit.position;
 
-        GlobalDefinitions.writeToLogFile("GameControl start(): Creating Singletons");
+        GlobalDefinitions.WriteToLogFile("GameControl start(): Creating Singletons");
         // Create singletons of each of the routine classes
-        createSingletons();
+        CreateSingletons();
 
-        GlobalDefinitions.writeToLogFile("GameControl start(): Setting up the map - " + path + "TGCBoardSetup.txt");
+        GlobalDefinitions.WriteToLogFile("GameControl start(): Setting up the map - " + path + "TGCBoardSetup.txt");
         // Set up the map from the read location
         createBoardInstance.GetComponent<CreateBoard>().ReadMapSetup(path + "TGCBoardSetup.txt");
 
@@ -152,17 +152,17 @@ public class GameControl : MonoBehaviour
         {
             GlobalDefinitions.difficultySetting = 5;
             GlobalDefinitions.aggressiveSetting = 3;
-            readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSettingsFile(5, 3);
+            readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().WriteSettingsFile(5, 3);
         }
         else
         {
             // If the file exists read the configuration settings
-            readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readSettingsFile();
+            readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadSettingsFile();
         }
         // Reset the min/max odds since the aggressiveness has just been read
-        CombatResolutionRoutines.adjustAggressiveness();
+        CombatResolutionRoutines.AdjustAggressiveness();
 
-        AIRoutines.setIntrinsicHexValues();
+        AIRoutines.SetIntrinsicHexValues();
 
         // AI TESTING
         //hexValueGuiInstance = new GameObject();
@@ -176,12 +176,12 @@ public class GameControl : MonoBehaviour
         //foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         //    GlobalDefinitions.createHexValueText(Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexValue), hex.name + "HexValueText", 20, 20, hex.position.x, hex.position.y, hexValueCanvas);
 
-        GlobalDefinitions.writeToLogFile("GameControl start(): Putting Allied units in Britain - reading from file: " + path + "TGCBritainUnitLocation.txt");
+        GlobalDefinitions.WriteToLogFile("GameControl start(): Putting Allied units in Britain - reading from file: " + path + "TGCBritainUnitLocation.txt");
         // When restarting a game the units won't have their Britain location loaded so this needs to be done before a restart file is read
-        createBoardInstance.GetComponent<CreateBoard>().readBritainPlacement(path + "TGCBritainUnitLocation.txt");
+        createBoardInstance.GetComponent<CreateBoard>().ReadBritainPlacement(path + "TGCBritainUnitLocation.txt");
 
-        GlobalDefinitions.writeToLogFile("GameControl start(): Setting up invasion areas");
-        createBoardInstance.GetComponent<CreateBoard>().setupInvasionAreas();
+        GlobalDefinitions.WriteToLogFile("GameControl start(): Setting up invasion areas");
+        createBoardInstance.GetComponent<CreateBoard>().SetupInvasionAreas();
 
         // Make sure the game doesn't start with selected unit or hex
         GlobalDefinitions.selectedUnit = null;
@@ -191,7 +191,7 @@ public class GameControl : MonoBehaviour
         GlobalDefinitions.guiList.Clear();
 
         gameStateControlInstance = new GameObject("gameStateControl");
-        gameStateControlInstance.AddComponent<gameStateControl>();
+        gameStateControlInstance.AddComponent<GameStateControl>();
         inputMessage = new GameObject("inputMessage");
         inputMessage.AddComponent<InputMessage>();
 
@@ -205,8 +205,8 @@ public class GameControl : MonoBehaviour
         victoryState.AddComponent<VictoryState>();
 
         // At this point everything has been setup.  Call up GUI to have the user select the type of game being played
-        GlobalDefinitions.writeToLogFile("GameControl start(): calling getGameModeUI()");
-        MainMenuRoutines.getGameModeUI();
+        GlobalDefinitions.WriteToLogFile("GameControl start(): calling getGameModeUI()");
+        MainMenuRoutines.GetGameModeUI();
     }
 
     private float initialTouch; // Used to check if the mouse click is a double click
@@ -223,36 +223,36 @@ public class GameControl : MonoBehaviour
                     {
                         // Check if the user double clicked
                         if ((Time.time < initialTouch + 0.5f) &&
-                                ((gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
-                                (gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance") ||
-                                (gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "setUpStateInstance")))
+                                ((gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedMovementStateInstance") ||
+                                (gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanMovementStateInstance") ||
+                                (gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "setUpStateInstance")))
                         {
                             // When we have a double click that means that there was already a single click that would have selected a unit
                             // Unhighlight it and then remove it
                             if (GlobalDefinitions.selectedUnit != null)
-                                GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                                GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
                             foreach (Transform hex in GameObject.Find("Board").transform)
-                                GlobalDefinitions.unhighlightHex(hex.gameObject);
+                                GlobalDefinitions.UnhighlightHex(hex.gameObject);
                             GlobalDefinitions.selectedUnit = null;
 
-                            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
+                            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
 
                             // I had a bug where double clicking on an off-board unit causes an exception in the following line because it is assuming a hex is being clicked
-                            if (GlobalDefinitions.getHexFromUserInput(Input.mousePosition) != null)
-                                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + GlobalDefinitions.getHexFromUserInput(Input.mousePosition).name + " " + gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+                            if (GlobalDefinitions.GetHexFromUserInput(Input.mousePosition) != null)
+                                GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD + " " + GlobalDefinitions.GetHexFromUserInput(Input.mousePosition).name + " " + gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality);
 
-                            movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GlobalDefinitions.getHexFromUserInput(Input.mousePosition),
-                                gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality);
+                            movementRoutinesInstance.GetComponent<MovementRoutines>().CallMultiUnitDisplay(GlobalDefinitions.GetHexFromUserInput(Input.mousePosition),
+                                gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality);
                         }
                         // If not double click then process a normal click
                         else
                         {
-                            inputMessage.GetComponent<InputMessage>().hex = GlobalDefinitions.getHexFromUserInput(Input.mousePosition);
-                            inputMessage.GetComponent<InputMessage>().unit = GlobalDefinitions.getUnitWithoutHex(Input.mousePosition);
+                            inputMessage.GetComponent<InputMessage>().hex = GlobalDefinitions.GetHexFromUserInput(Input.mousePosition);
+                            inputMessage.GetComponent<InputMessage>().unit = GlobalDefinitions.GetUnitWithoutHex(Input.mousePosition);
 
-                            recordMouseClick(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
+                            RecordMouseClick(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
 
-                            gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(inputMessage.GetComponent<InputMessage>());
+                            gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod(inputMessage.GetComponent<InputMessage>());
 
                         }
 
@@ -296,8 +296,8 @@ public class GameControl : MonoBehaviour
                                     string chatMessage = "";
                                     for (int index = 0; index < (switchEntries.Length - 1); index++)
                                         chatMessage += switchEntries[index + 1] + " ";
-                                    GlobalDefinitions.writeToLogFile("Chat message received: " + chatMessage);
-                                    GlobalDefinitions.addChatMessage(chatMessage);
+                                    GlobalDefinitions.WriteToLogFile("Chat message received: " + chatMessage);
+                                    GlobalDefinitions.AddChatMessage(chatMessage);
                                     break;
                             }
                             break;
@@ -328,32 +328,32 @@ public class GameControl : MonoBehaviour
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.writeToLogFile("GameControl udpate() OnDisconnect: (hostId = " + TransportScript.recHostId + ", connectionId = "
+                        GlobalDefinitions.WriteToLogFile("GameControl udpate() OnDisconnect: (hostId = " + TransportScript.recHostId + ", connectionId = "
                                 + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                        GlobalDefinitions.guiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                        TransportScript.resetConnection(TransportScript.recHostId);
+                        GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
+                        TransportScript.ResetConnection(TransportScript.recHostId);
 
                         // Since the connetion has been broken, quit the game and go back to the main menu
                         GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
                         guiButtonInstance.AddComponent<GUIButtonRoutines>();
-                        guiButtonInstance.GetComponent<GUIButtonRoutines>().yesMain();
+                        guiButtonInstance.GetComponent<GUIButtonRoutines>().YesMain();
                         break;
                     case NetworkEventType.DataEvent:
                         Stream stream = new MemoryStream(TransportScript.recBuffer);
                         BinaryFormatter formatter = new BinaryFormatter();
                         string message = formatter.Deserialize(stream) as string;
                         TransportScript.OnData(TransportScript.recHostId, TransportScript.recConnectionId, TransportScript.recChannelId, message, TransportScript.dataSize, (NetworkError)TransportScript.recError);
-                        ExecuteGameCommand.processCommand(message);
+                        ExecuteGameCommand.ProcessCommand(message);
                         break;
                     case NetworkEventType.Nothing:
                         break;
                     case NetworkEventType.ConnectEvent:
                         {
-                            GlobalDefinitions.writeToLogFile("TransportScript.OnConnect: (hostId = " + TransportScript.recHostId + ", connectionId = " + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                            GlobalDefinitions.WriteToLogFile("TransportScript.OnConnect: (hostId = " + TransportScript.recHostId + ", connectionId = " + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                             break;
                         }
                     default:
-                        GlobalDefinitions.writeToLogFile("GameControl Update(): Unknown network message type received: " + recNetworkEvent);
+                        GlobalDefinitions.WriteToLogFile("GameControl Update(): Unknown network message type received: " + recNetworkEvent);
                         break;
                 }
             }
@@ -375,9 +375,9 @@ public class GameControl : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <param name="hex"></param>
-    public static void recordMouseClick(GameObject unit, GameObject hex)
+    public static void RecordMouseClick(GameObject unit, GameObject hex)
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.SETCAMERAPOSITIONKEYWORD + " " + Camera.main.transform.position.x + " " + Camera.main.transform.position.y + " " + Camera.main.transform.position.z + " " + Camera.main.GetComponent<Camera>().orthographicSize);
 
         string hexName;
         string unitName;
@@ -395,14 +395,14 @@ public class GameControl : MonoBehaviour
         else
             unitName = "null";
 
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.MOUSESELECTIONKEYWORD + " " + hexName + " " + unitName);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.MOUSESELECTIONKEYWORD + " " + hexName + " " + unitName);
     }
 
     /// <summary>
     /// This routine sets the game state to the side who is in control
     /// </summary>
     /// <param name="currentSide"></param> this is the side that is passed in the saved game file that should be in control
-    public static void setGameState(string currentSide)
+    public static void SetGameState(string currentSide)
     {
         if (Convert.ToString(currentSide) == "German")
         {
@@ -416,29 +416,29 @@ public class GameControl : MonoBehaviour
                     // just go to the Allied invasion state
                     if (GlobalDefinitions.turnNumber == 0)
                     {
-                        GlobalDefinitions.writeToLogFile("setGameState: setting game state to turnInitializationStateInstance");
-                        gameStateControlInstance.GetComponent<gameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
+                        GlobalDefinitions.WriteToLogFile("setGameState: setting game state to turnInitializationStateInstance");
+                        gameStateControlInstance.GetComponent<GameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
                     }
                     else
                     {
-                        GlobalDefinitions.writeToLogFile("setGameState: setting game state to germanAIStateInstance");
-                        gameStateControlInstance.GetComponent<gameStateControl>().currentState = germanAIStateInstance.GetComponent<GermanAIState>();
+                        GlobalDefinitions.WriteToLogFile("setGameState: setting game state to germanAIStateInstance");
+                        gameStateControlInstance.GetComponent<GameStateControl>().currentState = germanAIStateInstance.GetComponent<GermanAIState>();
                     }
                 }
                 else
                 {
-                    GlobalDefinitions.writeToLogFile("setGameState: setting game state to germanIsolationStateInstance  turn number = " + GlobalDefinitions.turnNumber);
+                    GlobalDefinitions.WriteToLogFile("setGameState: setting game state to germanIsolationStateInstance  turn number = " + GlobalDefinitions.turnNumber);
                     // Check if this is a setup file in order to allow the player to update the setup if he wants to
                     if (GlobalDefinitions.turnNumber == 0)
                     {
-                        GlobalDefinitions.writeToLogFile("setGameState: setting game state to setUpStateInstance");
-                        gameStateControlInstance.GetComponent<gameStateControl>().currentState = setUpStateInstance.GetComponent<SetUpState>();
+                        GlobalDefinitions.WriteToLogFile("setGameState: setting game state to setUpStateInstance");
+                        gameStateControlInstance.GetComponent<GameStateControl>().currentState = setUpStateInstance.GetComponent<SetUpState>();
                     }
 
                     else
                     {
-                        GlobalDefinitions.writeToLogFile("setGameState: setting game state to germanIsolationStateInstance");
-                        gameStateControlInstance.GetComponent<gameStateControl>().currentState = germanIsolationStateInstance.GetComponent<GermanIsolationState>();
+                        GlobalDefinitions.WriteToLogFile("setGameState: setting game state to germanIsolationStateInstance");
+                        gameStateControlInstance.GetComponent<GameStateControl>().currentState = germanIsolationStateInstance.GetComponent<GermanIsolationState>();
                     }
                 }
             }
@@ -450,13 +450,13 @@ public class GameControl : MonoBehaviour
                 // Check if this is a setup file in order to allow the player to update the setup if he wants to
                 if (GlobalDefinitions.turnNumber == 0)
                 {
-                    GlobalDefinitions.writeToLogFile("setGameState: setting game state to setUpStateInstance");
-                    gameStateControlInstance.GetComponent<gameStateControl>().currentState = setUpStateInstance.GetComponent<SetUpState>();
+                    GlobalDefinitions.WriteToLogFile("setGameState: setting game state to setUpStateInstance");
+                    gameStateControlInstance.GetComponent<GameStateControl>().currentState = setUpStateInstance.GetComponent<SetUpState>();
                 }
                 else
                 {
-                    GlobalDefinitions.writeToLogFile("setGameState: setting game state to germanIsolationStateInstance");
-                    gameStateControlInstance.GetComponent<gameStateControl>().currentState = germanIsolationStateInstance.GetComponent<GermanIsolationState>();
+                    GlobalDefinitions.WriteToLogFile("setGameState: setting game state to germanIsolationStateInstance");
+                    gameStateControlInstance.GetComponent<GameStateControl>().currentState = germanIsolationStateInstance.GetComponent<GermanIsolationState>();
                 }
             }
         }
@@ -464,8 +464,8 @@ public class GameControl : MonoBehaviour
         {
             // The game state is for the Allied player to be in control
             // Note we don't need to check for a setup file here since that would indicate that the German side is in control
-            GlobalDefinitions.writeToLogFile("setGameState: Allied in control, setting game state to turnInitializationStateInstance");
-            gameStateControlInstance.GetComponent<gameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
+            GlobalDefinitions.WriteToLogFile("setGameState: Allied in control, setting game state to turnInitializationStateInstance");
+            gameStateControlInstance.GetComponent<GameStateControl>().currentState = turnInitializationStateInstance.GetComponent<TurnInitializationState>();
             if (GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.AI)
                 // Do not set the currentSidePlaying variable if it is an AI game since it will already have been set during the game selection
                 // This is being set for network play since it has no meaning in hotseat
@@ -476,7 +476,7 @@ public class GameControl : MonoBehaviour
     /// <summary>
     /// Creates the singletons for each of the routine classes
     /// </summary>
-    private void createSingletons()
+    private void CreateSingletons()
     {
         fileTransferServerInstance = new GameObject("fileTransferServerInstance");
         fileTransferServerInstance.AddComponent<FileTransferServer>();
@@ -521,9 +521,9 @@ public class GameControl : MonoBehaviour
     /// <summary>
     /// Creates the state instances and sets up the state transitions for network or hotseat games
     /// </summary>
-    public static void createStatesForHotSeatOrNetwork()
+    public static void CreateStatesForHotSeatOrNetwork()
     {
-        GlobalDefinitions.writeToLogFile("createStatesForHotSeatOrNetwork: executing");
+        GlobalDefinitions.WriteToLogFile("createStatesForHotSeatOrNetwork: executing");
 
         setUpStateInstance = new GameObject("setUpStateInstance");
         turnInitializationStateInstance = new GameObject("turnInitializationStateInstance");
@@ -581,9 +581,9 @@ public class GameControl : MonoBehaviour
     /// Creates the state instances and sets up the state transitions for AI games
     /// </summary>
     /// <param name="nationalityBeingPlayed"></param>
-    public static void createStatesForAI(GlobalDefinitions.Nationality nationalityBeingPlayed)
+    public static void CreateStatesForAI(GlobalDefinitions.Nationality nationalityBeingPlayed)
     {
-        GlobalDefinitions.writeToLogFile("createStatesForAI: executing");
+        GlobalDefinitions.WriteToLogFile("createStatesForAI: executing");
         // The AI is playing the German side
         if (nationalityBeingPlayed == GlobalDefinitions.Nationality.Allied)
         {

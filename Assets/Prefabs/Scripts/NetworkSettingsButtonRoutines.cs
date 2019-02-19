@@ -7,7 +7,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// <summary>
     /// This is the routine that executes when the player is initiating the game
     /// </summary>
-    public void yesInitiate()
+    public void YesInitiate()
     {
         MainMenuRoutines.alliedToggle.GetComponent<Toggle>().interactable = true;
         MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = true;
@@ -25,7 +25,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// This is the routine that executes when the player is not initiating the game
     /// The only thing the player has to enter is the opponent ip addr
     /// </summary>
-    public void noInitiate()
+    public void NoInitiate()
     {
         MainMenuRoutines.alliedToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = false;
@@ -42,7 +42,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// <summary>
     /// Executes when player toggles the German selection
     /// </summary>
-    public void germanSelection()
+    public void GermanSelection()
     {
         if (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn == true)
         {
@@ -59,7 +59,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// <summary>
     /// Executes when player toggles the Allied selection
     /// </summary>
-    public void alliedSelection()
+    public void AlliedSelection()
     {
         if (MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn == true)
         {
@@ -76,7 +76,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// <summary>
     /// Executes when player selects to play a new game
     /// </summary>
-    public void newGameSelection()
+    public void NewGameSelection()
     {
         if (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn == true)
         {
@@ -94,7 +94,10 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         }
     }
 
-    public void savedGameSelection()
+    /// <summary>
+    /// Executes when the player selects to play a saved game
+    /// </summary>
+    public void SavedGameSelection()
     {
         if (MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn == true)
         {
@@ -112,17 +115,20 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         }
     }
 
-    public void okNetworkSettings()
+    /// <summary>
+    /// Executes when the OK button is selected
+    /// </summary>
+    public void OkNetworkSettings()
     {
-        TransportScript.networkInit();
+        TransportScript.NetworkInit();
         GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
 
-        GlobalDefinitions.writeToLogFile("okNetworkSettings: executing");
-        GlobalDefinitions.writeToLogFile("okNetworkSettings:    channelEstablished - " + TransportScript.channelEstablished);
-        GlobalDefinitions.writeToLogFile("okNetworkSettings:    gameStarted - " + GlobalDefinitions.gameStarted);
-        GlobalDefinitions.writeToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-        GlobalDefinitions.writeToLogFile("okNetworkSettings:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-        GlobalDefinitions.writeToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing");
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    channelEstablished - " + TransportScript.channelEstablished);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameStarted - " + GlobalDefinitions.gameStarted);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
 
 
         if (TransportScript.channelEstablished)
@@ -130,19 +136,19 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             // This executes when the channel is established but the two computers have the same intiating state
             if (GlobalDefinitions.userIsIntiating)
             {
-                GlobalDefinitions.writeToLogFile("okNetworkSettings: sending message InControl");
+                GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
                 TransportScript.SendSocketMessage("InControl");
                 GlobalDefinitions.userIsIntiating = true;
-                GlobalDefinitions.writeToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
-                TransportScript.checkForHandshakeReceipt("NotInControl");
+                GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
+                TransportScript.CheckForHandshakeReceipt("NotInControl");
             }
             else
             {
-                GlobalDefinitions.writeToLogFile("okNetworkSettings: sending message NotInControl");
+                GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
                 TransportScript.SendSocketMessage("NotInControl");
                 GlobalDefinitions.userIsIntiating = false;
-                GlobalDefinitions.writeToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
-                TransportScript.checkForHandshakeReceipt("InControl");
+                GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
+                TransportScript.CheckForHandshakeReceipt("InControl");
             }
         }
         else
@@ -152,30 +158,30 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
                 if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
                     TransportScript.channelEstablished = true;
-                    GlobalDefinitions.writeToLogFile("okNetworkSettings: Channel Established");
-                    GlobalDefinitions.guiUpdateStatusMessage("Channel Established");
+                    GlobalDefinitions.WriteToLogFile("okNetworkSettings: Channel Established");
+                    GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
                 }
                 else
-                    GlobalDefinitions.guiUpdateStatusMessage("Connection Failed");
+                    GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
             }
             else
-                GlobalDefinitions.guiUpdateStatusMessage("No IP address entered");
+                GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
         }
     }
 
     /// <summary>
     /// This is the routine executes on clicking Cancel which brings up the Game Selection UI again
     /// </summary>
-    public void cancelNetworkSettings()
+    public void CancelNetworkSettings()
     {
-        GlobalDefinitions.removeGUI(transform.parent.gameObject);
-        MainMenuRoutines.getGameModeUI();
+        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+        MainMenuRoutines.GetGameModeUI();
     }
 
     /// <summary>
     /// IP address entered
     /// </summary>
-    public static void executeConnect()
+    public static void ExecuteConnect()
     {
         if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
             GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;

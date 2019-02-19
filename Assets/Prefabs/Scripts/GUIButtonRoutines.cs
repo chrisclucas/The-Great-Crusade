@@ -12,31 +12,31 @@ public class GUIButtonRoutines : MonoBehaviour
     /// <summary>
     /// Button the ends the current phase on the static gui
     /// </summary>
-    public void goToNextPhase()
+    public void GoToNextPhase()
     {
         // Check if there is a gui up before we move to the next phase since it could result in unknown state
         if (GlobalDefinitions.guiList.Count == 0)
         {
             // Need to do this first since during changes in control the next phase routine passes control so this would never be sent
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.NEXTPHASEKEYWORD);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.NEXTPHASEKEYWORD);
 
             // Button to quit the current game state
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve displayed menu before trying advancing to the next phase");
+            GlobalDefinitions.GuiUpdateStatusMessage("Resolve displayed menu before trying advancing to the next phase");
     }
 
     /// <summary>
     /// User selects Main Menu from the static gui
     /// </summary>
-    public void goToMainMenu()
+    public void GoToMainMenu()
     {
 
         // If this is a network game and the player isn't in control do not allow to reset.  Player has to quit to exit in this case.
         if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Cannot reset game when not in control");
+            GlobalDefinitions.GuiUpdateStatusMessage("Cannot reset game when not in control");
             return;
         }
 
@@ -48,13 +48,13 @@ public class GUIButtonRoutines : MonoBehaviour
             foreach (GameObject gui in GlobalDefinitions.guiList)
                 gui.SetActive(false);
 
-        GlobalDefinitions.askUserYesNoQuestion("Are you sure you want to quit?", ref yesButton, ref noButton, yesMain, noMain);
+        GlobalDefinitions.AskUserYesNoQuestion("Are you sure you want to quit?", ref yesButton, ref noButton, YesMain, NoMain);
     }
 
     /// <summary>
     /// User selects Quit from the static gui
     /// </summary>
-    public void quitApplication()
+    public void QuitApplication()
     {
         // Turn off the button
         GameObject.Find("QuitButton").GetComponent<Button>().interactable = false;
@@ -64,20 +64,20 @@ public class GUIButtonRoutines : MonoBehaviour
             foreach (GameObject gui in GlobalDefinitions.guiList)
                 gui.SetActive(false);
 
-        GlobalDefinitions.askUserYesNoQuestion("Are you sure you want to quit?", ref yesButton, ref noButton, yesQuit, noQuit);
+        GlobalDefinitions.AskUserYesNoQuestion("Are you sure you want to quit?", ref yesButton, ref noButton, YesQuit, NoQuit);
     }
 
     /// <summary>
     /// Executes when the user indicates he wants to go to main menu
     /// </summary>
-    public void yesMain()
+    public void YesMain()
     {
         List<GameObject> removeUnitList = new List<GameObject>();
 
         // If this is a network game I've already checked that the player is in control
         if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
         {
-            TransportScript.resetConnection(TransportScript.recHostId);
+            TransportScript.ResetConnection(TransportScript.recHostId);
         }
 
         // Copy list so the guis can be removed
@@ -88,7 +88,7 @@ public class GUIButtonRoutines : MonoBehaviour
 
         // Get rid of all active guis
         foreach (GameObject gui in removeList)
-            GlobalDefinitions.removeGUI(gui);
+            GlobalDefinitions.RemoveGUI(gui);
 
         // Put all the units back on the OOB sheet
         foreach (Transform unit in GlobalDefinitions.allUnitsOnBoard.transform)
@@ -106,8 +106,8 @@ public class GUIButtonRoutines : MonoBehaviour
             unit.GetComponent<UnitDatabaseFields>().remainingMovement = unit.GetComponent<UnitDatabaseFields>().movementFactor;
             if (unit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
             {
-                GlobalDefinitions.unhighlightUnit(unit.gameObject);
-                GlobalDefinitions.removeUnitFromHex(unit.gameObject, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                GlobalDefinitions.UnhighlightUnit(unit.gameObject);
+                GlobalDefinitions.RemoveUnitFromHex(unit.gameObject, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
                 unit.GetComponent<UnitDatabaseFields>().occupiedHex = null;
             }
 
@@ -115,7 +115,7 @@ public class GUIButtonRoutines : MonoBehaviour
         }
 
         foreach (GameObject unit in removeUnitList)
-            GlobalDefinitions.returnUnitToOOBShet(unit);
+            GlobalDefinitions.ReturnUnitToOOBShet(unit);
 
         // Clear out the lists keeping track of both side's units on board
         GlobalDefinitions.alliedUnitsOnBoard.Clear();
@@ -141,25 +141,25 @@ public class GUIButtonRoutines : MonoBehaviour
             hex.GetComponent<HexDatabaseFields>().riverInterdiction = false;
             hex.GetComponent<HexDatabaseFields>().carpetBombingActive = false;
 
-            GlobalDefinitions.unhighlightHex(hex.gameObject);
+            GlobalDefinitions.UnhighlightHex(hex.gameObject);
         }
 
-        GlobalDefinitions.writeToLogFile("Putting Allied units in Britain");
+        GlobalDefinitions.WriteToLogFile("Putting Allied units in Britain");
         // When restarting a game the units won't have their Britain location loaded so this needs to be done before a restart file is read
-        GameControl.createBoardInstance.GetComponent<CreateBoard>().readBritainPlacement(GameControl.path + "TGCBritainUnitLocation.txt");
+        GameControl.createBoardInstance.GetComponent<CreateBoard>().ReadBritainPlacement(GameControl.path + "TGCBritainUnitLocation.txt");
 
-        GlobalDefinitions.resetAllGlobalDefinitions();
+        GlobalDefinitions.ResetAllGlobalDefinitions();
 
         // Turn the button back on
         GameObject.Find("MainMenuButton").GetComponent<Button>().interactable = true;
 
-        MainMenuRoutines.getGameModeUI();
+        MainMenuRoutines.GetGameModeUI();
     }
 
     /// <summary>
     /// Quit the game
     /// </summary>
-    private void yesQuit()
+    private void YesQuit()
     {
         // Turn the button back on - only applies to the editor since otherwise the applciation quits
         GameObject.Find("QuitButton").GetComponent<Button>().interactable = true;
@@ -170,7 +170,7 @@ public class GUIButtonRoutines : MonoBehaviour
     /// <summary>
     /// Change of mind, do not quit
     /// </summary>
-    private void noQuit()
+    private void NoQuit()
     {
         // Turn the button back on
         GameObject.Find("QuitButton").GetComponent<Button>().interactable = true;
@@ -183,7 +183,7 @@ public class GUIButtonRoutines : MonoBehaviour
     /// <summary>
     /// Change of mind, do not go to the main menu
     /// </summary>
-    private void noMain()
+    private void NoMain()
     {
         // Turn the button back on
         GameObject.Find("MainMenuButton").GetComponent<Button>().interactable = true;
@@ -196,46 +196,46 @@ public class GUIButtonRoutines : MonoBehaviour
     /// <summary>
     /// Executes when the user wants to display the current combats
     /// </summary>
-    public void executeCombatResolution()
+    public void ExecuteCombatResolution()
     {
         if (GlobalDefinitions.guiList.Count == 0)
         {
-            GlobalDefinitions.writeToLogFile("executeCombatResolution: Executing  combat count = " + GlobalDefinitions.allCombats.Count);
+            GlobalDefinitions.WriteToLogFile("executeCombatResolution: Executing  combat count = " + GlobalDefinitions.allCombats.Count);
             if (GlobalDefinitions.allCombats.Count > 0)
             {
                 // Turn off the button
                 GameObject.Find("ResolveCombatButton").GetComponent<Button>().interactable = false;
 
-                CombatResolutionRoutines.combatResolutionDisplay();
+                CombatResolutionRoutines.CombatResolutionDisplay();
 
                 // When this is called by the AI then the line below end up calling two guis when the command file is being read
                 if (!GlobalDefinitions.AICombat)
-                    GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD);
+                    GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD);
             }
             else
-                GlobalDefinitions.guiUpdateStatusMessage("No combats have been assigned therefore there is nothing to resolve");
+                GlobalDefinitions.GuiUpdateStatusMessage("No combats have been assigned therefore there is nothing to resolve");
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve the currently displayed menu before trying to bring up combat display");
+            GlobalDefinitions.GuiUpdateStatusMessage("Resolve the currently displayed menu before trying to bring up combat display");
     }
 
     /// <summary>
     /// Undo from the static gui
     /// </summary>
-    public void executeUndo()
+    public void ExecuteUndo()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.UNDOKEYWORD);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.UNDOKEYWORD);
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeUndo(GameControl.inputMessage.GetComponent<InputMessage>());
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteUndo(GameControl.inputMessage.GetComponent<InputMessage>());
     }
 
     /// <summary>
     /// This routine processes the chagne in the toggle displaying the allied supply range
     /// </summary>
-    public void displayAlliedSupplyRange()
+    public void DisplayAlliedSupplyRange()
     {
         // Notify the remote computer
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYALLIEDSUPPLYRANGETOGGLEWORD);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DISPLAYALLIEDSUPPLYRANGETOGGLEWORD);
 
 
         if (gameObject.GetComponent<Toggle>().isOn)
@@ -251,7 +251,7 @@ public class GUIButtonRoutines : MonoBehaviour
             // Highlight all hexes that have supply available
             foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().alliedInSupply)
-                    GlobalDefinitions.highlightHexInSupply(hex);
+                    GlobalDefinitions.HighlightHexInSupply(hex);
         }
         else
         {
@@ -259,25 +259,25 @@ public class GUIButtonRoutines : MonoBehaviour
             GlobalDefinitions.displayAlliedSupplyStatus = false;
             // Turn off supply highlighting
             foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
-                GlobalDefinitions.unhighlightHexSupplyRange(hex);
+                GlobalDefinitions.UnhighlightHexSupplyRange(hex);
         }
     }
 
     /// <summary>
     /// Toggle that displays all units that must be attacked
     /// </summary>
-    public void displayMustAttackUnits()
+    public void DisplayMustAttackUnits()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYMUSTATTACKTOGGLEWORD);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DISPLAYMUSTATTACKTOGGLEWORD);
 
         if (gameObject.GetComponent<Toggle>().isOn)
-            CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, true);
+            CombatRoutines.CheckIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality, true);
         else
         {
             foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
-                GlobalDefinitions.unhighlightUnit(unit);
+                GlobalDefinitions.UnhighlightUnit(unit);
             foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
-                GlobalDefinitions.unhighlightUnit(unit);
+                GlobalDefinitions.UnhighlightUnit(unit);
         }
 
         //else
@@ -294,38 +294,38 @@ public class GUIButtonRoutines : MonoBehaviour
     /// <summary>
     /// Executes when the user selects Assign Combat from the static gui
     /// </summary>
-    public void loadCombat()
+    public void LoadCombat()
     {
         if (GlobalDefinitions.guiList.Count == 0)
         {
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOADCOMBATKEYWORD);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOADCOMBATKEYWORD);
 
-            GlobalDefinitions.guiUpdateStatusMessage("Select a hex to attack; hex must contain enemy units that are adjacent to friendly units");
-            if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedInvasionStateInstance")
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedInvasionState>().loadCombat;
-            if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedAirborneStateInstance")
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedAirborneState>().loadCombat;
-            if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
-                    (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance"))
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<MovementState>().loadCombat;
-            if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedCombatStateInstance") ||
-                    (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanCombatStateInstance"))
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<CombatState>().executeSelectUnit;
+            GlobalDefinitions.GuiUpdateStatusMessage("Select a hex to attack; hex must contain enemy units that are adjacent to friendly units");
+            if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedInvasionStateInstance")
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedInvasionState>().LoadCombat;
+            if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedAirborneStateInstance")
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedAirborneState>().LoadCombat;
+            if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedMovementStateInstance") ||
+                    (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanMovementStateInstance"))
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<MovementState>().LoadCombat;
+            if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
+                    (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance"))
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<CombatState>().ExecuteSelectUnit;
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve the currently displayed menu before assigning combat");
+            GlobalDefinitions.GuiUpdateStatusMessage("Resolve the currently displayed menu before assigning combat");
     }
 
     /// <summary>
     /// This routine processes the chagne in the toggle displaying the German supply range
     /// </summary>
-    public void displayGermanSupplyRange()
+    public void DisplayGermanSupplyRange()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYGERMANSUPPLYRANGETOGGLEWORD);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DISPLAYGERMANSUPPLYRANGETOGGLEWORD);
 
         if (gameObject.GetComponent<Toggle>().isOn)
         {
@@ -340,7 +340,7 @@ public class GUIButtonRoutines : MonoBehaviour
             // Highlight all hexes that have supply available
             foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().germanInSupply)
-                    GlobalDefinitions.highlightHexInSupply(hex);
+                    GlobalDefinitions.HighlightHexInSupply(hex);
         }
         else
         {
@@ -348,14 +348,14 @@ public class GUIButtonRoutines : MonoBehaviour
             GlobalDefinitions.displayGermanSupplyStatus = false;
             // Turn off supply highlighting
             foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
-                GlobalDefinitions.unhighlightHexSupplyRange(hex);
+                GlobalDefinitions.UnhighlightHexSupplyRange(hex);
         }
     }
 
     /// <summary>
     /// Executes when the toggle is changed, highlights the hexes that were under Allied control in the current turn
     /// </summary>
-    public void displayHisoricalProgress()
+    public void DisplayHisoricalProgress()
     {
         if (GameObject.Find("ShowHistoryToggle").GetComponent<Toggle>().isOn)
             // The toggle is on so highlight the hexes
@@ -374,13 +374,13 @@ public class GUIButtonRoutines : MonoBehaviour
         else
             // The toggle is off so unhightlight the hexes
             foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
-                GlobalDefinitions.unhighlightHex(hex);
+                GlobalDefinitions.UnhighlightHex(hex);
     }
 
     /// <summary>
     /// Executes when the toogle is changed and either makes the units on the board visible or hides them
     /// </summary>
-    public void hideUnits()
+    public void HideUnits()
     {
         if (GameObject.Find("HideUnitsToggle").GetComponent<Toggle>().isOn)
         {
@@ -409,11 +409,11 @@ public class GUIButtonRoutines : MonoBehaviour
             //foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
             //    GlobalDefinitions.unhighlightUnit(unit);
             foreach (Transform unit in GlobalDefinitions.allUnitsOnBoard.transform)
-                GlobalDefinitions.unhighlightUnit(unit.gameObject);
+                GlobalDefinitions.UnhighlightUnit(unit.gameObject);
         }
     }
 
-    public void updateSettings()
+    public void UpdateSettings()
     {
         // Turn the button off so that it can't pull up more of the same window
         GameObject.Find("SettingsButton").GetComponent<Button>().interactable = false;
@@ -434,109 +434,109 @@ public class GUIButtonRoutines : MonoBehaviour
                 gui.SetActive(false);
 
         //settingCanvasGameObject = GlobalDefinitions.createGUICanvas("SettingsGUIInstance",
-        GlobalDefinitions.createGUICanvas("SettingsGUIInstance",
+        GlobalDefinitions.CreateGUICanvas("SettingsGUIInstance",
                 panelWidth,
                 panelHeight,
                 ref settingCanvas);
 
-        GlobalDefinitions.createText("Settings", "SettingsText",
+        GlobalDefinitions.CreateText("Settings", "SettingsText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        agressivenessSlider = GlobalDefinitions.createSlider("AgressivenessSlider", "GUI Slider15",
+        agressivenessSlider = GlobalDefinitions.CreateSlider("AgressivenessSlider", "GUI Slider15",
                 0,
                 2f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
         agressivenessSlider.value = GlobalDefinitions.aggressiveSetting;
-        agressivenessSlider.onValueChanged.AddListener(delegate { updateAggressivenessSettingText(agressivenessSlider.value); });
+        agressivenessSlider.onValueChanged.AddListener(delegate { UpdateAggressivenessSettingText(agressivenessSlider.value); });
 
-        GlobalDefinitions.createText("Aggressive", "AggressiveText",
+        GlobalDefinitions.CreateText("Aggressive", "AggressiveText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        GlobalDefinitions.createText("Defensive", "DefensiveText",
+        GlobalDefinitions.CreateText("Defensive", "DefensiveText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        GlobalDefinitions.aggressivenessSettingText = GlobalDefinitions.createText(Convert.ToString(agressivenessSlider.value), "AggressivenessSettingText",
+        GlobalDefinitions.aggressivenessSettingText = GlobalDefinitions.CreateText(Convert.ToString(agressivenessSlider.value), "AggressivenessSettingText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        GlobalDefinitions.createText("Computer Aggressiveness", "ComputerAggressivenessText",
+        GlobalDefinitions.CreateText("Computer Aggressiveness", "ComputerAggressivenessText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        diffiultySlider = GlobalDefinitions.createSlider("DifficultySlider", "GUI Slider010",
+        diffiultySlider = GlobalDefinitions.CreateSlider("DifficultySlider", "GUI Slider010",
                 0,
                 0,
                 settingCanvas);
         diffiultySlider.value = GlobalDefinitions.difficultySetting;
-        diffiultySlider.onValueChanged.AddListener(delegate { updateDifficultySettingText(diffiultySlider.value); });
+        diffiultySlider.onValueChanged.AddListener(delegate { UpdateDifficultySettingText(diffiultySlider.value); });
 
-        GlobalDefinitions.createText("Harder", "HarderText",
+        GlobalDefinitions.CreateText("Harder", "HarderText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 settingCanvas);
 
-        GlobalDefinitions.createText("Easier", "EasierText",
+        GlobalDefinitions.CreateText("Easier", "EasierText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 settingCanvas);
 
-        GlobalDefinitions.difficultySettingText = GlobalDefinitions.createText(Convert.ToString(diffiultySlider.value), "DifficultySettingText",
+        GlobalDefinitions.difficultySettingText = GlobalDefinitions.CreateText(Convert.ToString(diffiultySlider.value), "DifficultySettingText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 -0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
 
-        GlobalDefinitions.createText("Game Difficulty", "GameDifficultyText",
+        GlobalDefinitions.CreateText("Game Difficulty", "GameDifficultyText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 -1f * GlobalDefinitions.GUIUNITIMAGESIZE,
         settingCanvas);
 
-        okButton = GlobalDefinitions.createButton("settingOKButton", "OK",
+        okButton = GlobalDefinitions.CreateButton("settingOKButton", "OK",
                 -1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
         okButton.gameObject.AddComponent<SettingGUIButtons>();
-        okButton.onClick.AddListener(okButton.GetComponent<SettingGUIButtons>().okSelected);
+        okButton.onClick.AddListener(okButton.GetComponent<SettingGUIButtons>().OkSelected);
 
-        cancelButton = GlobalDefinitions.createButton("settingCancelButton", "Cancel",
+        cancelButton = GlobalDefinitions.CreateButton("settingCancelButton", "Cancel",
                 1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 settingCanvas);
         cancelButton.gameObject.AddComponent<SettingGUIButtons>();
-        cancelButton.onClick.AddListener(cancelButton.GetComponent<SettingGUIButtons>().cancelSelected);
+        cancelButton.onClick.AddListener(cancelButton.GetComponent<SettingGUIButtons>().CancelSelected);
     }
 
-    public void updateDifficultySettingText(float value)
+    public void UpdateDifficultySettingText(float value)
     {
         GlobalDefinitions.difficultySettingText.GetComponent<Text>().text = Convert.ToString(value);
     }
 
-    public void updateAggressivenessSettingText(float value)
+    public void UpdateAggressivenessSettingText(float value)
     {
         GlobalDefinitions.aggressivenessSettingText.GetComponent<Text>().text = Convert.ToString(value);
     }
@@ -544,10 +544,10 @@ public class GUIButtonRoutines : MonoBehaviour
     /// <summary>
     /// Executes when the user hits OK on the victory screen
     /// </summary>
-    public void victoryOK()
+    public void VictoryOK()
     {
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.victoryState.GetComponent<VictoryState>();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
-        GlobalDefinitions.removeAllGUIs();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.victoryState.GetComponent<VictoryState>();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
+        GlobalDefinitions.RemoveAllGUIs();
     }
 }

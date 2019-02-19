@@ -12,7 +12,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// </summary>
     /// <param name="combatOdds"></param>
     /// <returns></returns>
-    private static int translateCombatOddsToArrayIndex(string combatOdds)
+    private static int TranslateCombatOddsToArrayIndex(string combatOdds)
     {
         switch (combatOdds)
         {
@@ -43,7 +43,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             case "7:1":
                 return (12);
             default:
-                GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unknown Odds Found - " + combatOdds);
+                GlobalDefinitions.GuiUpdateStatusMessage("Internal Error - Unknown Odds Found - " + combatOdds);
                 return (11);
         }
     }
@@ -53,7 +53,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// </summary>
     /// <param name="combatResults"></param>
     /// <returns></returns>
-    private static string convertResultsToString(GlobalDefinitions.CombatResults combatResults)
+    private static string ConvertResultsToString(GlobalDefinitions.CombatResults combatResults)
     {
         switch (combatResults)
         {
@@ -68,7 +68,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             case GlobalDefinitions.CombatResults.Exchange:
                 return ("Exchange");
             default:
-                GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Can't translate combat results - " + combatResults);
+                GlobalDefinitions.GuiUpdateStatusMessage("Internal Error - Can't translate combat results - " + combatResults);
                 return ("");
         }
     }
@@ -76,7 +76,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <summary>
     /// Displays the large GUI that the user uses to select the order of combat resolution
     /// </summary>
-    public static void combatResolutionDisplay()
+    public static void CombatResolutionDisplay()
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("combatResolutionDisplay: executing - number of combats = " + GlobalDefinitions.allCombats.Count);
@@ -96,7 +96,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         Button okButton;
         bool playerControl = true;
 
-        GlobalDefinitions.writeToLogFile("combatResolutionDisplay: executing");
+        GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: executing");
 
         GameObject combatResolutionGuiInstance;
 
@@ -105,9 +105,9 @@ public class CombatResolutionRoutines : MonoBehaviour
         // resolve combats
         if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
         {
-            if ((GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.German) && (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedCombatStateInstance"))
+            if ((GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.German) && (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance"))
                 playerControl = false;
-            if ((GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.Allied) && (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanCombatStateInstance"))
+            if ((GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.Allied) && (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance"))
                 playerControl = false;
         }
 
@@ -132,14 +132,14 @@ public class CombatResolutionRoutines : MonoBehaviour
         panelImage.rectTransform.anchoredPosition = new Vector2(0, 0);
 
         if (panelHeight > (UnityEngine.Screen.height - 50))
-            combatResolutionGuiInstance = GlobalDefinitions.createScrollingGUICanvas("CombatResolutionGUIInstance",
+            combatResolutionGuiInstance = GlobalDefinitions.CreateScrollingGUICanvas("CombatResolutionGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref combatContentPanel,
                     ref combatCanvas);
         else
         {
-            combatResolutionGuiInstance = GlobalDefinitions.createGUICanvas("CombatResolutionGUIInstance",
+            combatResolutionGuiInstance = GlobalDefinitions.CreateGUICanvas("CombatResolutionGUIInstance",
                 panelWidth,
                 panelHeight,
                 ref combatCanvas);
@@ -150,7 +150,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         // Put a series of text boxes along the top row to serve as the header
 
         // The first three columns contain images of the defending units
-        GlobalDefinitions.createText("Units on Defense", "UnitsHeaderText",
+        GlobalDefinitions.CreateText("Units on Defense", "UnitsHeaderText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
@@ -158,7 +158,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column four the defense factor will be listed
-        GlobalDefinitions.createText("Defense", "DefenseHeaderText",
+        GlobalDefinitions.CreateText("Defense", "DefenseHeaderText",
                 1.1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
@@ -166,7 +166,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column five the attack factor will be listed
-        GlobalDefinitions.createText("Attack", "AttackHeaderText",
+        GlobalDefinitions.CreateText("Attack", "AttackHeaderText",
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
@@ -174,7 +174,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column six the odds will be listed
-        GlobalDefinitions.createText("Odds", "OddsHeaderText",
+        GlobalDefinitions.CreateText("Odds", "OddsHeaderText",
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 6 * 1.25f - 0.5f * panelWidth,
@@ -183,15 +183,15 @@ public class CombatResolutionRoutines : MonoBehaviour
 
         // In column seven the carpet bombing indicator will be placed if Allied mode
         // if it is the German mode will put the close defense indicator
-        if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
-            GlobalDefinitions.createText("Carpet Bomb", "CarpetBombHeaderText",
+        if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
+            GlobalDefinitions.CreateText("Carpet Bomb", "CarpetBombHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
                     (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas).transform.SetParent(combatContentPanel.transform, false);
         else
-            GlobalDefinitions.createText("Air Def", "CloseDefenseHeaderText",
+            GlobalDefinitions.CreateText("Air Def", "CloseDefenseHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
@@ -199,8 +199,8 @@ public class CombatResolutionRoutines : MonoBehaviour
                     combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column eight the air support toggle will be placed only if it is Allied combat
-        if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
-            GlobalDefinitions.createText("Air Support", "AirSupportHeaderText",
+        if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
+            GlobalDefinitions.CreateText("Air Support", "AirSupportHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
@@ -208,7 +208,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         //  In column nine the combat results will be listed
-        GlobalDefinitions.createText("Combat Results", "CombatResultsHeaderText",
+        GlobalDefinitions.CreateText("Combat Results", "CombatResultsHeaderText",
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 9 * 1.25f - 0.5f * panelWidth,
@@ -232,7 +232,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("combatResolutionDisplay: unit " + defendingUnit.name + "  x = " + (GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE));
                 GlobalDefinitions.writeToLogFile("combatResolutionDisplay: unit index = " + combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit));
 #endif
-                GlobalDefinitions.createUnitImage(combat.GetComponent<Combat>().defendingUnits[a],
+                GlobalDefinitions.CreateUnitImage(combat.GetComponent<Combat>().defendingUnits[a],
                             "UnitImage",
                             //GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE * a * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -243,7 +243,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             GlobalDefinitions.writeToLogFile("combatResolutionDisplay: combat number = " + GlobalDefinitions.allCombats.IndexOf(combat) + " defender count = " + combat.GetComponent<Combat>().defendingUnits.Count + " attacker count = " + combat.GetComponent<Combat>().attackingUnits.Count);
 #endif
             // In column four the defense factor will be listed
-            GlobalDefinitions.createText(GlobalDefinitions.calculateDefenseFactor(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits).ToString(),
+            GlobalDefinitions.CreateText(GlobalDefinitions.CalculateDefenseFactor(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits).ToString(),
                     "DefenseFactorText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -252,7 +252,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
             // In column five the attack factor will be listed
-            attackFactorTextGameObject = GlobalDefinitions.createText(GlobalDefinitions.calculateAttackFactor(combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport).ToString(),
+            attackFactorTextGameObject = GlobalDefinitions.CreateText(GlobalDefinitions.CalculateAttackFactor(combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport).ToString(),
                     "AttackFactorText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -262,7 +262,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             attackFactorTextGameObject.transform.SetParent(combatContentPanel.transform, false);
 
             // In column six the odds will be listed
-            oddsTextGameObject = GlobalDefinitions.createText(GlobalDefinitions.convertOddsToString(GlobalDefinitions.returnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport)),
+            oddsTextGameObject = GlobalDefinitions.CreateText(GlobalDefinitions.ConvertOddsToString(GlobalDefinitions.ReturnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport)),
                     "OddsText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -273,10 +273,10 @@ public class CombatResolutionRoutines : MonoBehaviour
 
             // If allied turn, put "Yes" in column seven if carpet bombing is active
             // if it is German turn, put a "Yes" in the column is close defense is active
-            if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
+            if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
             {
-                if (checkIfCarpetBombingInEffect(combat.GetComponent<Combat>().defendingUnits))
-                    GlobalDefinitions.createText("Yes",
+                if (CheckIfCarpetBombingInEffect(combat.GetComponent<Combat>().defendingUnits))
+                    GlobalDefinitions.CreateText("Yes",
                             "CarpetBombingActiveText",
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -286,8 +286,8 @@ public class CombatResolutionRoutines : MonoBehaviour
             }
             else
             {
-                if (checkIfCloseDefenseActive(combat.GetComponent<Combat>().defendingUnits))
-                    GlobalDefinitions.createText("Yes",
+                if (CheckIfCloseDefenseActive(combat.GetComponent<Combat>().defendingUnits))
+                    GlobalDefinitions.CreateText("Yes",
                             "CloseDefenseActiveText",
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -297,9 +297,9 @@ public class CombatResolutionRoutines : MonoBehaviour
             }
 
             // In column eight a toggle will be listed to add air support if this is the Allied combat mode
-            if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
+            if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
             {
-                combat.GetComponent<Combat>().airSupportToggle = GlobalDefinitions.createToggle("CombatResolutionAirSupportToggle" + GlobalDefinitions.allCombats.IndexOf(combat),
+                combat.GetComponent<Combat>().airSupportToggle = GlobalDefinitions.CreateToggle("CombatResolutionAirSupportToggle" + GlobalDefinitions.allCombats.IndexOf(combat),
                     GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
                     yPosition,
                     combatCanvas).GetComponent<Toggle>();
@@ -320,63 +320,63 @@ public class CombatResolutionRoutines : MonoBehaviour
                 // A separate Toggle object is needed otherwise the Listener won't work without it
                 Toggle tempToggle;
                 tempToggle = combat.GetComponent<Combat>().airSupportToggle.GetComponent<Toggle>();
-                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<CombatResolutionButtonRoutines>().addAttackAirSupport());
+                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<CombatResolutionButtonRoutines>().AddAttackAirSupport());
 
                 if (!playerControl)
                     tempToggle.interactable = false;
             }
 
             // In column nine add a button to resolve the combat
-            combat.GetComponent<Combat>().resolveButton = GlobalDefinitions.createButton("CombatResolutionResolveButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Resolve",
+            combat.GetComponent<Combat>().resolveButton = GlobalDefinitions.CreateButton("CombatResolutionResolveButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Resolve",
                     GlobalDefinitions.GUIUNITIMAGESIZE * 9 * 1.25f - 0.5f * panelWidth,
                     yPosition,
                     combatCanvas);
             combat.GetComponent<Combat>().resolveButton.transform.SetParent(combatContentPanel.transform, false);
 
-            if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedCombatStateInstance") ||
-                    (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanCombatStateInstance"))
+            if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
+                    (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance"))
             {
                 // Combat mode is the only phase that the resolve button should be active
                 combat.GetComponent<Combat>().resolveButton.gameObject.AddComponent<CombatResolutionButtonRoutines>();
                 combat.GetComponent<Combat>().resolveButton.GetComponent<CombatResolutionButtonRoutines>().curentCombat = combat;
-                combat.GetComponent<Combat>().resolveButton.onClick.AddListener(combat.GetComponent<Combat>().resolveButton.GetComponent<CombatResolutionButtonRoutines>().resolutionSelected);
+                combat.GetComponent<Combat>().resolveButton.onClick.AddListener(combat.GetComponent<Combat>().resolveButton.GetComponent<CombatResolutionButtonRoutines>().ResolutionSelected);
             }
             else
                 combat.GetComponent<Combat>().resolveButton.interactable = false;
 
             // In column ten add a button to locate the combat
-            combat.GetComponent<Combat>().locateButton = GlobalDefinitions.createButton("CombatResolutionLocateButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Locate",
+            combat.GetComponent<Combat>().locateButton = GlobalDefinitions.CreateButton("CombatResolutionLocateButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Locate",
                    GlobalDefinitions.GUIUNITIMAGESIZE * 10 * 1.25f - 0.5f * panelWidth,
                    yPosition,
                    combatCanvas);
             combat.GetComponent<Combat>().locateButton.transform.SetParent(combatContentPanel.transform, false);
             combat.GetComponent<Combat>().locateButton.gameObject.AddComponent<CombatResolutionButtonRoutines>();
             combat.GetComponent<Combat>().locateButton.GetComponent<CombatResolutionButtonRoutines>().curentCombat = combat;
-            combat.GetComponent<Combat>().locateButton.onClick.AddListener(combat.GetComponent<Combat>().locateButton.GetComponent<CombatResolutionButtonRoutines>().locateAttack);
+            combat.GetComponent<Combat>().locateButton.onClick.AddListener(combat.GetComponent<Combat>().locateButton.GetComponent<CombatResolutionButtonRoutines>().LocateAttack);
 
             // In column eleven add a button to cancel the combat
-            combat.GetComponent<Combat>().cancelButton = GlobalDefinitions.createButton("CombatResolutionCamcelButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Cancel",
+            combat.GetComponent<Combat>().cancelButton = GlobalDefinitions.CreateButton("CombatResolutionCamcelButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Cancel",
                     GlobalDefinitions.GUIUNITIMAGESIZE * 11 * 1.25f - 0.5f * panelWidth,
                     yPosition,
                     combatCanvas);
             combat.GetComponent<Combat>().cancelButton.transform.SetParent(combatContentPanel.transform, false);
             combat.GetComponent<Combat>().cancelButton.gameObject.AddComponent<CombatResolutionButtonRoutines>();
             combat.GetComponent<Combat>().cancelButton.GetComponent<CombatResolutionButtonRoutines>().curentCombat = combat;
-            combat.GetComponent<Combat>().cancelButton.onClick.AddListener(combat.GetComponent<Combat>().cancelButton.GetComponent<CombatResolutionButtonRoutines>().cancelAttack);
+            combat.GetComponent<Combat>().cancelButton.onClick.AddListener(combat.GetComponent<Combat>().cancelButton.GetComponent<CombatResolutionButtonRoutines>().CancelAttack);
 
             if (!playerControl)
                 combat.GetComponent<Combat>().cancelButton.interactable = false;
         }
 
         // Need an OK button to get out of the GUI
-        okButton = GlobalDefinitions.createButton("CombatResolutionOKButton", "Continue",
+        okButton = GlobalDefinitions.CreateButton("CombatResolutionOKButton", "Continue",
                 7 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
         okButton.transform.SetParent(combatContentPanel.transform, false);
 
         okButton.gameObject.AddComponent<CombatResolutionButtonRoutines>();
-        okButton.onClick.AddListener(okButton.GetComponent<CombatResolutionButtonRoutines>().ok);
+        okButton.onClick.AddListener(okButton.GetComponent<CombatResolutionButtonRoutines>().Ok);
         GlobalDefinitions.combatResolutionOKButton = okButton.gameObject;
         GlobalDefinitions.combatResolutionOKButton.SetActive(true);
 
@@ -393,7 +393,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <param name="defendingUnits"></param>
     /// <param name="attackingUnits"></param>
     /// <param name="arrayIndex"></param>
-    public static void determineCombatResults(GameObject currentCombat, Vector2 buttonLocation)
+    public static void DetermineCombatResults(GameObject currentCombat, Vector2 buttonLocation)
     {
         // I originally kept the die roll results local here.  With network play though I need to drive this off global variables so that I can normalize the 
         // code for both network and local and the network computer works off the local computer's results
@@ -403,40 +403,40 @@ public class CombatResolutionRoutines : MonoBehaviour
         Toggle tempToggle1;
         Toggle tempToggle2;
 
-        combatOdds = GlobalDefinitions.convertOddsToString(GlobalDefinitions.returnCombatOdds(currentCombat.GetComponent<Combat>().defendingUnits,
+        combatOdds = GlobalDefinitions.ConvertOddsToString(GlobalDefinitions.ReturnCombatOdds(currentCombat.GetComponent<Combat>().defendingUnits,
                 currentCombat.GetComponent<Combat>().attackingUnits, currentCombat.GetComponent<Combat>().attackAirSupport));
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("Combat Results: Odds " + combatOdds);
 #endif
         if ((GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && !GlobalDefinitions.commandFileBeingRead)
         {
-            GlobalDefinitions.dieRollResult1 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
+            GlobalDefinitions.dieRollResult1 = CheckForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
             //GlobalDefinitions.dieRollResult1 = 3;  // REMOVE - FOR TESTING ONLY
             // 1:1 odds results 0-Delim 1-Exchange 2-Dback2 3-Aback2 4-Aelim 5-Aelim 
 
-            GlobalDefinitions.dieRollResult2 = checkForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
+            GlobalDefinitions.dieRollResult2 = CheckForDieRollInfluence(GlobalDefinitions.dieRoll.Next(0, 5));
         }
 
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DIEROLLRESULT1KEYWORD + " " + GlobalDefinitions.dieRollResult1);
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DIEROLLRESULT2KEYWORD + " " + GlobalDefinitions.dieRollResult2);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DIEROLLRESULT1KEYWORD + " " + GlobalDefinitions.dieRollResult1);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DIEROLLRESULT2KEYWORD + " " + GlobalDefinitions.dieRollResult2);
 
 #if OUTPUTDEBUG
         GlobalDefinitions.guiUpdateStatusMessage("Combat Results: die roll result 1 = " + GlobalDefinitions.dieRollResult1);
         GlobalDefinitions.guiUpdateStatusMessage("Combat Results: die roll result 2 = " + GlobalDefinitions.dieRollResult2);
 #endif
 
-        GlobalDefinitions.guiUpdateStatusMessage("Combat Results: Odds " + combatOdds + "  Die Roll " + (GlobalDefinitions.dieRollResult1 + 1) + "   which translates to " + GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]);
+        GlobalDefinitions.GuiUpdateStatusMessage("Combat Results: Odds " + combatOdds + "  Die Roll " + (GlobalDefinitions.dieRollResult1 + 1) + "   which translates to " + GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]);
 
-        if (!checkIfCarpetBombingInEffect(currentCombat.GetComponent<Combat>().defendingUnits))
+        if (!CheckIfCarpetBombingInEffect(currentCombat.GetComponent<Combat>().defendingUnits))
         {
             // This is the path for combat results without carpet bombing ... 99.9999% of the time
-            executeCombatResults(currentCombat.GetComponent<Combat>().defendingUnits,
+            ExecuteCombatResults(currentCombat.GetComponent<Combat>().defendingUnits,
                     currentCombat.GetComponent<Combat>().attackingUnits,
                     combatOdds,
                     GlobalDefinitions.dieRollResult1,
-                    GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1],
+                    GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1],
                     buttonLocation);
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD + " " + GlobalDefinitions.CombatResultToggleName);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD + " " + GlobalDefinitions.CombatResultToggleName);
 
         }
         else
@@ -447,15 +447,15 @@ public class CombatResolutionRoutines : MonoBehaviour
             {
                 if (GlobalDefinitions.dieRollResult1 < GlobalDefinitions.dieRollResult2)
                 {
-                    executeCombatResults(currentCombat.GetComponent<Combat>().defendingUnits, currentCombat.GetComponent<Combat>().attackingUnits,
+                    ExecuteCombatResults(currentCombat.GetComponent<Combat>().defendingUnits, currentCombat.GetComponent<Combat>().attackingUnits,
                         combatOdds, GlobalDefinitions.dieRollResult1, 
-                        GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1], buttonLocation);
+                        GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1], buttonLocation);
                 }
                 else
                 {
-                    executeCombatResults(currentCombat.GetComponent<Combat>().defendingUnits, currentCombat.GetComponent<Combat>().attackingUnits,
+                    ExecuteCombatResults(currentCombat.GetComponent<Combat>().defendingUnits, currentCombat.GetComponent<Combat>().attackingUnits,
                             combatOdds, GlobalDefinitions.dieRollResult2,
-                            GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2], buttonLocation);
+                            GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2], buttonLocation);
                 }
             }
 
@@ -466,41 +466,41 @@ public class CombatResolutionRoutines : MonoBehaviour
                 // Get rid off the combat result gui
                 GlobalDefinitions.combatResolutionGUIInstance.SetActive(false);
 
-                GlobalDefinitions.guiUpdateStatusMessage("Combat Results2: Odds " + combatOdds + "  Die Roll " + (GlobalDefinitions.dieRollResult2 + 1) + "   which translates to " + GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]);
+                GlobalDefinitions.GuiUpdateStatusMessage("Combat Results2: Odds " + combatOdds + "  Die Roll " + (GlobalDefinitions.dieRollResult2 + 1) + "   which translates to " + GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]);
 
                 // Create a GUI and present the user with the two die roll results for selection.  The toggle routine will call executeCombatResults once the user selects the result so need to load up all the
                 // variables it will need to pass
 
                 float panelWidth = 5 * GlobalDefinitions.GUIUNITIMAGESIZE;
                 float panelHeight = 3 * GlobalDefinitions.GUIUNITIMAGESIZE;
-                GlobalDefinitions.createGUICanvas("CarpetBombingResultSelectionGUIInstance",
+                GlobalDefinitions.CreateGUICanvas("CarpetBombingResultSelectionGUIInstance",
                         panelWidth,
                         panelHeight,
                         ref carpetBombingCanvasInstance);
 
-                GlobalDefinitions.createText("Select a Result", "CarpetBombingGUIHeaderText",
+                GlobalDefinitions.CreateText("Select a Result", "CarpetBombingGUIHeaderText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         carpetBombingCanvasInstance);
 
-                tempToggle1 = GlobalDefinitions.createToggle("CarpetBombingToggle1",
+                tempToggle1 = GlobalDefinitions.CreateToggle("CarpetBombingToggle1",
                         1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         carpetBombingCanvasInstance).GetComponent<Toggle>();
-                GlobalDefinitions.createText(convertResultsToString(GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]), "CarpetBombingResultText",
+                GlobalDefinitions.CreateText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]), "CarpetBombingResultText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         carpetBombingCanvasInstance);
 
-                tempToggle2 = GlobalDefinitions.createToggle("CarpetBombingToggle2",
+                tempToggle2 = GlobalDefinitions.CreateToggle("CarpetBombingToggle2",
                         4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         carpetBombingCanvasInstance).GetComponent<Toggle>();
-                GlobalDefinitions.createText(convertResultsToString(GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]), "CarpetBombingResultText",
+                GlobalDefinitions.CreateText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]), "CarpetBombingResultText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -522,14 +522,14 @@ public class CombatResolutionRoutines : MonoBehaviour
                 tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().dieRollResult = GlobalDefinitions.dieRollResult1;
                 tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().dieRollResult = GlobalDefinitions.dieRollResult2;
 
-                tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().combatResults = GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1];
-                tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().combatResults = GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2];
+                tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().combatResults = GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1];
+                tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().combatResults = GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2];
 
                 tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().buttonLocation = buttonLocation;
                 tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().buttonLocation = buttonLocation;
 
-                tempToggle1.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().carpetBombingResultsSelected());
-                tempToggle2.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().carpetBombingResultsSelected());
+                tempToggle1.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle1.GetComponent<CarpetBombingSelectionToggleRoutines>().CarpetBombingResultsSelected());
+                tempToggle2.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle2.GetComponent<CarpetBombingSelectionToggleRoutines>().CarpetBombingResultsSelected());
             }
         }
     }
@@ -543,15 +543,15 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <param name="dieRollResult"></param>
     /// <param name="combatResults"></param>
     /// <param name="buttonLocation"></param>
-    public static void executeCombatResults(List<GameObject> defendingUnits, List<GameObject> attackingUnits, string combatOdds, int dieRollResult,
+    public static void ExecuteCombatResults(List<GameObject> defendingUnits, List<GameObject> attackingUnits, string combatOdds, int dieRollResult,
             GlobalDefinitions.CombatResults combatResults, Vector2 buttonLocation)
     {
         // The combat results from last turn are only saved for the Allied player because it is used by the AI to determine carpet bombing and airborne attacks
-        if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
+        if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
             GlobalDefinitions.combatResultsFromLastTurn.Add(combatResults);
 
         // The added text below is to put the combat results in the Combat Results GUI in place of the deleted Resolve button
-        GlobalDefinitions.createText(convertResultsToString(GlobalDefinitions.combatResultsTable[translateCombatOddsToArrayIndex(combatOdds), dieRollResult]), "CombatResolutionText",
+        GlobalDefinitions.CreateText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), dieRollResult]), "CombatResolutionText",
                 1.4f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 buttonLocation.x,
@@ -569,13 +569,13 @@ public class CombatResolutionRoutines : MonoBehaviour
                 foreach (GameObject unit in attackingUnits)
                 {
                     GlobalDefinitions.retreatingUnitsBeginningHexes.Add(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
-                    if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().sea || !unitCanRetreat(unit))
+                    if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().sea || !UnitCanRetreat(unit))
                     {
                         // This means that the unit can't retreat so it will be removed before all the checks are run.
                         // Otherwise (the way it was first written, the unit would be deleted after the user selects it.
                         // This seems silly when it is clear that the unit can't retreat.
-                        GlobalDefinitions.guiUpdateStatusMessage("No retreat available - eliminating unit " + unit.GetComponent<UnitDatabaseFields>().unitDesignation);
-                        GlobalDefinitions.moveUnitToDeadPile(unit);
+                        GlobalDefinitions.GuiUpdateStatusMessage("No retreat available - eliminating unit " + unit.GetComponent<UnitDatabaseFields>().unitDesignation);
+                        GlobalDefinitions.MoveUnitToDeadPile(unit);
                     }
                     else
                     {
@@ -589,7 +589,7 @@ public class CombatResolutionRoutines : MonoBehaviour
 
                     if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
                             && (GlobalDefinitions.nationalityUserIsPlaying == attackingUnits[0].GetComponent<UnitDatabaseFields>().nationality))
-                        AIRoutines.executeAIAback2(GlobalDefinitions.retreatingUnits);
+                        AIRoutines.ExecuteAIAback2(GlobalDefinitions.retreatingUnits);
 
                     else
                     {
@@ -598,7 +598,7 @@ public class CombatResolutionRoutines : MonoBehaviour
 
                         // We are going to need to get user input to move the units back so disable the combat resolution gui
                         GlobalDefinitions.combatResolutionGUIInstance.SetActive(false);
-                        selectUnitsForRetreat();
+                        SelectUnitsForRetreat();
 
                     }
                 }
@@ -606,7 +606,7 @@ public class CombatResolutionRoutines : MonoBehaviour
 
             case GlobalDefinitions.CombatResults.Aelim:
                 foreach (GameObject unit in attackingUnits)
-                    GlobalDefinitions.moveUnitToDeadPile(unit);
+                    GlobalDefinitions.MoveUnitToDeadPile(unit);
                 // If we'er coming from the carpet bombing option, need to set the gui active again
                 GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
                 break;
@@ -625,19 +625,19 @@ public class CombatResolutionRoutines : MonoBehaviour
                 foreach (GameObject unit in attackingUnits)
                     GlobalDefinitions.dback2Attackers.Add(unit);
 
-                loadHexesAvailableForPostCombatMovement(attackingUnits, defendingUnits);
+                LoadHexesAvailableForPostCombatMovement(attackingUnits, defendingUnits);
 
                 // Store and highlight the defenders that need to be moved
                 foreach (GameObject unit in defendingUnits)
                 {
                     GlobalDefinitions.retreatingUnitsBeginningHexes.Add(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
-                    if (!unitCanRetreat(unit))
+                    if (!UnitCanRetreat(unit))
                     {
                         // This means that the unit can't retreat so it will be removed before all the checks are run.
                         // Otherwise (the way it was first written, the unit would be deleted after the user selects it.
                         // This seems silly when it is clear that the unit can't retreat.
-                        GlobalDefinitions.guiUpdateStatusMessage("No retreat available - eliminating unit " + unit.GetComponent<UnitDatabaseFields>().unitDesignation);
-                        GlobalDefinitions.moveUnitToDeadPile(unit);
+                        GlobalDefinitions.GuiUpdateStatusMessage("No retreat available - eliminating unit " + unit.GetComponent<UnitDatabaseFields>().unitDesignation);
+                        GlobalDefinitions.MoveUnitToDeadPile(unit);
                     }
                     else
                     {
@@ -648,32 +648,32 @@ public class CombatResolutionRoutines : MonoBehaviour
                 if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
                     && (GlobalDefinitions.nationalityUserIsPlaying == defendingUnits[0].GetComponent<UnitDatabaseFields>().nationality))
                 {
-                    AIRoutines.executeAIDback2(GlobalDefinitions.retreatingUnits);
+                    AIRoutines.ExecuteAIDback2(GlobalDefinitions.retreatingUnits);
                 }
                 else
                 {
-                    selectUnitsForRetreat();
+                    SelectUnitsForRetreat();
                 }
                 break;
 
             case GlobalDefinitions.CombatResults.Delim:
                 // Need to determine if the attackers can occupy the defenders vacated hex
-                loadHexesAvailableForPostCombatMovement(attackingUnits, defendingUnits);
+                LoadHexesAvailableForPostCombatMovement(attackingUnits, defendingUnits);
 
                 foreach (GameObject unit in defendingUnits)
-                    GlobalDefinitions.moveUnitToDeadPile(unit);
+                    GlobalDefinitions.MoveUnitToDeadPile(unit);
 
                 if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
                         && (GlobalDefinitions.nationalityUserIsPlaying == defendingUnits[0].GetComponent<UnitDatabaseFields>().nationality))
                 {
                     if (GlobalDefinitions.hexesAvailableForPostCombatMovement.Count > 0)
-                        AIRoutines.executeAIPostCombatMovement(attackingUnits);
+                        AIRoutines.ExecuteAIPostCombatMovement(attackingUnits);
                 }
                 else
                 {
                     if (GlobalDefinitions.hexesAvailableForPostCombatMovement.Count > 0)
                         if (attackingUnits.Count > 0)
-                            selectUnitsForPostCombatMovement(attackingUnits);
+                            SelectUnitsForPostCombatMovement(attackingUnits);
                         else
                             // If we're coming from the carpet bombing option, need to set the gui active again
                             GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
@@ -682,43 +682,43 @@ public class CombatResolutionRoutines : MonoBehaviour
 
             // Resolve exchange combat results
             case GlobalDefinitions.CombatResults.Exchange:
-                if (GlobalDefinitions.calculateDefenseFactorWithoutAirSupport(defendingUnits, attackingUnits) == GlobalDefinitions.calculateAttackFactorWithoutAirSupport(attackingUnits))
+                if (GlobalDefinitions.CalculateDefenseFactorWithoutAirSupport(defendingUnits, attackingUnits) == GlobalDefinitions.CalculateAttackFactorWithoutAirSupport(attackingUnits))
                 {
                     // No need to bother the user since the attack and defense factors match
                     foreach (GameObject unit in attackingUnits)
-                        GlobalDefinitions.moveUnitToDeadPile(unit);
+                        GlobalDefinitions.MoveUnitToDeadPile(unit);
                     foreach (GameObject unit in defendingUnits)
-                        GlobalDefinitions.moveUnitToDeadPile(unit);
+                        GlobalDefinitions.MoveUnitToDeadPile(unit);
                     // In case we're coming from the carpet bombing option, need to set the gui active again
                     GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
                 }
                 // This executes if the attacker had the greater number of factors
-                else if (GlobalDefinitions.calculateDefenseFactorWithoutAirSupport(defendingUnits, attackingUnits) < GlobalDefinitions.calculateAttackFactorWithoutAirSupport(attackingUnits))
+                else if (GlobalDefinitions.CalculateDefenseFactorWithoutAirSupport(defendingUnits, attackingUnits) < GlobalDefinitions.CalculateAttackFactorWithoutAirSupport(attackingUnits))
                 {
-                    loadHexesAvailableForPostCombatMovement(attackingUnits, defendingUnits);
+                    LoadHexesAvailableForPostCombatMovement(attackingUnits, defendingUnits);
                     // If there is only one attacker, don't need to bother the user
                     if (attackingUnits.Count == 1)
                     {
-                        GlobalDefinitions.moveUnitToDeadPile(attackingUnits[0]);
+                        GlobalDefinitions.MoveUnitToDeadPile(attackingUnits[0]);
                         foreach (GameObject unit in defendingUnits)
-                            GlobalDefinitions.moveUnitToDeadPile(unit);
+                            GlobalDefinitions.MoveUnitToDeadPile(unit);
                         // In case we're coming from the carpet bombing option, need to set the gui active again
                         GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
                     }
                     else
                     {
-                        GlobalDefinitions.exchangeFactorsToLose = GlobalDefinitions.calculateDefenseFactorWithoutAirSupport(defendingUnits, attackingUnits);
+                        GlobalDefinitions.exchangeFactorsToLose = GlobalDefinitions.CalculateDefenseFactorWithoutAirSupport(defendingUnits, attackingUnits);
                         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
                                 && (GlobalDefinitions.nationalityUserIsPlaying == defendingUnits[0].GetComponent<UnitDatabaseFields>().nationality))
                         {
-                            GlobalDefinitions.writeToLogFile("executeCombatResults: executing executeAIExchangeForAttackingUnits");
-                            AIRoutines.executeAIExchangeForAttackingUnits(attackingUnits, defendingUnits);
+                            GlobalDefinitions.WriteToLogFile("executeCombatResults: executing executeAIExchangeForAttackingUnits");
+                            AIRoutines.ExecuteAIExchangeForAttackingUnits(attackingUnits, defendingUnits);
                         }
                         else
                         {
                             // Pull up a GUI to have the attacker determine what units will be exchanged
-                            GlobalDefinitions.writeToLogFile("executeCombatResults: executing selectUnitsToExchange attacker has greater factors");
-                            selectUnitsToExchange(attackingUnits, true, attackingUnits, defendingUnits);
+                            GlobalDefinitions.WriteToLogFile("executeCombatResults: executing selectUnitsToExchange attacker has greater factors");
+                            SelectUnitsToExchange(attackingUnits, true, attackingUnits, defendingUnits);
                             GlobalDefinitions.combatResolutionGUIInstance.SetActive(false);
                         }
                     }
@@ -730,26 +730,26 @@ public class CombatResolutionRoutines : MonoBehaviour
                     // If there is only one defender, don't need to bother the user
                     if (defendingUnits.Count == 1)
                     {
-                        GlobalDefinitions.moveUnitToDeadPile(defendingUnits[0]);
+                        GlobalDefinitions.MoveUnitToDeadPile(defendingUnits[0]);
                         foreach (GameObject unit in attackingUnits)
-                            GlobalDefinitions.moveUnitToDeadPile(unit);
+                            GlobalDefinitions.MoveUnitToDeadPile(unit);
                         // If we're coming from the carpet bombing option, need to set the gui active again
                         GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
                     }
                     else
                     {
-                        GlobalDefinitions.exchangeFactorsToLose = (int)GlobalDefinitions.calculateAttackFactorWithoutAirSupport(attackingUnits);
+                        GlobalDefinitions.exchangeFactorsToLose = (int)GlobalDefinitions.CalculateAttackFactorWithoutAirSupport(attackingUnits);
                         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
                                 && (GlobalDefinitions.nationalityUserIsPlaying == attackingUnits[0].GetComponent<UnitDatabaseFields>().nationality))
                         {
-                            GlobalDefinitions.writeToLogFile("executeCombatResults: executing executeAIExchangeForDefendingUnits");
-                            AIRoutines.executeAIExchangeForDefendingUnits(attackingUnits, defendingUnits);
+                            GlobalDefinitions.WriteToLogFile("executeCombatResults: executing executeAIExchangeForDefendingUnits");
+                            AIRoutines.ExecuteAIExchangeForDefendingUnits(attackingUnits, defendingUnits);
                         }
                         else
                         {
                             // Pull up a GUI to have the defender determine what units will be exchanged
-                            GlobalDefinitions.writeToLogFile("executeCombatResults: executing selectUnitsToExchange defense has greater factors");
-                            selectUnitsToExchange(defendingUnits, false, attackingUnits, defendingUnits);
+                            GlobalDefinitions.WriteToLogFile("executeCombatResults: executing selectUnitsToExchange defense has greater factors");
+                            SelectUnitsToExchange(defendingUnits, false, attackingUnits, defendingUnits);
                             GlobalDefinitions.combatResolutionGUIInstance.SetActive(false);
 
                         }
@@ -758,7 +758,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 break;
 
             default:
-                GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unknown combat result - " + convertResultsToString(combatResults));
+                GlobalDefinitions.GuiUpdateStatusMessage("Internal Error - Unknown combat result - " + ConvertResultsToString(combatResults));
                 break;
         }
     }
@@ -770,7 +770,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <param name="attackerHadMostFactors"></param>
     /// <param name="attackingUnits"></param>
     /// <param name="defendingUnits"></param>
-    private static void selectUnitsToExchange(List<GameObject> unitList, bool attackerHadMostFactors, List<GameObject> attackingUnits, List<GameObject> defendingUnits)
+    private static void SelectUnitsToExchange(List<GameObject> unitList, bool attackerHadMostFactors, List<GameObject> attackingUnits, List<GameObject> defendingUnits)
     {
         Button okButton;
         Canvas combatCanvas = new Canvas();
@@ -788,14 +788,14 @@ public class CombatResolutionRoutines : MonoBehaviour
         float panelWidth = (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
         float panelHeight = 5 * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-        exchangeGuiInstance = GlobalDefinitions.createGUICanvas("ExchangeGUIInstance",
+        exchangeGuiInstance = GlobalDefinitions.CreateGUICanvas("ExchangeGUIInstance",
                 panelWidth,
                 panelHeight,
                 ref combatCanvas);
 
         GlobalDefinitions.ExchangeGUIInstance = exchangeGuiInstance;
 
-        GlobalDefinitions.createText("Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected, "ExchangeText",
+        GlobalDefinitions.CreateText("Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected, "ExchangeText",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0.5f * (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -807,7 +807,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         for (int index = 0; index < unitList.Count; index++)
         {
             Toggle tempToggle;
-            tempToggle = GlobalDefinitions.createUnitTogglePair("ExchangeUnitToggle" + index,
+            tempToggle = GlobalDefinitions.CreateUnitTogglePair("ExchangeUnitToggle" + index,
                     index * xSeperation + xOffset - 0.5f * panelWidth,
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas,
@@ -816,10 +816,10 @@ public class CombatResolutionRoutines : MonoBehaviour
             tempToggle.gameObject.GetComponent<ExchangeToggleRoutines>().unit = unitList[index];
             tempToggle.gameObject.GetComponent<ExchangeToggleRoutines>().attacker = attackerHadMostFactors; // Used in the toggle routines to determine if attackers or defenders are being selected
             tempToggle.gameObject.GetComponent<ExchangeToggleRoutines>().attackingUnits = attackingUnits;
-            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<ExchangeToggleRoutines>().addOrSubtractExchangeFactors());
+            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<ExchangeToggleRoutines>().AddOrSubtractExchangeFactors());
         }
 
-        okButton = GlobalDefinitions.createButton("ExchangeOKButton", "OK",
+        okButton = GlobalDefinitions.CreateButton("ExchangeOKButton", "OK",
                 0.5f * (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
@@ -827,14 +827,14 @@ public class CombatResolutionRoutines : MonoBehaviour
         okButton.gameObject.GetComponent<ExchangeOKRoutines>().defendingUnits = defendingUnits;
         okButton.gameObject.GetComponent<ExchangeOKRoutines>().attackingUnits = attackingUnits;
         okButton.gameObject.GetComponent<ExchangeOKRoutines>().attackerHadMostFactors = attackerHadMostFactors;
-        okButton.onClick.AddListener(okButton.GetComponent<ExchangeOKRoutines>().exchangeOKSelected);
+        okButton.onClick.AddListener(okButton.GetComponent<ExchangeOKRoutines>().ExchangeOKSelected);
     }
 
     /// <summary>
     /// Presents a gui for post combat movement
     /// </summary>
     /// <param name="unitList"></param>
-    public static void selectUnitsForPostCombatMovement(List<GameObject> unitList)
+    public static void SelectUnitsForPostCombatMovement(List<GameObject> unitList)
     {
         Button okButton;
         int widthSeed;
@@ -851,13 +851,13 @@ public class CombatResolutionRoutines : MonoBehaviour
 
         float panelWidth = widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE;
         float panelHeight = 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
-        GameObject postCombatMovementGuiInstance = GlobalDefinitions.createGUICanvas("PostCombatMovementGUIInstance",
+        GameObject postCombatMovementGuiInstance = GlobalDefinitions.CreateGUICanvas("PostCombatMovementGUIInstance",
                 panelWidth,
                 panelHeight,
                 ref combatCanvas);
         GlobalDefinitions.postCombatMovementGuiInstance = postCombatMovementGuiInstance;
 
-        GlobalDefinitions.createText("Select units to occupy the vacated hex", "PostCombatMovementText",
+        GlobalDefinitions.CreateText("Select units to occupy the vacated hex", "PostCombatMovementText",
                 widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
@@ -870,7 +870,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         {
             Toggle tempToggle;
 
-            tempToggle = GlobalDefinitions.createUnitTogglePair("PostCombatMovementUnitToggle" + index,
+            tempToggle = GlobalDefinitions.CreateUnitTogglePair("PostCombatMovementUnitToggle" + index,
                     index * xSeperation + xOffset - 0.5f * panelWidth,
                     2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas,
@@ -883,22 +883,22 @@ public class CombatResolutionRoutines : MonoBehaviour
                 tempToggle.GetComponent<PostCombatMovementToggleRoutines>().stackingLimit = GlobalDefinitions.AlliedStackingLimit;
             else
                 tempToggle.GetComponent<PostCombatMovementToggleRoutines>().stackingLimit = GlobalDefinitions.GermanStackingLimit;
-            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<PostCombatMovementToggleRoutines>().moveSelectedUnit());
+            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<PostCombatMovementToggleRoutines>().MoveSelectedUnit());
         }
 
-        okButton = GlobalDefinitions.createButton("PostCombatMovementButton", "OK",
+        okButton = GlobalDefinitions.CreateButton("PostCombatMovementButton", "OK",
                 widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
         okButton.gameObject.AddComponent<PostCombatMovementOkRoutines>();
-        okButton.onClick.AddListener(okButton.GetComponent<PostCombatMovementOkRoutines>().executePostCombatMovement);
+        okButton.onClick.AddListener(okButton.GetComponent<PostCombatMovementOkRoutines>().ExecutePostCombatMovement);
     }
 
     /// <summary>
     /// This routine will go through the units that need to retreat and get user input to determine where they will retreat to
     /// This executes until there are no more retreating units left since after the user selects a hex destination it calls this routine again
     /// </summary>
-    public static void selectUnitsForRetreat()
+    public static void SelectUnitsForRetreat()
     {
         // This is for the case where the retreating units have been eliminated and the attackers can occupy the vacant hexes
         if (GlobalDefinitions.retreatingUnits.Count == 0)
@@ -906,7 +906,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             if (GlobalDefinitions.hexesAvailableForPostCombatMovement.Count > 0)
             {
                 if (GlobalDefinitions.dback2Attackers.Count > 0)
-                    selectUnitsForPostCombatMovement(GlobalDefinitions.dback2Attackers);
+                    SelectUnitsForPostCombatMovement(GlobalDefinitions.dback2Attackers);
             }
             else
             {
@@ -920,24 +920,24 @@ public class CombatResolutionRoutines : MonoBehaviour
         {
             // If there is only one unit don't need to have a gui, just need to have the user choose the retreat hex
             // if highlightRetreatMovement comes back with false it means that there was no retreat available and the unit was deleted
-            List<GameObject> retreatHexes = returnRetreatHexes(GlobalDefinitions.retreatingUnits[0]);
+            List<GameObject> retreatHexes = ReturnRetreatHexes(GlobalDefinitions.retreatingUnits[0]);
             if (retreatHexes.Count > 0)
             {
                 GlobalDefinitions.combatResolutionGUIInstance.SetActive(false);
-                GlobalDefinitions.highlightUnit(GlobalDefinitions.retreatingUnits[0]);
+                GlobalDefinitions.HighlightUnit(GlobalDefinitions.retreatingUnits[0]);
                 foreach (GameObject hex in retreatHexes)
-                    GlobalDefinitions.highlightHexForMovement(hex);
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<CombatState>().executeRetreatMovement;
+                    GlobalDefinitions.HighlightHexForMovement(hex);
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<CombatState>().ExecuteRetreatMovement;
             }
             else
             {
                 // This executes when there are not enough retreat hexes for all the units that need to retreat
-                GlobalDefinitions.guiUpdateStatusMessage("No retreat available - eliminating " + GlobalDefinitions.retreatingUnits[0].name);
-                GlobalDefinitions.moveUnitToDeadPile(GlobalDefinitions.retreatingUnits[0]);
+                GlobalDefinitions.GuiUpdateStatusMessage("No retreat available - eliminating " + GlobalDefinitions.retreatingUnits[0].name);
+                GlobalDefinitions.MoveUnitToDeadPile(GlobalDefinitions.retreatingUnits[0]);
 
                 if ((GlobalDefinitions.hexesAvailableForPostCombatMovement.Count > 0) && (GlobalDefinitions.dback2Attackers.Count > 0))
-                    selectUnitsForPostCombatMovement(GlobalDefinitions.dback2Attackers);
+                    SelectUnitsForPostCombatMovement(GlobalDefinitions.dback2Attackers);
                 else
                     GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
             }
@@ -950,12 +950,12 @@ public class CombatResolutionRoutines : MonoBehaviour
 
             float panelWidth = (GlobalDefinitions.retreatingUnits.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
             float panelHeight = 3 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            GlobalDefinitions.createGUICanvas("RetreatGUIInstance",
+            GlobalDefinitions.CreateGUICanvas("RetreatGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref combatCanvas);
 
-            GlobalDefinitions.createText("Select unit to retreat", "RetreatText",
+            GlobalDefinitions.CreateText("Select unit to retreat", "RetreatText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (GlobalDefinitions.retreatingUnits.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -968,7 +968,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             {
                 Toggle tempToggle;
 
-                tempToggle = GlobalDefinitions.createUnitTogglePair("RetreatUnitToggle" + index,
+                tempToggle = GlobalDefinitions.CreateUnitTogglePair("RetreatUnitToggle" + index,
                         index * xSeperation + xOffset - 0.5f * panelWidth,
                         1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         combatCanvas,
@@ -976,7 +976,7 @@ public class CombatResolutionRoutines : MonoBehaviour
 
                 tempToggle.gameObject.AddComponent<RetreatToggleRoutines>();
                 tempToggle.GetComponent<RetreatToggleRoutines>().unit = GlobalDefinitions.retreatingUnits[index];
-                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<RetreatToggleRoutines>().selectUnitsToMove());
+                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<RetreatToggleRoutines>().SelectUnitsToMove());
             }
         }
     }
@@ -986,7 +986,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// </summary>
     /// <param name="retreatingUnit"></param>
     /// <returns></returns>
-    public static List<GameObject> returnRetreatHexes(GameObject retreatingUnit)
+    public static List<GameObject> ReturnRetreatHexes(GameObject retreatingUnit)
     {
         // The process that will be used to check retreat is to execute two movement sections of one hex at a time.  This is needed to account
         // for the fact that the movement doesn't need to be efficient.  A retreat of two hexes can leave a unit only one hex away from where
@@ -996,7 +996,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().remainingMovement = 1;
         foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
             if (retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
-                if (checkForRetreatMovementAvailableNoStackingRestrictions(retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex,
+                if (CheckForRetreatMovementAvailableNoStackingRestrictions(retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex,
                         retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], retreatingUnit))
                     firstMoveHexes.Add(retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]);
 
@@ -1006,7 +1006,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             hex.GetComponent<HexDatabaseFields>().remainingMovement = 1;
             foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
                 if (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
-                    if (checkForRetreatMovementAvailable(hex, hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], retreatingUnit))
+                    if (CheckForRetreatMovementAvailable(hex, hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], retreatingUnit))
                         retreatHexes.Add(hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]);
         }
 
@@ -1019,7 +1019,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <param name="initialHexToCheck"></param>
     /// <param name="retreatingUnit"></param>
     /// <returns></returns>
-    public static bool highlightRetreatMovement(GameObject retreatingUnit, bool hexesShouldBeHighlighted)
+    public static bool HighlightRetreatMovement(GameObject retreatingUnit, bool hexesShouldBeHighlighted)
     {
         List<GameObject> storedHexes = new List<GameObject>();
         // The process that will be used to check retreat is to execute two movement sections of one hex at a time.  This is needed to account
@@ -1039,7 +1039,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 {
                     storeHex = false;
 
-                    if (checkForRetreatMovementAvailableNoStackingRestrictions(hexesToCheck[0], hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], retreatingUnit))
+                    if (CheckForRetreatMovementAvailableNoStackingRestrictions(hexesToCheck[0], hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], retreatingUnit))
                         storeHex = true;
 
                     // See if the current neighbor needs to be popped to the stack for checking
@@ -1066,7 +1066,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                     {
                         storeHex = false;
 
-                        if (checkForRetreatMovementAvailable(hexesToCheck[0], hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], retreatingUnit))
+                        if (CheckForRetreatMovementAvailable(hexesToCheck[0], hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], retreatingUnit))
                             storeHex = true;
 
                         // See if the current neighbor needs to be popped to the stack for checking
@@ -1101,9 +1101,9 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static bool unitCanRetreat(GameObject unit)
+    public static bool UnitCanRetreat(GameObject unit)
     {
-        if (returnRetreatHexes(unit).Count > 0)
+        if (ReturnRetreatHexes(unit).Count > 0)
             return (true);
         else
             return (false);
@@ -1116,15 +1116,15 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <param name="destinationHex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private static bool checkForRetreatMovementAvailable(GameObject beginningHex, GameObject destinationHex, GameObject unit)
+    private static bool CheckForRetreatMovementAvailable(GameObject beginningHex, GameObject destinationHex, GameObject unit)
     {
-        if (!checkForRetreatMovementAvailableNoStackingRestrictions(beginningHex, destinationHex, unit))
+        if (!CheckForRetreatMovementAvailableNoStackingRestrictions(beginningHex, destinationHex, unit))
             // Even without stacking limits the move is not possible
             return (false);
         else
         {
             //Check if there is a stacking limitation for occupying the hex and also check that it isn't a bridge hex
-            if (GlobalDefinitions.hexUnderStackingLimit(destinationHex, unit.GetComponent<UnitDatabaseFields>().nationality) &&
+            if (GlobalDefinitions.HexUnderStackingLimit(destinationHex, unit.GetComponent<UnitDatabaseFields>().nationality) &&
                     !destinationHex.GetComponent<HexDatabaseFields>().bridge)
             {
                 destinationHex.GetComponent<HexDatabaseFields>().availableForMovement = true;
@@ -1141,7 +1141,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <param name="destinationHex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private static bool checkForRetreatMovementAvailableNoStackingRestrictions(GameObject beginningHex, GameObject destinationHex, GameObject unit)
+    private static bool CheckForRetreatMovementAvailableNoStackingRestrictions(GameObject beginningHex, GameObject destinationHex, GameObject unit)
     {
         // First check if there is any remaining movement cost available from the start hex
         if (beginningHex.GetComponent<HexDatabaseFields>().remainingMovement == 0)
@@ -1189,12 +1189,12 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// After moving it cleans up the hexes
     /// </summary>
     /// <param name="attackingNationality"></param>
-    public static void retreatHexSelection(GameObject hex, GlobalDefinitions.Nationality attackingNationality)
+    public static void RetreatHexSelection(GameObject hex, GlobalDefinitions.Nationality attackingNationality)
     {
         if ((hex != null) && hex.GetComponent<HexDatabaseFields>().availableForMovement)
         {
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(hex, GlobalDefinitions.retreatingUnits[0].GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.retreatingUnits[0]);
-            GlobalDefinitions.unhighlightUnit(GlobalDefinitions.retreatingUnits[0]);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(hex, GlobalDefinitions.retreatingUnits[0].GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.retreatingUnits[0]);
+            GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.retreatingUnits[0]);
             GlobalDefinitions.retreatingUnits.RemoveAt(0);
 
             // Clean up the hexes that were highlighted and reset remainingMovement
@@ -1202,16 +1202,16 @@ public class CombatResolutionRoutines : MonoBehaviour
             {
                 cleanHex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
                 cleanHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
-                GlobalDefinitions.unhighlightHex(cleanHex.gameObject);
+                GlobalDefinitions.UnhighlightHex(cleanHex.gameObject);
             }
             //storedHexes.Clear();
 
             // Go back and check if additional units need to be retreated
-            selectUnitsForRetreat();
+            SelectUnitsForRetreat();
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Invalid hex.  Please select again");
+            GlobalDefinitions.GuiUpdateStatusMessage("Invalid hex.  Please select again");
         }
     }
 
@@ -1220,12 +1220,12 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// </summary>
     /// <param name="attackingUnits"></param>
     /// <param name="defendingUnits"></param>
-    public static void loadHexesAvailableForPostCombatMovement(List<GameObject> attackingUnits, List<GameObject> defendingUnits)
+    public static void LoadHexesAvailableForPostCombatMovement(List<GameObject> attackingUnits, List<GameObject> defendingUnits)
     {
         // Post combat movement is available if the defenders were doubled or tripled (i.e. city, mountain, fortress, or cross river)
         GlobalDefinitions.hexesAvailableForPostCombatMovement.Clear();
         foreach (GameObject unit in defendingUnits)
-            if (GlobalDefinitions.calculateUnitDefendingFactor(unit, attackingUnits) > unit.GetComponent<UnitDatabaseFields>().defenseFactor)
+            if (GlobalDefinitions.CalculateUnitDefendingFactor(unit, attackingUnits) > unit.GetComponent<UnitDatabaseFields>().defenseFactor)
                 if (!GlobalDefinitions.hexesAvailableForPostCombatMovement.Contains(unit.GetComponent<UnitDatabaseFields>().occupiedHex))
                     GlobalDefinitions.hexesAvailableForPostCombatMovement.Add(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
 
@@ -1240,9 +1240,9 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <summary>
     /// Take the unit loaded into the unitSelectedForPostCombatMovement and move it to the hex selected
     /// </summary>
-    public static void executePostCombatMovement(GameObject hex)
+    public static void ExecutePostCombatMovement(GameObject hex)
     {
-        GlobalDefinitions.writeToLogFile("executePostCombatMovement: Moving unit " + GlobalDefinitions.unitSelectedForPostCombatMovement.name + " to hex " + hex.name);
+        GlobalDefinitions.WriteToLogFile("executePostCombatMovement: Moving unit " + GlobalDefinitions.unitSelectedForPostCombatMovement.name + " to hex " + hex.name);
         if (GlobalDefinitions.hexesAvailableForPostCombatMovement.Contains(hex) && hex.GetComponent<HexDatabaseFields>().availableForMovement)
         {
             // Move the unit
@@ -1250,26 +1250,26 @@ public class CombatResolutionRoutines : MonoBehaviour
             // If the unit is coming from a sea hex then this is a successful invasion
             if (GlobalDefinitions.unitSelectedForPostCombatMovement.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().sea)
             {
-                GlobalDefinitions.writeToLogFile("executePostCombatMovement: setting hex " + hex.name + " to a successful invaded hex");
+                GlobalDefinitions.WriteToLogFile("executePostCombatMovement: setting hex " + hex.name + " to a successful invaded hex");
                 hex.GetComponent<HexDatabaseFields>().successfullyInvaded = true;
                 hex.GetComponent<HexDatabaseFields>().alliedControl = true;
             }
 
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(hex, GlobalDefinitions.unitSelectedForPostCombatMovement.GetComponent<UnitDatabaseFields>().occupiedHex,
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(hex, GlobalDefinitions.unitSelectedForPostCombatMovement.GetComponent<UnitDatabaseFields>().occupiedHex,
                             GlobalDefinitions.unitSelectedForPostCombatMovement);
 
             // Take highlighting off the hexes
             foreach (GameObject highlightHex in GlobalDefinitions.hexesAvailableForPostCombatMovement)
             {
                 highlightHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
-                GlobalDefinitions.unhighlightHex(highlightHex);
+                GlobalDefinitions.UnhighlightHex(highlightHex);
             }
 
             // Now turn the gui back on for selection of any other units
             GlobalDefinitions.postCombatMovementGuiInstance.SetActive(true);
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not available for post-combat movement");
+            GlobalDefinitions.GuiUpdateStatusMessage("Hex selected is not available for post-combat movement");
     }
 
     /// <summary>
@@ -1277,7 +1277,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// </summary>
     /// <param name="defendingUnits"></param>
     /// <returns></returns>
-    private static bool checkIfCarpetBombingInEffect(List<GameObject> defendingUnits)
+    private static bool CheckIfCarpetBombingInEffect(List<GameObject> defendingUnits)
     {
         if (defendingUnits.Count > 1)
         {
@@ -1303,7 +1303,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         else
         {
             // This should never happen
-            GlobalDefinitions.writeToLogFile("Error - null set of defending units passed to checkIfCarpetBombingInEffect()");
+            GlobalDefinitions.WriteToLogFile("Error - null set of defending units passed to checkIfCarpetBombingInEffect()");
             return (false);
         }
     }
@@ -1311,7 +1311,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <summary>
     /// Called at the end of the combat phase to reset all carpet bombing flags
     /// </summary>
-    public static void resetCarpetBombingHexes()
+    public static void ResetCarpetBombingHexes()
     {
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
             hex.GetComponent<HexDatabaseFields>().carpetBombingActive = false;
@@ -1322,7 +1322,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// </summary>
     /// <param name="defendingUnits"></param>
     /// <returns></returns>
-    private static bool checkIfCloseDefenseActive(List<GameObject> defendingUnits)
+    private static bool CheckIfCloseDefenseActive(List<GameObject> defendingUnits)
     {
         foreach (GameObject unit in defendingUnits)
             if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().closeDefenseSupport)
@@ -1334,20 +1334,20 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// Need a routine to end combat because is gets executed from two diffent points.  A user hitting "Next" when there are no 
     /// attacks or exiting out of the combat resolution gui when all combats have been resolved.
     /// </summary>
-    public static void endAlliedCombatPhase()
+    public static void EndAlliedCombatPhase()
     {
-        resetCarpetBombingHexes();
-        GlobalDefinitions.guiDisplayAlliedVictoryUnits();
-        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().setAlliedSupplyStatus(true);
+        ResetCarpetBombingHexes();
+        GlobalDefinitions.GuiDisplayAlliedVictoryUnits();
+        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetAlliedSupplyStatus(true);
     }
 
     /// <summary>
     /// Need a routine to end combat because is gets executed from two diffent points.  A user hitting "Next" when there are no 
     /// attacks or exiting out of the combat resolution gui when all combats have been resolved.
     /// </summary>
-    public static void endGermanCombatPhase()
+    public static void EndGermanCombatPhase()
     {
-        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().setGermanSupplyStatus(true);
+        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetGermanSupplyStatus(true);
 
         // This is the second check of the German turn.  The rule is that a unit that starts and ends two consecutive turns out of supply are eliminated.
         // A unit that has a 1 for turns out of supply at this stage didn't start the turn out of supply so reset it to 0
@@ -1359,7 +1359,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <summary>
     /// This is the routine that pulls up the gui for assiging allied tactical air support
     /// </summary>
-    public static void createTacticalAirGUI()
+    public static void CreateTacticalAirGUI()
     {
         Canvas tacticalAirCanvasInstance = new Canvas();
         float yPosition = 0;
@@ -1380,7 +1380,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             float panelWidth = 9 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
             float panelHeight = (numberOfRows) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-            GameObject tacticalAirGUIInstance = GlobalDefinitions.createGUICanvas("TacticalAirGUIInstance",
+            GameObject tacticalAirGUIInstance = GlobalDefinitions.CreateGUICanvas("TacticalAirGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref tacticalAirCanvasInstance);
@@ -1388,11 +1388,11 @@ public class CombatResolutionRoutines : MonoBehaviour
             GlobalDefinitions.tacticalAirGUIInstance = tacticalAirGUIInstance;
 
             yPosition = 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight;
-            okButton = GlobalDefinitions.createButton("tacticalAirOKButton", "OK",
+            okButton = GlobalDefinitions.CreateButton("tacticalAirOKButton", "OK",
                         4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
-            okButton.onClick.AddListener(TacticalAirToggleRoutines.tacticalAirOK);
+            okButton.onClick.AddListener(TacticalAirToggleRoutines.TacticalAirOK);
             yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
             // The gui is being built from the bottom up.  At the bottom list the river interdicted units, then the interdicted units, and then the close defense hexes
@@ -1404,35 +1404,35 @@ public class CombatResolutionRoutines : MonoBehaviour
                 Button riverInterdictionLocateButton;
                 Button riverInterdictionCancelButton;
 
-                GlobalDefinitions.createText("River Interdiction", "RiverInerdictionInstanceText",
+                GlobalDefinitions.CreateText("River Interdiction", "RiverInerdictionInstanceText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
 
-                GlobalDefinitions.createText(hex.name, "RiverInerdictionHexText",
+                GlobalDefinitions.CreateText(hex.name, "RiverInerdictionHexText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
 
-                riverInterdictionLocateButton = GlobalDefinitions.createButton("riverInterdictionLocateButton" + toggleIndex, "Locate",
+                riverInterdictionLocateButton = GlobalDefinitions.CreateButton("riverInterdictionLocateButton" + toggleIndex, "Locate",
                         5 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
                 riverInterdictionLocateButton.gameObject.AddComponent<TacticalAirToggleRoutines>();
                 riverInterdictionLocateButton.gameObject.GetComponent<TacticalAirToggleRoutines>().hex = hex;
-                riverInterdictionLocateButton.onClick.AddListener(riverInterdictionLocateButton.GetComponent<TacticalAirToggleRoutines>().locateRiverInterdiction);
+                riverInterdictionLocateButton.onClick.AddListener(riverInterdictionLocateButton.GetComponent<TacticalAirToggleRoutines>().LocateRiverInterdiction);
 
-                riverInterdictionCancelButton = GlobalDefinitions.createButton("riverInterdictionCancelButton" + toggleIndex, "Cancel",
+                riverInterdictionCancelButton = GlobalDefinitions.CreateButton("riverInterdictionCancelButton" + toggleIndex, "Cancel",
                         7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
                 riverInterdictionCancelButton.gameObject.AddComponent<TacticalAirToggleRoutines>();
                 riverInterdictionCancelButton.gameObject.GetComponent<TacticalAirToggleRoutines>().hex = hex;
-                riverInterdictionCancelButton.onClick.AddListener(riverInterdictionCancelButton.GetComponent<TacticalAirToggleRoutines>().cancelRiverInterdiction);
+                riverInterdictionCancelButton.onClick.AddListener(riverInterdictionCancelButton.GetComponent<TacticalAirToggleRoutines>().CancelRiverInterdiction);
 
                 yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
                 toggleIndex++;
@@ -1444,33 +1444,33 @@ public class CombatResolutionRoutines : MonoBehaviour
                 Button unitInterdictionLocateButton;
                 Button unitInterdictionCancelButton;
 
-                GlobalDefinitions.createText("Unit Interdiction", "UnitInerdictionInstanceText",
+                GlobalDefinitions.CreateText("Unit Interdiction", "UnitInerdictionInstanceText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
 
-                GlobalDefinitions.createUnitImage(unit, "tacticalAirUnitInterdictionImage",
+                GlobalDefinitions.CreateUnitImage(unit, "tacticalAirUnitInterdictionImage",
                         3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
 
-                unitInterdictionLocateButton = GlobalDefinitions.createButton("unitInterdictionLocateButton" + toggleIndex, "Locate",
+                unitInterdictionLocateButton = GlobalDefinitions.CreateButton("unitInterdictionLocateButton" + toggleIndex, "Locate",
                         5 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
                 unitInterdictionLocateButton.gameObject.AddComponent<TacticalAirToggleRoutines>();
                 unitInterdictionLocateButton.gameObject.GetComponent<TacticalAirToggleRoutines>().unit = unit;
-                unitInterdictionLocateButton.onClick.AddListener(unitInterdictionLocateButton.GetComponent<TacticalAirToggleRoutines>().locateInterdictedUnit);
+                unitInterdictionLocateButton.onClick.AddListener(unitInterdictionLocateButton.GetComponent<TacticalAirToggleRoutines>().LocateInterdictedUnit);
 
-                unitInterdictionCancelButton = GlobalDefinitions.createButton("unitInterdictionCancelButton" + toggleIndex, "Cancel",
+                unitInterdictionCancelButton = GlobalDefinitions.CreateButton("unitInterdictionCancelButton" + toggleIndex, "Cancel",
                         7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
                 unitInterdictionCancelButton.gameObject.AddComponent<TacticalAirToggleRoutines>();
                 unitInterdictionCancelButton.gameObject.GetComponent<TacticalAirToggleRoutines>().unit = unit;
-                unitInterdictionCancelButton.onClick.AddListener(unitInterdictionCancelButton.GetComponent<TacticalAirToggleRoutines>().cancelInterdictedUnit);
+                unitInterdictionCancelButton.onClick.AddListener(unitInterdictionCancelButton.GetComponent<TacticalAirToggleRoutines>().CancelInterdictedUnit);
 
                 yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
                 toggleIndex++;
@@ -1481,7 +1481,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             {
                 Button closeDefenseLocateButton;
                 Button closeDefenseCancelButton;
-                GlobalDefinitions.createText("Close Defense", "CloseDefenseInstanceText",
+                GlobalDefinitions.CreateText("Close Defense", "CloseDefenseInstanceText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1490,28 +1490,28 @@ public class CombatResolutionRoutines : MonoBehaviour
                 //for (int index = 0; ((index < hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count) && (index < 2)); index++)
                 for (int index = 0; (index < hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count); index++)
                 {
-                    GlobalDefinitions.createUnitImage(hex.GetComponent<HexDatabaseFields>().occupyingUnit[index], "tacticalAirDefenseImage",
+                    GlobalDefinitions.CreateUnitImage(hex.GetComponent<HexDatabaseFields>().occupyingUnit[index], "tacticalAirDefenseImage",
                         (index + 2) * 1f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 40 + index * 5,
                         yPosition,
                         tacticalAirCanvasInstance);
                 }
 
-                closeDefenseLocateButton = GlobalDefinitions.createButton("closeDefenseLocateButton" + toggleIndex, "Locate",
+                closeDefenseLocateButton = GlobalDefinitions.CreateButton("closeDefenseLocateButton" + toggleIndex, "Locate",
                         5 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
                 closeDefenseLocateButton.gameObject.AddComponent<TacticalAirToggleRoutines>();
                 closeDefenseLocateButton.gameObject.GetComponent<TacticalAirToggleRoutines>().hex = hex;
-                closeDefenseLocateButton.onClick.AddListener(closeDefenseLocateButton.GetComponent<TacticalAirToggleRoutines>().locateCloseDefense);
+                closeDefenseLocateButton.onClick.AddListener(closeDefenseLocateButton.GetComponent<TacticalAirToggleRoutines>().LocateCloseDefense);
 
 
-                closeDefenseCancelButton = GlobalDefinitions.createButton("closeDefenseCancelButton" + toggleIndex, "Cancel",
+                closeDefenseCancelButton = GlobalDefinitions.CreateButton("closeDefenseCancelButton" + toggleIndex, "Cancel",
                         7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
                 closeDefenseCancelButton.gameObject.AddComponent<TacticalAirToggleRoutines>();
                 closeDefenseCancelButton.gameObject.GetComponent<TacticalAirToggleRoutines>().hex = hex;
-                closeDefenseCancelButton.onClick.AddListener(closeDefenseCancelButton.GetComponent<TacticalAirToggleRoutines>().cancelCloseDefense);
+                closeDefenseCancelButton.onClick.AddListener(closeDefenseCancelButton.GetComponent<TacticalAirToggleRoutines>().CancelCloseDefense);
 
                 yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
                 toggleIndex++;
@@ -1521,45 +1521,45 @@ public class CombatResolutionRoutines : MonoBehaviour
             if ((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) > 0)
             {
 
-                closeDefenseToggle = GlobalDefinitions.createToggle("CloseDefense",
+                closeDefenseToggle = GlobalDefinitions.CreateToggle("CloseDefense",
                         2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance).GetComponent<Toggle>();
                 closeDefenseToggle.gameObject.AddComponent<TacticalAirToggleRoutines>();
-                closeDefenseToggle.onValueChanged.AddListener((bool value) => closeDefenseToggle.GetComponent<TacticalAirToggleRoutines>().addCloseDefenseHex());
+                closeDefenseToggle.onValueChanged.AddListener((bool value) => closeDefenseToggle.GetComponent<TacticalAirToggleRoutines>().AddCloseDefenseHex());
 
 
-                riverInterdictionToggle = GlobalDefinitions.createToggle("RiverInterdiction",
+                riverInterdictionToggle = GlobalDefinitions.CreateToggle("RiverInterdiction",
                         4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance).GetComponent<Toggle>();
                 riverInterdictionToggle.gameObject.AddComponent<TacticalAirToggleRoutines>();
-                riverInterdictionToggle.onValueChanged.AddListener((bool value) => riverInterdictionToggle.GetComponent<TacticalAirToggleRoutines>().addRiverInterdiction());
+                riverInterdictionToggle.onValueChanged.AddListener((bool value) => riverInterdictionToggle.GetComponent<TacticalAirToggleRoutines>().AddRiverInterdiction());
 
-                unitInterdictionToggle = GlobalDefinitions.createToggle("UnitInterdiction",
+                unitInterdictionToggle = GlobalDefinitions.CreateToggle("UnitInterdiction",
                         7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance).GetComponent<Toggle>();
                 unitInterdictionToggle.gameObject.AddComponent<TacticalAirToggleRoutines>();
-                unitInterdictionToggle.onValueChanged.AddListener((bool value) => unitInterdictionToggle.GetComponent<TacticalAirToggleRoutines>().addInterdictedUnit());
+                unitInterdictionToggle.onValueChanged.AddListener((bool value) => unitInterdictionToggle.GetComponent<TacticalAirToggleRoutines>().AddInterdictedUnit());
 
                 yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-                GlobalDefinitions.createText("Assign Close Defense Support", "CloseDefenseText",
+                GlobalDefinitions.CreateText("Assign Close Defense Support", "CloseDefenseText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
 
-                GlobalDefinitions.createText("Assign River Interdiction", "RiverInterdictionText",
+                GlobalDefinitions.CreateText("Assign River Interdiction", "RiverInterdictionText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
                         tacticalAirCanvasInstance);
 
-                GlobalDefinitions.createText("Assign Unit Interdiction", "UnitInterdictionText",
+                GlobalDefinitions.CreateText("Assign Unit Interdiction", "UnitInterdictionText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1569,7 +1569,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
             }
 
-            GlobalDefinitions.numberTacticalAirFactorsRemainingText = GlobalDefinitions.createText((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) + " number of air factors remaining", "RemainingFactorsText",
+            GlobalDefinitions.numberTacticalAirFactorsRemainingText = GlobalDefinitions.CreateText((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) + " number of air factors remaining", "RemainingFactorsText",
                     7 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1578,7 +1578,7 @@ public class CombatResolutionRoutines : MonoBehaviour
 
             yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-            GlobalDefinitions.createText("Allied Tactical Air", "TacticalAirHeaderText",
+            GlobalDefinitions.CreateText("Allied Tactical Air", "TacticalAirHeaderText",
                     4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1590,7 +1590,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// <summary>
     /// This routine checks that the hex passed is available for close air defense and sets the flag if it is
     /// </summary>
-    public static void setCloseDefenseHex(GameObject closeDefenseHex)
+    public static void SetCloseDefenseHex(GameObject closeDefenseHex)
     {
         if ((closeDefenseHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                 (closeDefenseHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied))
@@ -1604,7 +1604,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Invalid hex selected for Close Defense Support.  Hex must be occupied by Allied units");
+            GlobalDefinitions.GuiUpdateStatusMessage("Invalid hex selected for Close Defense Support.  Hex must be occupied by Allied units");
         }
 
         // Only pull up a gui if this isn't the AI calling the routine
@@ -1613,25 +1613,25 @@ public class CombatResolutionRoutines : MonoBehaviour
 
         // If a gui isn't already up then call up a tactical air gui
         if (GlobalDefinitions.guiList.Count == 0)
-            createTacticalAirGUI();
+            CreateTacticalAirGUI();
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().nonToggleSelection;
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().NonToggleSelection;
 
     }
 
     /// <summary>
     /// This routine takes the user input and sets a river interdiction hex
     /// </summary>
-    public static void getRiverInterdictedHex(GameObject riverInterdictionHex)
+    public static void GetRiverInterdictedHex(GameObject riverInterdictionHex)
     {
         bool riverHex = false;
 
         if (riverInterdictionHex == null)
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected; must select a hex bordered by a river");
+            GlobalDefinitions.GuiUpdateStatusMessage("No hex selected; must select a hex bordered by a river");
 
         else if (riverInterdictionHex.GetComponent<HexDatabaseFields>().bridge)
-            GlobalDefinitions.guiUpdateStatusMessage("Dyke cannot be selected for river interdiction");
+            GlobalDefinitions.GuiUpdateStatusMessage("Dyke cannot be selected for river interdiction");
         else
         {
             for (int index = 0; index < 6; index++)
@@ -1648,7 +1648,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 }
             }
             if (!riverHex)
-                GlobalDefinitions.guiUpdateStatusMessage("Hex selected doesn't border a river; not valid for river interdiction");
+                GlobalDefinitions.GuiUpdateStatusMessage("Hex selected doesn't border a river; not valid for river interdiction");
         }
 
         // Only pull up a gui if this isn't the AI calling the routine
@@ -1656,17 +1656,17 @@ public class CombatResolutionRoutines : MonoBehaviour
         {
             // If a gui isn't already up then call up a tactical air gui
             if (GlobalDefinitions.guiList.Count == 0)
-                createTacticalAirGUI();
+                CreateTacticalAirGUI();
 
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                    GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().nonToggleSelection;
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                    GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().NonToggleSelection;
         }
     }
 
     /// <summary>
     /// Stores the unit to interdict based on the user input
     /// </summary>
-    public static void getInterdictedUnit(GameObject interdictedUnitHex)
+    public static void GetInterdictedUnit(GameObject interdictedUnitHex)
     {
         int numberOfUnits = 0;
         int currentUnitCount = 0;
@@ -1689,29 +1689,29 @@ public class CombatResolutionRoutines : MonoBehaviour
                         for (int index = 0; index < interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count; index++)
                             if (!interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().unitInterdiction &&
                                     interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().availableForStrategicMovement)
-                                addInterdictedUnitToList(interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index]);
+                                AddInterdictedUnitToList(interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index]);
                     }
                     else if (numberOfUnits == 0)
                     {
-                        GlobalDefinitions.guiUpdateStatusMessage("All units on the hex have already been interdicted or aren't available for strategic movement anyhow");
+                        GlobalDefinitions.GuiUpdateStatusMessage("All units on the hex have already been interdicted or aren't available for strategic movement anyhow");
 
                         // If a gui isn't already up then call up a tactical air gui
                         if (GlobalDefinitions.guiList.Count == 0)
-                            createTacticalAirGUI();
+                            CreateTacticalAirGUI();
 
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().nonToggleSelection;
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().NonToggleSelection;
                     }
                     else
                     {
                         float panelWidth = (numberOfUnits + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
                         float panelHeight = 3 * GlobalDefinitions.GUIUNITIMAGESIZE;
                         // Will need to present a gui to the user to select which unit he wants to select
-                        GlobalDefinitions.tacticalAirGUIInstance = GlobalDefinitions.createGUICanvas("InterdictedAirGUIInstance",
+                        GlobalDefinitions.tacticalAirGUIInstance = GlobalDefinitions.CreateGUICanvas("InterdictedAirGUIInstance",
                                 panelWidth,
                                 panelHeight,
                                 ref tacticalAirMultiUnitCanvasInstance);
-                        GlobalDefinitions.createText("Select unit for interdiction", "TacticalAirMultiUnitText",
+                        GlobalDefinitions.CreateText("Select unit for interdiction", "TacticalAirMultiUnitText",
                                 (numberOfUnits + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE,
                                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                                 0.5f * (numberOfUnits + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1722,53 +1722,53 @@ public class CombatResolutionRoutines : MonoBehaviour
                                     interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().availableForStrategicMovement)
                             {
                                 Toggle tempToggle;
-                                tempToggle = GlobalDefinitions.createUnitTogglePair("tacticalAirMultiUnitTogglePair" + index,
+                                tempToggle = GlobalDefinitions.CreateUnitTogglePair("tacticalAirMultiUnitTogglePair" + index,
                                             (currentUnitCount + 1) * GlobalDefinitions.GUIUNITIMAGESIZE * 1.25f - 0.5f * panelWidth,
                                             1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                                             tacticalAirMultiUnitCanvasInstance,
                                             interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index]);
                                 tempToggle.gameObject.AddComponent<TacticalAirToggleRoutines>();
                                 tempToggle.GetComponent<TacticalAirToggleRoutines>().unit = interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index];
-                                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<TacticalAirToggleRoutines>().multiUnitSelection());
+                                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<TacticalAirToggleRoutines>().MultiUnitSelection());
                                 currentUnitCount++;
                             }
                     }
                 }
                 else
                 {
-                    GlobalDefinitions.guiUpdateStatusMessage("Unit selected must be German");
+                    GlobalDefinitions.GuiUpdateStatusMessage("Unit selected must be German");
                     // Only pull up a gui if this isn't the AI calling the routine
                     if (GlobalDefinitions.localControl)
                     {
 
                         // If a gui isn't already up then call up a tactical air gui
                         if (GlobalDefinitions.guiList.Count == 0)
-                            createTacticalAirGUI();
+                            CreateTacticalAirGUI();
 
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().nonToggleSelection;
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().NonToggleSelection;
                     }
                 }
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("No units to interdict on the hex selected");
+                GlobalDefinitions.GuiUpdateStatusMessage("No units to interdict on the hex selected");
 
                 // Only pull up a gui if this isn't the AI calling the routine
                 if (GlobalDefinitions.localControl)
                 {
                     // If a gui isn't already up then call up a tactical air gui
                     if (GlobalDefinitions.guiList.Count == 0)
-                        createTacticalAirGUI();
+                        CreateTacticalAirGUI();
 
-                    GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().nonToggleSelection;
+                    GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().NonToggleSelection;
                 }
             }
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected; must select a hex that has German units on it");
+            GlobalDefinitions.GuiUpdateStatusMessage("No hex selected; must select a hex that has German units on it");
 
             // Only pull up a gui if this isn't the AI calling the routine
             if (GlobalDefinitions.localControl)
@@ -1776,15 +1776,15 @@ public class CombatResolutionRoutines : MonoBehaviour
 
                 // If a gui isn't already up then call up a tactical air gui
                 if (GlobalDefinitions.guiList.Count == 0)
-                    createTacticalAirGUI();
+                    CreateTacticalAirGUI();
 
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().nonToggleSelection;
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().NonToggleSelection;
             }
         }
     }
 
-    public static void addInterdictedUnitToList(GameObject unit)
+    public static void AddInterdictedUnitToList(GameObject unit)
     {
         GlobalDefinitions.tacticalAirMissionsThisTurn++;
         GlobalDefinitions.interdictedUnits.Add(unit);
@@ -1792,16 +1792,16 @@ public class CombatResolutionRoutines : MonoBehaviour
 
         // If a gui isn't already up then call up a tactical air gui
         if (GlobalDefinitions.guiList.Count == 0)
-            createTacticalAirGUI();
+            CreateTacticalAirGUI();
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().nonToggleSelection;
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().NonToggleSelection;
     }
 
     /// <summary>
     /// This set the turn available on the Free French units to the curent turn if German units are North of the line indicated on the board
     /// </summary>
-    public static void checkForAvailableFreeFrenchUnits()
+    public static void CheckForAvailableFreeFrenchUnits()
     {
         bool germanUnitsCleared = true;
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
@@ -1812,7 +1812,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         // The German units are all North of the line so the Free French units need to be marked as being available
         if (germanUnitsCleared)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("The five Free French units at the bottom of the board are now available");
+            GlobalDefinitions.GuiUpdateStatusMessage("The five Free French units at the bottom of the board are now available");
             GameObject.Find("Armor-FR-5").GetComponent<UnitDatabaseFields>().turnAvailable = GlobalDefinitions.turnNumber;
             GameObject.Find("Infantry-FR-14").GetComponent<UnitDatabaseFields>().turnAvailable = GlobalDefinitions.turnNumber;
             GameObject.Find("Infantry-FR-2").GetComponent<UnitDatabaseFields>().turnAvailable = GlobalDefinitions.turnNumber;
@@ -1826,7 +1826,7 @@ public class CombatResolutionRoutines : MonoBehaviour
     /// </summary>
     /// <param name="dieRoll"></param>
     /// <returns></returns>
-    private static int checkForDieRollInfluence(int dieRoll)
+    private static int CheckForDieRollInfluence(int dieRoll)
     {
         int adjustedDieRoll = dieRoll;
         int influenceRoll = GlobalDefinitions.dieRoll.Next(1, 5);
@@ -2015,7 +2015,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         return (adjustedDieRoll);
     }
 
-    public static void adjustAggressiveness()
+    public static void AdjustAggressiveness()
     {
         switch (GlobalDefinitions.aggressiveSetting)
         {

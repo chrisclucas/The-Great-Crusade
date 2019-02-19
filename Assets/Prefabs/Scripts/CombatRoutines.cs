@@ -11,7 +11,7 @@ public class CombatRoutines : MonoBehaviour
     /// </summary>
     /// <param name="attackingNationality"></param>
     /// <param name="shouldHighlight"></param>
-    public static bool checkIfRequiredUnitsAreUncommitted(GlobalDefinitions.Nationality attackingNationality, bool shouldHighlight)
+    public static bool CheckIfRequiredUnitsAreUncommitted(GlobalDefinitions.Nationality attackingNationality, bool shouldHighlight)
     {
         //GlobalDefinitions.writeToLogFile("checkIfRequiredUnitsAreUncommitted: executing");
         bool unitFound = false;
@@ -19,9 +19,9 @@ public class CombatRoutines : MonoBehaviour
 
         // I'm going to turn off all unit highlighting here.  It will be added back on when the gui is dismissed if needed
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
         foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
 
         if (attackingNationality == GlobalDefinitions.Nationality.German)
             attackingUnits = GlobalDefinitions.germanUnitsOnBoard;
@@ -42,11 +42,11 @@ public class CombatRoutines : MonoBehaviour
                     {
                         unitFound = true;
                         if (shouldHighlight)
-                            GlobalDefinitions.highlightUnit(unit);
+                            GlobalDefinitions.HighlightUnit(unit);
                     }
 
                     // Get the German units that exert ZOC to this unit
-                    if (highlightUnitsThatMustBeAttacked(GlobalDefinitions.Nationality.Allied, unit.GetComponent<UnitDatabaseFields>().occupiedHex, shouldHighlight))
+                    if (HighlightUnitsThatMustBeAttacked(GlobalDefinitions.Nationality.Allied, unit.GetComponent<UnitDatabaseFields>().occupiedHex, shouldHighlight))
                         unitFound = true;
                 }
             }
@@ -59,11 +59,11 @@ public class CombatRoutines : MonoBehaviour
                     {
                         unitFound = true;
                         if (shouldHighlight)
-                            GlobalDefinitions.highlightUnit(unit);
+                            GlobalDefinitions.HighlightUnit(unit);
                     }
 
                     // Get the Allied units that exert ZOC to this unit
-                    if (highlightUnitsThatMustBeAttacked(GlobalDefinitions.Nationality.German, unit.GetComponent<UnitDatabaseFields>().occupiedHex, shouldHighlight))
+                    if (HighlightUnitsThatMustBeAttacked(GlobalDefinitions.Nationality.German, unit.GetComponent<UnitDatabaseFields>().occupiedHex, shouldHighlight))
                         unitFound = true;
                 }
             }
@@ -72,7 +72,7 @@ public class CombatRoutines : MonoBehaviour
         // Need to check all existing attacks and see if they are cross river and bring in additional defenders that aren't being attacked
         foreach (GameObject combat in GlobalDefinitions.allCombats)
         {
-            if (checkIfDefenderToBeAddedDueToCrossRiverAttack(combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().defendingUnits, shouldHighlight))
+            if (CheckIfDefenderToBeAddedDueToCrossRiverAttack(combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().defendingUnits, shouldHighlight))
                 unitFound = true;
         }
         return (unitFound);
@@ -81,7 +81,7 @@ public class CombatRoutines : MonoBehaviour
     /// <summary>
     /// This routine looks through the attackers and defenders and determines if there are defenders that need to be added to the mustBeAttackedUnits due to being in the ZOC of a defender being attacked cross river
     /// </summary>
-    public static bool checkIfDefenderToBeAddedDueToCrossRiverAttack(List<GameObject> attackingUnits, List<GameObject> defendingUnits, bool shouldHighlight)
+    public static bool CheckIfDefenderToBeAddedDueToCrossRiverAttack(List<GameObject> attackingUnits, List<GameObject> defendingUnits, bool shouldHighlight)
     {
         bool foundUnit = false;
         List<GameObject> adjacentUnits = new List<GameObject>();
@@ -90,7 +90,7 @@ public class CombatRoutines : MonoBehaviour
         {
             // Get all adjacent defenders to the attacking units
             foreach (GameObject attackingUnit in attackingUnits)
-                foreach (GameObject defendingUnit in GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().returnAdjacentEnemyUnits(attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.returnOppositeNationality(attackingUnits[0].GetComponent<UnitDatabaseFields>().nationality)))
+                foreach (GameObject defendingUnit in GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().ReturnAdjacentEnemyUnits(attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.ReturnOppositeNationality(attackingUnits[0].GetComponent<UnitDatabaseFields>().nationality)))
                     if (!adjacentUnits.Contains(defendingUnit))
                         adjacentUnits.Add(defendingUnit);
 
@@ -110,15 +110,15 @@ public class CombatRoutines : MonoBehaviour
                                     // Now check if there is a friendly unit in the ZOC of the defender and is adjacent to the attacker.  If so, add it to must be attacked
 
                                     // Get all friendly units that are in the ZOC of the defender
-                                    foreach (GameObject unit in returnFriendlyUnitsInZOC(defendingUnit))
+                                    foreach (GameObject unit in ReturnFriendlyUnitsInZOC(defendingUnit))
                                         // Now check if any of the units are adjacent to the attacker with a river between them.  If so, add it to must be attacked.
                                         if (adjacentUnits.Contains(unit) &&
-                                                GlobalDefinitions.checkForRiverBetweenTwoHexes(attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex) &&
+                                                GlobalDefinitions.CheckForRiverBetweenTwoHexes(attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex) &&
                                                 !unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
                                         {
                                             foundUnit = true;
                                             if (shouldHighlight)
-                                                GlobalDefinitions.highlightUnit(unit);
+                                                GlobalDefinitions.HighlightUnit(unit);
                                         }
                                 }
         }
@@ -131,7 +131,7 @@ public class CombatRoutines : MonoBehaviour
     /// </summary>
     /// <param name="defendingUnit"></param>
     /// <returns></returns>
-    private static List<GameObject> returnFriendlyUnitsInZOC(GameObject defendingUnit)
+    private static List<GameObject> ReturnFriendlyUnitsInZOC(GameObject defendingUnit)
     {
         List<GameObject> returnList = new List<GameObject>();
         foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
@@ -148,13 +148,13 @@ public class CombatRoutines : MonoBehaviour
     /// <param name="attackingNationality"></param>
     /// <param name="hex"></param>
     /// <param name="shouldHighlight"></param>
-    private static bool highlightUnitsThatMustBeAttacked(GlobalDefinitions.Nationality attackingNationality, GameObject hex, bool shouldHighlight)
+    private static bool HighlightUnitsThatMustBeAttacked(GlobalDefinitions.Nationality attackingNationality, GameObject hex, bool shouldHighlight)
     {
         bool foundUnit = false;
 
         foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
             if ((hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
-                    && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.returnHexSideOpposide((int)hexSide)] == true)
+                    && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.ReturnHexSideOpposide((int)hexSide)] == true)
                     && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
                     && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality != attackingNationality))
                 foreach (GameObject unit in hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit)
@@ -163,7 +163,7 @@ public class CombatRoutines : MonoBehaviour
                     {
                         foundUnit = true;
                         if (shouldHighlight)
-                            GlobalDefinitions.highlightUnit(unit);
+                            GlobalDefinitions.HighlightUnit(unit);
                     }
                 }
 
@@ -175,7 +175,7 @@ public class CombatRoutines : MonoBehaviour
                 {
                     foundUnit = true;
                     if (shouldHighlight)
-                        GlobalDefinitions.highlightUnit(unit);
+                        GlobalDefinitions.HighlightUnit(unit);
                 }
 
         return (foundUnit);
@@ -187,7 +187,7 @@ public class CombatRoutines : MonoBehaviour
     /// </summary>
     /// <param name="hex"></param>
     /// <returns></returns>
-    private bool nonCommittedDefendersAvailable(GameObject hex)
+    private bool NonCommittedDefendersAvailable(GameObject hex)
     {
         bool allUnitsCommitted = true;
         foreach (GameObject unit in hex.GetComponent<HexDatabaseFields>().occupyingUnit)
@@ -202,12 +202,12 @@ public class CombatRoutines : MonoBehaviour
     /// This routine pulls all the defenders and attackers based on the hex passed and then calls the combat selection GUI
     /// </summary>
     /// <param name="defendingNationality"></param>
-    public void prepForCombatDisplay(GameObject hex, GlobalDefinitions.Nationality defendingNationality)
+    public void PrepForCombatDisplay(GameObject hex, GlobalDefinitions.Nationality defendingNationality)
     {
         // First thing we need to do is check that the combat assignment gui isn't already active.  If it is do not load anoether one.
         if (GameObject.Find("CombatGUIInstance") != null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve current combat assignment before assigning another");
+            GlobalDefinitions.GuiUpdateStatusMessage("Resolve current combat assignment before assigning another");
             return;
         }
 
@@ -217,47 +217,47 @@ public class CombatRoutines : MonoBehaviour
         if ((hex != null) &&
                 (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                 (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == defendingNationality) &&
-                nonCommittedDefendersAvailable(hex) &&
-                (returnUncommittedUnits(returnAdjacentEnemyUnits(hex, GlobalDefinitions.returnOppositeNationality(defendingNationality))).Count > 0))
+                NonCommittedDefendersAvailable(hex) &&
+                (ReturnUncommittedUnits(ReturnAdjacentEnemyUnits(hex, GlobalDefinitions.ReturnOppositeNationality(defendingNationality))).Count > 0))
         {
             // Get all the available defending units
-            singleCombat.GetComponent<Combat>().defendingUnits = returnUncommittedUnits(hex.GetComponent<HexDatabaseFields>().occupyingUnit);
+            singleCombat.GetComponent<Combat>().defendingUnits = ReturnUncommittedUnits(hex.GetComponent<HexDatabaseFields>().occupyingUnit);
 
-            singleCombat.GetComponent<Combat>().attackingUnits = returnUncommittedUnits(returnAdjacentEnemyUnits(hex, GlobalDefinitions.returnOppositeNationality(defendingNationality)));
+            singleCombat.GetComponent<Combat>().attackingUnits = ReturnUncommittedUnits(ReturnAdjacentEnemyUnits(hex, GlobalDefinitions.ReturnOppositeNationality(defendingNationality)));
 
             // Fianlly we have to get all potential defenders that are adjacent to the attackers
-            foreach (GameObject defender in returnUncommittedUnits(returnAdjacentDefenders(hex, singleCombat)))
+            foreach (GameObject defender in ReturnUncommittedUnits(ReturnAdjacentDefenders(hex, singleCombat)))
                 if (!singleCombat.GetComponent<Combat>().defendingUnits.Contains(defender))
                     singleCombat.GetComponent<Combat>().defendingUnits.Add(defender);
 
-            callCombatDisplay(singleCombat);
+            CallCombatDisplay(singleCombat);
         }
         else
         {
             if (hex == null)
-                GlobalDefinitions.guiUpdateStatusMessage("No valid hex selected for combat; hex selected must contain enemy units");
+                GlobalDefinitions.GuiUpdateStatusMessage("No valid hex selected for combat; hex selected must contain enemy units");
             else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0)
-                GlobalDefinitions.guiUpdateStatusMessage("No units found on hex selected for combat; hex selected must contain enemy units");
-            else if (!nonCommittedDefendersAvailable(hex))
-                GlobalDefinitions.guiUpdateStatusMessage("No uncommitted defenders found on hex selected; all units on hex are already assigned to combat.  Cancel attacks and reassign combat to add additional attacking units.");
-            else if (returnUncommittedUnits(returnAdjacentEnemyUnits(hex, GlobalDefinitions.returnOppositeNationality(defendingNationality))).Count == 0)
-                GlobalDefinitions.guiUpdateStatusMessage("No units are available to attack the hex selected");
+                GlobalDefinitions.GuiUpdateStatusMessage("No units found on hex selected for combat; hex selected must contain enemy units");
+            else if (!NonCommittedDefendersAvailable(hex))
+                GlobalDefinitions.GuiUpdateStatusMessage("No uncommitted defenders found on hex selected; all units on hex are already assigned to combat.  Cancel attacks and reassign combat to add additional attacking units.");
+            else if (ReturnUncommittedUnits(ReturnAdjacentEnemyUnits(hex, GlobalDefinitions.ReturnOppositeNationality(defendingNationality))).Count == 0)
+                GlobalDefinitions.GuiUpdateStatusMessage("No units are available to attack the hex selected");
             else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality != defendingNationality)
-                GlobalDefinitions.guiDisplayUnitsOnHex(hex);
+                GlobalDefinitions.GuiDisplayUnitsOnHex(hex);
 
-            if ((GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedMovementStateInstance") ||
-                    (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "germanMovementStateInstance"))
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<MovementState>().executeSelectUnit;
-            else if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedInvasionStateInstance")
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedInvasionState>().executeSelectUnit;
-            else if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.name == "alliedAirborneStateInstance")
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedAirborneState>().executeSelectUnit;
+            if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedMovementStateInstance") ||
+                    (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanMovementStateInstance"))
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<MovementState>().ExecuteSelectUnit;
+            else if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedInvasionStateInstance")
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedInvasionState>().ExecuteSelectUnit;
+            else if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedAirborneStateInstance")
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedAirborneState>().ExecuteSelectUnit;
             else
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<CombatState>().executeSelectUnit;
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<CombatState>().ExecuteSelectUnit;
         }
     }
 
@@ -266,7 +266,7 @@ public class CombatRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unitList"></param>
     /// <returns></returns>
-    public List<GameObject> returnUncommittedUnits(List<GameObject> unitList)
+    public List<GameObject> ReturnUncommittedUnits(List<GameObject> unitList)
     {
         List<GameObject> returnList = new List<GameObject>();
         foreach (GameObject unit in unitList)
@@ -279,7 +279,7 @@ public class CombatRoutines : MonoBehaviour
     /// This routine is what pulls up the GUI to assign units to a single combat
     /// </summary>
     /// <param name="singleCombat"></param>
-    public void callCombatDisplay(GameObject singleCombat)
+    public void CallCombatDisplay(GameObject singleCombat)
     {
         Button okButton;
         Button cancelButton;
@@ -289,9 +289,9 @@ public class CombatRoutines : MonoBehaviour
         // will be highlighted.  I will restore the must-attack and must-be-attacked highlighting when leaving the gui
 
         foreach (GameObject unit in singleCombat.GetComponent<Combat>().defendingUnits)
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
         foreach (GameObject unit in singleCombat.GetComponent<Combat>().attackingUnits)
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
 
         // The panel needs to be at least the width for four units to fit everything
         int maxUnits = 5;
@@ -301,12 +301,12 @@ public class CombatRoutines : MonoBehaviour
             maxUnits = singleCombat.GetComponent<Combat>().attackingUnits.Count;
         float panelWidth = (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
         float panelHeight = 7 * GlobalDefinitions.GUIUNITIMAGESIZE;
-        GlobalDefinitions.combatGUIInstance = GlobalDefinitions.createGUICanvas("CombatGUIInstance",
+        GlobalDefinitions.combatGUIInstance = GlobalDefinitions.CreateGUICanvas("CombatGUIInstance",
                 panelWidth,
                 panelHeight,
                 ref combatCanvas);
 
-        GlobalDefinitions.createText("Combat Odds", "OddsText",
+        GlobalDefinitions.CreateText("Combat Odds", "OddsText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 (0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE) - 0.5f * panelWidth,
@@ -318,7 +318,7 @@ public class CombatRoutines : MonoBehaviour
         for (int index = 0; index < singleCombat.GetComponent<Combat>().defendingUnits.Count; index++)
         {
             Toggle tempToggle;
-            tempToggle = GlobalDefinitions.createUnitTogglePair("unitToggleDefendingPair" + index,
+            tempToggle = GlobalDefinitions.CreateUnitTogglePair("unitToggleDefendingPair" + index,
                     index * xSeperation + xOffset - 0.5f * panelWidth,
                     5.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas,
@@ -327,9 +327,9 @@ public class CombatRoutines : MonoBehaviour
             tempToggle.gameObject.GetComponent<CombatToggleRoutines>().currentCombat = singleCombat;
             tempToggle.gameObject.GetComponent<CombatToggleRoutines>().unit = singleCombat.GetComponent<Combat>().defendingUnits[index];
             tempToggle.gameObject.GetComponent<CombatToggleRoutines>().attackingUnitFlag = false;
-            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<CombatToggleRoutines>().addOrDeleteSelectedUnit());
+            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<CombatToggleRoutines>().AddOrDeleteSelectedUnit());
 
-            if (checkForInvasionDefense(singleCombat.GetComponent<Combat>().defendingUnits[index], singleCombat))
+            if (CheckForInvasionDefense(singleCombat.GetComponent<Combat>().defendingUnits[index], singleCombat))
             {
                 // This executes if the defender is on an invasion hex of at least one of the attackers.  If it is the toggle will be set and there are checks in the toggle routines from allowing
                 // it to be turned off.  If the defenders are being invaded they can't be attacked separately.
@@ -341,7 +341,7 @@ public class CombatRoutines : MonoBehaviour
         for (int index = 0; index < singleCombat.GetComponent<Combat>().attackingUnits.Count; index++)
         {
             Toggle tempToggle;
-            tempToggle = GlobalDefinitions.createUnitTogglePair("unitToggleAttackingPair" + index,
+            tempToggle = GlobalDefinitions.CreateUnitTogglePair("unitToggleAttackingPair" + index,
                     index * xSeperation + xOffset - 0.5f * panelWidth,
                     3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas,
@@ -350,9 +350,9 @@ public class CombatRoutines : MonoBehaviour
             tempToggle.gameObject.GetComponent<CombatToggleRoutines>().currentCombat = singleCombat;
             tempToggle.gameObject.GetComponent<CombatToggleRoutines>().unit = singleCombat.GetComponent<Combat>().attackingUnits[index];
             tempToggle.gameObject.GetComponent<CombatToggleRoutines>().attackingUnitFlag = true;
-            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<CombatToggleRoutines>().addOrDeleteSelectedUnit());
+            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<CombatToggleRoutines>().AddOrDeleteSelectedUnit());
 
-            if (checkForInvadingAttacker(singleCombat.GetComponent<Combat>().attackingUnits[index]))
+            if (CheckForInvadingAttacker(singleCombat.GetComponent<Combat>().attackingUnits[index]))
             {
                 // This executes if the attacker is invading this turn. The unit will be selected and the toggle routines will not allow it to be turned off 
                 tempToggle.isOn = true;
@@ -363,23 +363,23 @@ public class CombatRoutines : MonoBehaviour
         GlobalDefinitions.combatAirSupportToggle = null;
         GlobalDefinitions.combatCarpetBombingToggle = null;
         // If there are air missions left present the user with the option of adding air support to the attack
-        if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
+        if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
         {
             Toggle airToggle;
-            airToggle = GlobalDefinitions.createToggle("CombatAirSupportToggle",
+            airToggle = GlobalDefinitions.CreateToggle("CombatAirSupportToggle",
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth - 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas).GetComponent<Toggle>();
             GlobalDefinitions.combatAirSupportToggle = airToggle.gameObject;
             airToggle.gameObject.AddComponent<CombatToggleRoutines>();
             airToggle.gameObject.GetComponent<CombatToggleRoutines>().currentCombat = singleCombat;
-            airToggle.onValueChanged.AddListener((bool value) => airToggle.GetComponent<CombatToggleRoutines>().toggleAirSupport());
+            airToggle.onValueChanged.AddListener((bool value) => airToggle.GetComponent<CombatToggleRoutines>().ToggleAirSupport());
             if (GlobalDefinitions.tacticalAirMissionsThisTurn <= GlobalDefinitions.maxNumberOfTacticalAirMissions)
                 airToggle.GetComponent<Toggle>().interactable = true;
             else
                 airToggle.GetComponent<Toggle>().interactable = false;
 
-            GlobalDefinitions.createText("Air Support", "CombatAirSupportText",
+            GlobalDefinitions.CreateText("Air Support", "CombatAirSupportText",
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth - 1 * GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -387,20 +387,20 @@ public class CombatRoutines : MonoBehaviour
                     combatCanvas);
 
             Toggle carpetToggle;
-            carpetToggle = GlobalDefinitions.createToggle("CombatCarpetBombingToggle",
+            carpetToggle = GlobalDefinitions.CreateToggle("CombatCarpetBombingToggle",
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas).GetComponent<Toggle>();
             GlobalDefinitions.combatCarpetBombingToggle = carpetToggle.gameObject;
             carpetToggle.gameObject.AddComponent<CombatToggleRoutines>();
             carpetToggle.gameObject.GetComponent<CombatToggleRoutines>().currentCombat = singleCombat;
-            carpetToggle.onValueChanged.AddListener((bool value) => carpetToggle.GetComponent<CombatToggleRoutines>().toggleCarpetBombing());
-            if (checkIfCarpetBombingIsAvailable(singleCombat))
+            carpetToggle.onValueChanged.AddListener((bool value) => carpetToggle.GetComponent<CombatToggleRoutines>().ToggleCarpetBombing());
+            if (CheckIfCarpetBombingIsAvailable(singleCombat))
                 carpetToggle.GetComponent<Toggle>().interactable = true;
             else
                 carpetToggle.GetComponent<Toggle>().interactable = false;
 
-            GlobalDefinitions.createText("Carpet Bombing", "CarpetBombingSupportText",
+            GlobalDefinitions.CreateText("Carpet Bombing", "CarpetBombingSupportText",
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -409,22 +409,22 @@ public class CombatRoutines : MonoBehaviour
         }
 
         // OK button
-        okButton = GlobalDefinitions.createButton("combatOKButton", "OK",
+        okButton = GlobalDefinitions.CreateButton("combatOKButton", "OK",
                 0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth - 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
         okButton.gameObject.AddComponent<CombatGUIOK>();
         okButton.gameObject.GetComponent<CombatGUIOK>().singleCombat = singleCombat;
-        okButton.onClick.AddListener(okButton.GetComponent<CombatGUIOK>().okCombatGUISelection);
+        okButton.onClick.AddListener(okButton.GetComponent<CombatGUIOK>().OkCombatGUISelection);
 
         // Cancel button
-        cancelButton = GlobalDefinitions.createButton("combatCancelButton", "Cancel",
+        cancelButton = GlobalDefinitions.CreateButton("combatCancelButton", "Cancel",
                 0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 combatCanvas);
         cancelButton.gameObject.AddComponent<CombatGUIOK>();
         cancelButton.gameObject.GetComponent<CombatGUIOK>().singleCombat = singleCombat;
-        cancelButton.onClick.AddListener(cancelButton.GetComponent<CombatGUIOK>().cancelCombatGUISelection);
+        cancelButton.onClick.AddListener(cancelButton.GetComponent<CombatGUIOK>().CancelCombatGUISelection);
 
     }
 
@@ -433,7 +433,7 @@ public class CombatRoutines : MonoBehaviour
     /// </summary>
     /// <param name="GameObject"></param>
     /// <returns></returns>
-    public static bool checkIfCarpetBombingIsAvailable(GameObject singleCombat)
+    public static bool CheckIfCarpetBombingIsAvailable(GameObject singleCombat)
     {
         // The criteria for having carpet bombing available on a combat is that:
         //      * only four in a game
@@ -482,7 +482,7 @@ public class CombatRoutines : MonoBehaviour
     /// <summary>
     /// Display a GUI that shows all of the available carpet bombing hexes available
     /// </summary>
-    public static void displayCarpetBombingHexesAvailable()
+    public static void DisplayCarpetBombingHexesAvailable()
     {
         Canvas bombingCanvas = new Canvas();
         Button tempOKButton;
@@ -494,7 +494,7 @@ public class CombatRoutines : MonoBehaviour
 
         // The avaialble carpet bombing hexes are stored in the hexesAttackedLastTurn list.  All non valid
         // hexes were removed already (i.e. hexes attacked last turn but do not have Germans on them this turn)
-        GlobalDefinitions.createGUICanvas("CarpetBombingGUI",
+        GlobalDefinitions.CreateGUICanvas("CarpetBombingGUI",
                 panelWidth,
                 panelHeight,
                 ref bombingCanvas);
@@ -504,7 +504,7 @@ public class CombatRoutines : MonoBehaviour
             Toggle tempToggle;
             Button tempLocateButton;
 
-            GlobalDefinitions.createText("Carpet bombing available - you may select a hex", "CarpetBombingAvailableText",
+            GlobalDefinitions.CreateText("Carpet bombing available - you may select a hex", "CarpetBombingAvailableText",
                     widthSeed * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     (widthSeed * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) / 2 - 0.5f * panelWidth,
@@ -513,33 +513,33 @@ public class CombatRoutines : MonoBehaviour
 
             for (int index2 = 0; index2 < GlobalDefinitions.hexesAttackedLastTurn[index].GetComponent<HexDatabaseFields>().occupyingUnit.Count; index2++)
             {
-                GlobalDefinitions.createUnitImage(GlobalDefinitions.hexesAttackedLastTurn[index].GetComponent<HexDatabaseFields>().occupyingUnit[index2], "UnitImage",
+                GlobalDefinitions.CreateUnitImage(GlobalDefinitions.hexesAttackedLastTurn[index].GetComponent<HexDatabaseFields>().occupyingUnit[index2], "UnitImage",
                         index2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         (index + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         bombingCanvas);
             }
 
-            tempLocateButton = GlobalDefinitions.createButton("BombingLocateButton" + index, "Locate",
+            tempLocateButton = GlobalDefinitions.CreateButton("BombingLocateButton" + index, "Locate",
                     3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     (index + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     bombingCanvas);
             tempLocateButton.gameObject.AddComponent<CarpetBombingToggleRoutines>();
             tempLocateButton.GetComponent<CarpetBombingToggleRoutines>().hex = GlobalDefinitions.hexesAttackedLastTurn[index];
-            tempLocateButton.onClick.AddListener(tempLocateButton.GetComponent<CarpetBombingToggleRoutines>().locateCarpetBombingHex);
-            tempToggle = GlobalDefinitions.createToggle("BombingToggle" + index,
+            tempLocateButton.onClick.AddListener(tempLocateButton.GetComponent<CarpetBombingToggleRoutines>().LocateCarpetBombingHex);
+            tempToggle = GlobalDefinitions.CreateToggle("BombingToggle" + index,
                     4 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     (index + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     bombingCanvas).GetComponent<Toggle>();
             tempToggle.gameObject.AddComponent<CarpetBombingToggleRoutines>();
             tempToggle.GetComponent<CarpetBombingToggleRoutines>().hex = GlobalDefinitions.hexesAttackedLastTurn[index];
-            tempToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle.GetComponent<CarpetBombingToggleRoutines>().selectHex());
+            tempToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle.GetComponent<CarpetBombingToggleRoutines>().SelectHex());
         }
-        tempOKButton = GlobalDefinitions.createButton("BombingOKButton", "OK",
+        tempOKButton = GlobalDefinitions.CreateButton("BombingOKButton", "OK",
                 widthSeed * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                 bombingCanvas);
         tempOKButton.gameObject.AddComponent<CarpetBombingOKRoutines>();
-        tempOKButton.onClick.AddListener(tempOKButton.GetComponent<CarpetBombingOKRoutines>().carpetBombingOK);
+        tempOKButton.onClick.AddListener(tempOKButton.GetComponent<CarpetBombingOKRoutines>().CarpetBombingOK);
     }
 
     /// <summary>
@@ -547,7 +547,7 @@ public class CombatRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public bool checkForInvasionDefense(GameObject unit, GameObject singleCombat)
+    public bool CheckForInvasionDefense(GameObject unit, GameObject singleCombat)
     {
         // Check the attacking units if they are on a sea hex with an invasion target of the defender
         foreach (GameObject attackUnit in singleCombat.GetComponent<Combat>().attackingUnits)
@@ -562,7 +562,7 @@ public class CombatRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public bool checkForInvadingAttacker(GameObject unit)
+    public bool CheckForInvadingAttacker(GameObject unit)
     {
         // The assumption here is that if there is an attacker on a sea hex it and it is in the combatAssignmentAttackingUnits list than it is invading
         if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().sea)
@@ -577,7 +577,7 @@ public class CombatRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="defendingNationality"></param>
     /// <returns></returns>
-    public List<GameObject> returnAdjacentEnemyUnits(GameObject hex, GlobalDefinitions.Nationality enemyNationality)
+    public List<GameObject> ReturnAdjacentEnemyUnits(GameObject hex, GlobalDefinitions.Nationality enemyNationality)
     {
         //GlobalDefinitions.writeToLogFile("returnAdjacentEnemyUnits: hex = " + hex.name);
         List<GameObject> returnList = new List<GameObject>();
@@ -600,7 +600,7 @@ public class CombatRoutines : MonoBehaviour
     /// <summary>
     /// Takes the list of attackers passed to it and returns all adjacent defenders not committed to an attack
     /// </summary>
-    public List<GameObject> returnAdjacentDefenders(GameObject hex, GameObject singleCombat)
+    public List<GameObject> ReturnAdjacentDefenders(GameObject hex, GameObject singleCombat)
     {
         // This should never happen but make sure that the hex passed has defending units on it in order to check for an invasion.
         // If the hex doesn't have a defender then the routine will return null
@@ -611,7 +611,7 @@ public class CombatRoutines : MonoBehaviour
             return (null);
 
         List<GameObject> returnList = new List<GameObject>();
-        if (!checkForInvasionDefense(hex.GetComponent<HexDatabaseFields>().occupyingUnit[0], singleCombat))
+        if (!CheckForInvasionDefense(hex.GetComponent<HexDatabaseFields>().occupyingUnit[0], singleCombat))
             foreach (GameObject attacker in singleCombat.GetComponent<Combat>().attackingUnits)
                 foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
                     if ((attacker.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides] != null) &&

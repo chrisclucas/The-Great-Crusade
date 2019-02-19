@@ -41,7 +41,7 @@ public class ClientServerRoutines : MonoBehaviour
             switch (recNetworkEvent)
             {
                 case NetworkEventType.ConnectEvent:
-                    GlobalDefinitions.writeToLogFile("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    GlobalDefinitions.WriteToLogFile("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
                     channelEstablished = true;
                     SendServerMessage("PlayerID: cbc");
@@ -49,12 +49,12 @@ public class ClientServerRoutines : MonoBehaviour
                     break;
 
                 case NetworkEventType.DisconnectEvent:
-                    GlobalDefinitions.guiUpdateStatusMessage("ClientServerRoutines update: Disconnect event received from remote computer - resetting connection");
-                    TransportScript.resetConnection(recHostId);
+                    GlobalDefinitions.GuiUpdateStatusMessage("ClientServerRoutines update: Disconnect event received from remote computer - resetting connection");
+                    TransportScript.ResetConnection(recHostId);
                     break;
 
                 case NetworkEventType.DataEvent:
-                    GlobalDefinitions.writeToLogFile("ClientServerRoutines update: data event");
+                    GlobalDefinitions.WriteToLogFile("ClientServerRoutines update: data event");
                     Stream stream = new MemoryStream(recBuffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     string message = formatter.Deserialize(stream) as string;
@@ -65,7 +65,7 @@ public class ClientServerRoutines : MonoBehaviour
                 case NetworkEventType.Nothing:
                     break;
                 default:
-                    GlobalDefinitions.writeToLogFile("ClientServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    GlobalDefinitions.WriteToLogFile("ClientServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                     break;
             }
         }
@@ -74,11 +74,11 @@ public class ClientServerRoutines : MonoBehaviour
     /// <summary>
     /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
     /// </summary>
-    public void initiateServerConnection()
+    public void InitiateServerConnection()
     {
         //byte error;
 
-        GlobalDefinitions.writeToLogFile("initiateServerConnection: executing");
+        GlobalDefinitions.WriteToLogFile("initiateServerConnection: executing");
 
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
@@ -88,7 +88,7 @@ public class ClientServerRoutines : MonoBehaviour
 
 
         reliableChannelId = config.AddChannel(QosType.AllCostDelivery);
-        GlobalDefinitions.writeToLogFile("initiateServerConnection: ReliableChannelID set to " + reliableChannelId);
+        GlobalDefinitions.WriteToLogFile("initiateServerConnection: ReliableChannelID set to " + reliableChannelId);
 
         config.PacketSize = 1400;
         config.MaxConnectionAttempt = Byte.MaxValue;
@@ -101,15 +101,15 @@ public class ClientServerRoutines : MonoBehaviour
         NetworkTransport.Init(globalConfig);
 
         hostId = NetworkTransport.AddHost(topology);
-        GlobalDefinitions.writeToLogFile("initiateServerConnection: HostID set to " + hostId);
+        GlobalDefinitions.WriteToLogFile("initiateServerConnection: HostID set to " + hostId);
 
         if (ConnectToServer())
         {
             channelRequested = true;
-            GlobalDefinitions.guiUpdateStatusMessage("initiateServerConnection: Channel requested");
+            GlobalDefinitions.GuiUpdateStatusMessage("initiateServerConnection: Channel requested");
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("initiateServerConnection: Connection request failed");
+            GlobalDefinitions.GuiUpdateStatusMessage("initiateServerConnection: Connection request failed");
     }
 
     /// <summary>
@@ -126,7 +126,7 @@ public class ClientServerRoutines : MonoBehaviour
 
             connectionId = NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error);
 
-            GlobalDefinitions.writeToLogFile("ConnectToServer: ConnectionID set to " + connectionId + " hostId = " + hostId + ", IP addr = " + GlobalDefinitions.serverIPAddress + ", port = " + GlobalDefinitions.port + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            GlobalDefinitions.WriteToLogFile("ConnectToServer: ConnectionID set to " + connectionId + " hostId = " + hostId + ", IP addr = " + GlobalDefinitions.serverIPAddress + ", port = " + GlobalDefinitions.port + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
             if (connectionId <= 0)
                 return (false);
@@ -148,11 +148,11 @@ public class ClientServerRoutines : MonoBehaviour
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(stream, message);
         NetworkTransport.Send(hostId, connectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
-        GlobalDefinitions.writeToLogFile("Sending message - " + message + " HostID=" + hostId + "  ConnectionID=" + connectionId + " ChannelID=" + reliableChannelId + " Error: " + (NetworkError)sendError);
+        GlobalDefinitions.WriteToLogFile("Sending message - " + message + " HostID=" + hostId + "  ConnectionID=" + connectionId + " ChannelID=" + reliableChannelId + " Error: " + (NetworkError)sendError);
 
         if ((NetworkError)sendError != NetworkError.Ok)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("ERROR IN TRANSMISSION - Network Error returned = " + (NetworkError)sendError);
+            GlobalDefinitions.GuiUpdateStatusMessage("ERROR IN TRANSMISSION - Network Error returned = " + (NetworkError)sendError);
         }
     }
 }

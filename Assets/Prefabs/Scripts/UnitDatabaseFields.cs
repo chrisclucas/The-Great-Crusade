@@ -139,7 +139,7 @@ public class UnitDatabaseFields : MonoBehaviour
     /// <summary>
     /// This routine will write out the fields of the unit
     /// </summary>
-    public void writeUnitFields(StreamWriter theWriter)
+    public void WriteUnitFields(StreamWriter theWriter)
     {
         theWriter.Write(name + " ");
         if (occupiedHex != null)
@@ -150,17 +150,17 @@ public class UnitDatabaseFields : MonoBehaviour
             theWriter.Write(beginningTurnHex.name + " ");
         else
             theWriter.Write("null ");
-        theWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(inBritain) + " ");
-        theWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(unitInterdiction) + " ");
+        theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(inBritain) + " ");
+        theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(unitInterdiction) + " ");
         theWriter.Write(invasionAreaIndex + " ");
-        theWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(availableForStrategicMovement) + " ");
-        theWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(inSupply) + " ");
+        theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(availableForStrategicMovement) + " ");
+        theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(inSupply) + " ");
         if (supplySource != null)
             theWriter.Write(supplySource.name + " ");
         else
             theWriter.Write("null ");
         theWriter.Write(supplyIncrementsOutOfSupply + " ");
-        theWriter.Write(GlobalDefinitions.writeBooleanToSaveFormat(unitEliminated) + " ");
+        theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(unitEliminated) + " ");
 
         theWriter.WriteLine();
     }

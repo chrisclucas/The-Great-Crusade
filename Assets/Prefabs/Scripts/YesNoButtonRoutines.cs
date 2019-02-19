@@ -7,20 +7,20 @@ public class YesNoButtonRoutines : MonoBehaviour
     /// <summary>
     /// Sets variables for a yes response
     /// </summary>
-    public void yesButtonSelected()
+    public void YesButtonSelected()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.YESBUTTONSELECTEDKEYWORD);
-        GlobalDefinitions.removeGUI(transform.parent.gameObject);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.YESBUTTONSELECTEDKEYWORD);
+        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         yesAction();
     }
 
     /// <summary>
     /// Sets variables for a no response
     /// </summary>
-    public void noButtonSelected()
+    public void NoButtonSelected()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.NOBUTTONSELECTEDKEYWORD);
-        GlobalDefinitions.removeGUI(transform.parent.gameObject);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.NOBUTTONSELECTEDKEYWORD);
+        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         noAction();
     }
 

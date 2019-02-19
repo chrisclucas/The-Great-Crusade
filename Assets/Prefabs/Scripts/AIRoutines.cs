@@ -14,12 +14,12 @@ public class AIRoutines : MonoBehaviour
     /// This routine moves Allied units that are not near enemy units
     /// </summary>
     /// <param name="unitList"></param>
-    public static void makeAlliedStrategicMoves(List<GameObject> unitList)
+    public static void MakeAlliedStrategicMoves(List<GameObject> unitList)
     {
         if (unitList.Count > 0)
         {
             // Set the target location for reinforcement movement
-            targetLocation = getAverageEnemyLocation(GlobalDefinitions.Nationality.German);
+            targetLocation = GetAverageEnemyLocation(GlobalDefinitions.Nationality.German);
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("makeAlliedStrategicMoves: target reinforcement location " + targetLocation.x + " " + targetLocation.y);
 #endif
@@ -37,8 +37,8 @@ public class AIRoutines : MonoBehaviour
                 // Note that I've changed the distance to check for Allied units to be 4.  This makes it more effective in getting 
                 // units moving west.
                 if (!unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack && !unit.GetComponent<UnitDatabaseFields>().hasMoved &&
-                        (findNearbyEnemyUnits(unit.GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.Nationality.Allied, 4).Count == 0))
-                    executeAlliedStrategicMovement(unit);
+                        (FindNearbyEnemyUnits(unit.GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.Nationality.Allied, 4).Count == 0))
+                    ExecuteAlliedStrategicMovement(unit);
             }
         }
     }
@@ -48,7 +48,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <param name="targetLocation"></param>
-    public static void executeGermanReinforcementMovement(GameObject unit, GameObject targetHex)
+    public static void ExecuteGermanReinforcementMovement(GameObject unit, GameObject targetHex)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("executeGermanReinforcementMovement: moving unit - " + unit.name + " target location = " + targetHex.name);
@@ -59,10 +59,10 @@ public class AIRoutines : MonoBehaviour
 
         // We have the target location to move to and the list of available hexes so we can exeute movement now
         // Go through each of the available hexes and determine which is closest to the target location
-        GlobalDefinitions.resetMovementAvailableFields();
+        GlobalDefinitions.ResetMovementAvailableFields();
         unit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Clear();
         unit.GetComponent<UnitDatabaseFields>().availableMovementHexes
-                = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
         foreach (GameObject hex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
         {
 #if OUTPUTDEBUG
@@ -74,10 +74,10 @@ public class AIRoutines : MonoBehaviour
                     //!hex.GetComponent<HexDatabaseFields>().mountain &&
                     !hex.GetComponent<HexDatabaseFields>().impassible &&
                     !hex.GetComponent<HexDatabaseFields>().inAlliedZOC &&
-                    (calculateDistance(hex, targetHex) < closestDistance) &&
-                    (GlobalDefinitions.hexUnderStackingLimit(hex, unit.GetComponent<UnitDatabaseFields>().nationality)))
+                    (CalculateDistance(hex, targetHex) < closestDistance) &&
+                    (GlobalDefinitions.HexUnderStackingLimit(hex, unit.GetComponent<UnitDatabaseFields>().nationality)))
             {
-                closestDistance = calculateDistance(hex, targetHex);
+                closestDistance = CalculateDistance(hex, targetHex);
                 moveHex = hex;
             }
         }
@@ -93,10 +93,10 @@ public class AIRoutines : MonoBehaviour
                         //!hex.GetComponent<HexDatabaseFields>().mountain &&
                         !hex.GetComponent<HexDatabaseFields>().impassible &&
                         !hex.GetComponent<HexDatabaseFields>().inAlliedZOC &&
-                        (calculateDistance(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex) > furthestDistance) &&
-                        (GlobalDefinitions.hexUnderStackingLimit(hex, unit.GetComponent<UnitDatabaseFields>().nationality)))
+                        (CalculateDistance(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex) > furthestDistance) &&
+                        (GlobalDefinitions.HexUnderStackingLimit(hex, unit.GetComponent<UnitDatabaseFields>().nationality)))
                 {
-                    furthestDistance = calculateDistance(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                    furthestDistance = CalculateDistance(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
                     moveHex = hex;
                 }
             }
@@ -107,7 +107,7 @@ public class AIRoutines : MonoBehaviour
             // At this point just move it to the first available hex
             moveHex = unit.GetComponent<UnitDatabaseFields>().availableMovementHexes[0];
         else
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(moveHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(moveHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
 
     }
 
@@ -115,7 +115,7 @@ public class AIRoutines : MonoBehaviour
     /// Moves Allied units that aren't attacking as far East or North as possible
     /// </summary>
     /// <param name="unit"></param>
-    public static void executeAlliedStrategicMovement(GameObject unit)
+    public static void ExecuteAlliedStrategicMovement(GameObject unit)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("executeAlliedStrategicMovement: executing for unit " + unit.name);
@@ -128,21 +128,21 @@ public class AIRoutines : MonoBehaviour
 #endif
             // For Allied units the goal is to get to Germany, so the unit will move as far west as possible.  This is the hex with the highest y value.
             int maxY = 0;
-            GlobalDefinitions.resetMovementAvailableFields();
+            GlobalDefinitions.ResetMovementAvailableFields();
             unit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Clear();
             unit.GetComponent<UnitDatabaseFields>().availableMovementHexes
-                    = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
-            removeEnemyZOCHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes, GlobalDefinitions.Nationality.Allied);
-            removeBridgeHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
-            removeOutOfSupplyHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
+                    = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+            RemoveEnemyZOCHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes, GlobalDefinitions.Nationality.Allied);
+            RemoveBridgeHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
+            RemoveOutOfSupplyHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
             foreach (GameObject hex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
-                if ((hex.GetComponent<HexDatabaseFields>().yMapCoor > maxY) && GlobalDefinitions.hexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied) &&
+                if ((hex.GetComponent<HexDatabaseFields>().yMapCoor > maxY) && GlobalDefinitions.HexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied) &&
                         !hex.GetComponent<HexDatabaseFields>().sea && !unit.GetComponent<UnitDatabaseFields>().hasMoved && (hex.GetComponent<HexDatabaseFields>().supplySources.Count > 0))
                     maxY = hex.GetComponent<HexDatabaseFields>().yMapCoor;
             foreach (GameObject hex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
-                if ((hex.GetComponent<HexDatabaseFields>().yMapCoor == maxY) && GlobalDefinitions.hexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied) &&
+                if ((hex.GetComponent<HexDatabaseFields>().yMapCoor == maxY) && GlobalDefinitions.HexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied) &&
                         !hex.GetComponent<HexDatabaseFields>().sea && !unit.GetComponent<UnitDatabaseFields>().hasMoved && (hex.GetComponent<HexDatabaseFields>().supplySources.Count > 0))
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
         }
         // Otherwise move it North.  This is mainly for units landing in South France
         else
@@ -151,16 +151,16 @@ public class AIRoutines : MonoBehaviour
             GlobalDefinitions.writeToLogFile("executeAlliedStrategicMovement: looking to move unit north");
 #endif
             int minX = int.MaxValue;
-            GlobalDefinitions.resetMovementAvailableFields();
+            GlobalDefinitions.ResetMovementAvailableFields();
             unit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Clear();
             unit.GetComponent<UnitDatabaseFields>().availableMovementHexes
-                    = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
-            removeEnemyZOCHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes, GlobalDefinitions.Nationality.Allied);
-            removeBridgeHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
-            removeOutOfSupplyHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
+                    = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+            RemoveEnemyZOCHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes, GlobalDefinitions.Nationality.Allied);
+            RemoveBridgeHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
+            RemoveOutOfSupplyHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
             foreach (GameObject hex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
                 if ((hex.GetComponent<HexDatabaseFields>().xMapCoor < minX) &&
-                        GlobalDefinitions.hexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied) &&
+                        GlobalDefinitions.HexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied) &&
                         !hex.GetComponent<HexDatabaseFields>().sea &&
                         !hex.GetComponent<HexDatabaseFields>().mountain &&
                         !unit.GetComponent<UnitDatabaseFields>().hasMoved &&
@@ -168,12 +168,12 @@ public class AIRoutines : MonoBehaviour
                     minX = hex.GetComponent<HexDatabaseFields>().xMapCoor;
             foreach (GameObject hex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
                 if ((hex.GetComponent<HexDatabaseFields>().xMapCoor == minX) &&
-                        GlobalDefinitions.hexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied) &&
+                        GlobalDefinitions.HexUnderStackingLimit(hex, GlobalDefinitions.Nationality.Allied) &&
                         !hex.GetComponent<HexDatabaseFields>().sea &&
                         !hex.GetComponent<HexDatabaseFields>().mountain &&
                         !unit.GetComponent<UnitDatabaseFields>().hasMoved &&
                         (hex.GetComponent<HexDatabaseFields>().supplySources.Count > 0))
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
         }
     }
 
@@ -182,7 +182,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static Vector2 getAverageEnemyLocation(GlobalDefinitions.Nationality enemyNationality)
+    public static Vector2 GetAverageEnemyLocation(GlobalDefinitions.Nationality enemyNationality)
     {
         List<GameObject> enemyUnits;
 
@@ -214,11 +214,11 @@ public class AIRoutines : MonoBehaviour
     /// Removes all hexes that are in an enemy ZOC from the list passed
     /// </summary>
     /// <param name="availableMovementHexes"></param>
-    private static void removeEnemyZOCHexes(List<GameObject> availableMovementHexes, GlobalDefinitions.Nationality friendlyNationality)
+    private static void RemoveEnemyZOCHexes(List<GameObject> availableMovementHexes, GlobalDefinitions.Nationality friendlyNationality)
     {
         List<GameObject> hexesToRemove = new List<GameObject>();
         foreach (GameObject hex in availableMovementHexes)
-            if (GlobalDefinitions.hexInEnemyZOC(hex, friendlyNationality))
+            if (GlobalDefinitions.HexInEnemyZOC(hex, friendlyNationality))
                 hexesToRemove.Add(hex);
         foreach (GameObject hex in hexesToRemove)
             if (availableMovementHexes.Contains(hex))
@@ -229,7 +229,7 @@ public class AIRoutines : MonoBehaviour
     /// Removes bridges from possible movement hexes
     /// </summary>
     /// <param name="availableMovementHexes"></param>
-    private static void removeBridgeHexes(List<GameObject> availableMovementHexes)
+    private static void RemoveBridgeHexes(List<GameObject> availableMovementHexes)
     {
         List<GameObject> hexesToRemove = new List<GameObject>();
         foreach (GameObject hex in availableMovementHexes)
@@ -244,7 +244,7 @@ public class AIRoutines : MonoBehaviour
     /// Remove hexes that don't have supply sources
     /// </summary>
     /// <param name="availableMovementHexes"></param>
-    private static void removeOutOfSupplyHexes(List<GameObject> availableMovementHexes)
+    private static void RemoveOutOfSupplyHexes(List<GameObject> availableMovementHexes)
     {
         List<GameObject> hexesToRemove = new List<GameObject>();
         foreach (GameObject hex in availableMovementHexes)
@@ -259,23 +259,23 @@ public class AIRoutines : MonoBehaviour
     /// This routine goes through all the units on the board and moves any that have not yet moved or attacked
     /// </summary>
     /// <param name="nationality"></param>
-    public static void moveAllUnits(GlobalDefinitions.Nationality nationality)
+    public static void MoveAllUnits(GlobalDefinitions.Nationality nationality)
     {
         //GameObject unit = new GameObject("moveAllUnits");
         GameObject unit;
 
-        unit = returnNextUnitToMove(nationality);
+        unit = ReturnNextUnitToMove(nationality);
 
         if (unit != null)
-            setUnitMovementValues(unit);
+            SetUnitMovementValues(unit);
 
         while (unit != null)
         {
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("moveAllUnits: unit " + unit.name + " was returned as the next unit to move");
 #endif
-            removeEnemyZOCHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes, nationality);
-            removeBridgeHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
+            RemoveEnemyZOCHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes, nationality);
+            RemoveBridgeHexes(unit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
             unit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Sort((b, a) => a.GetComponent<HexDatabaseFields>().hexValue.CompareTo(b.GetComponent<HexDatabaseFields>().hexValue));
 
 #if OUTPUTDEBUG
@@ -295,11 +295,11 @@ public class AIRoutines : MonoBehaviour
                     if (hex == unit.GetComponent<UnitDatabaseFields>().occupiedHex)
                         unit.GetComponent<UnitDatabaseFields>().hasMoved = true;
                     else if (!hex.GetComponent<HexDatabaseFields>().sea && !hex.GetComponent<HexDatabaseFields>().impassible && !hex.GetComponent<HexDatabaseFields>().neutralCountry &&
-                            GlobalDefinitions.hexUnderStackingLimit(hex, unit.GetComponent<UnitDatabaseFields>().nationality))
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                            GlobalDefinitions.HexUnderStackingLimit(hex, unit.GetComponent<UnitDatabaseFields>().nationality))
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
                 }
             unit.GetComponent<UnitDatabaseFields>().hasMoved = true; // If the unit has moved this is already set but if it hasn't moved, leave it where it is.
-            unit = returnNextUnitToMove(nationality);
+            unit = ReturnNextUnitToMove(nationality);
         }
     }
 
@@ -309,7 +309,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="nationality"></param>
     /// <returns></returns>
-    public static GameObject returnNextUnitToMove(GlobalDefinitions.Nationality nationality)
+    public static GameObject ReturnNextUnitToMove(GlobalDefinitions.Nationality nationality)
     {
         List<GameObject> unitList;
         //GameObject maxValueUnit = new GameObject("returnNextUnitToMove");
@@ -337,7 +337,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                 GlobalDefinitions.writeToLogFile("returnNextUnitToMove: processing unit - " + unit.name);
 #endif
-                setUnitMovementValues(unit.gameObject);
+                SetUnitMovementValues(unit.gameObject);
                 if (unit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Count > 0)
                     maxValue = unit.GetComponent<UnitDatabaseFields>().availableMovementHexes[0].GetComponent<HexDatabaseFields>().hexValue;
                 else
@@ -389,7 +389,7 @@ public class AIRoutines : MonoBehaviour
 
                 // If a unit is currently sitting in an enemy ZOC and is not committed to an attack it has to be moved first so it doesn't
                 // end up getting boxed in and then it causes a problem because it is in a ZOC but it is not part of an attack.
-                if (GlobalDefinitions.hexInEnemyZOC(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality))
+                if (GlobalDefinitions.HexInEnemyZOC(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality))
                 {
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("returnNextUnitToMove: unit " + unit.name + " being returned because it is in enemy ZOC");
@@ -414,7 +414,7 @@ public class AIRoutines : MonoBehaviour
         {
             // This executes when there is more than one unit with the same difference.  Need to break the tie
             // Get the unit with the highest value hex to move to
-            maxValueUnit = returnUnitWithHighestValueHex(listOfGlobalMaxDifferenceUnits);
+            maxValueUnit = ReturnUnitWithHighestValueHex(listOfGlobalMaxDifferenceUnits);
 #if OUTPUTDEBUG
             if (maxValueUnit != null)
                 GlobalDefinitions.writeToLogFile("returnNextUnitToMove: breaking max difference tie - " + maxValueUnit.name);
@@ -422,7 +422,7 @@ public class AIRoutines : MonoBehaviour
             if (maxValueUnit == null)
             {
                 // Return the unit with the highest defense factor
-                maxValueUnit = returnUnitWithHightestDefenseFactor(listOfGlobalMaxDifferenceUnits);
+                maxValueUnit = ReturnUnitWithHightestDefenseFactor(listOfGlobalMaxDifferenceUnits);
 #if OUTPUTDEBUG
                 if (maxValueUnit != null)
                     GlobalDefinitions.writeToLogFile("retrunNextUnitToMove: breaking max difference tie defender with highest defense factor - " + maxValueUnit.name);
@@ -445,7 +445,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static void setUnitMovementValues(GameObject unit)
+    public static void SetUnitMovementValues(GameObject unit)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("setUnitMovementValues: processing unit " + unit.name + " supply status = " + unit.GetComponent<UnitDatabaseFields>().inSupply + "  remaining movement = " + unit.GetComponent<UnitDatabaseFields>().remainingMovement);
@@ -468,16 +468,16 @@ public class AIRoutines : MonoBehaviour
             //GlobalDefinitions.updateHexValueText(tempHex.gameObject);
         }
 
-        GlobalDefinitions.resetMovementAvailableFields();
+        GlobalDefinitions.ResetMovementAvailableFields();
         unit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Clear();
         unit.GetComponent<UnitDatabaseFields>().availableMovementHexes =
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.gameObject);
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.gameObject);
 
         // Calculate the value for all available moves
         foreach (GameObject hex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
         {
 
-            hex.GetComponent<HexDatabaseFields>().hexValue = returnHexValue(hex, unit);
+            hex.GetComponent<HexDatabaseFields>().hexValue = ReturnHexValue(hex, unit);
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("setUnitMovementValues: hex value for hex " + hex.name + " with value = " + hex.GetComponent<HexDatabaseFields>().hexValue);
 #endif
@@ -499,7 +499,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private static int returnHexValue(GameObject hex, GameObject unit)
+    private static int ReturnHexValue(GameObject hex, GameObject unit)
     {
         int returnValue = hex.GetComponent<HexDatabaseFields>().intrinsicHexValue;
         if (hex.GetComponent<HexDatabaseFields>().successfullyInvaded)
@@ -511,19 +511,19 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("      setUnitMovementValues: Calculating hex value for hex - " + hex.name);
 #endif
-            returnValue += returnUnitContextHexValueModifier(hex, unit);
+            returnValue += ReturnUnitContextHexValueModifier(hex, unit);
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("            setUnitMovementValues: Executed returnUnitContextHexValueModifier hexValue = " + returnValue);
 #endif
-            returnValue += returnEnemyDistanceHexModifierValue(hex, unit);
+            returnValue += ReturnEnemyDistanceHexModifierValue(hex, unit);
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("            setUnitMovementValues: Executed returnEnemyDistanceHexModifierValue hexValue = " + returnValue);
 #endif
-            returnValue += returnRiverContextHexValueModifier(hex, unit);
+            returnValue += ReturnRiverContextHexValueModifier(hex, unit);
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("            setUnitMovementValues: Executed returnRiverContextHexValueModifier hexValue = " + returnValue);
 #endif
-            returnValue += returnSupplyContextHexValueModifier(hex, unit);
+            returnValue += ReturnSupplyContextHexValueModifier(hex, unit);
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("            setUnitMovementValues: Executed returnSupplyContextHexValueModifier hexValue = " + returnValue);
 #endif
@@ -533,19 +533,19 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
             //GlobalDefinitions.writeToLogFile("      setUnitMovementValues: Calculating hex value for hex - " + hex.name);
 #endif
-            returnValue += returnUnitContextHexValueModifier(hex, unit);
+            returnValue += ReturnUnitContextHexValueModifier(hex, unit);
 #if OUTPUTDEBUG
             //GlobalDefinitions.writeToLogFile("            setUnitMovementValues: Executed returnUnitContextHexValueModifier hexValue = " + returnValue);
 #endif
-            returnValue += returnEnemyDistanceHexModifierValue(hex, unit);
+            returnValue += ReturnEnemyDistanceHexModifierValue(hex, unit);
 #if OUTPUTDEBUG
             //GlobalDefinitions.writeToLogFile("            setUnitMovementValues: Executed returnEnemyDistanceHexModifierValue hexValue = " + returnValue);
 #endif
-            returnValue += returnRiverContextHexValueModifier(hex, unit);
+            returnValue += ReturnRiverContextHexValueModifier(hex, unit);
 #if OUTPUTDEBUG
             //GlobalDefinitions.writeToLogFile("            setUnitMovementValues: Executed returnRiverContextHexValueModifier hexValue = " + returnValue);
 #endif
-            returnValue += returnSupplyContextHexValueModifier(hex, unit);
+            returnValue += ReturnSupplyContextHexValueModifier(hex, unit);
 #if OUTPUTDEBUG
             //GlobalDefinitions.writeToLogFile("            setUnitMovementValues: Executed returnSupplyContextHexValueModifier hexValue = " + returnValue);
 #endif
@@ -560,7 +560,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static int returnUnitContextHexValueModifier(GameObject hex, GameObject unit)
+    public static int ReturnUnitContextHexValueModifier(GameObject hex, GameObject unit)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("returnUnitContextHexValueModifier: Evaluating hex - " + hex.name);
@@ -572,7 +572,7 @@ public class AIRoutines : MonoBehaviour
 
         // Only check if the unit is already on the hex or there is availability on the hex
         if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Contains(unit) ||
-                GlobalDefinitions.hexUnderStackingLimit(hex, unit.GetComponent<UnitDatabaseFields>().nationality))
+                GlobalDefinitions.HexUnderStackingLimit(hex, unit.GetComponent<UnitDatabaseFields>().nationality))
         {
             // Check for stacked unit bonus
             if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
@@ -620,17 +620,17 @@ public class AIRoutines : MonoBehaviour
 
             // Check for adding a modifier for being adjacent to a friendly ZOC
             modifierAdded = false; // Reset to false we will add a adjacent ZOC modifier once regardless of how many there are
-            foreach (GameObject tempHex in returnHexesWithinDistance(hex, 1))
+            foreach (GameObject tempHex in ReturnHexesWithinDistance(hex, 1))
                 if (!modifierAdded)
                 {
-                    if (GlobalDefinitions.hexInFriendlyZOC(tempHex, unit.GetComponent<UnitDatabaseFields>().nationality))
+                    if (GlobalDefinitions.HexInFriendlyZOC(tempHex, unit.GetComponent<UnitDatabaseFields>().nationality))
                     {
                         // Set the modifier if there is ZOC in the hex and no friendly units (otherwise we would be adding two modifiers for an adjacent unit)
                         if ((tempHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0) || ((tempHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                                 (tempHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality != unit.GetComponent<UnitDatabaseFields>().nationality)))
                         {
                             // The modifier will not be added if it is the unit that being evaluated is causing the ZOC.  This is an issue when scoring hexes around the starting location
-                            if (!checkIfUnitIsOnlyFriendlyUnitExertingZOC(tempHex, unit))
+                            if (!CheckIfUnitIsOnlyFriendlyUnitExertingZOC(tempHex, unit))
                             {
                                 hex.GetComponent<HexDatabaseFields>().sharedZOCModifier += GlobalDefinitions.adjacentZOCHexModifier;
                                 returnValue += GlobalDefinitions.adjacentZOCHexModifier;
@@ -652,8 +652,8 @@ public class AIRoutines : MonoBehaviour
                 // because it is projected or has a friendly unit on it.
 
                 // In order to get the list of hexes two hexes away I will get the list of hexes 1 away and take these away from the list of hexes 2 away
-                List<GameObject> hexesOneAway = returnHexesWithinDistance(hex, 1);
-                List<GameObject> hexesTwoAway = returnHexesWithinDistance(hex, 2);
+                List<GameObject> hexesOneAway = ReturnHexesWithinDistance(hex, 1);
+                List<GameObject> hexesTwoAway = ReturnHexesWithinDistance(hex, 2);
                 List<GameObject> hexesOnlyTwoAway = new List<GameObject>();
                 List<GameObject> zocHexes = new List<GameObject>();
 
@@ -674,7 +674,7 @@ public class AIRoutines : MonoBehaviour
                     {
                         foreach (GameObject tempHex in hexesOnlyTwoAway)
                         {
-                            if (!modifierAdded && hexInFriendlyZOC(tempHex, unit))
+                            if (!modifierAdded && HexInFriendlyZOC(tempHex, unit))
                             {
                                 // At this point the tempHex is two hexes away and is in friendly ZOC
                                 foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
@@ -684,7 +684,7 @@ public class AIRoutines : MonoBehaviour
                                     if (((tempHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 1) && (tempHex.GetComponent<HexDatabaseFields>().occupyingUnit[0] == unit)))
                                         matchUnit = true;
                                     // Check that the ZOC of control isn't there only because of the unit that we're checking
-                                    if (!matchUnit && !checkIfUnitIsOnlyFriendlyUnitExertingZOC(tempHex, unit))
+                                    if (!matchUnit && !CheckIfUnitIsOnlyFriendlyUnitExertingZOC(tempHex, unit))
 
                                         // Check to see if the zoc's one hex away are adjacent to the tempHex
                                         if (!modifierAdded && (zocHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] == tempHex))
@@ -712,7 +712,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static int returnEnemyDistanceHexModifierValue(GameObject hex, GameObject unit)
+    public static int ReturnEnemyDistanceHexModifierValue(GameObject hex, GameObject unit)
     {
         List<GameObject> hexList;
 
@@ -725,15 +725,15 @@ public class AIRoutines : MonoBehaviour
         for (int distance = 1; distance <= GlobalDefinitions.enemyUnitModiferDistance; distance++)
         {
             // Get the hexes within the current distance of the hex
-            hexList = returnHexesWithinDistance(hex, distance);
+            hexList = ReturnHexesWithinDistance(hex, distance);
             // Search to see if an enemy is on any of the hexes
             // The check for the hex not being in enemy ZOC is to keep units moving to attack for no other reason than they can
             foreach (GameObject tempHex in hexList)
                 if ((tempHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                         (tempHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality != unit.GetComponent<UnitDatabaseFields>().nationality) &&
-                        !GlobalDefinitions.hexInEnemyZOC(hex, unit.GetComponent<UnitDatabaseFields>().nationality))
+                        !GlobalDefinitions.HexInEnemyZOC(hex, unit.GetComponent<UnitDatabaseFields>().nationality))
                 {
-                    hex.GetComponent<HexDatabaseFields>().enemyDistanceModifier = returnDistanceToEnemyHexValueModifier(distance);
+                    hex.GetComponent<HexDatabaseFields>().enemyDistanceModifier = ReturnDistanceToEnemyHexValueModifier(distance);
                     return (hex.GetComponent<HexDatabaseFields>().enemyDistanceModifier);
                 }
         }
@@ -748,7 +748,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static int returnRiverContextHexValueModifier(GameObject hex, GameObject unit)
+    public static int ReturnRiverContextHexValueModifier(GameObject hex, GameObject unit)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("returnRiverContextHexValueModifier: evaluating hex " + hex.name);
@@ -765,7 +765,7 @@ public class AIRoutines : MonoBehaviour
         if (hex.GetComponent<HexDatabaseFields>().fortress || hex.GetComponent<HexDatabaseFields>().city)
             return (0);
 
-        List<GameObject> nearbyEnemyUnits = findNearbyEnemyUnits(hex, unit.GetComponent<UnitDatabaseFields>().nationality, GlobalDefinitions.riverModifierDistance);
+        List<GameObject> nearbyEnemyUnits = FindNearbyEnemyUnits(hex, unit.GetComponent<UnitDatabaseFields>().nationality, GlobalDefinitions.riverModifierDistance);
 
         // We have all the nearby enemy units.  Now we just need to go through all of them and determine if 
         // there is a river edge on the hex between the unit passed and the enemy unit being checked.
@@ -923,7 +923,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static int returnSupplyContextHexValueModifier(GameObject hex, GameObject unit)
+    public static int ReturnSupplyContextHexValueModifier(GameObject hex, GameObject unit)
     {
         if (hex.GetComponent<HexDatabaseFields>().supplySources.Count == 0)
         {
@@ -945,9 +945,9 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="hex"></param>
     /// <returns></returns>
-    public static int returnSupplySourceHexValueModifier(GameObject hex, GlobalDefinitions.Nationality nationality)
+    public static int ReturnSupplySourceHexValueModifier(GameObject hex, GlobalDefinitions.Nationality nationality)
     {
-        if (supplyNeeded() && hex.GetComponent<HexDatabaseFields>().supplyCapacity > 0)
+        if (SupplyNeeded() && hex.GetComponent<HexDatabaseFields>().supplyCapacity > 0)
             return (GlobalDefinitions.supplySourceValue);
 
         return (0);
@@ -956,7 +956,7 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// This routine resets the context hex value modifiers for all hexes
     /// </summary>
-    public static void resetContextHexValueModifiers(List<GameObject> hexList)
+    public static void ResetContextHexValueModifiers(List<GameObject> hexList)
     {
         foreach (GameObject hex in hexList)
         {
@@ -980,7 +980,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static bool hexInFriendlyZOC(GameObject hex, GameObject unit)
+    public static bool HexInFriendlyZOC(GameObject hex, GameObject unit)
     {
         if ((unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied) && hex.GetComponent<HexDatabaseFields>().inAlliedZOC)
         {
@@ -988,7 +988,7 @@ public class AIRoutines : MonoBehaviour
             if ((hex.GetComponent<HexDatabaseFields>().unitsExertingZOC.Count == 1) && (hex.GetComponent<HexDatabaseFields>().unitsExertingZOC[0] == unit))
                 return (false);
             // Also check that the unit we're looking to move isn't the only unit on the hex and no other friendly unit is projecting ZOC
-            else if ((hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 1) && (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0] == unit) && !checkIfFriendyUnitProjectingZOC(hex, unit))
+            else if ((hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 1) && (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0] == unit) && !CheckIfFriendyUnitProjectingZOC(hex, unit))
                 return (false);
             else
                 return (true);
@@ -1012,7 +1012,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static bool checkIfFriendyUnitProjectingZOC(GameObject hex, GameObject unit)
+    public static bool CheckIfFriendyUnitProjectingZOC(GameObject hex, GameObject unit)
     {
         foreach (GameObject tempUnit in hex.GetComponent<HexDatabaseFields>().unitsExertingZOC)
             if (tempUnit.GetComponent<UnitDatabaseFields>().nationality == unit.GetComponent<UnitDatabaseFields>().nationality)
@@ -1027,10 +1027,10 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="distance"></param>
     /// <returns></returns>
-    public static List<GameObject> findNearbyEnemyUnits(GameObject hex, GlobalDefinitions.Nationality friendlyNationality, int distance)
+    public static List<GameObject> FindNearbyEnemyUnits(GameObject hex, GlobalDefinitions.Nationality friendlyNationality, int distance)
     {
         List<GameObject> nearbyEnemyUnits = new List<GameObject>();
-        List<GameObject> hexesToCheck = returnHexesWithinDistance(hex, distance);
+        List<GameObject> hexesToCheck = ReturnHexesWithinDistance(hex, distance);
         foreach (GameObject tempHex in hexesToCheck)
             if ((tempHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                     (tempHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality != friendlyNationality))
@@ -1050,10 +1050,10 @@ public class AIRoutines : MonoBehaviour
     /// <param name="nationality"></param>
     /// <param name="distance"></param>
     /// <returns></returns>
-    public static List<GameObject> findNearbyUnits(GameObject hex, GlobalDefinitions.Nationality nationality, int distance)
+    public static List<GameObject> FindNearbyUnits(GameObject hex, GlobalDefinitions.Nationality nationality, int distance)
     {
         List<GameObject> nearbyEnemyUnits = new List<GameObject>();
-        List<GameObject> hexesToCheck = returnHexesWithinDistance(hex, distance);
+        List<GameObject> hexesToCheck = ReturnHexesWithinDistance(hex, distance);
         foreach (GameObject tempHex in hexesToCheck)
             if ((tempHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                     (tempHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == nationality))
@@ -1070,7 +1070,7 @@ public class AIRoutines : MonoBehaviour
     /// Returns the number of armor units available through this invasion area passed for this turn
     /// </summary>
     /// <param name="invasionAreaIndex"></param>
-    private static int returnNumberOfArmorUnitsAvailable(int invasionAreaIndex)
+    private static int ReturnNumberOfArmorUnitsAvailable(int invasionAreaIndex)
     {
         if ((GlobalDefinitions.firstInvasionAreaIndex == invasionAreaIndex) || (GlobalDefinitions.secondInvasionAreaIndex == invasionAreaIndex))
         {
@@ -1086,7 +1086,7 @@ public class AIRoutines : MonoBehaviour
     /// Returns the number of infantry units available through this invasion area passed for this turn
     /// </summary>
     /// <param name="invasionAreaIndex"></param>
-    private static int returnNumberOfInfantryUnitsAvailable(int invasionAreaIndex)
+    private static int ReturnNumberOfInfantryUnitsAvailable(int invasionAreaIndex)
     {
         if ((GlobalDefinitions.firstInvasionAreaIndex == invasionAreaIndex) || (GlobalDefinitions.secondInvasionAreaIndex == invasionAreaIndex))
         {
@@ -1102,7 +1102,7 @@ public class AIRoutines : MonoBehaviour
     /// Returns the number of infantry units available through this invasion area passed for this turn
     /// </summary>
     /// <param name="invasionAreaIndex"></param>
-    private static int returnNumberOfHQUnitsAvailable(int invasionAreaIndex)
+    private static int ReturnNumberOfHQUnitsAvailable(int invasionAreaIndex)
     {
         if ((GlobalDefinitions.firstInvasionAreaIndex == invasionAreaIndex) || (GlobalDefinitions.secondInvasionAreaIndex == invasionAreaIndex))
         {
@@ -1120,7 +1120,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="distance"></param>
     /// <returns></returns>
-    public static List<GameObject> returnHexesWithinDistance(GameObject hex, int distance)
+    public static List<GameObject> ReturnHexesWithinDistance(GameObject hex, int distance)
     {
         List<GameObject> hexList = new List<GameObject>();
         List<GameObject> addList = new List<GameObject>();
@@ -1148,7 +1148,7 @@ public class AIRoutines : MonoBehaviour
     /// Returns the best movement option for the unit from those stored in the unit's maxMovementValueHexes List
     /// </summary>
     /// <param name="unit"></param>
-    private static GameObject returnBestMovementOptionForUnit(GameObject unit)
+    private static GameObject ReturnBestMovementOptionForUnit(GameObject unit)
     {
         List<GameObject> bestHexes = new List<GameObject>();
 
@@ -1247,7 +1247,7 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// This routine sets the intrinsic value of each hex on the board
     /// </summary>
-    public static void setIntrinsicHexValues()
+    public static void SetIntrinsicHexValues()
     {
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         {
@@ -1272,7 +1272,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unitList"></param>
     /// <returns></returns>
-    private static GameObject returnUnitWithHighestValueHex(List<GameObject> unitList)
+    private static GameObject ReturnUnitWithHighestValueHex(List<GameObject> unitList)
     {
         int maxValue = 0;
 
@@ -1310,7 +1310,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unitList"></param>
     /// <returns></returns>
-    private static GameObject returnUnitWithHightestDefenseFactor(List<GameObject> unitList)
+    private static GameObject ReturnUnitWithHightestDefenseFactor(List<GameObject> unitList)
     {
         int maxValue = 0;
         foreach (GameObject unit in unitList)
@@ -1342,7 +1342,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private static bool checkIfUnitIsOnlyFriendlyUnitExertingZOC(GameObject hex, GameObject unit)
+    private static bool CheckIfUnitIsOnlyFriendlyUnitExertingZOC(GameObject hex, GameObject unit)
     {
         List<GameObject> friendlyUnitsExertingZOC = new List<GameObject>();
         // This routine is needed because I was just checking if the number of exerting units was 1 and if it was the unit than I wouldn't add the modifier.
@@ -1365,7 +1365,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="defendingHexes"></param>
     /// <param name="defendingUnitsOnBoard"></param>
-    public static void setGermanAttackHexValues(List<GameObject> defendingHexes)
+    public static void SetGermanAttackHexValues(List<GameObject> defendingHexes)
     {
         // Get all hexes with defenders on them
         foreach (GameObject defendingUnit in GlobalDefinitions.alliedUnitsOnBoard)
@@ -1389,7 +1389,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="defendingHexes"></param>
     /// <param name="defendingUnitsOnBoard"></param>
-    public static void setAlliedAttackHexValues(List<GameObject> defendingHexes)
+    public static void SetAlliedAttackHexValues(List<GameObject> defendingHexes)
     {
         // Get all hexes with defenders on them
         foreach (GameObject defendingUnit in GlobalDefinitions.germanUnitsOnBoard)
@@ -1412,7 +1412,7 @@ public class AIRoutines : MonoBehaviour
     /// This routine determines what attacks should be attempted.
     /// </summary>
     /// <param name="attackingNationality"></param>
-    public static void checkForAICombat(GlobalDefinitions.Nationality attackingNationality, List<GameObject> defendingHexes, List<GameObject> defendingUnitsOnBoard)
+    public static void CheckForAICombat(GlobalDefinitions.Nationality attackingNationality, List<GameObject> defendingHexes, List<GameObject> defendingUnitsOnBoard)
     {
         // Evaluate each hex.  These have been sorted from the most to least valuable
         bool defendersNonCommitted = false;
@@ -1420,7 +1420,7 @@ public class AIRoutines : MonoBehaviour
         int minimumOdds = GlobalDefinitions.minimumAIOdds;
 
         //#if OUTPUTDEBUG
-        GlobalDefinitions.writeToLogFile("makeAllCombatAssignments: number of turns without successfulcombat = " + GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack);
+        GlobalDefinitions.WriteToLogFile("makeAllCombatAssignments: number of turns without successfulcombat = " + GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack);
         //#endif
         // Germans don't need to worry about attacking
         if (attackingNationality == GlobalDefinitions.Nationality.Allied)
@@ -1500,7 +1500,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                 GlobalDefinitions.writeToLogFile("checkForAICombat: Checking attacks against defending hex " + defendingHex.name);
 #endif
-                makeAllCombatAssignments(defendingHex, attackingNationality, targetOdds, minimumOdds);
+                MakeAllCombatAssignments(defendingHex, attackingNationality, targetOdds, minimumOdds);
             }
         }
     }
@@ -1511,12 +1511,12 @@ public class AIRoutines : MonoBehaviour
     /// <param name="attack"></param>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private static bool makeAnAttack(AIPotentialAttack attack, GameObject unit, int targetOdds)
+    private static bool MakeAnAttack(AIPotentialAttack attack, GameObject unit, int targetOdds)
     {
         unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = true;
         attack.attackingUnits.Add(unit);
         // NEED FIX - the false being passed in the if statement below is for attack air support, need to deal with this for Allies
-        attack.odds = GlobalDefinitions.returnCombatOdds(attack.defendingUnits, attack.attackingUnits, false);
+        attack.odds = GlobalDefinitions.ReturnCombatOdds(attack.defendingUnits, attack.attackingUnits, false);
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("makeAnAttack:         checking attacker " + unit.name + " attack odds = " + attack.odds + "  target odds = " + targetOdds);
 #endif
@@ -1539,7 +1539,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="attackingNationality"></param>
     /// <param name="targetOdds"></param>
     /// <param name="minimumOdds"></param>
-    private static void makeAllCombatAssignments(GameObject defendingHex, GlobalDefinitions.Nationality attackingNationality, int targetOdds, int minimumOdds)
+    private static void MakeAllCombatAssignments(GameObject defendingHex, GlobalDefinitions.Nationality attackingNationality, int targetOdds, int minimumOdds)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("makeAllCombatAssignments: initiating");
@@ -1562,7 +1562,7 @@ public class AIRoutines : MonoBehaviour
             // Create a new potential attack structure
             AIPotentialAttack newPotentialAttack = new AIPotentialAttack();
             AIDefendHex newAIDefendingHex = new AIDefendHex();
-            loadHexesAndUnitsForPotentialAttack(listOfHexesToBeAttacked[0], newAIDefendingHex, attackingNationality);
+            LoadHexesAndUnitsForPotentialAttack(listOfHexesToBeAttacked[0], newAIDefendingHex, attackingNationality);
             newPotentialAttack.defendingHexes.Add(newAIDefendingHex);
 
             // Load up the defending structure with all of the units on the current defending hex
@@ -1591,26 +1591,26 @@ public class AIRoutines : MonoBehaviour
                     // move them first the units already on the board may use hexes that the reinforcements need but that the on board units don't.
                     GlobalDefinitions.writeToLogFile("makeAllCombatAssignments:              checking reinforcement - oddsMet = " + oddsMet + " under stacking limit = " + GlobalDefinitions.hexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied) + " Attacking nationality = " + attackingNationality);
 #endif
-                    if (!oddsMet && (attackingNationality == GlobalDefinitions.Nationality.Allied) && GlobalDefinitions.hexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied))
+                    if (!oddsMet && (attackingNationality == GlobalDefinitions.Nationality.Allied) && GlobalDefinitions.HexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied))
                     {
-                        GameObject reinforcementUnit = returnReinforcementUnitForAttackHex(singleAttackHex.attackHex);
+                        GameObject reinforcementUnit = ReturnReinforcementUnitForAttackHex(singleAttackHex.attackHex);
                         if (reinforcementUnit != null)
                         {
                             hexBeingAttacked = true;
-                            oddsMet = makeAnAttack(newPotentialAttack, reinforcementUnit, targetOdds);
+                            oddsMet = MakeAnAttack(newPotentialAttack, reinforcementUnit, targetOdds);
 #if OUTPUTDEBUG
                             GlobalDefinitions.writeToLogFile("makeAllCombatAssignments:              adding reinforcement " + reinforcementUnit.name + " to the attack  odds met = " + oddsMet);
 #endif
                         }
 
                         // Check for another reinforcement unit if the odds aren't met and there is still room on the hex
-                        if (!oddsMet && GlobalDefinitions.hexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied))
+                        if (!oddsMet && GlobalDefinitions.HexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied))
                         {
-                            reinforcementUnit = returnReinforcementUnitForAttackHex(singleAttackHex.attackHex);
+                            reinforcementUnit = ReturnReinforcementUnitForAttackHex(singleAttackHex.attackHex);
                             if (reinforcementUnit != null)
                             {
                                 hexBeingAttacked = true;
-                                oddsMet = makeAnAttack(newPotentialAttack, reinforcementUnit, targetOdds);
+                                oddsMet = MakeAnAttack(newPotentialAttack, reinforcementUnit, targetOdds);
 #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("makeAllCombatAssignments:              adding another reinforcement " + reinforcementUnit.name + " to the attack  odds met = " + oddsMet);
 #endif
@@ -1625,14 +1625,14 @@ public class AIRoutines : MonoBehaviour
                             // Check to see if the unit is available
                             if (!oddsMet && !attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack &&
                                 (singleAttackHex.attackHex.GetComponent<HexDatabaseFields>().occupyingUnit.Contains(attackingUnit) ||
-                                GlobalDefinitions.hexUnderStackingLimit(singleAttackHex.attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().nationality)))
+                                GlobalDefinitions.HexUnderStackingLimit(singleAttackHex.attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().nationality)))
                             {
                                 // The unit and the hex are available so move the unit to the hex if it isn't already on the hex
                                 if (attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex != singleAttackHex.attackHex)
-                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(singleAttackHex.attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex, attackingUnit);
+                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(singleAttackHex.attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex, attackingUnit);
 
                                 hexBeingAttacked = true;
-                                oddsMet = makeAnAttack(newPotentialAttack, attackingUnit, targetOdds);
+                                oddsMet = MakeAnAttack(newPotentialAttack, attackingUnit, targetOdds);
 #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("makeAllCombatAssignments:              adding " + attackingUnit.name + " to the attack  odds met = " + oddsMet);
 #endif
@@ -1675,13 +1675,13 @@ public class AIRoutines : MonoBehaviour
                     // move them first the units already on the board may use hexes that the reinforcements need but that the on board units don't.
                     GlobalDefinitions.writeToLogFile("makeAllCombatAssignments:              checking reinforcement - oddsMet = " + oddsMet + " under stacking limit = " + GlobalDefinitions.hexUnderStackingLimit(multipleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied) + " Attacking nationality = " + attackingNationality);
 #endif
-                    if (!oddsMet && (attackingNationality == GlobalDefinitions.Nationality.Allied) && GlobalDefinitions.hexUnderStackingLimit(multipleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied))
+                    if (!oddsMet && (attackingNationality == GlobalDefinitions.Nationality.Allied) && GlobalDefinitions.HexUnderStackingLimit(multipleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied))
                     {
-                        GameObject reinforcementUnit = returnReinforcementUnitForAttackHex(multipleAttackHex.attackHex);
+                        GameObject reinforcementUnit = ReturnReinforcementUnitForAttackHex(multipleAttackHex.attackHex);
                         if (reinforcementUnit != null)
                         {
                             hexBeingAttacked = true;
-                            oddsMet = makeAnAttack(newPotentialAttack, reinforcementUnit, targetOdds);
+                            oddsMet = MakeAnAttack(newPotentialAttack, reinforcementUnit, targetOdds);
 #if OUTPUTDEBUG
                             GlobalDefinitions.writeToLogFile("makeAllCombatAssignments:              adding reinforcement " + reinforcementUnit.name + " to the attack  odds met = " + oddsMet);
 #endif
@@ -1699,13 +1699,13 @@ public class AIRoutines : MonoBehaviour
                         }
 
                         // Check for another reinforcement unit if the odds aren't met and there is still room on the hex
-                        if (!oddsMet && GlobalDefinitions.hexUnderStackingLimit(multipleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied))
+                        if (!oddsMet && GlobalDefinitions.HexUnderStackingLimit(multipleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied))
                         {
-                            reinforcementUnit = returnReinforcementUnitForAttackHex(multipleAttackHex.attackHex);
+                            reinforcementUnit = ReturnReinforcementUnitForAttackHex(multipleAttackHex.attackHex);
                             if (reinforcementUnit != null)
                             {
                                 hexBeingAttacked = true;
-                                oddsMet = makeAnAttack(newPotentialAttack, reinforcementUnit, targetOdds);
+                                oddsMet = MakeAnAttack(newPotentialAttack, reinforcementUnit, targetOdds);
 #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("makeAllCombatAssignments:              adding another reinforcement " + reinforcementUnit.name + " to the attack  odds met = " + oddsMet);
 #endif
@@ -1720,17 +1720,17 @@ public class AIRoutines : MonoBehaviour
                             // Check to see if the hex is at the stacking limit
                             if (!oddsMet && !attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack &&
                                     (multipleAttackHex.attackHex.GetComponent<HexDatabaseFields>().occupyingUnit.Contains(attackingUnit) ||
-                                    GlobalDefinitions.hexUnderStackingLimit(multipleAttackHex.attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().nationality)))
+                                    GlobalDefinitions.HexUnderStackingLimit(multipleAttackHex.attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().nationality)))
                             {
 #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("makeAllCombatAssignments:         checking attacker " + attackingUnit.name);
 #endif
                                 // The unit and the hex are available so move the unit to the hex if it isn't already on the hex
                                 if (attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex != multipleAttackHex.attackHex)
-                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(multipleAttackHex.attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex, attackingUnit);
+                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(multipleAttackHex.attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex, attackingUnit);
 
                                 hexBeingAttacked = true;
-                                oddsMet = makeAnAttack(newPotentialAttack, attackingUnit, targetOdds);
+                                oddsMet = MakeAnAttack(newPotentialAttack, attackingUnit, targetOdds);
                                 attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = true;
 
                                 // Note that the additional hexes that are brought in battle are not factored in the current battle.  They are pushed to the stack and will be dealt with separately.
@@ -1752,40 +1752,40 @@ public class AIRoutines : MonoBehaviour
             // Only use airborne units if there were no successful attacks last turn.  While not definitive it is a sign that the Allied units might be stalled.
             // Note that hexBeingAttacked is being checked to avoid having airborne units attack on their own.  While this doesn't violate rules, the AI doesn't
             // have a strategic sense to know what random hex should be attacked.
-            if (attackingNationality == GlobalDefinitions.Nationality.Allied && !oddsMet && hexBeingAttacked && !GlobalDefinitions.successfulAttacksLastTurn() &&
+            if (attackingNationality == GlobalDefinitions.Nationality.Allied && !oddsMet && hexBeingAttacked && !GlobalDefinitions.SuccessfulAttacksLastTurn() &&
                     (GlobalDefinitions.currentAirborneDropsThisTurn < GlobalDefinitions.maxNumberAirborneDropsThisTurn))
             {
                 List<GameObject> airborneUnits = new List<GameObject>();
                 GameObject airborneUnit;
                 foreach (AISingleAttackHex singleAttackHex in newPotentialAttack.defendingHexes[0].singleAttackHexes)
-                    if (!oddsMet && GlobalDefinitions.hexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied) &&
+                    if (!oddsMet && GlobalDefinitions.HexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied) &&
                             (GlobalDefinitions.maxNumberAirborneDropsThisTurn > 0) && (GlobalDefinitions.currentAirborneDropsThisTurn < GlobalDefinitions.maxNumberAirborneDropsThisTurn))
                     {
-                        airborneUnit = returnAirborneFromBritain(airborneUnits);
+                        airborneUnit = ReturnAirborneFromBritain(airborneUnits);
                         if (airborneUnit != null)
                         {
                             airborneUnits.Add(airborneUnit);
 
-                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitFromBritain(singleAttackHex.attackHex, airborneUnit);
+                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitFromBritain(singleAttackHex.attackHex, airborneUnit);
                             singleAttackHex.attackHex.GetComponent<HexDatabaseFields>().alliedControl = true;
                             airborneUnit.GetComponent<UnitDatabaseFields>().remainingMovement = 0;
 
-                            oddsMet = makeAnAttack(newPotentialAttack, airborneUnit, targetOdds);
+                            oddsMet = MakeAnAttack(newPotentialAttack, airborneUnit, targetOdds);
                             GlobalDefinitions.currentAirborneDropsThisTurn++;
 
-                            if (!oddsMet && GlobalDefinitions.hexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied) &&
+                            if (!oddsMet && GlobalDefinitions.HexUnderStackingLimit(singleAttackHex.attackHex, GlobalDefinitions.Nationality.Allied) &&
                                     (GlobalDefinitions.currentAirborneDropsThisTurn < GlobalDefinitions.maxNumberAirborneDropsThisTurn))
                             {
-                                airborneUnit = returnAirborneFromBritain(airborneUnits);
+                                airborneUnit = ReturnAirborneFromBritain(airborneUnits);
                                 if (airborneUnit != null)
                                 {
                                     airborneUnits.Add(airborneUnit);
 
-                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitFromBritain(singleAttackHex.attackHex, airborneUnit);
+                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitFromBritain(singleAttackHex.attackHex, airborneUnit);
                                     singleAttackHex.attackHex.GetComponent<HexDatabaseFields>().alliedControl = true;
                                     airborneUnit.GetComponent<UnitDatabaseFields>().remainingMovement = 0;
 
-                                    oddsMet = makeAnAttack(newPotentialAttack, airborneUnit, targetOdds);
+                                    oddsMet = MakeAnAttack(newPotentialAttack, airborneUnit, targetOdds);
                                     GlobalDefinitions.currentAirborneDropsThisTurn++;
                                 }
                             }
@@ -1820,15 +1820,15 @@ public class AIRoutines : MonoBehaviour
                     if (attacker.GetComponent<UnitDatabaseFields>().airborne && (attacker.GetComponent<UnitDatabaseFields>().beginningTurnHex == null))
                     {
                         GlobalDefinitions.currentAirborneDropsThisTurn--;
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
                     }
                     else if (attacker.GetComponent<UnitDatabaseFields>().beginningTurnHex == null)
                     {
-                        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().decrementInvasionUnitLimits(attacker);
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
+                        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().DecrementInvasionUnitLimits(attacker);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
                     }
                     else
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(attacker.GetComponent<UnitDatabaseFields>().beginningTurnHex, attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(attacker.GetComponent<UnitDatabaseFields>().beginningTurnHex, attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker);
                     if (attacker.GetComponent<UnitDatabaseFields>().inSupply)
                         attacker.GetComponent<UnitDatabaseFields>().remainingMovement = attacker.GetComponent<UnitDatabaseFields>().movementFactor;
                     else
@@ -1847,18 +1847,18 @@ public class AIRoutines : MonoBehaviour
                         if (attacker.GetComponent<UnitDatabaseFields>().airborne && (attacker.GetComponent<UnitDatabaseFields>().beginningTurnHex == null))
                         {
                             GlobalDefinitions.currentAirborneDropsThisTurn--;
-                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
+                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
                         }
                         else if (attacker.GetComponent<UnitDatabaseFields>().beginningTurnHex == null)
                         {
-                            GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().decrementInvasionUnitLimits(attacker);
-                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
+                            GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().DecrementInvasionUnitLimits(attacker);
+                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
 #if OUTPUTDEBUG
                             //GlobalDefinitions.writeToLogFile("hexAvailableForUnitTypeReinforcements: invasion area index = " + attacker.GetComponent<UnitDatabaseFields>().invasionAreaIndex + " invasion turn = " + GlobalDefinitions.invasionAreas[attacker.GetComponent<UnitDatabaseFields>().invasionAreaIndex].turn + " armor units used this turn = " + GlobalDefinitions.invasionAreas[attacker.GetComponent<UnitDatabaseFields>().invasionAreaIndex].armorUnitsUsedThisTurn + " infantry units used this turn = " + GlobalDefinitions.invasionAreas[attacker.GetComponent<UnitDatabaseFields>().invasionAreaIndex].infantryUnitsUsedThisTurn);
 #endif
                         }
                         else
-                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(attacker.GetComponent<UnitDatabaseFields>().beginningTurnHex, attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker);
+                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(attacker.GetComponent<UnitDatabaseFields>().beginningTurnHex, attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker);
 
                         if (attacker.GetComponent<UnitDatabaseFields>().inSupply)
                             attacker.GetComponent<UnitDatabaseFields>().remainingMovement = attacker.GetComponent<UnitDatabaseFields>().movementFactor;
@@ -1949,7 +1949,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="attackHex"></param>
     /// <returns></returns>
-    private static GameObject returnReinforcementUnitForAttackHex(GameObject attackHex)
+    private static GameObject ReturnReinforcementUnitForAttackHex(GameObject attackHex)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("returnReinforcementUnit: executing for attack hex = " + attackHex.name);
@@ -1958,7 +1958,7 @@ public class AIRoutines : MonoBehaviour
             GlobalDefinitions.writeToLogFile("returnReinforcementUnit:              " + hex.name);
 #endif
         // Get the list of hexes that are up to four hexes away, this will be within distance of a unit to land and move to the hex
-        List<GameObject> hexList = returnHexesWithinDistance(attackHex, (GlobalDefinitions.attackRange - 1));
+        List<GameObject> hexList = ReturnHexesWithinDistance(attackHex, (GlobalDefinitions.attackRange - 1));
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("returnReinforcementUnit:  found " + hexList.Count + " hexes to check for ports");
 #endif
@@ -1974,10 +1974,10 @@ public class AIRoutines : MonoBehaviour
                 // hex contains a reinforcement port within range
 
                 // Check if an armor unit can be landed
-                GameObject reinforcementUnit = returnAvailableArmorUnit();
+                GameObject reinforcementUnit = ReturnAvailableArmorUnit();
 
                 if ((reinforcementUnit != null) &&
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnReinforcementLandingHexes(reinforcementUnit).Contains(hex))
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnReinforcementLandingHexes(reinforcementUnit).Contains(hex))
                     reinforcementAvailable = true;
                 else
                     reinforcementAvailable = false;
@@ -1985,9 +1985,9 @@ public class AIRoutines : MonoBehaviour
                 // If an armor unit isn't available check for an infantry unit
                 if (!reinforcementAvailable)
                 {
-                    reinforcementUnit = returnAvailableInfantryUnit();
+                    reinforcementUnit = ReturnAvailableInfantryUnit();
                     if ((reinforcementUnit != null) &&
-                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnReinforcementLandingHexes(reinforcementUnit).Contains(hex))
+                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnReinforcementLandingHexes(reinforcementUnit).Contains(hex))
                         reinforcementAvailable = true;
                     else
                         reinforcementAvailable = false;
@@ -2001,8 +2001,8 @@ public class AIRoutines : MonoBehaviour
                     // Check if the unit can be landed at the port
 
                     hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(reinforcementUnit, hex, false);
-                    reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(hex, reinforcementUnit);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(reinforcementUnit, hex, false);
+                    reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(hex, reinforcementUnit);
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("returnReinforcementUnit: available movement hexes:");
                     foreach (GameObject tempHex in reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
@@ -2012,7 +2012,7 @@ public class AIRoutines : MonoBehaviour
                     if (reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Contains(attackHex))
                     {
                         // The unit can move to the attack hex so move it
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(attackHex, hex, reinforcementUnit);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(attackHex, hex, reinforcementUnit);
 #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("returnReinforcementUnit: unit " + reinforcementUnit.name + " is available returning the unit");
 #endif
@@ -2027,8 +2027,8 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("returnReinforcementUnit: invasion area index = " + hex.GetComponent<HexDatabaseFields>().invasionAreaIndex + " invasion turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].turn + " armor units used this turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].armorUnitsUsedThisTurn + " infantry units used this turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].infantryUnitsUsedThisTurn);
 #endif
-                        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().decrementInvasionUnitLimits(reinforcementUnit);
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(hex, reinforcementUnit, false);
+                        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().DecrementInvasionUnitLimits(reinforcementUnit);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(hex, reinforcementUnit, false);
 #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("returnReinforcementUnit: invasion area index = " + hex.GetComponent<HexDatabaseFields>().invasionAreaIndex + " invasion turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].turn + " armor units used this turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].armorUnitsUsedThisTurn + " infantry units used this turn = " + GlobalDefinitions.invasionAreas[hex.GetComponent<HexDatabaseFields>().invasionAreaIndex].infantryUnitsUsedThisTurn);
 #endif
@@ -2043,7 +2043,7 @@ public class AIRoutines : MonoBehaviour
     /// Loads hexes and units for the potential attacks related to the attack on the passed hex
     /// </summary>
     /// <param name="defendingHex"></param>
-    private static void loadHexesAndUnitsForPotentialAttack(GameObject defendingHex, AIDefendHex aiDefendHex, GlobalDefinitions.Nationality attackingNationality)
+    private static void LoadHexesAndUnitsForPotentialAttack(GameObject defendingHex, AIDefendHex aiDefendHex, GlobalDefinitions.Nationality attackingNationality)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("loadHexesAndUnitsForPotentialAttack:        executing with parameters defending hex = " + defendingHex.name);
@@ -2052,11 +2052,11 @@ public class AIRoutines : MonoBehaviour
         List<GameObject> attackHexes = new List<GameObject>();
 
         aiDefendHex.defendingHex = defendingHex;
-        attackHexes = determineAttackHexesForTargetDefendingHex(defendingHex, attackingNationality);
-        aiDefendHex.singleAttackHexes = returnSingleAttackHexes(defendingHex, attackHexes, attackingNationality);
-        aiDefendHex.multipleAttackHexes = returnMultipleAttackHexes(defendingHex, attackHexes, attackingNationality);
-        loadPotentialAttackingUnits(defendingHex, attackingNationality, aiDefendHex.singleAttackHexes);
-        loadPotentialAttackingUnits(defendingHex, attackingNationality, aiDefendHex.multipleAttackHexes);
+        attackHexes = DetermineAttackHexesForTargetDefendingHex(defendingHex, attackingNationality);
+        aiDefendHex.singleAttackHexes = ReturnSingleAttackHexes(defendingHex, attackHexes, attackingNationality);
+        aiDefendHex.multipleAttackHexes = ReturnMultipleAttackHexes(defendingHex, attackHexes, attackingNationality);
+        LoadPotentialAttackingUnits(defendingHex, attackingNationality, aiDefendHex.singleAttackHexes);
+        LoadPotentialAttackingUnits(defendingHex, attackingNationality, aiDefendHex.multipleAttackHexes);
     }
 
     /// <summary>
@@ -2065,7 +2065,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="attackingNationality"></param>
     /// <returns></returns>
-    private static List<GameObject> determineAttackHexesForTargetDefendingHex(GameObject hex, GlobalDefinitions.Nationality attackingNationality)
+    private static List<GameObject> DetermineAttackHexesForTargetDefendingHex(GameObject hex, GlobalDefinitions.Nationality attackingNationality)
     {
         List<GameObject> openAttackHexes = new List<GameObject>();
 
@@ -2083,7 +2083,7 @@ public class AIRoutines : MonoBehaviour
                     (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                     !hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().bridge &&
                     (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == attackingNationality) &&
-                    !GlobalDefinitions.stackingLimitExceeded(hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide],
+                    !GlobalDefinitions.StackingLimitExceeded(hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide],
                     hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality))
                 // Hex has units but they are attacking units so add the hex
                 openAttackHexes.Add(hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]);
@@ -2094,16 +2094,15 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Loads the list of units that can attack the defending unit from the passed list of attack hexes
     /// </summary>
-    /// <param name="attackingHexes"></param>
     /// <param name="defendingHex"></param>
     /// <param name="attackingNationality"></param>
-    /// <returns></returns>
-    private static void loadPotentialAttackingUnits(GameObject defendingHex, GlobalDefinitions.Nationality attackingNationality, List<AISingleAttackHex> attackingHexes)
+    /// <param name="attackingHexes"></param>
+    private static void LoadPotentialAttackingUnits(GameObject defendingHex, GlobalDefinitions.Nationality attackingNationality, List<AISingleAttackHex> attackingHexes)
     {
         // Get all the units within five hexes and then check this list since the max any unit can move and still attack is four hexes
         List<GameObject> potentialAttackUnits = new List<GameObject>();
 
-        potentialAttackUnits = findNearbyEnemyUnits(defendingHex, defendingHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality, GlobalDefinitions.attackRange);
+        potentialAttackUnits = FindNearbyEnemyUnits(defendingHex, defendingHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality, GlobalDefinitions.attackRange);
 
         // Go through all of the potential attackers and see if the attacking hexes are contained in their available movement
         // If so then they are a potential attack unit
@@ -2115,7 +2114,7 @@ public class AIRoutines : MonoBehaviour
             if (!tempUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack && !tempUnit.GetComponent<UnitDatabaseFields>().hasMoved &&
                     !tempUnit.GetComponent<UnitDatabaseFields>().HQ)
             {
-                tempUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(tempUnit.GetComponent<UnitDatabaseFields>().occupiedHex, tempUnit);
+                tempUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(tempUnit.GetComponent<UnitDatabaseFields>().occupiedHex, tempUnit);
                 foreach (AISingleAttackHex tempHex in attackingHexes)
                     if (tempUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Contains(tempHex.attackHex))
                     {
@@ -2141,7 +2140,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="defendingHex"></param>
     /// <param name="attackingNationality"></param>
     /// <param name="attackingHexes"></param>
-    private static void loadPotentialAttackingUnits(GameObject defendingHex, GlobalDefinitions.Nationality attackingNationality, List<AIMultipleAttackHex> attackingHexes)
+    private static void LoadPotentialAttackingUnits(GameObject defendingHex, GlobalDefinitions.Nationality attackingNationality, List<AIMultipleAttackHex> attackingHexes)
     {
         // I am not going to go through all of the attacking units.  I think it would be quicker to get all the units within
         // five hexes and then check this list since the max any unit can move and still attack is four hexes
@@ -2149,7 +2148,7 @@ public class AIRoutines : MonoBehaviour
 
         // Go through all of the potential attackers and see if the attacking hexes are contained in their available movement
         // If so then they are a potential attack unit
-        potentialAttackUnits = findNearbyEnemyUnits(defendingHex, defendingHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality, GlobalDefinitions.attackRange);
+        potentialAttackUnits = FindNearbyEnemyUnits(defendingHex, defendingHex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality, GlobalDefinitions.attackRange);
         foreach (GameObject tempUnit in potentialAttackUnits)
         {
 #if OUTPUTDEBUG
@@ -2158,7 +2157,7 @@ public class AIRoutines : MonoBehaviour
             if (!tempUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack && !tempUnit.GetComponent<UnitDatabaseFields>().hasMoved &&
             !tempUnit.GetComponent<UnitDatabaseFields>().HQ)
             {
-                tempUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(tempUnit.GetComponent<UnitDatabaseFields>().occupiedHex, tempUnit);
+                tempUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(tempUnit.GetComponent<UnitDatabaseFields>().occupiedHex, tempUnit);
                 foreach (AIMultipleAttackHex tempHex in attackingHexes)
                     if (tempUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Contains(tempHex.attackHex))
                     {
@@ -2178,7 +2177,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="attackHexes"></param>
     /// <param name="attackingNationality"></param>
     /// <returns></returns>
-    private static List<AISingleAttackHex> returnSingleAttackHexes(GameObject defendingHex, List<GameObject> attackHexes, GlobalDefinitions.Nationality attackingNationality)
+    private static List<AISingleAttackHex> ReturnSingleAttackHexes(GameObject defendingHex, List<GameObject> attackHexes, GlobalDefinitions.Nationality attackingNationality)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("returnSingleAttackHexes: executing for defending hex " + defendingHex.name);
@@ -2196,16 +2195,16 @@ public class AIRoutines : MonoBehaviour
             foreach (GameObject unit in attackHex.GetComponent<HexDatabaseFields>().unitsExertingZOC)
             {
                 if ((unit.GetComponent<UnitDatabaseFields>().occupiedHex != defendingHex)
-                        && (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.returnOppositeNationality(attackingNationality)))
+                        && (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.ReturnOppositeNationality(attackingNationality)))
                     hexIncludesAdditionalDefenders = true;
             }
 
             // Need to check if there is a river
-            if (!hexIncludesAdditionalDefenders && GlobalDefinitions.checkForRiverBetweenTwoHexes(attackHex, defendingHex))
+            if (!hexIncludesAdditionalDefenders && GlobalDefinitions.CheckForRiverBetweenTwoHexes(attackHex, defendingHex))
             {
                 // Since this would be a cross river attack check to see if it would add additional defenders
                 // We need to go through all the additional potential defenders and make sure they are not all already being attacked
-                foreach (GameObject hex in returnAdditionalDefendersForCrossRiverAttack(attackHex, defendingHex, attackingNationality))
+                foreach (GameObject hex in ReturnAdditionalDefendersForCrossRiverAttack(attackHex, defendingHex, attackingNationality))
                 {
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("returnSingleAttackHexes:          checking single hex attack for river adjacent hex " + hex.name);
@@ -2231,7 +2230,7 @@ public class AIRoutines : MonoBehaviour
         // they are tested in order so we want to make sure that the hexes that do not attack across a river are done first.
         List<GameObject> sortedSingleAttackHexes = new List<GameObject>();
         foreach (GameObject hex in singleAttackHexes)
-            if (!GlobalDefinitions.checkForRiverBetweenTwoHexes(hex, defendingHex))
+            if (!GlobalDefinitions.CheckForRiverBetweenTwoHexes(hex, defendingHex))
                 sortedSingleAttackHexes.Add(hex);
         foreach (GameObject hex in singleAttackHexes)
             if (!sortedSingleAttackHexes.Contains(hex))
@@ -2253,8 +2252,9 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="defendingHex"></param>
     /// <param name="attackHexes"></param>
+    /// <param name="attackingNationality"></param>
     /// <returns></returns>
-    private static List<AIMultipleAttackHex> returnMultipleAttackHexes(GameObject defendingHex, List<GameObject> attackHexes, GlobalDefinitions.Nationality attackingNationality)
+    private static List<AIMultipleAttackHex> ReturnMultipleAttackHexes(GameObject defendingHex, List<GameObject> attackHexes, GlobalDefinitions.Nationality attackingNationality)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("returnMultipleAttackHexes:    defending hex = " + defendingHex.name);
@@ -2276,7 +2276,7 @@ public class AIRoutines : MonoBehaviour
                 // I was originally including a check if the attack hex was already in multipleAttackHexes I would skip the following code.  This caused a hex that brought in two 
                 // additional defending hexes from loading both.  Only one would be loaded.
                 if ((unit.GetComponent<UnitDatabaseFields>().occupiedHex != defendingHex) &&
-                        (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.returnOppositeNationality(attackingNationality)) &&
+                        (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.ReturnOppositeNationality(attackingNationality)) &&
                         !unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
                 {
 #if OUTPUTDEBUG
@@ -2294,9 +2294,9 @@ public class AIRoutines : MonoBehaviour
             }
 
             // Need to check if there is a river
-            if (GlobalDefinitions.checkForRiverBetweenTwoHexes(attackHex, defendingHex))
+            if (GlobalDefinitions.CheckForRiverBetweenTwoHexes(attackHex, defendingHex))
                 // Since this would be a cross river attack check to see if it would add additional defenders
-                foreach (GameObject newHex in returnAdditionalDefendersForCrossRiverAttack(attackHex, defendingHex, attackingNationality))
+                foreach (GameObject newHex in ReturnAdditionalDefendersForCrossRiverAttack(attackHex, defendingHex, attackingNationality))
                     foreach (GameObject unit in newHex.GetComponent<HexDatabaseFields>().occupyingUnit)
                         if (!unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
                         {
@@ -2322,14 +2322,14 @@ public class AIRoutines : MonoBehaviour
             index1Total = 0;
             foreach (GameObject hex in returnList[index1].additionalDefendingHexes)
                 foreach (GameObject unit in hex.GetComponent<HexDatabaseFields>().occupyingUnit)
-                    index1Total += returnBaseDefenseFactor(unit);
+                    index1Total += ReturnBaseDefenseFactor(unit);
 
             for (int index2 = 0; index2 < returnList.Count; index2++)
             {
                 index2Total = 0;
                 foreach (GameObject hex in returnList[index2].additionalDefendingHexes)
                     foreach (GameObject unit in hex.GetComponent<HexDatabaseFields>().occupyingUnit)
-                        index2Total += returnBaseDefenseFactor(unit);
+                        index2Total += ReturnBaseDefenseFactor(unit);
 
 
                 if (index2Total < index1Total)
@@ -2354,7 +2354,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private static int returnBaseDefenseFactor(GameObject unit)
+    private static int ReturnBaseDefenseFactor(GameObject unit)
     {
         if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().city)
             return (unit.GetComponent<UnitDatabaseFields>().defenseFactor * GlobalDefinitions.defenseFactorScalingForCity);
@@ -2369,7 +2369,7 @@ public class AIRoutines : MonoBehaviour
     }
 
     // This routine returns the hex modifier based on the distance to an enemy
-    public static int returnDistanceToEnemyHexValueModifier(int distanceToEnemy)
+    public static int ReturnDistanceToEnemyHexValueModifier(int distanceToEnemy)
     {
         // The only reason this routine should be called with a 1 distance is if the enemy is in a fortress 
         // or across a river so that it doesn't exert ZOX to the hex
@@ -2383,7 +2383,11 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Returns the additional hexes that would need to be attacked due to being in the ZOC of a defender being attacked cross river
     /// </summary>
-    private static List<GameObject> returnAdditionalDefendersForCrossRiverAttack(GameObject attackHex, GameObject defendHex, GlobalDefinitions.Nationality attackingNationality)
+    /// <param name="attackHex"></param>
+    /// <param name="defendHex"></param>
+    /// <param name="attackingNationality"></param>
+    /// <returns></returns>
+    private static List<GameObject> ReturnAdditionalDefendersForCrossRiverAttack(GameObject attackHex, GameObject defendHex, GlobalDefinitions.Nationality attackingNationality)
     {
         // The assumption here is that the calling code already checked for a river between the hexes passed
         List<GameObject> returnList = new List<GameObject>();
@@ -2409,13 +2413,13 @@ public class AIRoutines : MonoBehaviour
                     // Check if there are defending units on the neighbor
                     if (defendHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
                     {
-                        if (defendHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.returnOppositeNationality(attackingNationality))
+                        if (defendHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.ReturnOppositeNationality(attackingNationality))
                         {
 #if OUTPUTDEBUG
                             GlobalDefinitions.writeToLogFile("returnAdditionalDefendersForCrossRiverAttack:         neighbor has defenders");
 #endif
                             // And finally check if there is a river between the attack hex and the neighbor hex
-                            if (GlobalDefinitions.checkForRiverBetweenTwoHexes(attackHex, defendHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]))
+                            if (GlobalDefinitions.CheckForRiverBetweenTwoHexes(attackHex, defendHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]))
                             {
 #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("returnAdditionalDefendersForCrossRiverAttack:         river between neighbor and attack hex");
@@ -2443,7 +2447,7 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Selects the allied replacement units and places them in Britain
     /// </summary>
-    public static void selectAlliedAIReplacementUnits()
+    public static void SelectAlliedAIReplacementUnits()
     {
         GameObject replacementUnit = new GameObject("selectAlliedAIReplacementUnits");
         List<GameObject> armorReplacements = new List<GameObject>();
@@ -2488,7 +2492,7 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Places German replacement units on the board
     /// </summary>
-    public static void germanAIReplacementUnits()
+    public static void GermanAIReplacementUnits()
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("germanAIReplacementUnits: starting German Replacement Remaining = " + GlobalDefinitions.germanReplacementsRemaining);
@@ -2506,7 +2510,7 @@ public class AIRoutines : MonoBehaviour
             return;
 
         // The target location will be used when determining which replacement hex to use
-        targetLocation = getAverageEnemyLocation(GlobalDefinitions.Nationality.Allied);
+        targetLocation = GetAverageEnemyLocation(GlobalDefinitions.Nationality.Allied);
 
         // Get a list of the replacement hexes that aren't fully stacked, not in Allied ZOC (I don't want to have to figure an attack out here) and it isn't in Allied control
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
@@ -2542,7 +2546,7 @@ public class AIRoutines : MonoBehaviour
         // Now sort the replacement hexes from nearest to furthest from the furthest west unit
         for (int index1 = 0; index1 < replacementHexes.Count; index1++)
             for (int index2 = (index1 + 1); index2 < replacementHexes.Count; index2++)
-                if (calculateDistance(replacementHexes[index1], furthestWestHex) > calculateDistance(replacementHexes[index2], furthestWestHex))
+                if (CalculateDistance(replacementHexes[index1], furthestWestHex) > CalculateDistance(replacementHexes[index2], furthestWestHex))
                 {
                     // Swap the two hexes
                     tempHex = replacementHexes[index1];
@@ -2595,11 +2599,11 @@ public class AIRoutines : MonoBehaviour
                         infantryReplacements[index1] = infantryReplacements[index2];
                         infantryReplacements[index2] = tempUnit;
                     }
-        tempUnit = returnReplacementUnit(armorReplacements, airborneReplacements, infantryReplacements);
+        tempUnit = ReturnReplacementUnit(armorReplacements, airborneReplacements, infantryReplacements);
 
         while (tempUnit != null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("German replacement " + tempUnit.GetComponent<UnitDatabaseFields>().unitDesignation + " being placed on board");
+            GlobalDefinitions.GuiUpdateStatusMessage("German replacement " + tempUnit.GetComponent<UnitDatabaseFields>().unitDesignation + " being placed on board");
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("      replacement being moved to hex " + replacementHexes[0].name + "available for movement flag = " + replacementHexes[0].GetComponent<HexDatabaseFields>().availableForMovement);
 #endif
@@ -2611,17 +2615,17 @@ public class AIRoutines : MonoBehaviour
             GlobalDefinitions.germanUnitsOnBoard.Add(tempUnit);
 
             // Change the unit's location to the target hex
-            GlobalDefinitions.putUnitOnHex(tempUnit, replacementHexes[0]);
+            GlobalDefinitions.PutUnitOnHex(tempUnit, replacementHexes[0]);
 
             tempUnit.GetComponent<UnitDatabaseFields>().hasMoved = false;
             tempUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex = replacementHexes[0];
-            if (!GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().checkForAdjacentEnemy(replacementHexes[0], tempUnit) &&
+            if (!GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().CheckForAdjacentEnemy(replacementHexes[0], tempUnit) &&
                     (tempUnit.GetComponent<UnitDatabaseFields>().armor || tempUnit.GetComponent<UnitDatabaseFields>().airborne))
                 tempUnit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = true;
 
             // If this is the only unit in the target hex then update ZOC's
             if (replacementHexes[0].GetComponent<HexDatabaseFields>().occupyingUnit.Count < 2)
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().updateZOC(replacementHexes[0]);
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().UpdateZOC(replacementHexes[0]);
 
             GlobalDefinitions.germanReplacementsRemaining -= tempUnit.GetComponent<UnitDatabaseFields>().attackFactor;
 
@@ -2645,7 +2649,7 @@ public class AIRoutines : MonoBehaviour
             else
                 infantryReplacements.Remove(tempUnit);
 
-            tempUnit = returnReplacementUnit(armorReplacements, airborneReplacements, infantryReplacements);
+            tempUnit = ReturnReplacementUnit(armorReplacements, airborneReplacements, infantryReplacements);
         }
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("germanAIReplacementUnits: exiting German Replacement Remaining = " + GlobalDefinitions.germanReplacementsRemaining);
@@ -2659,7 +2663,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="airborneList"></param>
     /// <param name="infantryList"></param>
     /// <returns></returns>
-    private static GameObject returnReplacementUnit(List<GameObject> armorList, List<GameObject> airborneList, List<GameObject> infantryList)
+    private static GameObject ReturnReplacementUnit(List<GameObject> armorList, List<GameObject> airborneList, List<GameObject> infantryList)
     {
         // First check if there is an armor unit that there is enough factors for
         foreach (GameObject unit in armorList)
@@ -2687,7 +2691,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex1"></param>
     /// <param name="target"></param>
     /// <returns></returns>
-    private static float calculateDistance(GameObject hex1, Vector2 target)
+    private static float CalculateDistance(GameObject hex1, Vector2 target)
     {
         return ((float)Math.Sqrt(Math.Pow(Math.Abs(target.x - hex1.GetComponent<HexDatabaseFields>().xMapCoor), 2) + Math.Pow(Math.Abs(target.y - hex1.GetComponent<HexDatabaseFields>().yMapCoor), 2)));
     }
@@ -2698,7 +2702,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="hex"></param>
     /// <param name="targetLocation"></param>
     /// <returns></returns>
-    private static float calculateDistance(GameObject hex1, GameObject hex2)
+    private static float CalculateDistance(GameObject hex1, GameObject hex2)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("calcualteDistanec: hex = " + hex1.name + " coord = " + hex1.GetComponent<HexDatabaseFields>().xMapCoor + " , " + hex1.GetComponent<HexDatabaseFields>().yMapCoor);
@@ -2711,7 +2715,7 @@ public class AIRoutines : MonoBehaviour
     /// Sort the invasion hexes from best to worst
     /// </summary>
     /// <param name="invasionArea"></param>
-    private static void sortInvasionHexes(InvasionArea invasionArea)
+    private static void SortInvasionHexes(InvasionArea invasionArea)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("sortInvasionHexes: starting order of invasion hexes");
@@ -2737,9 +2741,9 @@ public class AIRoutines : MonoBehaviour
                 // The best hexes are determined by dividing the supply capacity of the hex by the defense factors
 
                 foreach (GameObject unit in invasionArea.invasionHexes[index1].GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().occupyingUnit)
-                    defense1 += returnBaseDefenseFactor(unit);
+                    defense1 += ReturnBaseDefenseFactor(unit);
                 foreach (GameObject unit in invasionArea.invasionHexes[index2].GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().occupyingUnit)
-                    defense2 += returnBaseDefenseFactor(unit);
+                    defense2 += ReturnBaseDefenseFactor(unit);
                 float score1 = (float)invasionArea.invasionHexes[index1].GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity / defense1;
                 float score2 = (float)invasionArea.invasionHexes[index2].GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity / defense2;
                 if (score1 < score2)
@@ -2757,7 +2761,7 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Determines what beach to invade and assigns attacks
     /// </summary>
-    public static void determineInvasionSite()
+    public static void DetermineInvasionSite()
     {
         List<GameObject> invadingUnits = new List<GameObject>();
         int maxInvasionAreaScore = 0;
@@ -2769,14 +2773,14 @@ public class AIRoutines : MonoBehaviour
         List<GameObject> tempListOfNewAttackHexesAdded = new List<GameObject>();
         bool oddsMet = false;
 
-        GlobalDefinitions.writeToLogFile("determineInvasionSite: executing");
+        GlobalDefinitions.WriteToLogFile("determineInvasionSite: executing");
         GlobalDefinitions.invasionsTookPlaceThisTurn = true;
         foreach (InvasionArea invasionArea in GlobalDefinitions.invasionAreas)
         {
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("determineInvasionSite: evaluating invasion area " + invasionArea.name);
 #endif
-            sortInvasionHexes(invasionArea);
+            SortInvasionHexes(invasionArea);
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("determineInvasionSite: sorted list of invasion hexes");
             foreach (GameObject hex in invasionArea.invasionHexes)
@@ -2784,7 +2788,7 @@ public class AIRoutines : MonoBehaviour
 #endif
             // Reset the list of invading units and then reload
             invadingUnits.Clear();
-            loadInvadingUnits(invadingUnits, invasionArea.invasionHexes[0].GetComponent<HexDatabaseFields>().invasionAreaIndex);
+            LoadInvadingUnits(invadingUnits, invasionArea.invasionHexes[0].GetComponent<HexDatabaseFields>().invasionAreaIndex);
 
             // The invasion score will be the accumulated score for each invasion hex in an area
             int invasionAreaScore = 0;
@@ -2817,7 +2821,7 @@ public class AIRoutines : MonoBehaviour
                         listOfHexesToBeAttacked.Add(invasionHex.GetComponent<HexDatabaseFields>().invasionTarget);
                         while (listOfHexesToBeAttacked.Count > 0)
                         {
-                            odds = invasionOdds(invasionHex, invadingUnits, tempListPotentialAttacks, listOfHexesToBeAttacked, tempListOfNewAttackHexesAdded, ref oddsMet);
+                            odds = InvasionOdds(invasionHex, invadingUnits, tempListPotentialAttacks, listOfHexesToBeAttacked, tempListOfNewAttackHexesAdded, ref oddsMet);
 
                             // If the odds returned is 0 that means that a valid battle can't be made so cancel the attacks loaded
                             if (odds == 0)
@@ -2825,7 +2829,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("determineInvasionSite: odds returned is 0 so canceling attacks attackNumber = " + tempListPotentialAttacks.Count);
 #endif
-                                removePotentialInvasions(tempListPotentialAttacks);
+                                RemovePotentialInvasions(tempListPotentialAttacks);
                                 tempListPotentialAttacks.Clear();
                                 foreach (GameObject hex in tempListOfNewAttackHexesAdded)
                                     if (listOfHexesToBeAttacked.Contains(hex))
@@ -2894,7 +2898,7 @@ public class AIRoutines : MonoBehaviour
             }
 
             // Clear out the list of attacks before moving to the next area
-            removePotentialInvasions(listPotentialAttacks);
+            RemovePotentialInvasions(listPotentialAttacks);
 
             // Remove all the hexes that were added for this hex
 #if OUTPUTDEBUG
@@ -2927,17 +2931,17 @@ public class AIRoutines : MonoBehaviour
         else
             invasionAreaIndex = GlobalDefinitions.secondInvasionAreaIndex;
         //invasionAreaIndex = 6; // TESTING
-        GlobalDefinitions.writeToLogFile("determineInvasionSite: top scoring invasion site is " + GlobalDefinitions.invasionAreas[invasionAreaIndex].name);
+        GlobalDefinitions.WriteToLogFile("determineInvasionSite: top scoring invasion site is " + GlobalDefinitions.invasionAreas[invasionAreaIndex].name);
         // Set the global variables for the invasion site
-        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().setInvasionArea(invasionAreaIndex);
+        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().SetInvasionArea(invasionAreaIndex);
 
-        sortInvasionHexes(GlobalDefinitions.invasionAreas[invasionAreaIndex]);
+        SortInvasionHexes(GlobalDefinitions.invasionAreas[invasionAreaIndex]);
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("determineInvasionSite: sorted list of invasion hexes");
         foreach (GameObject hex in GlobalDefinitions.invasionAreas[invasionAreaIndex].invasionHexes)
             GlobalDefinitions.writeToLogFile("determineInvasionSite:    " + hex.GetComponent<HexDatabaseFields>().invasionTarget.name);
 #endif
-        loadInvadingUnits(invadingUnits, invasionAreaIndex);
+        LoadInvadingUnits(invadingUnits, invasionAreaIndex);
 
         foreach (GameObject invasionHex in GlobalDefinitions.invasionAreas[invasionAreaIndex].invasionHexes)
         {
@@ -3009,7 +3013,7 @@ public class AIRoutines : MonoBehaviour
         //GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().moveUnopposedSeaUnits();
 
         // For some reason the units on board list is being double loaded, I'm being lazy and I'll just reinitialize it here
-        GlobalDefinitions.alliedUnitsOnBoard = GlobalDefinitions.returnNationUnitsOnBoard(GlobalDefinitions.Nationality.Allied);
+        GlobalDefinitions.alliedUnitsOnBoard = GlobalDefinitions.ReturnNationUnitsOnBoard(GlobalDefinitions.Nationality.Allied);
     }
 
     /// <summary>
@@ -3017,7 +3021,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="invadingUnits"></param>
     /// <param name="invasionAreaIndex"></param>
-    private static void loadInvadingUnits(List<GameObject> invadingUnits, int invasionAreaIndex)
+    private static void LoadInvadingUnits(List<GameObject> invadingUnits, int invasionAreaIndex)
     {
         bool allUnitsLoaded;
         GameObject tempUnit;
@@ -3029,7 +3033,7 @@ public class AIRoutines : MonoBehaviour
         // Load up the invading list with units available for this invasion site
         for (int index = 0; !allUnitsLoaded && (index < GlobalDefinitions.invasionAreas[invasionAreaIndex].firstTurnArmor); index++)
         {
-            tempUnit = returnArmorFromBritain(invadingUnits);
+            tempUnit = ReturnArmorFromBritain(invadingUnits);
             if ((tempUnit != null) && (!invadingUnits.Contains(tempUnit)))
             {
                 invadingUnits.Add(tempUnit);
@@ -3045,7 +3049,7 @@ public class AIRoutines : MonoBehaviour
         allUnitsLoaded = false;
         for (int index = 0; !allUnitsLoaded && (index < infantryLimit); index++)
         {
-            tempUnit = returnInfantryFromBritain(invadingUnits);
+            tempUnit = ReturnInfantryFromBritain(invadingUnits);
             if ((tempUnit != null) && (!invadingUnits.Contains(tempUnit)))
                 invadingUnits.Add(tempUnit);
             else if (tempUnit == null)
@@ -3055,7 +3059,7 @@ public class AIRoutines : MonoBehaviour
         allUnitsLoaded = false;
         for (int index = 0; !allUnitsLoaded && (index < GlobalDefinitions.invasionAreas[invasionAreaIndex].firstTurnAirborne); index++)
         {
-            tempUnit = returnAirborneFromBritain(invadingUnits);
+            tempUnit = ReturnAirborneFromBritain(invadingUnits);
             if ((tempUnit != null) && (!invadingUnits.Contains(tempUnit)))
                 invadingUnits.Add(tempUnit);
             else if (tempUnit == null)
@@ -3069,7 +3073,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="invadingUnits"></param>
     /// <returns></returns>
-    private static GameObject returnArmorFromBritain(List<GameObject> invadingUnits)
+    private static GameObject ReturnArmorFromBritain(List<GameObject> invadingUnits)
     {
         foreach (Transform unit in GameObject.Find("Units In Britain").transform)
             if (unit.GetComponent<UnitDatabaseFields>().armor && !invadingUnits.Contains(unit.gameObject) && (unit.GetComponent<UnitDatabaseFields>().turnAvailable <= GlobalDefinitions.turnNumber))
@@ -3083,7 +3087,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="invadingUnits"></param>
     /// <returns></returns>
-    private static GameObject returnInfantryFromBritain(List<GameObject> invadingUnits)
+    private static GameObject ReturnInfantryFromBritain(List<GameObject> invadingUnits)
     {
         foreach (Transform unit in GameObject.Find("Units In Britain").transform)
             if (unit.GetComponent<UnitDatabaseFields>().infantry && !invadingUnits.Contains(unit.gameObject) && (unit.GetComponent<UnitDatabaseFields>().turnAvailable <= GlobalDefinitions.turnNumber))
@@ -3096,7 +3100,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="invadingUnits"></param>
     /// <returns></returns>
-    private static GameObject returnAirborneFromBritain(List<GameObject> invadingUnits)
+    private static GameObject ReturnAirborneFromBritain(List<GameObject> invadingUnits)
     {
         foreach (Transform unit in GameObject.Find("Units In Britain").transform)
             if (unit.GetComponent<UnitDatabaseFields>().airborne && !invadingUnits.Contains(unit.gameObject) && (unit.GetComponent<UnitDatabaseFields>().turnAvailable <= GlobalDefinitions.turnNumber))
@@ -3107,8 +3111,12 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Assigns the units to invade the passed hex
     /// </summary>
-    /// <param name="defendingHex"></param>
-    /// <param name="attackingNationality"></param>
+    /// <param name="invadingHex"></param>
+    /// <param name="potentialInvadingUnitsList"></param>
+    /// <param name="listPotentialAttacks"></param>
+    /// <param name="listOfHexesToBeAttacked"></param>
+    /// <param name="listOfNewAttackHexesAdded"></param>
+    /// <param name="oddsMet"></param>
     private static void AIInvasion(GameObject invadingHex, List<GameObject> potentialInvadingUnitsList, List<AIPotentialAttack> listPotentialAttacks,
             List<GameObject> listOfHexesToBeAttacked, List<GameObject> listOfNewAttackHexesAdded, ref bool oddsMet)
     {
@@ -3131,12 +3139,12 @@ public class AIRoutines : MonoBehaviour
             listOfHexesToBeAttacked.Add(invadingHex.GetComponent<HexDatabaseFields>().invasionTarget);
             while (listOfHexesToBeAttacked.Count > 0)
             {
-                if (invasionOdds(invadingHex, potentialInvadingUnitsList, listPotentialAttacks, listOfHexesToBeAttacked, listOfNewAttackHexesAdded, ref oddsMet) == 0)
+                if (InvasionOdds(invadingHex, potentialInvadingUnitsList, listPotentialAttacks, listOfHexesToBeAttacked, listOfNewAttackHexesAdded, ref oddsMet) == 0)
                 {
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("AIInvasion: odds returned is 0 so canceling attacks attackNumber = " + listPotentialAttacks.Count);
 #endif
-                    removePotentialInvasions(listPotentialAttacks);
+                    RemovePotentialInvasions(listPotentialAttacks);
                     listPotentialAttacks.Clear();
                     foreach (GameObject hex in listOfNewAttackHexesAdded)
                         if (listOfHexesToBeAttacked.Contains(hex))
@@ -3207,7 +3215,7 @@ public class AIRoutines : MonoBehaviour
                         }
 
                         newAttack.defendingHexes[0].defendingHex.GetComponent<HexDatabaseFields>().availableForMovement = true;
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(unit, newAttack.defendingHexes[0].defendingHex, false);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(unit, newAttack.defendingHexes[0].defendingHex, false);
                     }
                 }
             }
@@ -3218,9 +3226,7 @@ public class AIRoutines : MonoBehaviour
     /// Removes the loaded attacks that are passed.  It moves the units back to Britain and resets any status indicators.
     /// </summary>
     /// <param name="listPotentialAttacks"></param>
-    /// <param name="listOfNewAttackHexesAdded"></param>
-    /// <param name="listOfHexesToBeAttacked"></param>
-    private static void removePotentialInvasions(List<AIPotentialAttack> listPotentialAttacks)
+    private static void RemovePotentialInvasions(List<AIPotentialAttack> listPotentialAttacks)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("removePotentialAttacks: canceling attacks number of attacks = " + listPotentialAttacks.Count);
@@ -3234,7 +3240,7 @@ public class AIRoutines : MonoBehaviour
             foreach (GameObject attacker in attack.attackingUnits)
             {
                 //GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().decrementInvasionUnitLimits(attacker);
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
                 if (attacker.GetComponent<UnitDatabaseFields>().inSupply)
                     attacker.GetComponent<UnitDatabaseFields>().remainingMovement = attacker.GetComponent<UnitDatabaseFields>().movementFactor;
                 else
@@ -3269,7 +3275,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="listOfNewAttackHexesAdded"></param>
     /// <param name="oddsMet"></param>
     /// <returns></returns>
-    private static int invasionOdds(GameObject invadingHex, List<GameObject> potentialInvadingUnitsList, List<AIPotentialAttack> listPotentialAttacks, List<GameObject> listOfHexesToBeAttacked,
+    private static int InvasionOdds(GameObject invadingHex, List<GameObject> potentialInvadingUnitsList, List<AIPotentialAttack> listPotentialAttacks, List<GameObject> listOfHexesToBeAttacked,
             List<GameObject> listOfNewAttackHexesAdded, ref bool oddsMet)
     {
         int odds = 0;
@@ -3305,7 +3311,7 @@ public class AIRoutines : MonoBehaviour
             // single attack hexes loaded since.
             if (defendingHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0)
             {
-                if (!GlobalDefinitions.hexInEnemyZOC(listOfHexesToBeAttacked[0], GlobalDefinitions.Nationality.Allied))
+                if (!GlobalDefinitions.HexInEnemyZOC(listOfHexesToBeAttacked[0], GlobalDefinitions.Nationality.Allied))
                 {
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("invasionOdds:     Unopposed invasion with no other attacks");
@@ -3354,11 +3360,11 @@ public class AIRoutines : MonoBehaviour
                         listOfHexesToBeAttacked[0] = tempList[0];
 
                         // If the new hex is an invasion site then add the invasion hex if it is empty and is in the targeted invasion beach
-                        if ((returnInvasionHexForTarget(tempList[0]) != null) &&
-                                (returnInvasionHexForTarget(tempList[0]).GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0) &&
+                        if ((ReturnInvasionHexForTarget(tempList[0]) != null) &&
+                                (ReturnInvasionHexForTarget(tempList[0]).GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0) &&
                                 (defendingHex.GetComponent<HexDatabaseFields>().invasionAreaIndex == tempList[0].GetComponent<HexDatabaseFields>().invasionAreaIndex))
                         {
-                            newAttackHex.attackHex = returnInvasionHexForTarget(tempList[0]);
+                            newAttackHex.attackHex = ReturnInvasionHexForTarget(tempList[0]);
                             singleAttackHexes.Add(newAttackHex);
                         }
 #if OUTPUTDEBUG
@@ -3392,16 +3398,16 @@ public class AIRoutines : MonoBehaviour
         List<GameObject> attackHexes = new List<GameObject>();
 
         // Load the single and multiple attack hex lists
-        attackHexes = determineAttackHexesForTargetDefendingHex(listOfHexesToBeAttacked[0], GlobalDefinitions.Nationality.Allied);
+        attackHexes = DetermineAttackHexesForTargetDefendingHex(listOfHexesToBeAttacked[0], GlobalDefinitions.Nationality.Allied);
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("invasionOdds: number of attack hexes returned = " + attackHexes.Count);
         foreach (GameObject hex in attackHexes)
             GlobalDefinitions.writeToLogFile("invasionOdds:      " + hex.name);
 #endif
-        foreach (AISingleAttackHex aiSingleAttackHex in returnSingleAttackHexes(listOfHexesToBeAttacked[0], attackHexes, GlobalDefinitions.Nationality.Allied))
+        foreach (AISingleAttackHex aiSingleAttackHex in ReturnSingleAttackHexes(listOfHexesToBeAttacked[0], attackHexes, GlobalDefinitions.Nationality.Allied))
             if (!singleAttackHexes.Contains(aiSingleAttackHex))
                 singleAttackHexes.Add(aiSingleAttackHex);
-        foreach (AIMultipleAttackHex aiMultipleAttackHex in returnMultipleAttackHexes(listOfHexesToBeAttacked[0], attackHexes, GlobalDefinitions.Nationality.Allied))
+        foreach (AIMultipleAttackHex aiMultipleAttackHex in ReturnMultipleAttackHexes(listOfHexesToBeAttacked[0], attackHexes, GlobalDefinitions.Nationality.Allied))
             if (!multipleAttackHexes.Contains(aiMultipleAttackHex))
                 multipleAttackHexes.Add(aiMultipleAttackHex);
 #if OUTPUTDEBUG
@@ -3415,7 +3421,7 @@ public class AIRoutines : MonoBehaviour
 #endif
         // There is a scenario that can happen that when I have an unopposed landing and move the defending hex to be a hex other than the landing hex, it could have invasion hexes that are
         // not part of the current invasion area.  Need to go through the coastal hexes loaded and remove any hexes that are not part of the current invasion area.
-        removeOutOfInvasionAreaHexes(singleAttackHexes, multipleAttackHexes, invadingHex.GetComponent<HexDatabaseFields>().invasionAreaIndex);
+        RemoveOutOfInvasionAreaHexes(singleAttackHexes, multipleAttackHexes, invadingHex.GetComponent<HexDatabaseFields>().invasionAreaIndex);
 
         // If we don't generate hexes then add 0 count lists so we don't have to keep checking throughout this routine.
         if (newAIDefendingHex.singleAttackHexes == null)
@@ -3435,7 +3441,7 @@ public class AIRoutines : MonoBehaviour
         if (!landUnitAvailable)
             return (0);
 
-        loadAndSortPotentialAttackersToHexes(potentialInvadingUnitsList, newAIDefendingHex, newPotentialAttack, listOfHexesToBeAttacked[0]);
+        LoadAndSortPotentialAttackersToHexes(potentialInvadingUnitsList, newAIDefendingHex, newPotentialAttack, listOfHexesToBeAttacked[0]);
 
         foreach (GameObject defendingUnit in listOfHexesToBeAttacked[0].GetComponent<HexDatabaseFields>().occupyingUnit)
         {
@@ -3484,7 +3490,7 @@ public class AIRoutines : MonoBehaviour
                 // Note that newPotentialAttack.defendingHexes[0] is the original defending hex
                 foreach (AISingleAttackHex singleAttackHex in oddsTargetNewPotentailAttack.defendingHexes[0].singleAttackHexes)
                     foreach (GameObject attackingUnit in singleAttackHex.potentialAttackers)
-                        assignInvasionUnitsToAttack(attackingUnit, singleAttackHex.attackHex, invadingHex, ref oddsMet, ref odds, oddsTarget, oddsTargetNewPotentailAttack);
+                        AssignInvasionUnitsToAttack(attackingUnit, singleAttackHex.attackHex, invadingHex, ref oddsMet, ref odds, oddsTarget, oddsTargetNewPotentailAttack);
 
             // The single attack didn't work so now start adding more units that would cause additional hexes to be brought in
             if (!oddsMet)
@@ -3498,7 +3504,7 @@ public class AIRoutines : MonoBehaviour
                     foreach (AIMultipleAttackHex multipleAttackHex in oddsTargetNewPotentailAttack.defendingHexes[0].multipleAttackHexes)
                         foreach (GameObject attackingUnit in multipleAttackHex.potentialAttackers)
                         {
-                            assignInvasionUnitsToAttack(attackingUnit, multipleAttackHex.attackHex, invadingHex, ref oddsMet, ref odds, oddsTarget, oddsTargetNewPotentailAttack);
+                            AssignInvasionUnitsToAttack(attackingUnit, multipleAttackHex.attackHex, invadingHex, ref oddsMet, ref odds, oddsTarget, oddsTargetNewPotentailAttack);
 
                             // If the attack hex was used add the additional hexes that this brings into the battle
                             if (attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
@@ -3526,7 +3532,7 @@ public class AIRoutines : MonoBehaviour
                 foreach (GameObject attacker in oddsTargetNewPotentailAttack.attackingUnits)
                 {
                     //GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().decrementInvasionUnitLimits(attacker);
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(attacker.GetComponent<UnitDatabaseFields>().occupiedHex, attacker, false);
                     if (attacker.GetComponent<UnitDatabaseFields>().inSupply)
                         attacker.GetComponent<UnitDatabaseFields>().remainingMovement = attacker.GetComponent<UnitDatabaseFields>().movementFactor;
                     else
@@ -3599,10 +3605,10 @@ public class AIRoutines : MonoBehaviour
     /// <param name="odds"></param>
     /// <param name="attackingUnits"></param>
     /// <param name="newPotentialAttack"></param>
-    private static void assignInvasionUnitsToAttack(GameObject attackingUnit, GameObject attackHex, GameObject invadingHex, ref bool oddsMet, ref int odds, int oddsTarget, AIPotentialAttack newPotentialAttack)
+    private static void AssignInvasionUnitsToAttack(GameObject attackingUnit, GameObject attackHex, GameObject invadingHex, ref bool oddsMet, ref int odds, int oddsTarget, AIPotentialAttack newPotentialAttack)
     {
         if (!oddsMet && !attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack
-                               && GlobalDefinitions.hexUnderStackingLimit(attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().nationality))
+                               && GlobalDefinitions.HexUnderStackingLimit(attackHex, attackingUnit.GetComponent<UnitDatabaseFields>().nationality))
         {
             // The unit and the hex are available so move the unit to the hex
 #if OUTPUTDEBUG
@@ -3617,14 +3623,14 @@ public class AIRoutines : MonoBehaviour
 
             attackHex.GetComponent<HexDatabaseFields>().availableForMovement = true;
             if (attackHex == invadingHex)
-                GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().getUnitInvasionHex(attackingUnit, attackHex);
+                GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().GetUnitInvasionHex(attackingUnit, attackHex);
             else
             {
                 // Need to check if this is an airborne drop since it is brought in differently
                 if (attackHex.GetComponent<HexDatabaseFields>().coast || attackHex.GetComponent<HexDatabaseFields>().coastalPort)
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(attackingUnit, attackHex, false);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(attackingUnit, attackHex, false);
                 else
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitFromBritain(attackHex, attackingUnit);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitFromBritain(attackHex, attackingUnit);
             }
             attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = true;
             newPotentialAttack.attackingUnits.Add(attackingUnit);
@@ -3632,7 +3638,7 @@ public class AIRoutines : MonoBehaviour
                 odds = oddsTarget;
             else
             {
-                odds = GlobalDefinitions.returnCombatOdds(newPotentialAttack.defendingUnits, newPotentialAttack.attackingUnits, false);
+                odds = GlobalDefinitions.ReturnCombatOdds(newPotentialAttack.defendingUnits, newPotentialAttack.attackingUnits, false);
                 newPotentialAttack.addAirSupport = false;
             }
             if (odds >= oddsTarget)
@@ -3641,7 +3647,7 @@ public class AIRoutines : MonoBehaviour
             // See if adding air support will meet the odds
             if (!oddsMet)
             {
-                odds = GlobalDefinitions.returnCombatOdds(newPotentialAttack.defendingUnits, newPotentialAttack.attackingUnits, true);
+                odds = GlobalDefinitions.ReturnCombatOdds(newPotentialAttack.defendingUnits, newPotentialAttack.attackingUnits, true);
                 newPotentialAttack.addAirSupport = true;
                 if (odds >= oddsTarget)
                     oddsMet = true;
@@ -3656,7 +3662,7 @@ public class AIRoutines : MonoBehaviour
     /// <param name="newAIDefendingHex"></param>
     /// <param name="newPotentialAttack"></param>
     /// <param name="defendingHex"></param>
-    private static void loadAndSortPotentialAttackersToHexes(List<GameObject> potentialInvadingUnitsList, AIDefendHex newAIDefendingHex, AIPotentialAttack newPotentialAttack, GameObject defendingHex)
+    private static void LoadAndSortPotentialAttackersToHexes(List<GameObject> potentialInvadingUnitsList, AIDefendHex newAIDefendingHex, AIPotentialAttack newPotentialAttack, GameObject defendingHex)
     {
         foreach (GameObject unit in potentialInvadingUnitsList)
             if (!unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
@@ -3698,9 +3704,9 @@ public class AIRoutines : MonoBehaviour
         // Note that this will put airborne units to the end of the list
 
         foreach (AISingleAttackHex singleAttackHex in newAIDefendingHex.singleAttackHexes)
-            sortListByAttackFactor(singleAttackHex.potentialAttackers);
+            SortListByAttackFactor(singleAttackHex.potentialAttackers);
         foreach (AIMultipleAttackHex multipleAttackHex in newAIDefendingHex.multipleAttackHexes)
-            sortListByAttackFactor(multipleAttackHex.potentialAttackers);
+            SortListByAttackFactor(multipleAttackHex.potentialAttackers);
 
         //newPotentialAttack.defendingHexes.Add(newAIDefendingHex);
 
@@ -3716,8 +3722,8 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="singleAttackHexes"></param>
     /// <param name="multipleAttackHexes"></param>
-    /// <param name=""></param>
-    private static void removeOutOfInvasionAreaHexes(List<AISingleAttackHex> singleAttackHexes, List<AIMultipleAttackHex> multipleAttackHexes, int invasionAreaIndex)
+    /// <param name="invasionAreaIndex"></param>
+    private static void RemoveOutOfInvasionAreaHexes(List<AISingleAttackHex> singleAttackHexes, List<AIMultipleAttackHex> multipleAttackHexes, int invasionAreaIndex)
     {
 
         List<AISingleAttackHex> hexesToRemove = new List<AISingleAttackHex>();
@@ -3745,7 +3751,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="targetHex"></param>
     /// <returns></returns>
-    private static GameObject returnInvasionHexForTarget(GameObject targetHex)
+    private static GameObject ReturnInvasionHexForTarget(GameObject targetHex)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("returnInvasionHexForTarget: processing for target hex " + targetHex.name);
@@ -3763,7 +3769,7 @@ public class AIRoutines : MonoBehaviour
     /// Reorders the passed list from highest attack factor to least attack factor
     /// </summary>
     /// <param name="unitList"></param>
-    public static void sortListByAttackFactor(List<GameObject> unitList)
+    public static void SortListByAttackFactor(List<GameObject> unitList)
     {
         GameObject tempUnit;
         for (int index1 = 0; index1 < unitList.Count; index1++)
@@ -3779,7 +3785,7 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// This routine will assign the Allied air missions
     /// </summary>
-    public static void assignAlliedAirMissions()
+    public static void AssignAlliedAirMissions()
     {
 
         // Check how many missions are remaining
@@ -3799,7 +3805,7 @@ public class AIRoutines : MonoBehaviour
                     !unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().fortress)
             {
                 // The hex should be considered for air defense if there are enemy units within attack range
-                enemyUnits = findNearbyEnemyUnits(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality, GlobalDefinitions.attackRange);
+                enemyUnits = FindNearbyEnemyUnits(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality, GlobalDefinitions.attackRange);
 
                 if (enemyUnits.Count > 0)
                 {
@@ -3833,7 +3839,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                 GlobalDefinitions.writeToLogFile("assignAlliedAirMissions: assigning close air defense for hex - " + hex.name + "  missions remaining = " + missionsRemaining);
 #endif
-                CombatResolutionRoutines.setCloseDefenseHex(hex);
+                CombatResolutionRoutines.SetCloseDefenseHex(hex);
             }
 
         // Look for enemy units to interdict with any remaining missions.  
@@ -3862,7 +3868,7 @@ public class AIRoutines : MonoBehaviour
 
             foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
             {
-                enemyUnits = findNearbyEnemyUnits(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality, 6);
+                enemyUnits = FindNearbyEnemyUnits(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().nationality, 6);
                 foreach (GameObject enemyUnit in enemyUnits)
                     closeEnemyUnits.Add(enemyUnit);
             }
@@ -3898,7 +3904,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="number"></param>
     /// <returns></returns>
-    public static GameObject returnAvailableArmorUnit()
+    public static GameObject ReturnAvailableArmorUnit()
     {
         foreach (Transform unit in GameObject.Find("Units In Britain").transform)
             if ((unit.GetComponent<UnitDatabaseFields>().turnAvailable <= GlobalDefinitions.turnNumber) &&
@@ -3912,7 +3918,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="number"></param>
     /// <returns></returns>
-    public static GameObject returnAvailableInfantryUnit()
+    public static GameObject ReturnAvailableInfantryUnit()
     {
         foreach (Transform unit in GameObject.Find("Units In Britain").transform)
             if ((unit.GetComponent<UnitDatabaseFields>().turnAvailable <= GlobalDefinitions.turnNumber) &&
@@ -3926,7 +3932,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="number"></param>
     /// <returns></returns>
-    public static List<GameObject> returnAvailableAirborneUnits(int number)
+    public static List<GameObject> ReturnAvailableAirborneUnits(int number)
     {
         List<GameObject> unitList = new List<GameObject>();
         foreach (Transform unit in GameObject.Find("Units In Britain").transform)
@@ -3940,7 +3946,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="number"></param>
     /// <returns></returns>
-    public static GameObject returnAvailableHQUnit(int number)
+    public static GameObject ReturnAvailableHQUnit(int number)
     {
         foreach (Transform unit in GameObject.Find("Units In Britain").transform)
             if ((unit.GetComponent<UnitDatabaseFields>().turnAvailable <= GlobalDefinitions.turnNumber) &&
@@ -3952,24 +3958,25 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Returns an available unit from Britain for the hex passed
     /// </summary>
+    /// <param name="hex"></param>
     /// <returns></returns>
-    private static GameObject returnReinforcementUnit(GameObject hex)
+    private static GameObject ReturnReinforcementUnit(GameObject hex)
     {
         if (GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn < GlobalDefinitions.maxNumberAlliedReinforcementPerTurn)
         {
             GameObject reinforcementUnit = new GameObject("returnReinforcementUnit");
 
-            reinforcementUnit = returnAvailableArmorUnit();
+            reinforcementUnit = ReturnAvailableArmorUnit();
             if ((reinforcementUnit != null) &&
-                    (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnReinforcementLandingHexes(reinforcementUnit).Contains(hex)) &&
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().hexAvailableForUnitTypeReinforcements(hex, reinforcementUnit))
+                    (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnReinforcementLandingHexes(reinforcementUnit).Contains(hex)) &&
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().HexAvailableForUnitTypeReinforcements(hex, reinforcementUnit))
                 return (reinforcementUnit);
 
-            reinforcementUnit = returnAvailableInfantryUnit();
+            reinforcementUnit = ReturnAvailableInfantryUnit();
 
             if ((reinforcementUnit != null) &&
-                    (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnReinforcementLandingHexes(reinforcementUnit).Contains(hex)) &&
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().hexAvailableForUnitTypeReinforcements(hex, reinforcementUnit))
+                    (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnReinforcementLandingHexes(reinforcementUnit).Contains(hex)) &&
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().HexAvailableForUnitTypeReinforcements(hex, reinforcementUnit))
                 return (reinforcementUnit);
             else
                 return (null);
@@ -3982,7 +3989,7 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Land any reinforcements that are still available
     /// </summary>
-    public static void landAllAlliedReinforcementUnits()
+    public static void LandAllAlliedReinforcementUnits()
     {
         GameObject reinforcementUnit;
 
@@ -3992,20 +3999,20 @@ public class AIRoutines : MonoBehaviour
         GlobalDefinitions.availableReinforcementPorts.Sort((b, a) => a.GetComponent<HexDatabaseFields>().supplyCapacity.CompareTo(b.GetComponent<HexDatabaseFields>().supplyCapacity));
 
         foreach (GameObject hex in GlobalDefinitions.availableReinforcementPorts)
-            if (!GlobalDefinitions.hexInEnemyZOC(hex, GlobalDefinitions.Nationality.Allied))
+            if (!GlobalDefinitions.HexInEnemyZOC(hex, GlobalDefinitions.Nationality.Allied))
             {
-                reinforcementUnit = returnReinforcementUnit(hex);
+                reinforcementUnit = ReturnReinforcementUnit(hex);
 
                 bool movementAvailable = true;
                 while ((reinforcementUnit != null) && (movementAvailable))
                 {
-                    if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(reinforcementUnit, hex, false))
+                    if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(reinforcementUnit, hex, false))
                     {
-                        setUnitMovementValues(reinforcementUnit);
+                        SetUnitMovementValues(reinforcementUnit);
 
                         // Remove any hexes that are in enemy ZOC since we have already made all combat moves
-                        removeEnemyZOCHexes(reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes, reinforcementUnit.GetComponent<UnitDatabaseFields>().nationality);
-                        removeBridgeHexes(reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
+                        RemoveEnemyZOCHexes(reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes, reinforcementUnit.GetComponent<UnitDatabaseFields>().nationality);
+                        RemoveBridgeHexes(reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes);
 
                         // The hexes in availableMovementHexes are sorted from highest value to lowest.  Go through them and move to the first one available from the beginning.
                         bool moved = false;
@@ -4015,17 +4022,17 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                                 GlobalDefinitions.writeToLogFile("landAllAlliedReinforcementsUnits:     checking for movement from " + reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex.name + " to " + tempHex.name);
 #endif
-                                if (!moved && GlobalDefinitions.hexUnderStackingLimit(tempHex, GlobalDefinitions.Nationality.Allied) &&
+                                if (!moved && GlobalDefinitions.HexUnderStackingLimit(tempHex, GlobalDefinitions.Nationality.Allied) &&
                                         !tempHex.GetComponent<HexDatabaseFields>().sea && !tempHex.GetComponent<HexDatabaseFields>().impassible && !tempHex.GetComponent<HexDatabaseFields>().impassible &&
                                         (tempHex.GetComponent<HexDatabaseFields>().supplySources.Count > 0))
                                 {
                                     moved = true;
-                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(tempHex, reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex, reinforcementUnit);
+                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(tempHex, reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex, reinforcementUnit);
                                 }
                         }
 
                         // Check if the unit can stay on the landing hex
-                        if (!moved && GlobalDefinitions.hexUnderStackingLimit(reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.Nationality.Allied))
+                        if (!moved && GlobalDefinitions.HexUnderStackingLimit(reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.Nationality.Allied))
                             moved = true;
 
                         if (!moved)
@@ -4033,14 +4040,14 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                             GlobalDefinitions.writeToLogFile("landAllAlliedReinforcementsUnits: couldn't move, return reinforcement back to Britain unit = " + reinforcementUnit.name);
 #endif
-                            GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().decrementInvasionUnitLimits(reinforcementUnit);
-                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex, reinforcementUnit, false);
+                            GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().DecrementInvasionUnitLimits(reinforcementUnit);
+                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(reinforcementUnit.GetComponent<UnitDatabaseFields>().occupiedHex, reinforcementUnit, false);
 
                             // If one unit can't move than no units can moce.  Set the flag to move on to the next hex
                             movementAvailable = false;
                         }
                     }
-                    reinforcementUnit = returnReinforcementUnit(hex);
+                    reinforcementUnit = ReturnReinforcementUnit(hex);
                 }
             }
     }
@@ -4049,20 +4056,20 @@ public class AIRoutines : MonoBehaviour
     /// Returns true if additional supply capacity is needed by the Allies
     /// </summary>
     /// <returns></returns>
-    public static bool supplyNeeded()
+    public static bool SupplyNeeded()
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("supplyNeeded: allied excess supply = " + SupplyRoutines.returnAlliedExcessSupply());
         GlobalDefinitions.writeToLogFile("supplyNeeded: number of allied units available  = " + returnNumberAlliedUnitsAvailable());
         GlobalDefinitions.writeToLogFile("supplyNeeded: available units each turn  = " + returnNumberOfReinforcementsThatCanLandEachTurn());
 #endif
-        int excessSupply = SupplyRoutines.returnAlliedExcessSupply();
+        int excessSupply = SupplyRoutines.ReturnAlliedExcessSupply();
 
         if (excessSupply <= 0)
             return (true);
-        else if (SupplyRoutines.returnAlliedExcessSupply() > returnNumberAlliedUnitsAvailable())
+        else if (SupplyRoutines.ReturnAlliedExcessSupply() > ReturnNumberAlliedUnitsAvailable())
             return (false);
-        else if (SupplyRoutines.returnAlliedExcessSupply() < returnNumberOfReinforcementsThatCanLandEachTurn())
+        else if (SupplyRoutines.ReturnAlliedExcessSupply() < ReturnNumberOfReinforcementsThatCanLandEachTurn())
             return (true);
         else
             return (false);
@@ -4072,7 +4079,7 @@ public class AIRoutines : MonoBehaviour
     /// Returns the number of units that are currently available in Britain
     /// </summary>
     /// <returns></returns>
-    private static int returnNumberAlliedUnitsAvailable()
+    private static int ReturnNumberAlliedUnitsAvailable()
     {
         int unitsAvailable = 0;
         foreach (Transform unit in GameObject.Find("Units In Britain").transform)
@@ -4085,7 +4092,7 @@ public class AIRoutines : MonoBehaviour
     /// Returns how many units each turn can be landed from all beaches that have an Allied controled port
     /// </summary>
     /// <returns></returns>
-    public static int returnNumberOfReinforcementsThatCanLandEachTurn()
+    public static int ReturnNumberOfReinforcementsThatCanLandEachTurn()
     {
         List<int> invasionAreasChecked = new List<int>();
         int totalUnitsAvailablePerTurn = 0;
@@ -4104,7 +4111,7 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Makes all moves associated with securing and defending supply hexes
     /// </summary>
-    public static void makeSupplyMovements()
+    public static void MakeSupplyMovements()
     {
         List<GameObject> availablePorts = new List<GameObject>();
         List<GameObject> availableHQs = new List<GameObject>();
@@ -4118,7 +4125,7 @@ public class AIRoutines : MonoBehaviour
         foreach (GameObject hex in GlobalDefinitions.availableReinforcementPorts)
             if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
                 foreach (GameObject unit in hex.GetComponent<HexDatabaseFields>().occupyingUnit)
-                    if (unit.GetComponent<UnitDatabaseFields>().HQ && GlobalDefinitions.hexInEnemyZOC(hex, GlobalDefinitions.Nationality.Allied) &&
+                    if (unit.GetComponent<UnitDatabaseFields>().HQ && GlobalDefinitions.HexInEnemyZOC(hex, GlobalDefinitions.Nationality.Allied) &&
                             !unitList.Contains(unit))
                         unitList.Add(unit);
 
@@ -4127,7 +4134,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("makeSupplyMovements: sending HQ " + unit.name + "back to Britain due to being in German ZOC");
 #endif
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit, true);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit, true);
         }
 
         foreach (GameObject hex in GlobalDefinitions.availableReinforcementPorts)
@@ -4142,11 +4149,11 @@ public class AIRoutines : MonoBehaviour
                     availablePorts.Add(hex.gameObject);
                 else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
                 {
-                    if (GlobalDefinitions.numberHQOnHex(hex.gameObject) > 0)
+                    if (GlobalDefinitions.NumberHQOnHex(hex.gameObject) > 0)
                     {
                         foreach (GameObject unit in hex.GetComponent<HexDatabaseFields>().occupyingUnit)
                             if (unit.GetComponent<UnitDatabaseFields>().HQ)
-                                if (!GlobalDefinitions.hexInEnemyZOC(hex, GlobalDefinitions.Nationality.Allied))
+                                if (!GlobalDefinitions.HexInEnemyZOC(hex, GlobalDefinitions.Nationality.Allied))
                                     unit.GetComponent<UnitDatabaseFields>().hasMoved = true;
                     }
                     else
@@ -4177,7 +4184,7 @@ public class AIRoutines : MonoBehaviour
 #endif
             // Get the available movement for the unit
             unit.GetComponent<UnitDatabaseFields>().availableMovementHexes =
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
 
             bool unitMoved = false;
             if (stillNeedSupply)
@@ -4185,14 +4192,14 @@ public class AIRoutines : MonoBehaviour
                     if (!unitMoved && unit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Contains(hex))
                     {
                         unitMoved = true;
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
                     }
 
             // If the unit moved remove the port that it moved to from the available list since it is now covered
             if (unitMoved)
             {
                 availablePorts.Remove(unit.GetComponent<UnitDatabaseFields>().occupiedHex);
-                stillNeedSupply = supplyNeeded();
+                stillNeedSupply = SupplyNeeded();
             }
             else
             {
@@ -4203,7 +4210,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("makeSupplyMovement:       sending HQ back to Britain " + unit.name);
 #endif
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit, true);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit, true);
                         unitMoved = true;
                     }
 
@@ -4213,15 +4220,15 @@ public class AIRoutines : MonoBehaviour
                     float closestDistance = 0;
                     foreach (GameObject availableHex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
                         foreach (GameObject port in availablePorts)
-                            if (closestDistance > calculateDistance(availableHex, port))
-                                closestDistance = calculateDistance(availableHex, port);
+                            if (closestDistance > CalculateDistance(availableHex, port))
+                                closestDistance = CalculateDistance(availableHex, port);
 
                     if (closestDistance > 0)
                         foreach (GameObject availableHex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
                             foreach (GameObject port in availablePorts)
-                                if (closestDistance == calculateDistance(availableHex, port))
+                                if (closestDistance == CalculateDistance(availableHex, port))
                                 {
-                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(availableHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(availableHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
                                     unitMoved = true;
                                 }
 
@@ -4233,7 +4240,7 @@ public class AIRoutines : MonoBehaviour
         GlobalDefinitions.writeToLogFile("makeSupplyMovements: supplyNeeded = " + supplyNeeded());
 #endif
         // If supply is still needed at this point and there are no available HQ's check to see if any HQ's can be landed
-        if (supplyNeeded())
+        if (SupplyNeeded())
         {
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("makeSupplyMovements: all reinforcement ports - turn = " + GlobalDefinitions.turnNumber);
@@ -4243,18 +4250,18 @@ public class AIRoutines : MonoBehaviour
             // The approach I'm going to use is to only land HQs on ports.  I'm not going to land them somewhere and try to get them to the port.
             foreach (GameObject port in GlobalDefinitions.availableReinforcementPorts)
             {
-                if (supplyNeeded() && !port.GetComponent<HexDatabaseFields>().inGermanZOC)
+                if (SupplyNeeded() && !port.GetComponent<HexDatabaseFields>().inGermanZOC)
                 {
-                    if ((GlobalDefinitions.numberHQOnHex(port) == 0) && !port.GetComponent<HexDatabaseFields>().successfullyInvaded)
+                    if ((GlobalDefinitions.NumberHQOnHex(port) == 0) && !port.GetComponent<HexDatabaseFields>().successfullyInvaded)
                     {
-                        GameObject hqUnit = returnAvailableHQUnit(1);
+                        GameObject hqUnit = ReturnAvailableHQUnit(1);
                         if (hqUnit != null)
                         {
 #if OUTPUTDEBUG
                             GlobalDefinitions.writeToLogFile("makeSupplyMovements: landing hq unit " + hqUnit.name + " landing on port " + port.name);
 #endif
                             port.GetComponent<HexDatabaseFields>().availableForMovement = true;
-                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(hqUnit, port, false);
+                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(hqUnit, port, false);
                             hqUnit.GetComponent<UnitDatabaseFields>().hasMoved = true; // Don't want the unit wandering off during combat or movement
                         }
                     }
@@ -4271,14 +4278,14 @@ public class AIRoutines : MonoBehaviour
         foreach (GameObject supplySource in GlobalDefinitions.supplySources)
         {
             furthestUnit = 0;
-            foreach (GameObject unit in returnUnitsSupplied(supplySource))
-                if (calculateDistance(supplySource, unit.GetComponent<UnitDatabaseFields>().occupiedHex) > furthestUnit)
-                    furthestUnit = calculateDistance(supplySource, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+            foreach (GameObject unit in ReturnUnitsSupplied(supplySource))
+                if (CalculateDistance(supplySource, unit.GetComponent<UnitDatabaseFields>().occupiedHex) > furthestUnit)
+                    furthestUnit = CalculateDistance(supplySource, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
 
             // At this point we know how far away the furtheset unit is that this hex is supplying.  If it is less than 4 
             // hexes away from the current range add additional HQ units to extend the range
 
-            int supplyRange = GlobalDefinitions.numberHQOnHex(supplySource) * GlobalDefinitions.supplyRangeIncrement;
+            int supplyRange = GlobalDefinitions.NumberHQOnHex(supplySource) * GlobalDefinitions.supplyRangeIncrement;
             if ((supplyRange == 0) && supplySource.GetComponent<HexDatabaseFields>().successfullyInvaded)
                 // If a hex is successfully invaded it automatically gets a range of GlobalDefinitions.supplyRangeIncrement hexes even without an HQ unit
                 supplyRange = GlobalDefinitions.supplyRangeIncrement;
@@ -4287,20 +4294,20 @@ public class AIRoutines : MonoBehaviour
 #endif
             if ((int)furthestUnit > (supplyRange - 4))
             {
-                if (GlobalDefinitions.numberHQOnHex(supplySource) < 3)
+                if (GlobalDefinitions.NumberHQOnHex(supplySource) < 3)
                 {
-                    if (GlobalDefinitions.hexUnderStackingLimit(supplySource, GlobalDefinitions.Nationality.Allied) &&
+                    if (GlobalDefinitions.HexUnderStackingLimit(supplySource, GlobalDefinitions.Nationality.Allied) &&
                     (supplySource.GetComponent<HexDatabaseFields>().supplyCapacity > 4))
                     {
                         // Land an HQ on the hex
-                        GameObject hqUnit = returnAvailableHQUnit(1);
+                        GameObject hqUnit = ReturnAvailableHQUnit(1);
                         if (hqUnit != null)
                         {
 #if OUTPUTDEBUG
                             GlobalDefinitions.writeToLogFile("makeSupplyMovements: extending supply range, landing hq unit " + hqUnit.name + " landing on port " + supplySource.name);
 #endif
                             supplySource.GetComponent<HexDatabaseFields>().availableForMovement = true;
-                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(hqUnit, supplySource, false);
+                            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(hqUnit, supplySource, false);
                             hqUnit.GetComponent<UnitDatabaseFields>().hasMoved = true; // Don't want the unit wandering off during combat or movement
                         }
                     }
@@ -4329,7 +4336,7 @@ public class AIRoutines : MonoBehaviour
                     int numberDefendersNeeded = 1;
                     int numberDefendersPresent = 0;
 
-                    nearbyEnemyUnits = findNearbyEnemyUnits(port, GlobalDefinitions.Nationality.Allied, GlobalDefinitions.attackRange); // Nothing can attack if more than four hexes away
+                    nearbyEnemyUnits = FindNearbyEnemyUnits(port, GlobalDefinitions.Nationality.Allied, GlobalDefinitions.attackRange); // Nothing can attack if more than four hexes away
 
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("makeSupplyMovements:      nearby enemy units count = " + nearbyEnemyUnits.Count);
@@ -4363,24 +4370,24 @@ public class AIRoutines : MonoBehaviour
                         while (numberDefendersNeeded > numberDefendersPresent)
                         {
                             // The hex needs more defense on it and there are enemy units nearby, land an infantry unit
-                            GameObject reinforcementUnit = returnAvailableInfantryUnit();
+                            GameObject reinforcementUnit = ReturnAvailableInfantryUnit();
                             if (reinforcementUnit == null)
-                                reinforcementUnit = returnAvailableArmorUnit();
+                                reinforcementUnit = ReturnAvailableArmorUnit();
 
                             if (reinforcementUnit != null)
                             {
-                                if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnReinforcementLandingHexes(reinforcementUnit).Contains(port))
+                                if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnReinforcementLandingHexes(reinforcementUnit).Contains(port))
                                 {
 #if OUTPUTDEBUG
                                     GlobalDefinitions.writeToLogFile("makeSupplyMovements: landing infantry unit " + reinforcementUnit.name + " for defense on port " + port.name);
 #endif
 
-                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(reinforcementUnit, port, false);
-                                    GlobalDefinitions.writeToLogFile("makeSupplyMovements:  unit count on port = " + port.GetComponent<HexDatabaseFields>().occupyingUnit.Count);
+                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(reinforcementUnit, port, false);
+                                    GlobalDefinitions.WriteToLogFile("makeSupplyMovements:  unit count on port = " + port.GetComponent<HexDatabaseFields>().occupyingUnit.Count);
                                     reinforcementUnit.GetComponent<UnitDatabaseFields>().hasMoved = true; // Don't want the unit wandering off during combat or movement
 
                                     // Check if the hex is at its stacking limit
-                                    if (GlobalDefinitions.hexUnderStackingLimit(port, GlobalDefinitions.Nationality.Allied))
+                                    if (GlobalDefinitions.HexUnderStackingLimit(port, GlobalDefinitions.Nationality.Allied))
                                         numberDefendersPresent++;
                                     else
                                         numberDefendersPresent = numberDefendersNeeded;
@@ -4412,7 +4419,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("makeSupplyMovements: supplyNeeded = " + supplyNeeded());
 #endif
-        if (supplyNeeded())
+        if (SupplyNeeded())
         {
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("makeSupplyMovements: Check for additional supply ports available");
@@ -4428,7 +4435,7 @@ public class AIRoutines : MonoBehaviour
                     List<GameObject> nearbyHexes = new List<GameObject>();
                     // This is an empty port.  Check to see if there is a reinforcement port within 7 hexes
                     // It is 7 hexes because all allied units move four hexes and it counts one to land so there are only 7 more moves remaining in strategic movement
-                    nearbyHexes = returnHexesWithinDistance(hex.gameObject, 7);
+                    nearbyHexes = ReturnHexesWithinDistance(hex.gameObject, 7);
                     foreach (GameObject reinforcementPort in GlobalDefinitions.availableReinforcementPorts)
                         if (nearbyHexes.Contains(reinforcementPort))
                         {
@@ -4437,9 +4444,9 @@ public class AIRoutines : MonoBehaviour
 #endif
                             // There is a reinforcement port within movement range.  Land a unit and then see if movement is available
 
-                            GameObject reinforcementUnit = returnAvailableInfantryUnit();
+                            GameObject reinforcementUnit = ReturnAvailableInfantryUnit();
                             if (reinforcementUnit == null)
-                                reinforcementUnit = returnAvailableArmorUnit();
+                                reinforcementUnit = ReturnAvailableArmorUnit();
 
                             if (reinforcementUnit != null)
                             {
@@ -4447,21 +4454,21 @@ public class AIRoutines : MonoBehaviour
                                 GlobalDefinitions.writeToLogFile("makeSupplyMovements: landing unit " + reinforcementUnit.name);
 #endif
                                 // We have a unit, now land it
-                                if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(reinforcementUnit, reinforcementPort, false))
+                                if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(reinforcementUnit, reinforcementPort, false))
                                 {
 #if OUTPUTDEBUG
                                     GlobalDefinitions.writeToLogFile("makeSupplyMovements:      unit landed");
 #endif
                                     reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes =
-                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(reinforcementPort, reinforcementUnit);
+                                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(reinforcementPort, reinforcementUnit);
                                     if (reinforcementUnit.GetComponent<UnitDatabaseFields>().availableMovementHexes.Contains(hex.gameObject))
                                         // The unit is available to move the unoccupied port
-                                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(hex.gameObject, reinforcementPort, reinforcementUnit);
+                                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(hex.gameObject, reinforcementPort, reinforcementUnit);
                                     else
                                     {
                                         // The unit can't make it to the port so send it back to Britain
-                                        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().decrementInvasionUnitLimits(reinforcementUnit);
-                                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(reinforcementPort, reinforcementUnit, false);
+                                        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().DecrementInvasionUnitLimits(reinforcementUnit);
+                                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(reinforcementPort, reinforcementUnit, false);
                                     }
                                 }
                             }
@@ -4483,7 +4490,7 @@ public class AIRoutines : MonoBehaviour
     /// Used to assign combat for units that have been left in enemy ZOC
     /// </summary>
     /// <param name="nationality"></param>
-    public static void setDefaultAttacks(GlobalDefinitions.Nationality nationality)
+    public static void SetDefaultAttacks(GlobalDefinitions.Nationality nationality)
     {
         List<GameObject> unitList;
         List<GameObject> unitsThatMustAttack = new List<GameObject>();
@@ -4506,7 +4513,7 @@ public class AIRoutines : MonoBehaviour
         // Separate the units that are in enemy ZOC.  I will need them gathered together in order to see
         // if attacks should be combined.
         foreach (GameObject unit in unitList)
-            if (GlobalDefinitions.hexInEnemyZOC(unit.GetComponent<UnitDatabaseFields>().occupiedHex, nationality)
+            if (GlobalDefinitions.HexInEnemyZOC(unit.GetComponent<UnitDatabaseFields>().occupiedHex, nationality)
                     && !unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
                 unitsThatMustAttack.Add(unit);
 
@@ -4520,24 +4527,24 @@ public class AIRoutines : MonoBehaviour
         foreach (GameObject unit in unitsThatMustAttack)
         {
             unitHasMoved = false;
-            movementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+            movementHexes = GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
             foreach (GameObject hex in movementHexes)
             {
-                if (!unitHasMoved && GlobalDefinitions.hexUnderStackingLimit(hex, nationality) && !GlobalDefinitions.hexInEnemyZOC(hex, nationality))
+                if (!unitHasMoved && GlobalDefinitions.HexUnderStackingLimit(hex, nationality) && !GlobalDefinitions.HexInEnemyZOC(hex, nationality))
                 {
                     if (hex.GetComponent<HexDatabaseFields>().sea)
                     {
 #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("setDefaultAttacks: " + unit.name + " Moving back to Britain");
 #endif
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit, true);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit, true);
                     }
                     else
                     {
 #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("setDefaultAttacks: " + unit.name + " Moving  to " + hex.name);
 #endif
-                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
                     }
                     unitHasMoved = true;
                     unitsThatMoved.Add(unit);
@@ -4595,7 +4602,7 @@ public class AIRoutines : MonoBehaviour
             if (singleCombat.GetComponent<Combat>().defendingUnits.Count == 0)
             {
                 foreach (GameObject eliminateUnit in singleCombat.GetComponent<Combat>().attackingUnits)
-                    GlobalDefinitions.moveUnitToDeadPile(eliminateUnit);
+                    GlobalDefinitions.MoveUnitToDeadPile(eliminateUnit);
             }
             else
                 GlobalDefinitions.allCombats.Add(singleCombat);
@@ -4607,7 +4614,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="supppySource"></param>
     /// <returns></returns>
-    public static List<GameObject> returnUnitsSupplied(GameObject supplySource)
+    public static List<GameObject> ReturnUnitsSupplied(GameObject supplySource)
     {
         List<GameObject> returnList = new List<GameObject>();
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
@@ -4620,19 +4627,19 @@ public class AIRoutines : MonoBehaviour
     /// Executes retreat options when the AI is defending and the attacker has to retreat
     /// </summary>
     /// <param name="retreatingUnits"></param>
-    public static void executeAIAback2(List<GameObject> retreatingUnits)
+    public static void ExecuteAIAback2(List<GameObject> retreatingUnits)
     {
         foreach (GameObject unitToRetreat in retreatingUnits)
         {
-            List<GameObject> retreatHexes = CombatResolutionRoutines.returnRetreatHexes(unitToRetreat);
+            List<GameObject> retreatHexes = CombatResolutionRoutines.ReturnRetreatHexes(unitToRetreat);
             int highScore = 0;
             GameObject bestRetreatHex = null;
 
             if (retreatHexes.Count == 0)
             {
                 // There are no hexes the unit can retreat to so it is eliminated
-                GlobalDefinitions.guiUpdateStatusMessage("No retreat available - eliminating " + unitToRetreat.name);
-                GlobalDefinitions.moveUnitToDeadPile(unitToRetreat);
+                GlobalDefinitions.GuiUpdateStatusMessage("No retreat available - eliminating " + unitToRetreat.name);
+                GlobalDefinitions.MoveUnitToDeadPile(unitToRetreat);
             }
             else
             {
@@ -4647,7 +4654,7 @@ public class AIRoutines : MonoBehaviour
                     if (hex.GetComponent<HexDatabaseFields>().hexValue == 1)
                         score++;
                     // One point for being two hexes away
-                    if (!GlobalDefinitions.twoHexesAdjacent(unitToRetreat.GetComponent<UnitDatabaseFields>().occupiedHex, hex))
+                    if (!GlobalDefinitions.TwoHexesAdjacent(unitToRetreat.GetComponent<UnitDatabaseFields>().occupiedHex, hex))
                         score++;
                     if (score >= highScore)
                     {
@@ -4657,10 +4664,10 @@ public class AIRoutines : MonoBehaviour
                 }
                 // Move the unit to the best hex
                 if (bestRetreatHex != null)
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(bestRetreatHex, unitToRetreat.GetComponent<UnitDatabaseFields>().occupiedHex, unitToRetreat);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(bestRetreatHex, unitToRetreat.GetComponent<UnitDatabaseFields>().occupiedHex, unitToRetreat);
                 else
                     // Not sure why this would ever happen
-                    GlobalDefinitions.guiUpdateStatusMessage("Encounted a problem with executing retreat for unit " + unitToRetreat.name);
+                    GlobalDefinitions.GuiUpdateStatusMessage("Encounted a problem with executing retreat for unit " + unitToRetreat.name);
             }
         }
         GlobalDefinitions.dback2Attackers.Clear();
@@ -4672,18 +4679,18 @@ public class AIRoutines : MonoBehaviour
     /// Executes retreat options when the AI is attacking and the defender has to retreat
     /// </summary>
     /// <param name="retreatingUnits"></param>
-    public static void executeAIDback2(List<GameObject> retreatingUnits)
+    public static void ExecuteAIDback2(List<GameObject> retreatingUnits)
     {
         foreach (GameObject unitToRetreat in retreatingUnits)
         {
-            List<GameObject> retreatHexes = CombatResolutionRoutines.returnRetreatHexes(unitToRetreat);
+            List<GameObject> retreatHexes = CombatResolutionRoutines.ReturnRetreatHexes(unitToRetreat);
             int highScore = 0;
             GameObject bestRetreatHex = null;
             if (retreatHexes.Count == 0)
             {
                 // There are no hexes the unit can retreat to so it is eliminated
-                GlobalDefinitions.guiUpdateStatusMessage("No retreat available - eliminating " + unitToRetreat.name);
-                GlobalDefinitions.moveUnitToDeadPile(unitToRetreat);
+                GlobalDefinitions.GuiUpdateStatusMessage("No retreat available - eliminating " + unitToRetreat.name);
+                GlobalDefinitions.MoveUnitToDeadPile(unitToRetreat);
             }
             else
             {
@@ -4698,7 +4705,7 @@ public class AIRoutines : MonoBehaviour
                     if (hex.GetComponent<HexDatabaseFields>().hexValue == 1)
                         score++;
                     // One point for being two hexes away
-                    if (!GlobalDefinitions.twoHexesAdjacent(unitToRetreat.GetComponent<UnitDatabaseFields>().occupiedHex, hex))
+                    if (!GlobalDefinitions.TwoHexesAdjacent(unitToRetreat.GetComponent<UnitDatabaseFields>().occupiedHex, hex))
                         score++;
                     if (score >= highScore)
                     {
@@ -4708,16 +4715,16 @@ public class AIRoutines : MonoBehaviour
                 }
                 // Move the unit to the best hex
                 if (bestRetreatHex != null)
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(bestRetreatHex, unitToRetreat.GetComponent<UnitDatabaseFields>().occupiedHex, unitToRetreat);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(bestRetreatHex, unitToRetreat.GetComponent<UnitDatabaseFields>().occupiedHex, unitToRetreat);
                 else
                     // Not sure why this would ever happen
-                    GlobalDefinitions.guiUpdateStatusMessage("Encounted a problem with executing retreat for unit " + unitToRetreat.name);
+                    GlobalDefinitions.GuiUpdateStatusMessage("Encounted a problem with executing retreat for unit " + unitToRetreat.name);
             }
         }
 
         // Check if the attacking units can occupy the defending hex
         if (GlobalDefinitions.hexesAvailableForPostCombatMovement.Count > 0)
-            executeAIPostCombatMovement(GlobalDefinitions.dback2Attackers);
+            ExecuteAIPostCombatMovement(GlobalDefinitions.dback2Attackers);
 
         GlobalDefinitions.dback2Attackers.Clear();
         GlobalDefinitions.dback2Defenders.Clear();
@@ -4728,7 +4735,7 @@ public class AIRoutines : MonoBehaviour
     /// Determines if any of the units passed should occupy hexes available for post combat advance
     /// </summary>
     /// <param name="unitList"></param>
-    public static void executeAIPostCombatMovement(List<GameObject> unitList)
+    public static void ExecuteAIPostCombatMovement(List<GameObject> unitList)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("executeAIPostCombatMovement: executing unit count = " + unitList.Count);
@@ -4751,13 +4758,13 @@ public class AIRoutines : MonoBehaviour
             {
                 // If the hex has at least the same intrinsic value as what the unit is occupying then the bias is to take advantage of post combat movement
                 // Breaking through a defensive line on a river is dependent on getting units across the river
-                if ((GlobalDefinitions.hexUnderStackingLimit(hex, unitList[0].GetComponent<UnitDatabaseFields>().nationality)) &&
+                if ((GlobalDefinitions.HexUnderStackingLimit(hex, unitList[0].GetComponent<UnitDatabaseFields>().nationality)) &&
                         (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().intrinsicHexValue <= hex.GetComponent<HexDatabaseFields>().intrinsicHexValue))
                 {
                     // Check if the unit is moving off a sea hex which indicates that the hex being occupied should be flagged as a successful invasion
                     if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().sea)
                         hex.GetComponent<HexDatabaseFields>().successfullyInvaded = true;
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(hex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
                 }
             }
     }
@@ -4767,9 +4774,9 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="attackingUnits"></param>
     /// <param name="defendingUnits"></param>
-    public static void executeAIExchangeForAttackingUnits(List<GameObject> attackingUnits, List<GameObject> defendingUnits)
+    public static void ExecuteAIExchangeForAttackingUnits(List<GameObject> attackingUnits, List<GameObject> defendingUnits)
     {
-        int exchangeFactorsToLose = GlobalDefinitions.calculateDefenseFactorWithoutAirSupport(defendingUnits, attackingUnits);
+        int exchangeFactorsToLose = GlobalDefinitions.CalculateDefenseFactorWithoutAirSupport(defendingUnits, attackingUnits);
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("executeAIExchangeForAttackingUnits: need to eliminate factors total = " + exchangeFactorsToLose);
 #endif
@@ -4778,9 +4785,9 @@ public class AIRoutines : MonoBehaviour
 
         // Which units I want to exchange is dependent on the nationality so sort based on nationality
         if (attackingUnits[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German)
-            sortForExchangeGerman(attackingUnits);
+            SortForExchangeGerman(attackingUnits);
         else
-            sortForExchangeAllied(attackingUnits);
+            SortForExchangeAllied(attackingUnits);
 
         foreach (GameObject unit in attackingUnits)
             if (exchangeFactorsLost < exchangeFactorsToLose)
@@ -4788,7 +4795,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                 GlobalDefinitions.writeToLogFile("executeAIExchangeForAttackingUnits: adding unit " + unit.name + " with attack factor " + GlobalDefinitions.returnAttackFactor(unit) + " total lost factors = " + exchangeFactorsLost);
 #endif
-                exchangeFactorsLost += GlobalDefinitions.returnAttackFactor(unit);
+                exchangeFactorsLost += GlobalDefinitions.ReturnAttackFactor(unit);
                 unitsToDelete.Add(unit);
             }
 
@@ -4797,7 +4804,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("executeAIExchangeForAttackingUnits: eliminating attacking unit " + unit.name + " attack factor = " + unit.GetComponent<UnitDatabaseFields>().attackFactor);
 #endif
-            GlobalDefinitions.moveUnitToDeadPile(unit);
+            GlobalDefinitions.MoveUnitToDeadPile(unit);
             attackingUnits.Remove(unit);
         }
 
@@ -4806,11 +4813,11 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("executeAIExchangeForAttackingUnits: eliminating defending unit " + unit.name + " defense factor = " + unit.GetComponent<UnitDatabaseFields>().defenseFactor);
 #endif
-            GlobalDefinitions.moveUnitToDeadPile(unit);
+            GlobalDefinitions.MoveUnitToDeadPile(unit);
         }
 
         if ((GlobalDefinitions.hexesAvailableForPostCombatMovement.Count > 0) && (attackingUnits.Count > 0))
-            executeAIPostCombatMovement(attackingUnits);
+            ExecuteAIPostCombatMovement(attackingUnits);
     }
 
     /// <summary>
@@ -4818,17 +4825,17 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="attackingUnits"></param>
     /// <param name="defendingUnits"></param>
-    public static void executeAIExchangeForDefendingUnits(List<GameObject> attackingUnits, List<GameObject> defendingUnits)
+    public static void ExecuteAIExchangeForDefendingUnits(List<GameObject> attackingUnits, List<GameObject> defendingUnits)
     {
-        int exchangeFactorsToLose = (int)GlobalDefinitions.calculateAttackFactorWithoutAirSupport(attackingUnits);
+        int exchangeFactorsToLose = (int)GlobalDefinitions.CalculateAttackFactorWithoutAirSupport(attackingUnits);
         int exchangeFactorsLost = 0;
         List<GameObject> unitsToDelete = new List<GameObject>();
 
         // Which units I want to exchange is dependent on the nationality so sort based on nationality
         if (defendingUnits[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German)
-            sortForExchangeGerman(defendingUnits);
+            SortForExchangeGerman(defendingUnits);
         else
-            sortForExchangeAllied(defendingUnits);
+            SortForExchangeAllied(defendingUnits);
 
         foreach (GameObject unit in defendingUnits)
             if (exchangeFactorsLost < exchangeFactorsToLose)
@@ -4836,7 +4843,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
                 GlobalDefinitions.writeToLogFile("executeAIExchangeForDefendingUnits: adding unit " + unit.name + " with defense factor " + GlobalDefinitions.calculateUnitDefendingFactor(unit, attackingUnits) + " total lost factors = " + exchangeFactorsLost);
 #endif
-                exchangeFactorsLost += GlobalDefinitions.calculateUnitDefendingFactor(unit, attackingUnits);
+                exchangeFactorsLost += GlobalDefinitions.CalculateUnitDefendingFactor(unit, attackingUnits);
                 unitsToDelete.Add(unit);
             }
 
@@ -4845,7 +4852,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("executeAIExchangeForDefendingUnits: eliminating defending unit " + unit.name + " defense factor = " + unit.GetComponent<UnitDatabaseFields>().defenseFactor);
 #endif
-            GlobalDefinitions.moveUnitToDeadPile(unit);
+            GlobalDefinitions.MoveUnitToDeadPile(unit);
         }
 
         foreach (GameObject unit in attackingUnits)
@@ -4853,7 +4860,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("executeAIExchangeForDefendingUnits: eliminating attacking unit " + unit.name + " attack factor = " + unit.GetComponent<UnitDatabaseFields>().attackFactor);
 #endif
-            GlobalDefinitions.moveUnitToDeadPile(unit);
+            GlobalDefinitions.MoveUnitToDeadPile(unit);
         }
     }
 
@@ -4861,7 +4868,7 @@ public class AIRoutines : MonoBehaviour
     /// Sort the unit list passed based on which units should be exchanged first for German units
     /// </summary>
     /// <param name="unitList"></param>
-    private static void sortForExchangeGerman(List<GameObject> unitList)
+    private static void SortForExchangeGerman(List<GameObject> unitList)
     {
         // Sort the most desirable units for exchange to be at the beginning of the list
         //  HQ, Static, Infantry, Airborne, Armor
@@ -4982,7 +4989,7 @@ public class AIRoutines : MonoBehaviour
     /// Sort the unit list passed based on which units should be exchanged first for Allied units
     /// </summary>
     /// <param name="unitList"></param>
-    private static void sortForExchangeAllied(List<GameObject> unitList)
+    private static void SortForExchangeAllied(List<GameObject> unitList)
     {
         // Sort the most desirable units for exchange to be at the beginning of the list
         //  Infantry, Armor, Airborne, HQ
@@ -5084,7 +5091,7 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// Makes German reinforcement moves
     /// </summary>
-    public static void makeGermanReinforcementMoves()
+    public static void MakeGermanReinforcementMoves()
     {
         List<GameObject> closeUnits = new List<GameObject>();
 
@@ -5120,7 +5127,7 @@ public class AIRoutines : MonoBehaviour
 
                 for (int index = 0; index < GlobalDefinitions.alliedGroups[groupNumber].Count; index++)
                 {
-                    closeUnits = findNearbyUnits(GlobalDefinitions.alliedGroups[groupNumber][index].GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.Nationality.Allied, GlobalDefinitions.groupRange);
+                    closeUnits = FindNearbyUnits(GlobalDefinitions.alliedGroups[groupNumber][index].GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.Nationality.Allied, GlobalDefinitions.groupRange);
                     foreach (GameObject closeUnit in closeUnits)
                     {
                         closeUnit.GetComponent<UnitDatabaseFields>().groupNumber = groupNumber;
@@ -5149,7 +5156,7 @@ public class AIRoutines : MonoBehaviour
         // Now go through all of the German units and assign group numbers based on the Allied group they can attack
         foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
         {
-            closeUnits = findNearbyEnemyUnits(unit.GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.Nationality.German, (unit.GetComponent<UnitDatabaseFields>().movementFactor + 1));
+            closeUnits = FindNearbyEnemyUnits(unit.GetComponent<UnitDatabaseFields>().occupiedHex, GlobalDefinitions.Nationality.German, (unit.GetComponent<UnitDatabaseFields>().movementFactor + 1));
 
             List<int> differentGroups = new List<int>();
 
@@ -5268,16 +5275,16 @@ public class AIRoutines : MonoBehaviour
             if ((attackFactors[index] - defenseFactors[index]) > 0)
             {
                 int totalFactorsMoved = 0;
-                GameObject targetHex = returnGermanReinforcementTarget(groupNumber);
+                GameObject targetHex = ReturnGermanReinforcementTarget(groupNumber);
                 // Sort the units
-                sortGermanReinforcementUnits(GlobalDefinitions.germanReserves, index);
+                SortGermanReinforcementUnits(GlobalDefinitions.germanReserves, index);
                 foreach (GameObject unit in GlobalDefinitions.germanReserves)
                     if (totalFactorsMoved < (attackFactors[index] - defenseFactors[index]))
                     {
 #if OUTPUTDEBUG
                         GlobalDefinitions.writeToLogFile("makeGermanReinforcementMoves: Reserve unit " + unit.name + " being moved to target " + targetHex.name);
 #endif
-                        executeGermanReinforcementMovement(unit, targetHex);
+                        ExecuteGermanReinforcementMovement(unit, targetHex);
                         totalFactorsMoved += unit.GetComponent<UnitDatabaseFields>().defenseFactor;
                     }
 
@@ -5325,8 +5332,8 @@ public class AIRoutines : MonoBehaviour
                 // Determine which group is closest and move the unit to that target
                 for (int index = 0; index < GlobalDefinitions.germanGroups.Count; index++)
                 {
-                    tempHex = returnGermanReinforcementTarget(index);
-                    distance = calculateDistance(unit.GetComponent<UnitDatabaseFields>().occupiedHex, tempHex);
+                    tempHex = ReturnGermanReinforcementTarget(index);
+                    distance = CalculateDistance(unit.GetComponent<UnitDatabaseFields>().occupiedHex, tempHex);
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("makeGermanReinforcementMoves:     index = " + index + " distance = " + distance + " hex = " + tempHex.name);
 #endif
@@ -5340,14 +5347,14 @@ public class AIRoutines : MonoBehaviour
                 // If minHex is null that means that there aren't any Allied units on the board.  Move north???
                 if (minHex == null)
                 {
-                    moveGermanReinforcementWithNoAlliedUnits(unit);
+                    MoveGermanReinforcementWithNoAlliedUnits(unit);
                 }
                 else
                 {
 #if OUTPUTDEBUG
                     GlobalDefinitions.writeToLogFile("makeGermanReinforcementMoves: moving to hex " + minHex.name);
 #endif
-                    executeGermanReinforcementMovement(unit, minHex);
+                    ExecuteGermanReinforcementMovement(unit, minHex);
                 }
             }
     }
@@ -5356,20 +5363,20 @@ public class AIRoutines : MonoBehaviour
     /// Executes when there are no Allied units on the board so moves reinforement units directly behind Pas De Calais
     /// </summary>
     /// <param name="unit"></param>
-    private static void moveGermanReinforcementWithNoAlliedUnits(GameObject unit)
+    private static void MoveGermanReinforcementWithNoAlliedUnits(GameObject unit)
     {
         unit.GetComponent<UnitDatabaseFields>().availableMovementHexes =
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().returnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ReturnAvailableMovementHexes(unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
 
         // Find the available hex that is the closest to hex (19,17)
-        GameObject targetHex = GlobalDefinitions.getHexAtXY(12, 22);
+        GameObject targetHex = GlobalDefinitions.GetHexAtXY(12, 22);
         float closestDistance = float.MaxValue;
         GameObject closestHex = null;
 
         foreach (GameObject hex in unit.GetComponent<UnitDatabaseFields>().availableMovementHexes)
-            if (GlobalDefinitions.hexUnderStackingLimit(hex, GlobalDefinitions.Nationality.German) && (closestDistance > calculateDistance(hex, targetHex)))
+            if (GlobalDefinitions.HexUnderStackingLimit(hex, GlobalDefinitions.Nationality.German) && (closestDistance > CalculateDistance(hex, targetHex)))
             {
-                closestDistance = calculateDistance(hex, targetHex);
+                closestDistance = CalculateDistance(hex, targetHex);
                 closestHex = hex;
             }
 
@@ -5385,7 +5392,7 @@ public class AIRoutines : MonoBehaviour
 #if OUTPUTDEBUG
             GlobalDefinitions.writeToLogFile("moveGermanReinforcementWithNoAlliedUnits: unit " + unit.name + " moving to " + closestHex.name);
 #endif
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(closestHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(closestHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
         }
 
     }
@@ -5396,7 +5403,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="unitList"></param>
     /// <param name="groupNumber"></param>
-    private static void sortGermanReinforcementUnits(List<GameObject> unitList, int groupNumber)
+    private static void SortGermanReinforcementUnits(List<GameObject> unitList, int groupNumber)
     {
 #if OUTPUTDEBUG
         GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits: unitList count = " + unitList.Count);
@@ -5404,7 +5411,7 @@ public class AIRoutines : MonoBehaviour
             GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits:         " + unit.name);
 #endif
         GameObject tempUnit;
-        GameObject targetHex = returnGermanReinforcementTarget(groupNumber);
+        GameObject targetHex = ReturnGermanReinforcementTarget(groupNumber);
         int index1 = 0;
         int index2 = 0;
         int startIndex = 0;
@@ -5435,7 +5442,7 @@ public class AIRoutines : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits: sorting armor units i = " + i + " j = " + j);
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits:     i unit = " + unitList[i].name + " j unit = " + unitList[j].name);
 #endif
-                if (calculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > calculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
+                if (CalculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > CalculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
                 {
                     tempUnit = unitList[i];
                     unitList[i] = unitList[j];
@@ -5468,7 +5475,7 @@ public class AIRoutines : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits: sorting airborne units i = " + i + " j = " + j);
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits:     i unit = " + unitList[i].name + " j unit = " + unitList[j].name);
 #endif
-                if (calculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > calculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
+                if (CalculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > CalculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
                 {
                     tempUnit = unitList[i];
                     unitList[i] = unitList[j];
@@ -5501,7 +5508,7 @@ public class AIRoutines : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits: sorting infantry units i = " + i + " j = " + j);
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits:     i unit = " + unitList[i].name + " j unit = " + unitList[j].name);
 #endif
-                if (calculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > calculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
+                if (CalculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > CalculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
                 {
                     tempUnit = unitList[i];
                     unitList[i] = unitList[j];
@@ -5534,7 +5541,7 @@ public class AIRoutines : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits: sorting static units i = " + i + " j = " + j);
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits:     i unit = " + unitList[i].name + " j unit = " + unitList[j].name);
 #endif
-                if (calculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > calculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
+                if (CalculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > CalculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
                 {
                     tempUnit = unitList[i];
                     unitList[i] = unitList[j];
@@ -5552,7 +5559,7 @@ public class AIRoutines : MonoBehaviour
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits: sorting hq units i = " + i + " j = " + j);
                 GlobalDefinitions.writeToLogFile("sortGermanReinforcementUnits:     i unit = " + unitList[i].name + " j unit = " + unitList[j].name);
 #endif
-                if (calculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > calculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
+                if (CalculateDistance(unitList[i].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex) > CalculateDistance(unitList[j].GetComponent<UnitDatabaseFields>().occupiedHex, targetHex))
                 {
                     tempUnit = unitList[i];
                     unitList[i] = unitList[j];
@@ -5572,7 +5579,7 @@ public class AIRoutines : MonoBehaviour
     /// </summary>
     /// <param name="groupNumber"></param>
     /// <returns></returns>
-    private static GameObject returnGermanReinforcementTarget(int groupNumber)
+    private static GameObject ReturnGermanReinforcementTarget(int groupNumber)
     {
         List<GameObject> targets = new List<GameObject>();
         int furthestWest = 0;
@@ -5632,7 +5639,7 @@ public class AIRoutines : MonoBehaviour
         return (null);
     }
 
-    public static Vector2 returnAlliedAverageLocationForInvasionArea(int invasionAreaIndex)
+    public static Vector2 ReturnAlliedAverageLocationForInvasionArea(int invasionAreaIndex)
     {
         int totalX = 0;
         int totalY = 0;
@@ -5665,14 +5672,14 @@ public class AIRoutines : MonoBehaviour
     /// <summary>
     /// This routine adds carpet bombing to AI combats
     /// </summary>
-    public static void checkForAICarpetBombingShouldBeAdded()
+    public static void CheckForAICarpetBombingShouldBeAdded()
     {
         // Go through each of the combats that are pending and see if there are 1:2 combats in place that carpet bombing can be added to
         // I can make it better but I'm going to stop at the first one I find for now instead of weighing them off
         foreach (GameObject combat in GlobalDefinitions.allCombats)
         {
-            if ((GlobalDefinitions.returnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport) == -2) &&
-                    CombatRoutines.checkIfCarpetBombingIsAvailable(combat))
+            if ((GlobalDefinitions.ReturnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport) == -2) &&
+                    CombatRoutines.CheckIfCarpetBombingIsAvailable(combat))
             {
                 GlobalDefinitions.carpetBombingUsedThisTurn = true;
                 GlobalDefinitions.numberOfCarpetBombingsUsed++;

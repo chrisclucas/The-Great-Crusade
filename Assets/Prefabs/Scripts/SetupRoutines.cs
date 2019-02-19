@@ -7,12 +7,12 @@ public class SetupRoutines : MonoBehaviour
     /// <summary>
     /// This routine selects the unit to be setup
     /// </summary>
-    public GameObject getUnitToSetup(GlobalDefinitions.Nationality nationality, GameObject selectedUnit)
+    public GameObject GetUnitToSetup(GlobalDefinitions.Nationality nationality, GameObject selectedUnit)
     {
         if ((selectedUnit != null) && (selectedUnit.GetComponent<UnitDatabaseFields>().nationality == nationality))
         {
             // Change the color of the unit to yellow
-            GlobalDefinitions.highlightUnit(selectedUnit);
+            GlobalDefinitions.HighlightUnit(selectedUnit);
         }
         else
             selectedUnit = null;
@@ -23,18 +23,18 @@ public class SetupRoutines : MonoBehaviour
     /// <summary>
     /// This routine takes the selectedUnit and places it at the destination hex selected
     /// </summary>
-    public void getUnitSetupDestination(GameObject selectedUnit, GameObject targetHex)
+    public void GetUnitSetupDestination(GameObject selectedUnit, GameObject targetHex)
     {
-        if ((targetHex != null) && (verifyValidHex(selectedUnit, targetHex)))
+        if ((targetHex != null) && (VerifyValidHex(selectedUnit, targetHex)))
         {
             // If the unit already occupies a hex (not gauranteed since this is setup) need
             // to remove it from the hex so it isn't counting against stacking when it isn't there
             if (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
-                GlobalDefinitions.removeUnitFromHex(selectedUnit, selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                GlobalDefinitions.RemoveUnitFromHex(selectedUnit, selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
 
-            GlobalDefinitions.putUnitOnHex(selectedUnit, targetHex);
+            GlobalDefinitions.PutUnitOnHex(selectedUnit, targetHex);
         }
-        GlobalDefinitions.unhighlightUnit(selectedUnit);
+        GlobalDefinitions.UnhighlightUnit(selectedUnit);
 
         if (targetHex != null)
         {
@@ -51,21 +51,21 @@ public class SetupRoutines : MonoBehaviour
     /// <param name="selectedUnit"></param>
     /// <param name="xCoord"></param>
     /// <param name="yCoord"></param>
-    public void getUnitSetupDestination(GameObject selectedUnit, int xCoord, int yCoord)
+    public void GetUnitSetupDestination(GameObject selectedUnit, int xCoord, int yCoord)
     {
         GameObject targetHex;
 
-        targetHex = GlobalDefinitions.getHexAtXY(xCoord, yCoord);
-        if ((targetHex != null) && (verifyValidHex(selectedUnit, targetHex)))
+        targetHex = GlobalDefinitions.GetHexAtXY(xCoord, yCoord);
+        if ((targetHex != null) && (VerifyValidHex(selectedUnit, targetHex)))
         {
             // If the unit already occupies a hex (not gauranteed since this is setup) need
             // to remove it from the hex so it isn't counting against stacking when it isn't there
             if (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
-                GlobalDefinitions.removeUnitFromHex(selectedUnit, selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                GlobalDefinitions.RemoveUnitFromHex(selectedUnit, selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
 
-            GlobalDefinitions.putUnitOnHex(selectedUnit, targetHex);
+            GlobalDefinitions.PutUnitOnHex(selectedUnit, targetHex);
         }
-        GlobalDefinitions.unhighlightUnit(selectedUnit);
+        GlobalDefinitions.UnhighlightUnit(selectedUnit);
         selectedUnit.transform.parent = GlobalDefinitions.allUnitsOnBoard.transform;
         selectedUnit.GetComponent<UnitDatabaseFields>().inBritain = false;
         selectedUnit = null;
@@ -77,7 +77,7 @@ public class SetupRoutines : MonoBehaviour
     /// <param name="unit"></param>
     /// <param name="hex"></param>
     /// <returns></returns>
-    bool verifyValidHex(GameObject unit, GameObject hex)
+    bool VerifyValidHex(GameObject unit, GameObject hex)
     {
         // Make sure the unit isn't stacking on a hex with an enemy unit
         if ((hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
@@ -97,7 +97,7 @@ public class SetupRoutines : MonoBehaviour
     /// This routine goes through a series of checks to see if the units are setup properly.
     /// </summary>
     /// <returns></returns>
-    public static bool updateHexFields()
+    public static bool UpdateHexFields()
     {
         bool returnState = true;
 
@@ -107,18 +107,18 @@ public class SetupRoutines : MonoBehaviour
             if (unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German)
                 GlobalDefinitions.germanUnitsOnBoard.Add(unit.gameObject);
 
-        GlobalDefinitions.writeToLogFile("updateHexFields: executing ... number of German units on board = " + GlobalDefinitions.germanUnitsOnBoard.Count);
+        GlobalDefinitions.WriteToLogFile("updateHexFields: executing ... number of German units on board = " + GlobalDefinitions.germanUnitsOnBoard.Count);
 
         foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
         {
             // Unhighlight the unit so that if all units pass they will be unhighlighted
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
 
             // Not sure if this is needed.  Can't really be in "Units On Board" without a hex assignment
             if (unit.GetComponent<UnitDatabaseFields>().occupiedHex == null)
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unit " + unit.GetComponent<UnitDatabaseFields>().name + " is not assigned a hex locunit.GetComponent<UnitDatabaseFields>().ation");
-                GlobalDefinitions.highlightUnit(unit);
+                GlobalDefinitions.GuiUpdateStatusMessage("Internal Error - Unit " + unit.GetComponent<UnitDatabaseFields>().name + " is not assigned a hex locunit.GetComponent<UnitDatabaseFields>().ation");
+                GlobalDefinitions.HighlightUnit(unit);
                 returnState = false;
             }
 
@@ -128,8 +128,8 @@ public class SetupRoutines : MonoBehaviour
                     !unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().inlandPort &&
                     !unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().coastalPort)
             {
-                GlobalDefinitions.guiUpdateStatusMessage(unit.GetComponent<UnitDatabaseFields>().unitDesignation + " is a static unit and must start on a coast hex, a port, or an inland port");
-                GlobalDefinitions.highlightUnit(unit);
+                GlobalDefinitions.GuiUpdateStatusMessage(unit.GetComponent<UnitDatabaseFields>().unitDesignation + " is a static unit and must start on a coast hex, a port, or an inland port");
+                GlobalDefinitions.HighlightUnit(unit);
                 returnState = false;
             }
 
@@ -142,8 +142,8 @@ public class SetupRoutines : MonoBehaviour
                     (unit.name == "Armor-German-15SS")) &&
                     (!unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().germanRepalcement))
             {
-                GlobalDefinitions.guiUpdateStatusMessage(unit.GetComponent<UnitDatabaseFields>().unitDesignation + " must start on a replacement hex (hexes in Germany with a star on them");
-                GlobalDefinitions.highlightUnit(unit);
+                GlobalDefinitions.GuiUpdateStatusMessage(unit.GetComponent<UnitDatabaseFields>().unitDesignation + " must start on a replacement hex (hexes in Germany with a star on them");
+                GlobalDefinitions.HighlightUnit(unit);
                 returnState = false;
             }
 
@@ -158,7 +158,7 @@ public class SetupRoutines : MonoBehaviour
             }
         }
         if (!returnState)
-            GlobalDefinitions.guiUpdateStatusMessage("Cannot exit setup until all issues are resolved");
+            GlobalDefinitions.GuiUpdateStatusMessage("Cannot exit setup until all issues are resolved");
         return (returnState);
     }
 }

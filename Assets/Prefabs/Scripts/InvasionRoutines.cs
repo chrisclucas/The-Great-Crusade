@@ -8,7 +8,7 @@ public class InvasionRoutines : MonoBehaviour
     /// <summary>
     /// This routine resets all the counters associated with the units used in the invasion area for the turn
     /// </summary>
-    public void initializeAreaCounters()
+    public void InitializeAreaCounters()
     {
         foreach (InvasionArea targetArea in GlobalDefinitions.invasionAreas)
         {
@@ -25,7 +25,7 @@ public class InvasionRoutines : MonoBehaviour
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         {
             hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
-            GlobalDefinitions.unhighlightHex(hex.gameObject);
+            GlobalDefinitions.UnhighlightHex(hex.gameObject);
         }
     }
 
@@ -33,18 +33,18 @@ public class InvasionRoutines : MonoBehaviour
     /// Routine pulls up a list of the invasion areas for the user to select from.
     /// </summary>
     /// <returns></returns>
-    public void selectInvasionArea()
+    public void SelectInvasionArea()
     {
-        GlobalDefinitions.writeToLogFile("selectInvasionArea: executing");
+        GlobalDefinitions.WriteToLogFile("selectInvasionArea: executing");
         Canvas invasionAreaSelectionCanvasInstance = new Canvas();
 
         float panelWidth = 3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
         float panelHeight = 9 * GlobalDefinitions.GUIUNITIMAGESIZE;
-        GlobalDefinitions.invasionAreaSelectionGUIInstance = GlobalDefinitions.createGUICanvas("InvasionAreaSelectionGUIInstance",
+        GlobalDefinitions.invasionAreaSelectionGUIInstance = GlobalDefinitions.CreateGUICanvas("InvasionAreaSelectionGUIInstance",
                 panelWidth,
                 panelHeight,
                 ref invasionAreaSelectionCanvasInstance);
-        GlobalDefinitions.createText("Select invasion area", "InvasionAreaSelectionText",
+        GlobalDefinitions.CreateText("Select invasion area", "InvasionAreaSelectionText",
                 (3) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -53,20 +53,20 @@ public class InvasionRoutines : MonoBehaviour
         for (int index = 0; index < 7; index++)
         {
             Toggle tempToggle;
-            GlobalDefinitions.createText(GlobalDefinitions.invasionAreas[index].name,
+            GlobalDefinitions.CreateText(GlobalDefinitions.invasionAreas[index].name,
                     "InvasionAreaSelectionText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 1.25f - 0.5f * panelWidth,
                     (index + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     invasionAreaSelectionCanvasInstance);
-            tempToggle = GlobalDefinitions.createToggle("InvasionAreaSelectionToggle" + index,
+            tempToggle = GlobalDefinitions.CreateToggle("InvasionAreaSelectionToggle" + index,
                         2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         (index + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         invasionAreaSelectionCanvasInstance).GetComponent<Toggle>();
             tempToggle.gameObject.AddComponent<InvasionSelectionToggleRoutines>();
             tempToggle.GetComponent<InvasionSelectionToggleRoutines>().index = index;
-            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<InvasionSelectionToggleRoutines>().invadedAreaSelected());
+            tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<InvasionSelectionToggleRoutines>().InvadedAreaSelected());
         }
     }
 
@@ -74,9 +74,9 @@ public class InvasionRoutines : MonoBehaviour
     /// Sets the global variables related to an invasion site
     /// </summary>
     /// <param name="invadedAreaSectionIndex"></param>
-    public void setInvasionArea(int invadedAreaSectionIndex)
+    public void SetInvasionArea(int invadedAreaSectionIndex)
     {
-        GlobalDefinitions.writeToLogFile("setInvasionArea: executing with index " + invadedAreaSectionIndex);
+        GlobalDefinitions.WriteToLogFile("setInvasionArea: executing with index " + invadedAreaSectionIndex);
         GlobalDefinitions.numberInvasionsExecuted++;
         if (GlobalDefinitions.turnNumber == 1)
         {
@@ -96,14 +96,14 @@ public class InvasionRoutines : MonoBehaviour
     /// This routine gets an invading unit from Britain
     /// </summary>
     /// <returns></returns>
-    public GameObject getInvadingUnit(GameObject selectedUnit)
+    public GameObject GetInvadingUnit(GameObject selectedUnit)
     {
-        GlobalDefinitions.writeToLogFile("getInvadingUnit: executing for unit = " + selectedUnit.name);
+        GlobalDefinitions.WriteToLogFile("getInvadingUnit: executing for unit = " + selectedUnit.name);
 
         //  Check for valid unit
         if (selectedUnit == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("No unit selected; select a unit in Britain that is available to invade this turn");
+            GlobalDefinitions.GuiUpdateStatusMessage("No unit selected; select a unit in Britain that is available to invade this turn");
         }
 
         // Check if the unit is on a sea hex, this would make it a unit that has already been deployed for an invasion
@@ -112,7 +112,7 @@ public class InvasionRoutines : MonoBehaviour
                 (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().sea))
         {
             // Hghlight the unit
-            GlobalDefinitions.highlightUnit(selectedUnit);
+            GlobalDefinitions.HighlightUnit(selectedUnit);
             return (selectedUnit);
         }
 
@@ -120,15 +120,15 @@ public class InvasionRoutines : MonoBehaviour
         else if (!selectedUnit.GetComponent<UnitDatabaseFields>().inBritain)
         {
             if (selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex != null)
-                GlobalDefinitions.guiDisplayUnitsOnHex(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
+                GlobalDefinitions.GuiDisplayUnitsOnHex(selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex);
         }
         else if (selectedUnit.GetComponent<UnitDatabaseFields>().HQ)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("HQ units are not allowed to invade");
+            GlobalDefinitions.GuiUpdateStatusMessage("HQ units are not allowed to invade");
         }
         else if (selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable > GlobalDefinitions.turnNumber)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Unit selected is not available until turn " + selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable);
+            GlobalDefinitions.GuiUpdateStatusMessage("Unit selected is not available until turn " + selectedUnit.GetComponent<UnitDatabaseFields>().turnAvailable);
         }
         else
         {
@@ -136,20 +136,20 @@ public class InvasionRoutines : MonoBehaviour
 
             if (GlobalDefinitions.turnNumber == 1)
             {
-                GlobalDefinitions.writeToLogFile("getInvadingUnit: total units used this turn = " + GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].totalUnitsUsedThisTurn);
-                GlobalDefinitions.writeToLogFile("getInvadingUnit: max total unit for invasion area this turn = " + returnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]));
+                GlobalDefinitions.WriteToLogFile("getInvadingUnit: total units used this turn = " + GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].totalUnitsUsedThisTurn);
+                GlobalDefinitions.WriteToLogFile("getInvadingUnit: max total unit for invasion area this turn = " + ReturnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]));
 
                 if (GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].totalUnitsUsedThisTurn <
-                        returnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]))
+                        ReturnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]))
                 {
                     if (selectedUnit.GetComponent<UnitDatabaseFields>().armor)
                     {
                         if (GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].armorUnitsUsedThisTurn <
-                                returnMaxArmorUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]))
+                                ReturnMaxArmorUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]))
                         {
                             // Valid unit so highlight the hexes available in the invasion area
-                            GlobalDefinitions.highlightUnit(selectedUnit);
-                            highlightAvailableInvasionHexes(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]);
+                            GlobalDefinitions.HighlightUnit(selectedUnit);
+                            HighlightAvailableInvasionHexes(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]);
                             return (selectedUnit);
                         }
                     }
@@ -159,20 +159,20 @@ public class InvasionRoutines : MonoBehaviour
                         //GlobalDefinitions.writeToLogFile("getInvadingUnit: max infantry units this turn = " + returnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]));
                         // Need to check for using infantry against the armor limit
                         if ((GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].infantryUnitsUsedThisTurn <
-                                returnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex])) ||
+                                ReturnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex])) ||
                                 (GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].armorUnitsUsedThisTurn <
-                                returnMaxArmorUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex])))
+                                ReturnMaxArmorUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex])))
                         {
                             // Valid unit so highlight the hexes available in the invasion area
-                            GlobalDefinitions.highlightUnit(selectedUnit);
-                            highlightAvailableInvasionHexes(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]);
+                            GlobalDefinitions.HighlightUnit(selectedUnit);
+                            HighlightAvailableInvasionHexes(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]);
                             return (selectedUnit);
                         }
                     }
                     else
                     {
                         // Don't know why we would ever get here but if we do return a null
-                        GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Selected unit is not recognized as armor, infantry, or airborne");
+                        GlobalDefinitions.GuiUpdateStatusMessage("Internal Error - Selected unit is not recognized as armor, infantry, or airborne");
                     }
                 }
             }
@@ -180,16 +180,16 @@ public class InvasionRoutines : MonoBehaviour
             {
                 // Need to check the second invasion area
                 if (GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].totalUnitsUsedThisTurn <
-                        returnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex]))
+                        ReturnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex]))
                 {
                     if (selectedUnit.GetComponent<UnitDatabaseFields>().armor)
                     {
                         if (GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].armorUnitsUsedThisTurn <
-                                returnMaxArmorUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex]))
+                                ReturnMaxArmorUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex]))
                         {
                             // Valid unit so highlight the hexes available in the invasion area
-                            GlobalDefinitions.highlightUnit(selectedUnit);
-                            highlightAvailableInvasionHexes(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex]);
+                            GlobalDefinitions.HighlightUnit(selectedUnit);
+                            HighlightAvailableInvasionHexes(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex]);
                             return (selectedUnit);
                         }
                     }
@@ -197,13 +197,13 @@ public class InvasionRoutines : MonoBehaviour
                     {
                         // Need to check for using infantry against the armor limit
                         if ((GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].infantryUnitsUsedThisTurn <
-                                returnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex])) ||
+                                ReturnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex])) ||
                                 (GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].armorUnitsUsedThisTurn <
-                                returnMaxArmorUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex])))
+                                ReturnMaxArmorUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex])))
                         {
                             // Valid unit so highlight the hexes available in the invasion area
-                            GlobalDefinitions.highlightUnit(selectedUnit);
-                            highlightAvailableInvasionHexes(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex]);
+                            GlobalDefinitions.HighlightUnit(selectedUnit);
+                            HighlightAvailableInvasionHexes(GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex]);
                             return (selectedUnit);
                         }
                     }
@@ -217,39 +217,39 @@ public class InvasionRoutines : MonoBehaviour
     /// Determines the hex that the selected unit will invade from.
     /// </summary>
     /// <param name="selectedUnit"></param>
-    public void getUnitInvasionHex(GameObject selectedUnit, GameObject selectedHex)
+    public void GetUnitInvasionHex(GameObject selectedUnit, GameObject selectedHex)
     {
         if (selectedHex != null)
         {
             if (selectedHex.GetComponent<HexDatabaseFields>().availableForMovement)
             {
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(selectedUnit, selectedHex, false);
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(selectedUnit, selectedHex, false);
             }
             else
             {
-                GlobalDefinitions.guiDisplayUnitsOnHex(selectedHex);
-                GlobalDefinitions.guiUpdateStatusMessage("Hex selected is not available for invasion, must select a highlighted hex");
+                GlobalDefinitions.GuiDisplayUnitsOnHex(selectedHex);
+                GlobalDefinitions.GuiUpdateStatusMessage("Hex selected is not available for invasion, must select a highlighted hex");
             }
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("No hex selected, must select a highlighted hex");
+            GlobalDefinitions.GuiUpdateStatusMessage("No hex selected, must select a highlighted hex");
 
         if (GlobalDefinitions.selectedUnit != null)
-            GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+            GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
         GlobalDefinitions.selectedUnit = null;
 
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         {
-            GlobalDefinitions.unhighlightHex(hex.gameObject);
+            GlobalDefinitions.UnhighlightHex(hex.gameObject);
             hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
         }
     }
 
-    private int returnMaxTotalUnitsForInvasionAreaThisTurn(InvasionArea targetArea)
+    private int ReturnMaxTotalUnitsForInvasionAreaThisTurn(InvasionArea targetArea)
     {
         if (targetArea.turn == 0)
         {
-            GlobalDefinitions.writeToLogFile("returnMaxTotalUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
+            GlobalDefinitions.WriteToLogFile("returnMaxTotalUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
             return (0);
         }
         else if (targetArea.turn == 1)
@@ -260,11 +260,11 @@ public class InvasionRoutines : MonoBehaviour
             return (targetArea.divisionsPerTurn);
     }
 
-    private int returnMaxArmorUnitsForInvasionAreaThisTurn(InvasionArea targetArea)
+    private int ReturnMaxArmorUnitsForInvasionAreaThisTurn(InvasionArea targetArea)
     {
         if (targetArea.turn == 0)
         {
-            GlobalDefinitions.writeToLogFile("returnMaxArmorUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
+            GlobalDefinitions.WriteToLogFile("returnMaxArmorUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
             return (0);
         }
         else if (targetArea.turn == 1)
@@ -275,11 +275,11 @@ public class InvasionRoutines : MonoBehaviour
             return (targetArea.divisionsPerTurn);
     }
 
-    private int returnMaxInfantryUnitsForInvasionAreaThisTurn(InvasionArea targetArea)
+    private int ReturnMaxInfantryUnitsForInvasionAreaThisTurn(InvasionArea targetArea)
     {
         if (targetArea.turn == 0)
         {
-            GlobalDefinitions.writeToLogFile("returnMaxInfantryUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
+            GlobalDefinitions.WriteToLogFile("returnMaxInfantryUnitsForInvasionAreaThisTurn: Something is wrong - invasion area with turn set to 0");
             return (0);
         }
         else if (targetArea.turn == 1)
@@ -294,13 +294,13 @@ public class InvasionRoutines : MonoBehaviour
     /// Highlights the hexes for the invasion area passed
     /// </summary>
     /// <param name="targetArea"></param>
-    private void highlightAvailableInvasionHexes(InvasionArea targetArea)
+    private void HighlightAvailableInvasionHexes(InvasionArea targetArea)
     {
         foreach (GameObject hex in targetArea.invasionHexes)
         {
             if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count < 2)
             {
-                GlobalDefinitions.highlightHexForMovement(hex);
+                GlobalDefinitions.HighlightHexForMovement(hex);
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
             }
         }
@@ -310,7 +310,7 @@ public class InvasionRoutines : MonoBehaviour
     /// This routine is used to adjust the unit limits when a unit is landed from Britain
     /// </summary>
     /// <param name="unit"></param>
-    public void incrementInvasionUnitLimits(GameObject unit)
+    public void IncrementInvasionUnitLimits(GameObject unit)
     {
         int invasionAreaIndex = unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().invasionAreaIndex;
         if ((GlobalDefinitions.invasionAreas[invasionAreaIndex].invaded) &&
@@ -326,7 +326,7 @@ public class InvasionRoutines : MonoBehaviour
             {
                 //  First check if infantry should be used against the armor limits
                 if (GlobalDefinitions.invasionAreas[invasionAreaIndex].infantryUnitsUsedThisTurn ==
-                            returnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[invasionAreaIndex]))
+                            ReturnMaxInfantryUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[invasionAreaIndex]))
                 {
                     // If so then increment the armor and the decrement the infantry used as armor
                     GlobalDefinitions.invasionAreas[invasionAreaIndex].armorUnitsUsedThisTurn++;
@@ -351,7 +351,7 @@ public class InvasionRoutines : MonoBehaviour
             }
             else
             {
-                GlobalDefinitions.writeToLogFile("incrementInvasionLimits: ERROR - unit = " + unit.name + " Most likely due to an HQ being landed during the first two turns.. This should never be executed");
+                GlobalDefinitions.WriteToLogFile("incrementInvasionLimits: ERROR - unit = " + unit.name + " Most likely due to an HQ being landed during the first two turns.. This should never be executed");
             }
         }
         else
@@ -366,7 +366,7 @@ public class InvasionRoutines : MonoBehaviour
     /// This routine is called to add back to limits when a unit returns to Britain by an undo action
     /// </summary>
     /// <param name="unit"></param>
-    public void decrementInvasionUnitLimits(GameObject unit)
+    public void DecrementInvasionUnitLimits(GameObject unit)
     {
         // When returning a unit back to Britain, it only impacts the limits if it is being returned on the turn that it was landed.
         // Otherwise sending units back will allow the player to replace them with other units and still bring in the full 
@@ -425,7 +425,7 @@ public class InvasionRoutines : MonoBehaviour
             }
             else
             {
-                GlobalDefinitions.writeToLogFile("decrementInvasionUnitLimits: ERROR - Most likely due to an HQ being landed during the first two turns.. This should never be executed");
+                GlobalDefinitions.WriteToLogFile("decrementInvasionUnitLimits: ERROR - Most likely due to an HQ being landed during the first two turns.. This should never be executed");
             }
         }
         else
@@ -439,7 +439,7 @@ public class InvasionRoutines : MonoBehaviour
     /// <summary>
     /// Takes all units on sea hexes that don't have any opposition and moves them onto land
     /// </summary>
-    public void moveUnopposedSeaUnits()
+    public void MoveUnopposedSeaUnits()
     {
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
         {
@@ -452,7 +452,7 @@ public class InvasionRoutines : MonoBehaviour
                 // Set the flag on the invasion target hex to allow for reinforcement landing to take place
                 unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().successfullyInvaded = true;
                 unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().alliedControl = true;
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(
                         unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().invasionTarget,
                         unit.GetComponent<UnitDatabaseFields>().occupiedHex, unit);
             }

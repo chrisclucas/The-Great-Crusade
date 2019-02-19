@@ -9,11 +9,11 @@ public class SupplyButtonRoutines : MonoBehaviour
     /// <summary>
     /// This routine is called when a toggle value is changed (note not clicked - don't want to have the overhead of coding event handlers to use the onPointerClick
     /// </summary>
-    public void checkToggle()
+    public void CheckToggle()
     {
         if (GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.SETSUPPLYKEYWORD + " " + name);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.SETSUPPLYKEYWORD + " " + name);
 
             // The toggle was turned on.  Turn any other toggles that are on off.
             // Don't need to reset highlighting since the highlighting routine called
@@ -29,25 +29,25 @@ public class SupplyButtonRoutines : MonoBehaviour
 
             //GlobalDefinitions.writeToLogFile("checkToggle: setting currentSupplySource to " + supplySource.name);
             GlobalDefinitions.currentSupplySource = supplySource;
-            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().highlightUnitsAvailableForSupply(supplySource);
+            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().HighlightUnitsAvailableForSupply(supplySource);
         }
         else
         {
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.RESETSUPPLYKEYWORD + " " + name);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.RESETSUPPLYKEYWORD + " " + name);
 
             GlobalDefinitions.currentSupplySource = null;
             // The toggle was turned off so reset all highlighting
             foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
-                GlobalDefinitions.unhighlightUnit(unit);
+                GlobalDefinitions.UnhighlightUnit(unit);
         }
     }
 
     /// <summary>
     /// Moves the camera to the supply source related to the locate button pressed
     /// </summary>
-    public void locateSupplySource()
+    public void LocateSupplySource()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.LOCATESUPPLYKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATESUPPLYKEYWORD + " " + name);
 
         Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // This centers the camera on the unit
@@ -63,20 +63,20 @@ public class SupplyButtonRoutines : MonoBehaviour
     /// <summary>
     /// Executed when the ok button is selected on the supply sources gui for supply assignment.  At the end of a phase.
     /// </summary>
-    public void okSupplyWithEndPhase()
+    public void OkSupplyWithEndPhase()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.OKSUPPLYWITHENDPHASEKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.OKSUPPLYWITHENDPHASEKEYWORD + " " + name);
 
         // Reset all highlighting
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
         {
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
             if (unit.GetComponent<UnitDatabaseFields>().inSupply)
                 unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply = 0;
         }
 
-        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkIfAlliedUnsuppliedUnitsShouldBeEliminated(false);
-        GlobalDefinitions.removeGUI(GlobalDefinitions.supplySourceGUIInstance);
+        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CheckIfAlliedUnsuppliedUnitsShouldBeEliminated(false);
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.supplySourceGUIInstance);
 
         // Got rid of the GUI, now get rid of the global copies of the supply gui's
         //int count = GlobalDefinitions.supplyGUI.Count;
@@ -87,20 +87,20 @@ public class SupplyButtonRoutines : MonoBehaviour
         // Turn the button back on
         GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
     }
 
     /// <summary>
     /// Called to exit the supply gui when used for display
     /// </summary>
-    public void okSupply()
+    public void OkSupply()
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.OKSUPPLYKEYWORD + " " + name);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.OKSUPPLYKEYWORD + " " + name);
 
         // Reset all highlighting
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
         {
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
             if (unit.GetComponent<UnitDatabaseFields>().inSupply)
                 unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply = 0;
         }
@@ -108,28 +108,28 @@ public class SupplyButtonRoutines : MonoBehaviour
         // I need to know whether this is the beginning or end of a turn since unsupplied units are only eliminated at the end of a turn
         // With the implementation of the AI there is no Allied supply state but I think that the check at the end of combat doesn't come through this path... which might not be right
         //if (GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState == GameControl.alliedSupplyStateInstance.GetComponent<SupplyState>())
-        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkIfAlliedUnsuppliedUnitsShouldBeEliminated(false);
+        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CheckIfAlliedUnsuppliedUnitsShouldBeEliminated(false);
         //else
         //GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().checkIfAlliedUnsuppliedUnitsShouldBeEliminated(true);
 
         // Turn the button back on
         GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
 
-        GlobalDefinitions.removeGUI(GlobalDefinitions.supplySourceGUIInstance);
+        GlobalDefinitions.RemoveGUI(GlobalDefinitions.supplySourceGUIInstance);
     }
 
     /// <summary>
     /// This routine switches the supply status of the unit selected from the multi-unit gui
     /// </summary>
-    public void selectFromMultiUnits()
+    public void SelectFromMultiUnits()
     {
         if (GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CHANGESUPPLYSTATUSKEYWORD + " " + name);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CHANGESUPPLYSTATUSKEYWORD + " " + name);
 
-            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().swapSupplyStatus(unit);
+            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SwapSupplyStatus(unit);
         }
-        GlobalDefinitions.removeGUI(transform.parent.gameObject);
+        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         GlobalDefinitions.supplySourceGUIInstance.SetActive(true);
     }
 }

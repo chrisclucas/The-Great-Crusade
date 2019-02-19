@@ -9,40 +9,40 @@ public class ExchangeToggleRoutines : MonoBehaviour
     public bool attacker = true;
     public List<GameObject> attackingUnits;
 
-    public void addOrSubtractExchangeFactors()
+    public void AddOrSubtractExchangeFactors()
     {
         if (GetComponent<ExchangeToggleRoutines>().attacker)
         {
             if (GetComponent<Toggle>().isOn)
             {
-                GlobalDefinitions.exchangeFactorsSelected += GlobalDefinitions.returnAttackFactor(GetComponent<ExchangeToggleRoutines>().unit);
+                GlobalDefinitions.exchangeFactorsSelected += GlobalDefinitions.ReturnAttackFactor(GetComponent<ExchangeToggleRoutines>().unit);
                 GlobalDefinitions.unitsToExchange.Add(GetComponent<ExchangeToggleRoutines>().unit);
-                GlobalDefinitions.highlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
-                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDEXCHANGEKEYWORD + " " + name);
+                GlobalDefinitions.HighlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
+                GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDEXCHANGEKEYWORD + " " + name);
             }
             else
             {
-                GlobalDefinitions.exchangeFactorsSelected -= GlobalDefinitions.returnAttackFactor(GetComponent<ExchangeToggleRoutines>().unit);
+                GlobalDefinitions.exchangeFactorsSelected -= GlobalDefinitions.ReturnAttackFactor(GetComponent<ExchangeToggleRoutines>().unit);
                 GlobalDefinitions.unitsToExchange.Remove(GetComponent<ExchangeToggleRoutines>().unit);
-                GlobalDefinitions.unhighlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
-                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.REMOVEEXCHANGEKEYWORD + " " + name);
+                GlobalDefinitions.UnhighlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
+                GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.REMOVEEXCHANGEKEYWORD + " " + name);
             }
         }
         else
         {
             if (GetComponent<Toggle>().isOn)
             {
-                GlobalDefinitions.exchangeFactorsSelected += GlobalDefinitions.calculateUnitDefendingFactor(GetComponent<ExchangeToggleRoutines>().unit, attackingUnits);
+                GlobalDefinitions.exchangeFactorsSelected += GlobalDefinitions.CalculateUnitDefendingFactor(GetComponent<ExchangeToggleRoutines>().unit, attackingUnits);
                 GlobalDefinitions.unitsToExchange.Add(GetComponent<ExchangeToggleRoutines>().unit);
-                GlobalDefinitions.highlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
-                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.ADDEXCHANGEKEYWORD + " " + name);
+                GlobalDefinitions.HighlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
+                GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDEXCHANGEKEYWORD + " " + name);
             }
             else
             {
-                GlobalDefinitions.exchangeFactorsSelected -= GlobalDefinitions.calculateUnitDefendingFactor(GetComponent<ExchangeToggleRoutines>().unit, attackingUnits);
+                GlobalDefinitions.exchangeFactorsSelected -= GlobalDefinitions.CalculateUnitDefendingFactor(GetComponent<ExchangeToggleRoutines>().unit, attackingUnits);
                 GlobalDefinitions.unitsToExchange.Remove(GetComponent<ExchangeToggleRoutines>().unit);
-                GlobalDefinitions.unhighlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
-                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.REMOVEEXCHANGEKEYWORD + " " + name);
+                GlobalDefinitions.UnhighlightUnit(GetComponent<ExchangeToggleRoutines>().unit);
+                GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.REMOVEEXCHANGEKEYWORD + " " + name);
             }
         }
         GameObject.Find("ExchangeText").GetComponent<Text>().text = "Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected;

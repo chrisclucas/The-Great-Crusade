@@ -5,21 +5,21 @@ public class InvasionSelectionToggleRoutines : MonoBehaviour
 {
     public int index;
 
-    public void invadedAreaSelected()
+    public void InvadedAreaSelected()
     {
         if (GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToLogFile("invadedAreaSelected: exeucuting");
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.INVASIONAREASELECTIONKEYWORD + " " + name);
-            GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().setInvasionArea(index);
+            GlobalDefinitions.WriteToLogFile("invadedAreaSelected: exeucuting");
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.INVASIONAREASELECTIONKEYWORD + " " + name);
+            GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().SetInvasionArea(index);
 
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                    GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<AlliedInvasionState>().executeSelectUnit;
-            GlobalDefinitions.writeToLogFile("invadedAreaSelected: execute method set to executeSelectUnit()");
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                    GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedInvasionState>().ExecuteSelectUnit;
+            GlobalDefinitions.WriteToLogFile("invadedAreaSelected: execute method set to executeSelectUnit()");
 
-            GlobalDefinitions.writeToLogFile("invadedAreaSelected: removing gui with transform parent = " + transform.parent.name + "   game object name = " + transform.parent.gameObject.name);
+            GlobalDefinitions.WriteToLogFile("invadedAreaSelected: removing gui with transform parent = " + transform.parent.name + "   game object name = " + transform.parent.gameObject.name);
 
-            GlobalDefinitions.removeGUI(transform.parent.gameObject);
+            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
             GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
             GlobalDefinitions.undoButton.GetComponent<Button>().interactable = true;
             GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().interactable = true;

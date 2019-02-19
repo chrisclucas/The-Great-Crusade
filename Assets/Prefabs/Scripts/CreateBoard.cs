@@ -68,7 +68,7 @@ public class CreateBoard : MonoBehaviour
         if (!File.Exists(fileName))
         {
             // There is no recovering from this error but let the user know
-            GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unable to open the map file " + fileName);
+            GlobalDefinitions.GuiUpdateStatusMessage("Internal Error - Unable to open the map file " + fileName);
             return;
         }
 
@@ -105,7 +105,7 @@ public class CreateBoard : MonoBehaviour
                                     hexPositionX = Convert.ToInt32(entries[hexXPositionWord]);
                                     hexPositionY = Convert.ToInt32(entries[hexYPositionWord]);
                                     if (storedCoordinates.Contains(hexPositionX + "_" + hexPositionY))
-                                        GlobalDefinitions.writeToLogFile("Duplicae Hexes at X " + hexPositionX + " Y " + hexPositionY);
+                                        GlobalDefinitions.WriteToLogFile("Duplicae Hexes at X " + hexPositionX + " Y " + hexPositionY);
                                     else
                                         storedCoordinates.Add(hexPositionX + "_" + hexPositionY);
                                     v3Pos.x = ((3f * edgeLength) / 2f) * hexPositionX;
@@ -125,16 +125,16 @@ public class CreateBoard : MonoBehaviour
                                     if (hexagonPrefab == null)
                                     {
 
-                                        GlobalDefinitions.writeToLogFile("Returned null for " + hexPositionX + " " + hexPositionY + " " + entries[hexTypeWord]);
-                                        GlobalDefinitions.writeToLogFile("Hex instance did not instantiate at x" + hexPositionX + " y" + hexPositionY);
-                                        GlobalDefinitions.writeToLogFile("  Transform position = x" + v3Pos.x + " y " + v3Pos.y);
-                                        GlobalDefinitions.writeToLogFile("  Hex type = " + entries[hexTypeWord]);
+                                        GlobalDefinitions.WriteToLogFile("Returned null for " + hexPositionX + " " + hexPositionY + " " + entries[hexTypeWord]);
+                                        GlobalDefinitions.WriteToLogFile("Hex instance did not instantiate at x" + hexPositionX + " y" + hexPositionY);
+                                        GlobalDefinitions.WriteToLogFile("  Transform position = x" + v3Pos.x + " y " + v3Pos.y);
+                                        GlobalDefinitions.WriteToLogFile("  Hex type = " + entries[hexTypeWord]);
                                     }
                                     else
                                     {
                                         hexInstance = Instantiate(hexagonPrefab);
                                         if (hexInstance == null)
-                                            GlobalDefinitions.writeToLogFile("Hex did not instantiate");
+                                            GlobalDefinitions.WriteToLogFile("Hex did not instantiate");
 
                                         hexInstance.name = entries[hexTypeWord] + "_x" + hexPositionX + "_y" + hexPositionY;
                                         hexInstance.transform.position = v3Pos;
@@ -282,7 +282,7 @@ public class CreateBoard : MonoBehaviour
                                 else
                                 {
                                     // There were not 5 entries on the Hex line which means something is wrong, or one of the fields was null.
-                                    GlobalDefinitions.writeToLogFile("Error in file on Hex line " + lineNumber + " - entries should be 5 or greater there are " + entries.Length);
+                                    GlobalDefinitions.WriteToLogFile("Error in file on Hex line " + lineNumber + " - entries should be 5 or greater there are " + entries.Length);
                                 }
 
                                 line = theReader.ReadLine();
@@ -305,18 +305,18 @@ public class CreateBoard : MonoBehaviour
                                 string[] entries = line.Split(delimiterChars);
                                 if (entries.Length == (riverY2Word + 2))
                                 {
-                                    DrawRiverBetweenHexes(GlobalDefinitions.getHexAtXY(
+                                    DrawRiverBetweenHexes(GlobalDefinitions.GetHexAtXY(
                                             Convert.ToInt32(entries[riverX1Word]),
                                             Convert.ToInt32(entries[riverY1Word])),
-                                            GlobalDefinitions.getHexAtXY(
+                                            GlobalDefinitions.GetHexAtXY(
                                             Convert.ToInt32(entries[riverX2Word]),
                                             Convert.ToInt32(entries[riverY2Word])));
                                 }
                                 else
                                 {
                                     // There were not 5 entries on the Hex line which means something is wrong
-                                    GlobalDefinitions.writeToLogFile("Error in file on River line " + lineNumber + " - entries should be " + (riverY2Word + 2) + " but there are " + entries.Length);
-                                    GlobalDefinitions.writeToLogFile("    line text - " + line);
+                                    GlobalDefinitions.WriteToLogFile("Error in file on River line " + lineNumber + " - entries should be " + (riverY2Word + 2) + " but there are " + entries.Length);
+                                    GlobalDefinitions.WriteToLogFile("    line text - " + line);
                                 }
                                 line = theReader.ReadLine();
                                 lineNumber++;
@@ -332,13 +332,13 @@ public class CreateBoard : MonoBehaviour
                                 {
                                     unit = GameObject.Find(entries[unitNameWord]);
                                     if (unit == null)
-                                        GlobalDefinitions.writeToLogFile("Unable to find unit - " + entries[0]);
+                                        GlobalDefinitions.WriteToLogFile("Unable to find unit - " + entries[0]);
                                     else
                                     {
-                                        unit.GetComponent<UnitDatabaseFields>().occupiedHex = GlobalDefinitions.getHexAtXY(
+                                        unit.GetComponent<UnitDatabaseFields>().occupiedHex = GlobalDefinitions.GetHexAtXY(
                                                 Convert.ToInt32(entries[unitXWord]), Convert.ToInt32(entries[unitYWord]));
                                     }
-                                    GameControl.setupRoutinesInstance.GetComponent<SetupRoutines>().getUnitSetupDestination(unit, Convert.ToInt32(entries[unitXWord]), Convert.ToInt32(entries[unitYWord]));
+                                    GameControl.setupRoutinesInstance.GetComponent<SetupRoutines>().GetUnitSetupDestination(unit, Convert.ToInt32(entries[unitXWord]), Convert.ToInt32(entries[unitYWord]));
                                     // Assign the unit to be on the board
                                     unit.transform.parent = GlobalDefinitions.allUnitsOnBoard.transform;
                                     unit.GetComponent<UnitDatabaseFields>().inBritain = false;
@@ -346,20 +346,20 @@ public class CreateBoard : MonoBehaviour
                                 else
                                 {
                                     // There need to be 15 entries on the line (the () count as one each
-                                    GlobalDefinitions.writeToLogFile("Error for unit " + entries[unitNameWord] + " in file on line " + lineNumber + " should be 5 entries but there are " + entries.Length);
+                                    GlobalDefinitions.WriteToLogFile("Error for unit " + entries[unitNameWord] + " in file on line " + lineNumber + " should be 5 entries but there are " + entries.Length);
                                 }
                                 line = theReader.ReadLine();
                                 lineNumber++;
                             }
                             break;
                         case "InlandPort":
-                            hexInstance = GlobalDefinitions.getHexAtXY(Convert.ToInt32(switchEntries[inlandPortX]), Convert.ToInt32(switchEntries[inlandPortY]));
+                            hexInstance = GlobalDefinitions.GetHexAtXY(Convert.ToInt32(switchEntries[inlandPortX]), Convert.ToInt32(switchEntries[inlandPortY]));
                             line = theReader.ReadLine();
                             lineNumber++;
                             while (line != "}")
                             {
                                 string[] entries = line.Split(delimiterChars);
-                                hexInstance.GetComponent<HexDatabaseFields>().controlHexes.Add(GlobalDefinitions.getHexAtXY(Convert.ToInt32(entries[hexXPositionWord]), Convert.ToInt32(entries[hexYPositionWord])));
+                                hexInstance.GetComponent<HexDatabaseFields>().controlHexes.Add(GlobalDefinitions.GetHexAtXY(Convert.ToInt32(entries[hexXPositionWord]), Convert.ToInt32(entries[hexYPositionWord])));
                                 line = theReader.ReadLine();
                                 lineNumber++;
                             }
@@ -370,7 +370,7 @@ public class CreateBoard : MonoBehaviour
                             while (line != "}")
                             {
                                 string[] entries = line.Split(delimiterChars);
-                                GlobalDefinitions.getHexAtXY(Convert.ToInt32(entries[hexXPositionWord]), Convert.ToInt32(entries[hexYPositionWord])).GetComponent<HexDatabaseFields>().FreeFrenchAvailableHex = true;
+                                GlobalDefinitions.GetHexAtXY(Convert.ToInt32(entries[hexXPositionWord]), Convert.ToInt32(entries[hexYPositionWord])).GetComponent<HexDatabaseFields>().FreeFrenchAvailableHex = true;
                                 line = theReader.ReadLine();
                                 lineNumber++;
                             }
@@ -381,7 +381,7 @@ public class CreateBoard : MonoBehaviour
                             while (line != "}")
                             {
                                 string[] entries = line.Split(delimiterChars);
-                                GlobalDefinitions.getHexAtXY(Convert.ToInt32(entries[hexXPositionWord]), Convert.ToInt32(entries[hexYPositionWord])).GetComponent<HexDatabaseFields>().AlliedVictoryHex = true;
+                                GlobalDefinitions.GetHexAtXY(Convert.ToInt32(entries[hexXPositionWord]), Convert.ToInt32(entries[hexYPositionWord])).GetComponent<HexDatabaseFields>().AlliedVictoryHex = true;
                                 line = theReader.ReadLine();
                                 lineNumber++;
                             }
@@ -392,13 +392,13 @@ public class CreateBoard : MonoBehaviour
                             while (line != "}")
                             {
                                 string[] entries = line.Split(delimiterChars);
-                                GlobalDefinitions.getHexAtXY(Convert.ToInt32(entries[hexXPositionWord]), Convert.ToInt32(entries[hexYPositionWord])).GetComponent<HexDatabaseFields>().historyWeekCaptured = Convert.ToInt32(entries[historicalWeekCaptured]);
+                                GlobalDefinitions.GetHexAtXY(Convert.ToInt32(entries[hexXPositionWord]), Convert.ToInt32(entries[hexYPositionWord])).GetComponent<HexDatabaseFields>().historyWeekCaptured = Convert.ToInt32(entries[historicalWeekCaptured]);
                                 line = theReader.ReadLine();
                                 lineNumber++;
                             }
                             break;
                         default:
-                            GlobalDefinitions.writeToLogFile("ReadMapSetup: unknown header found in the file");
+                            GlobalDefinitions.WriteToLogFile("ReadMapSetup: unknown header found in the file");
                             break;
                     }
                 }
@@ -410,7 +410,7 @@ public class CreateBoard : MonoBehaviour
         // Rotterdam 8,23 Boulogne 14,16 Brest 22,1
         GameObject hex;
         Renderer targetRenderer;
-        hex = GlobalDefinitions.getHexAtXY(8, 23);
+        hex = GlobalDefinitions.GetHexAtXY(8, 23);
         {
             targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
             hex.transform.localScale = new Vector2(0.75f, 0.75f);
@@ -418,7 +418,7 @@ public class CreateBoard : MonoBehaviour
             targetRenderer.material.color = GlobalDefinitions.StrategicInstallationHexColor;
             targetRenderer.sortingOrder = 2;
         }
-        hex = GlobalDefinitions.getHexAtXY(14, 16);
+        hex = GlobalDefinitions.GetHexAtXY(14, 16);
         {
             targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
             hex.transform.localScale = new Vector2(0.75f, 0.75f);
@@ -426,7 +426,7 @@ public class CreateBoard : MonoBehaviour
             targetRenderer.material.color = GlobalDefinitions.StrategicInstallationHexColor;
             targetRenderer.sortingOrder = 2;
         }
-        hex = GlobalDefinitions.getHexAtXY(22, 1);
+        hex = GlobalDefinitions.GetHexAtXY(22, 1);
         {
             targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
             hex.transform.localScale = new Vector2(0.75f, 0.75f);
@@ -571,7 +571,7 @@ public class CreateBoard : MonoBehaviour
         else
         {
             // This is a problem, the two hexes aren't neighbors
-            GlobalDefinitions.writeToLogFile("DrawRiverBetweenHexes: ERROR - Two hexes provided for river that don't abutt.  Hex 1 (" +
+            GlobalDefinitions.WriteToLogFile("DrawRiverBetweenHexes: ERROR - Two hexes provided for river that don't abutt.  Hex 1 (" +
                     hex1.GetComponent<HexDatabaseFields>().xMapCoor + "," + hex1.GetComponent<HexDatabaseFields>().yMapCoor + ")  + Hex 2(" +
                     hex2.GetComponent<HexDatabaseFields>().xMapCoor + ", " + hex2.GetComponent<HexDatabaseFields>().yMapCoor + ") ");
         }
@@ -596,8 +596,8 @@ public class CreateBoard : MonoBehaviour
             currentHexCoodinates.y = hex.GetComponent<HexDatabaseFields>().yMapCoor;
             foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
             {
-                neightborHexCoordinates = calculateNeighborCoordinates(currentHexCoodinates, hexSides);
-                neighborHex = GlobalDefinitions.getHexAtXY(neightborHexCoordinates.x, neightborHexCoordinates.y);
+                neightborHexCoordinates = CalculateNeighborCoordinates(currentHexCoodinates, hexSides);
+                neighborHex = GlobalDefinitions.GetHexAtXY(neightborHexCoordinates.x, neightborHexCoordinates.y);
                 if (neighborHex != null)
                 {
                     hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides] = neighborHex;
@@ -615,7 +615,7 @@ public class CreateBoard : MonoBehaviour
                         hex.GetComponent<HexDatabaseFields>().impassible || hex.GetComponent<HexDatabaseFields>().neutralCountry)
                     hex.GetComponent<BoolArrayData>().exertsZOC[(int)hexSides] = false;
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
-            hex.GetComponent<HexDatabaseFields>().invasionTarget = GlobalDefinitions.getHexAtXY(hex.GetComponent<HexDatabaseFields>().invasionTargetX, hex.GetComponent<HexDatabaseFields>().invasionTargetY);
+            hex.GetComponent<HexDatabaseFields>().invasionTarget = GlobalDefinitions.GetHexAtXY(hex.GetComponent<HexDatabaseFields>().invasionTargetX, hex.GetComponent<HexDatabaseFields>().invasionTargetY);
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         {
             if (hex.GetComponent<HexDatabaseFields>().sea)
@@ -630,7 +630,7 @@ public class CreateBoard : MonoBehaviour
                         if (!hex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().fortress)
                         {
                             hex.GetComponent<BoolArrayData>().exertsZOC[(int)hexSides] = true;
-                            hex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.returnHexSideOpposide((int)hexSides)] = true;
+                            hex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.ReturnHexSideOpposide((int)hexSides)] = true;
                         }
                     }
                 }
@@ -663,7 +663,7 @@ public class CreateBoard : MonoBehaviour
     /// <param name="hexCoordinates"></param>
     /// <param name="sideToCheck"></param>
     /// <returns></returns>
-    private HexLocation calculateNeighborCoordinates(HexLocation hexCoordinates, GlobalDefinitions.HexSides sideToCheck)
+    private HexLocation CalculateNeighborCoordinates(HexLocation hexCoordinates, GlobalDefinitions.HexSides sideToCheck)
     {
         HexLocation returnValue = new HexLocation();
 
@@ -713,7 +713,7 @@ public class CreateBoard : MonoBehaviour
     /// <summary>
     /// This is a utility funtion to be used when adding a lot of hex prefabs
     /// </summary>
-    private void setupColliderOnHexes()
+    private void SetupColliderOnHexes()
     {
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         {
@@ -728,7 +728,7 @@ public class CreateBoard : MonoBehaviour
         }
     }
 
-    public void readBritainPlacement(string fileName)
+    public void ReadBritainPlacement(string fileName)
     {
         char[] delimiterChars = { ' ', ',', ')', '(' };
         string line;
@@ -745,7 +745,7 @@ public class CreateBoard : MonoBehaviour
         StreamReader theReader = new StreamReader(fileName);
         if (theReader == null)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Unable to read Britain placement file " + fileName);
+            GlobalDefinitions.GuiUpdateStatusMessage("Internal Error - Unable to read Britain placement file " + fileName);
         }
         using (theReader)
         {
@@ -776,7 +776,7 @@ public class CreateBoard : MonoBehaviour
     /// Reads the German setup file
     /// </summary>
     /// <param name="fileName"></param>
-    public void readGermanPlacement(string fileName)
+    public void ReadGermanPlacement(string fileName)
     {
         char[] delimiterChars = { ' ', ',', ')', '(' };
         string line;
@@ -794,7 +794,7 @@ public class CreateBoard : MonoBehaviour
         if (theReader == null)
         {
             // Can't recover from this error but notify the user
-            GlobalDefinitions.guiUpdateStatusMessage("Internal Error - Cannot access German setup file " + fileName);
+            GlobalDefinitions.GuiUpdateStatusMessage("Internal Error - Cannot access German setup file " + fileName);
         }
         else
         {
@@ -809,8 +809,8 @@ public class CreateBoard : MonoBehaviour
                         GameObject hex;
                         string[] lineEntries = line.Split(delimiterChars);
                         placedUnit = GameObject.Find(lineEntries[unitName]);
-                        hex = GlobalDefinitions.getHexAtXY(Convert.ToInt32(lineEntries[xHexCoor]), Convert.ToInt32(lineEntries[yHexCoor]));
-                        GlobalDefinitions.putUnitOnHex(placedUnit, hex);
+                        hex = GlobalDefinitions.GetHexAtXY(Convert.ToInt32(lineEntries[xHexCoor]), Convert.ToInt32(lineEntries[yHexCoor]));
+                        GlobalDefinitions.PutUnitOnHex(placedUnit, hex);
                         placedUnit.transform.parent = GlobalDefinitions.allUnitsOnBoard.transform;
                     }
                 }
@@ -823,7 +823,7 @@ public class CreateBoard : MonoBehaviour
     /// <summary>
     /// This routine sets up all the parameters for the invasion areas
     /// </summary>
-    public void setupInvasionAreas()
+    public void SetupInvasionAreas()
     {
         GlobalDefinitions.invasionAreas[0] = new InvasionArea();
         GlobalDefinitions.invasionAreas[1] = new InvasionArea();
@@ -843,17 +843,17 @@ public class CreateBoard : MonoBehaviour
         GlobalDefinitions.invasionAreas[0].secondTurnInfantry = 5;
         GlobalDefinitions.invasionAreas[0].secondTurnAirborne = 2;
         GlobalDefinitions.invasionAreas[0].divisionsPerTurn = 8;
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(44, 31));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(45, 30));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(45, 29));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(46, 29));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(47, 28));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(47, 27));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(47, 25));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(47, 24));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(46, 24));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(46, 23));
-        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.getHexAtXY(46, 20));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(44, 31));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(45, 30));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(45, 29));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(46, 29));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(47, 28));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(47, 27));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(47, 25));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(47, 24));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(46, 24));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(46, 23));
+        GlobalDefinitions.invasionAreas[0].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(46, 20));
 
         GlobalDefinitions.invasionAreas[1].name = "Bay of Biscay";
         GlobalDefinitions.invasionAreas[1].firstTurnArmor = 0;
@@ -863,14 +863,14 @@ public class CreateBoard : MonoBehaviour
         GlobalDefinitions.invasionAreas[1].secondTurnInfantry = 2;
         GlobalDefinitions.invasionAreas[1].secondTurnAirborne = 1;
         GlobalDefinitions.invasionAreas[1].divisionsPerTurn = 4;
-        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.getHexAtXY(37, 8));
-        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.getHexAtXY(35, 7));
-        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.getHexAtXY(34, 7));
-        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.getHexAtXY(32, 7));
-        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.getHexAtXY(32, 6));
-        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.getHexAtXY(31, 5));
-        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.getHexAtXY(29, 5));
-        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.getHexAtXY(27, 4));
+        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(37, 8));
+        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(35, 7));
+        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(34, 7));
+        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(32, 7));
+        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(32, 6));
+        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(31, 5));
+        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(29, 5));
+        GlobalDefinitions.invasionAreas[1].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(27, 4));
 
         GlobalDefinitions.invasionAreas[2].name = "Brittany";
         GlobalDefinitions.invasionAreas[2].firstTurnArmor = 0;
@@ -880,15 +880,15 @@ public class CreateBoard : MonoBehaviour
         GlobalDefinitions.invasionAreas[2].secondTurnInfantry = 2;
         GlobalDefinitions.invasionAreas[2].secondTurnAirborne = 1;
         GlobalDefinitions.invasionAreas[2].divisionsPerTurn = 6;
-        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.getHexAtXY(25, 2));
-        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.getHexAtXY(22, 0));
-        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.getHexAtXY(20, 2));
-        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.getHexAtXY(20, 3));
-        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.getHexAtXY(20, 4));
-        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.getHexAtXY(21, 4));
-        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.getHexAtXY(21, 5));
-        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.getHexAtXY(21, 6));
-        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.getHexAtXY(21, 7));
+        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(25, 2));
+        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(22, 0));
+        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(20, 2));
+        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(20, 3));
+        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(20, 4));
+        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(21, 4));
+        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(21, 5));
+        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(21, 6));
+        GlobalDefinitions.invasionAreas[2].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(21, 7));
 
         GlobalDefinitions.invasionAreas[3].name = "Normandy";
         GlobalDefinitions.invasionAreas[3].firstTurnArmor = 0;
@@ -898,12 +898,12 @@ public class CreateBoard : MonoBehaviour
         GlobalDefinitions.invasionAreas[3].secondTurnInfantry = 4;
         GlobalDefinitions.invasionAreas[3].secondTurnAirborne = 0;
         GlobalDefinitions.invasionAreas[3].divisionsPerTurn = 9;
-        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.getHexAtXY(19, 6));
-        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.getHexAtXY(16, 8));
-        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.getHexAtXY(16, 9));
-        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.getHexAtXY(18, 9));
-        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.getHexAtXY(18, 10));
-        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.getHexAtXY(18, 11));
+        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(19, 6));
+        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(16, 8));
+        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(16, 9));
+        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(18, 9));
+        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(18, 10));
+        GlobalDefinitions.invasionAreas[3].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(18, 11));
 
         GlobalDefinitions.invasionAreas[4].name = "Le Havre";
         GlobalDefinitions.invasionAreas[4].firstTurnArmor = 0;
@@ -913,9 +913,9 @@ public class CreateBoard : MonoBehaviour
         GlobalDefinitions.invasionAreas[4].secondTurnInfantry = 5;
         GlobalDefinitions.invasionAreas[4].secondTurnAirborne = 0;
         GlobalDefinitions.invasionAreas[4].divisionsPerTurn = 10;
-        GlobalDefinitions.invasionAreas[4].invasionHexes.Add(GlobalDefinitions.getHexAtXY(17, 11));
-        GlobalDefinitions.invasionAreas[4].invasionHexes.Add(GlobalDefinitions.getHexAtXY(17, 12));
-        GlobalDefinitions.invasionAreas[4].invasionHexes.Add(GlobalDefinitions.getHexAtXY(16, 13));
+        GlobalDefinitions.invasionAreas[4].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(17, 11));
+        GlobalDefinitions.invasionAreas[4].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(17, 12));
+        GlobalDefinitions.invasionAreas[4].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(16, 13));
 
         GlobalDefinitions.invasionAreas[5].name = "Pas De Calais";
         GlobalDefinitions.invasionAreas[5].firstTurnArmor = 2;
@@ -925,14 +925,14 @@ public class CreateBoard : MonoBehaviour
         GlobalDefinitions.invasionAreas[5].secondTurnInfantry = 5;
         GlobalDefinitions.invasionAreas[5].secondTurnAirborne = 0;
         GlobalDefinitions.invasionAreas[5].divisionsPerTurn = 12;
-        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.getHexAtXY(16, 14));
-        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.getHexAtXY(15, 14));
-        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.getHexAtXY(14, 15));
-        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.getHexAtXY(13, 15));
-        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.getHexAtXY(12, 16));
-        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.getHexAtXY(12, 17));
-        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.getHexAtXY(11, 17));
-        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.getHexAtXY(11, 18));
+        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(16, 14));
+        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(15, 14));
+        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(14, 15));
+        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(13, 15));
+        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(12, 16));
+        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(12, 17));
+        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(11, 17));
+        GlobalDefinitions.invasionAreas[5].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(11, 18));
 
         GlobalDefinitions.invasionAreas[6].name = "North Sea";
         GlobalDefinitions.invasionAreas[6].firstTurnArmor = 0;
@@ -942,11 +942,11 @@ public class CreateBoard : MonoBehaviour
         GlobalDefinitions.invasionAreas[6].secondTurnInfantry = 4;
         GlobalDefinitions.invasionAreas[6].secondTurnAirborne = 1;
         GlobalDefinitions.invasionAreas[6].divisionsPerTurn = 9;
-        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.getHexAtXY(10, 19));
-        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.getHexAtXY(9, 20));
-        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.getHexAtXY(8, 21));
-        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.getHexAtXY(7, 21));
-        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.getHexAtXY(6, 22));
-        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.getHexAtXY(5, 22));
+        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(10, 19));
+        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(9, 20));
+        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(8, 21));
+        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(7, 21));
+        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(6, 22));
+        GlobalDefinitions.invasionAreas[6].invasionHexes.Add(GlobalDefinitions.GetHexAtXY(5, 22));
     }
 }

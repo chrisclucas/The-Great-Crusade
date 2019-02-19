@@ -4,7 +4,7 @@ using System.IO;
 
 public class GameTypeSelectionButtonRoutines : MonoBehaviour
 {
-    public void toggleChange()
+    public void ToggleChange()
     {
         if (GetComponent<Toggle>().isOn == true)
         {
@@ -17,32 +17,32 @@ public class GameTypeSelectionButtonRoutines : MonoBehaviour
         }
     }
 
-    public void newSavedGameOK()
+    public void NewSavedGameOK()
     {
         if (GlobalDefinitions.newGameToggle.GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToLogFile("newSavedGameOK: Starting new game");
+            GlobalDefinitions.WriteToLogFile("newSavedGameOK: Starting new game");
 
-            GlobalDefinitions.removeGUI(transform.parent.gameObject);
-            GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
+            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GameControl.setUpStateInstance.GetComponent<SetUpState>().ExecuteNewGame();
         }
         else if (GlobalDefinitions.savedGameToggle.GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToLogFile("newSavedGameOK: Starting saved game");
+            GlobalDefinitions.WriteToLogFile("newSavedGameOK: Starting saved game");
 
             // Since at this point we know we are starting a new game and not running the command file, remove the command file
             if (!GlobalDefinitions.commandFileBeingRead)
-                GlobalDefinitions.deleteCommandFile();
+                GlobalDefinitions.DeleteCommandFile();
 
-            GlobalDefinitions.removeGUI(transform.parent.gameObject);
-            GameControl.setUpStateInstance.GetComponent<SetUpState>().executeSavedGame();
+            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GameControl.setUpStateInstance.GetComponent<SetUpState>().ExecuteSavedGame();
         }
         else if (GlobalDefinitions.commandFileToggle.GetComponent<Toggle>().isOn)
         {
-            GlobalDefinitions.writeToLogFile("newSavedGameOK: Executing command file");
+            GlobalDefinitions.WriteToLogFile("newSavedGameOK: Executing command file");
 
-            GlobalDefinitions.removeGUI(transform.parent.gameObject);
-            GameControl.setUpStateInstance.GetComponent<SetUpState>().readCommandFile();            
+            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GameControl.setUpStateInstance.GetComponent<SetUpState>().ReadCommandFile();            
         }
     }
 

@@ -11,21 +11,21 @@ public class CarpetBombingSelectionToggleRoutines : MonoBehaviour
     public GlobalDefinitions.CombatResults combatResults;
     public Vector2 buttonLocation;
 
-    public void carpetBombingResultsSelected()
+    public void CarpetBombingResultsSelected()
     {
         if (gameObject.GetComponent<Toggle>().isOn)
         {
             if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && (!GlobalDefinitions.localControl))
             {
-                GlobalDefinitions.removeGUI(transform.parent.gameObject);
-                CombatResolutionRoutines.executeCombatResults(defendingUnits, attackingUnits, combatOdds, dieRollResult, combatResults, buttonLocation);
+                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                CombatResolutionRoutines.ExecuteCombatResults(defendingUnits, attackingUnits, combatOdds, dieRollResult, combatResults, buttonLocation);
             }
             else
             {
-                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD + " " + GlobalDefinitions.CombatResultToggleName);
-                GlobalDefinitions.writeToCommandFile(GlobalDefinitions.CARPETBOMBINGRESULTSSELECTEDKEYWORD + " " + name + " " + dieRollResult);
-                GlobalDefinitions.removeGUI(transform.parent.gameObject);
-                CombatResolutionRoutines.executeCombatResults(defendingUnits, attackingUnits, combatOdds, dieRollResult, combatResults, buttonLocation);
+                GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD + " " + GlobalDefinitions.CombatResultToggleName);
+                GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CARPETBOMBINGRESULTSSELECTEDKEYWORD + " " + name + " " + dieRollResult);
+                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                CombatResolutionRoutines.ExecuteCombatResults(defendingUnits, attackingUnits, combatOdds, dieRollResult, combatResults, buttonLocation);
 
             }
         }

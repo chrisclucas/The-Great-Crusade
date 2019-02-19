@@ -116,7 +116,7 @@ public class FileTransferServer : MonoBehaviour
             }
             catch (System.Exception e)
             {
-                GlobalDefinitions.writeToLogFile("[FIleTransferServer.Awake] UDP ERROR: " + e.Message);
+                GlobalDefinitions.WriteToLogFile("[FIleTransferServer.Awake] UDP ERROR: " + e.Message);
                 if (onConnectionFailed != null)
                     onConnectionFailed.Invoke();
             }
@@ -263,7 +263,7 @@ public class FileTransferServer : MonoBehaviour
                             // Note that this code could be executed through an event since the event is invoked above
                             //GlobalDefinitions.writeToLogFile("FileTransferServer: Reading file that was downloaded");
                             TransportScript.SendSocketMessage(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
-                            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(fileName);
+                            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
                         }
                     }
                     break;

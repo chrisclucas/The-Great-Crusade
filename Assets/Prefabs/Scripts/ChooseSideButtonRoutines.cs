@@ -5,37 +5,37 @@ public class ChooseSideButtonRoutines : MonoBehaviour
     /// <summary>
     /// This routine executes when the player hits the button to indicate that they will be playing the Allied side
     /// </summary>
-    public void allyButtonSelected()
+    public void AllyButtonSelected()
     {
         GlobalDefinitions.nationalityUserIsPlaying = GlobalDefinitions.Nationality.Allied;
         GlobalDefinitions.commandFileHeader += " Allied";
-        GameControl.createStatesForAI(GlobalDefinitions.Nationality.Allied);
+        GameControl.CreateStatesForAI(GlobalDefinitions.Nationality.Allied);
         GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
         GlobalDefinitions.gameStarted = true;
-        GlobalDefinitions.switchLocalControl(true);
-        GlobalDefinitions.removeGUI(transform.parent.gameObject);
+        GlobalDefinitions.SwitchLocalControl(true);
+        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
 
         // Call the setup routine.  The user will indicate whether they are playing a saved or new game there.
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.germanAISetupStateInstance.GetComponent<GermanAISetupState>();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.germanAISetupStateInstance.GetComponent<GermanAISetupState>();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
         // Note there is no execute method for the German AI state
     }
 
     /// <summary>
     /// This routine executes when the player hits the button to indicate that they will be playing the German side
     /// </summary>
-    public void germanButtonSelected()
+    public void GermanButtonSelected()
     {
         GlobalDefinitions.nationalityUserIsPlaying = GlobalDefinitions.Nationality.German;
         GlobalDefinitions.commandFileHeader += " German";
-        GameControl.createStatesForAI(GlobalDefinitions.Nationality.German);
+        GameControl.CreateStatesForAI(GlobalDefinitions.Nationality.German);
         GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
         GlobalDefinitions.gameStarted = true;
-        GlobalDefinitions.switchLocalControl(true);
-        GlobalDefinitions.removeGUI(transform.parent.gameObject);
+        GlobalDefinitions.SwitchLocalControl(true);
+        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
     }
 }

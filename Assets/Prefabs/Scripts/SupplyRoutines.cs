@@ -11,7 +11,7 @@ public class SupplyRoutines : MonoBehaviour
     /// </summary>
     /// <param name="endOfTurn"></param>
     /// <returns></returns>
-    public bool setAlliedSupplyStatus(bool endOfTurn)
+    public bool SetAlliedSupplyStatus(bool endOfTurn)
     {
         int supplyRange = 0;
         bool userIntervention = false;
@@ -35,21 +35,21 @@ public class SupplyRoutines : MonoBehaviour
             if (supplySource.GetComponent<HexDatabaseFields>().successfullyInvaded)
             {
                 GlobalDefinitions.supplySources.Add(supplySource);
-                supplyRange = GlobalDefinitions.numberHQOnHex(supplySource) * GlobalDefinitions.supplyRangeIncrement;
+                supplyRange = GlobalDefinitions.NumberHQOnHex(supplySource) * GlobalDefinitions.supplyRangeIncrement;
                 // An invasion site has a minimum range of GlobalDefinitions.supplyRangeIncrement
                 if (supplyRange == 0)
                     supplyRange = GlobalDefinitions.supplyRangeIncrement;
                 supplySource.GetComponent<HexDatabaseFields>().supplyRange = supplyRange;
-                setHexAsSupplySource(supplySource, supplyRange, GlobalDefinitions.Nationality.Allied);
+                SetHexAsSupplySource(supplySource, supplyRange, GlobalDefinitions.Nationality.Allied);
             }
             // Ports that have Allied units on them are supply sources
             else
             {
                 GlobalDefinitions.supplySources.Add(supplySource);
                 // Note that if there are no HQ units on the port the range will be 0 which means it can only supply the units on the port
-                supplyRange = GlobalDefinitions.numberHQOnHex(supplySource) * GlobalDefinitions.supplyRangeIncrement;
+                supplyRange = GlobalDefinitions.NumberHQOnHex(supplySource) * GlobalDefinitions.supplyRangeIncrement;
                 supplySource.GetComponent<HexDatabaseFields>().supplyRange = supplyRange;
-                setHexAsSupplySource(supplySource, supplyRange, GlobalDefinitions.Nationality.Allied);
+                SetHexAsSupplySource(supplySource, supplyRange, GlobalDefinitions.Nationality.Allied);
             }
         }
 
@@ -82,7 +82,7 @@ public class SupplyRoutines : MonoBehaviour
                 unit.GetComponent<UnitDatabaseFields>().supplySource = unit.GetComponent<UnitDatabaseFields>().occupiedHex;
                 unit.GetComponent<UnitDatabaseFields>().inSupply = true;
                 unit.GetComponent<UnitDatabaseFields>().remainingMovement = unit.GetComponent<UnitDatabaseFields>().movementFactor;
-                GlobalDefinitions.unhighlightUnit(unit);
+                GlobalDefinitions.UnhighlightUnit(unit);
             }
 
         // Store all of the units that are out of supply with a supply source
@@ -97,7 +97,7 @@ public class SupplyRoutines : MonoBehaviour
         // Sort the list by the lowest supply available to the unit
         for (int firstIndex = 0; firstIndex < outOfSupplyUnitsWithSupplySources.Count; firstIndex++)
             for (int secondIndex = (firstIndex + 1); secondIndex < outOfSupplyUnitsWithSupplySources.Count; secondIndex++)
-                if (totalSupplyAvailable(outOfSupplyUnitsWithSupplySources[firstIndex]) > totalSupplyAvailable(outOfSupplyUnitsWithSupplySources[secondIndex]))
+                if (TotalSupplyAvailable(outOfSupplyUnitsWithSupplySources[firstIndex]) > TotalSupplyAvailable(outOfSupplyUnitsWithSupplySources[secondIndex]))
                 {
                     storedUnit = outOfSupplyUnitsWithSupplySources[firstIndex];
                     outOfSupplyUnitsWithSupplySources[firstIndex] = outOfSupplyUnitsWithSupplySources[secondIndex];
@@ -106,7 +106,7 @@ public class SupplyRoutines : MonoBehaviour
 
         // Now go through and assign supply
         for (int index = 0; index < outOfSupplyUnitsWithSupplySources.Count; index++)
-            assignAlliedSupply(outOfSupplyUnitsWithSupplySources[index]);
+            AssignAlliedSupply(outOfSupplyUnitsWithSupplySources[index]);
 
         // If it is the end of a turn and the unit just went out of supply, ignore it
         if (endOfTurn)
@@ -149,7 +149,7 @@ public class SupplyRoutines : MonoBehaviour
         }
 
         if (!userIntervention)
-            checkIfAlliedUnsuppliedUnitsShouldBeEliminated(endOfTurn);
+            CheckIfAlliedUnsuppliedUnitsShouldBeEliminated(endOfTurn);
 
         //GlobalDefinitions.writeToLogFile("setAlliedSupplyStatus: Allied Supply Sources - ");
         //foreach (GameObject hex in GlobalDefinitions.supplySources)
@@ -174,14 +174,14 @@ public class SupplyRoutines : MonoBehaviour
     /// This routine goes through the allied units and detemines if they need to be eliminated
     /// </summary>
     /// <param name="endOfTurn"></param> units are only deleted at the end of a turn
-    public void checkIfAlliedUnsuppliedUnitsShouldBeEliminated(bool endOfTurn)
+    public void CheckIfAlliedUnsuppliedUnitsShouldBeEliminated(bool endOfTurn)
     {
         List<GameObject> unitsToRemove = new List<GameObject>();
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
             if (!unit.GetComponent<UnitDatabaseFields>().inSupply)
             {
                 unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply++;
-                GlobalDefinitions.writeToLogFile("Turn " + GlobalDefinitions.turnNumber + " Allied unit " + unit.name + " is out of supply for " + unit.gameObject.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply + " checks");
+                GlobalDefinitions.WriteToLogFile("Turn " + GlobalDefinitions.turnNumber + " Allied unit " + unit.name + " is out of supply for " + unit.gameObject.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply + " checks");
                 unit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = false;
                 if (unit.GetComponent<UnitDatabaseFields>().remainingMovement > 0)
                     unit.GetComponent<UnitDatabaseFields>().remainingMovement = 1;
@@ -190,7 +190,7 @@ public class SupplyRoutines : MonoBehaviour
                 if (endOfTurn && (unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply > 5))
                 {
                     // Can't remove the unit in a foreach loop so store for later
-                    GlobalDefinitions.writeToLogFile("      unit being eliminated");
+                    GlobalDefinitions.WriteToLogFile("      unit being eliminated");
                     unitsToRemove.Add(unit);
                 }
 
@@ -201,13 +201,13 @@ public class SupplyRoutines : MonoBehaviour
 
         for (int index = 0; index < unitsToRemove.Count; index++)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Unit " + unitsToRemove[index].name + " has been eliminated due to supply");
+            GlobalDefinitions.GuiUpdateStatusMessage("Unit " + unitsToRemove[index].name + " has been eliminated due to supply");
             // Reset the flags in case this unit is used later as a replacement
             unitsToRemove[index].GetComponent<UnitDatabaseFields>().inSupply = true;
             if (unitsToRemove[index].GetComponent<UnitDatabaseFields>().armor || unitsToRemove[index].GetComponent<UnitDatabaseFields>().airborne)
                 unitsToRemove[index].GetComponent<UnitDatabaseFields>().availableForStrategicMovement = true;
             unitsToRemove[index].gameObject.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply = 0;
-            GlobalDefinitions.moveUnitToDeadPile(unitsToRemove[index]);
+            GlobalDefinitions.MoveUnitToDeadPile(unitsToRemove[index]);
         }
     }
 
@@ -215,7 +215,7 @@ public class SupplyRoutines : MonoBehaviour
     /// This routine will go through all of the German units on the board and set their supply status
     /// </summary>
     /// <param name="endOfTurn"></param>  units are only deleted at the end of a turn but supply check happens in the beginning and the end
-    public void setGermanSupplyStatus(bool endOfTurn)
+    public void SetGermanSupplyStatus(bool endOfTurn)
     {
         List<GameObject> unitsToRemove = new List<GameObject>();
 
@@ -226,29 +226,29 @@ public class SupplyRoutines : MonoBehaviour
         // There are 23 supply sources for the Germans.  They are the hexes on the eastern board edge north of Switzerland
         // I'm sure there is a better way to do this but I'm going to call the set routine 23 times.
         // The board limits are 46 hexes in the x plane and 33 in the y plane.  To account for lines that have to meander I will set range to 100 - no specific reason for 100
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(1, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(2, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(3, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(4, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(5, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(6, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(7, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(8, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(9, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(10, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(11, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(12, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(13, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(14, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(15, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(16, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(17, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(18, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(19, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(20, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(21, 32), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(22, 33), 100, GlobalDefinitions.Nationality.German);
-        setHexAsSupplySource(GlobalDefinitions.getHexAtXY(23, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(1, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(2, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(3, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(4, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(5, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(6, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(7, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(8, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(9, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(10, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(11, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(12, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(13, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(14, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(15, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(16, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(17, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(18, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(19, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(20, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(21, 32), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(22, 33), 100, GlobalDefinitions.Nationality.German);
+        SetHexAsSupplySource(GlobalDefinitions.GetHexAtXY(23, 32), 100, GlobalDefinitions.Nationality.German);
 
         // Go through all the hexes and set the flag for displaying supply status in the gui
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
@@ -271,13 +271,13 @@ public class SupplyRoutines : MonoBehaviour
                 unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply = 0;
                 if (unit.GetComponent<UnitDatabaseFields>().armor || unit.GetComponent<UnitDatabaseFields>().airborne)
                     unit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = true;
-                GlobalDefinitions.unhighlightUnit(unit.gameObject.gameObject); ;
+                GlobalDefinitions.UnhighlightUnit(unit.gameObject.gameObject); ;
             }
             else
             {
                 unit.GetComponent<UnitDatabaseFields>().inSupply = false;
                 unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply++;
-                GlobalDefinitions.writeToLogFile("Turn " + GlobalDefinitions.turnNumber + " German unit" + unit.name + "out of supply for " + unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply + " checks");
+                GlobalDefinitions.WriteToLogFile("Turn " + GlobalDefinitions.turnNumber + " German unit" + unit.name + "out of supply for " + unit.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply + " checks");
                 unit.GetComponent<UnitDatabaseFields>().availableForStrategicMovement = false;
                 // Remaining movement needs to be set here in preparation for movement
                 if (unit.GetComponent<UnitDatabaseFields>().remainingMovement > 0)
@@ -297,13 +297,13 @@ public class SupplyRoutines : MonoBehaviour
 
         for (int index = 0; index < unitsToRemove.Count; index++)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Unit " + unitsToRemove[index].name + " has been eliminated due to supply");
+            GlobalDefinitions.GuiUpdateStatusMessage("Unit " + unitsToRemove[index].name + " has been eliminated due to supply");
             // Reset the flags in case this unit is used later as a replacement
             unitsToRemove[index].GetComponent<UnitDatabaseFields>().inSupply = true;
             if (unitsToRemove[index].GetComponent<UnitDatabaseFields>().armor || unitsToRemove[index].GetComponent<UnitDatabaseFields>().airborne)
                 unitsToRemove[index].GetComponent<UnitDatabaseFields>().availableForStrategicMovement = true;
             unitsToRemove[index].gameObject.GetComponent<UnitDatabaseFields>().supplyIncrementsOutOfSupply = 0;
-            GlobalDefinitions.moveUnitToDeadPile(unitsToRemove[index]);
+            GlobalDefinitions.MoveUnitToDeadPile(unitsToRemove[index]);
         }
 
         // Now reset all the remainingMovement values
@@ -316,7 +316,7 @@ public class SupplyRoutines : MonoBehaviour
     /// </summary>
     /// <param name="supplySourceHex"></param>
     /// <param name="rangeOfSupply"></param>
-    public void setHexAsSupplySource(GameObject supplySourceHex, int rangeOfSupply, GlobalDefinitions.Nationality nationality)
+    public void SetHexAsSupplySource(GameObject supplySourceHex, int rangeOfSupply, GlobalDefinitions.Nationality nationality)
     {
         List<GameObject> hexesToCheck = new List<GameObject>();
         supplySourceHex.GetComponent<HexDatabaseFields>().remainingMovement = rangeOfSupply;
@@ -326,7 +326,7 @@ public class SupplyRoutines : MonoBehaviour
         {
             hexesToCheck[0].GetComponent<HexDatabaseFields>().supplySources.Add(supplySourceHex);
             // The hex is a stopping point if it is in enemy ZOC or no more movement remaining
-            if (!GlobalDefinitions.hexInEnemyZOC(hexesToCheck[0], nationality) && (hexesToCheck[0].GetComponent<HexDatabaseFields>().remainingMovement > 0))
+            if (!GlobalDefinitions.HexInEnemyZOC(hexesToCheck[0], nationality) && (hexesToCheck[0].GetComponent<HexDatabaseFields>().remainingMovement > 0))
             {
                 foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
                 {
@@ -362,13 +362,13 @@ public class SupplyRoutines : MonoBehaviour
     /// Return the Allied unit with the least available supply
     /// </summary>
     /// <returns></returns>
-    private GameObject returnLeastSuppliedAlliedUnit()
+    private GameObject ReturnLeastSuppliedAlliedUnit()
     {
         int leastAvailableSupply = 1000;
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
-            if ((totalSupplyAvailable(unit) > 0)
-                    && (totalSupplyAvailable(unit) < leastAvailableSupply))
-                leastAvailableSupply = totalSupplyAvailable(unit);
+            if ((TotalSupplyAvailable(unit) > 0)
+                    && (TotalSupplyAvailable(unit) < leastAvailableSupply))
+                leastAvailableSupply = TotalSupplyAvailable(unit);
 
         if (leastAvailableSupply == 1000)
             // Everthing is out of supply
@@ -376,7 +376,7 @@ public class SupplyRoutines : MonoBehaviour
         else
             foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
                 if ((unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied)
-                        && (totalSupplyAvailable(unit) == leastAvailableSupply))
+                        && (TotalSupplyAvailable(unit) == leastAvailableSupply))
                     return (unit);
         // Should never get here
         return (null);
@@ -386,7 +386,7 @@ public class SupplyRoutines : MonoBehaviour
     /// Returns the total supply avaiable to the unit passed
     /// </summary>
     /// <param name="unit"></param>
-    private int totalSupplyAvailable(GameObject unit)
+    private int TotalSupplyAvailable(GameObject unit)
     {
         int total = 0;
 
@@ -399,7 +399,7 @@ public class SupplyRoutines : MonoBehaviour
     /// Assigns supply to the unit passed using the source with the most unassigned supply
     /// </summary>
     /// <param name="unit"></param>
-    private void assignAlliedSupply(GameObject unit)
+    private void AssignAlliedSupply(GameObject unit)
     {
         int mostUnassignedSuppply = 0;
         bool assignmentMade = false;
@@ -422,7 +422,7 @@ public class SupplyRoutines : MonoBehaviour
                     // Remaining movement needs to be set here in preparation for movement
                     unit.GetComponent<UnitDatabaseFields>().remainingMovement = unit.GetComponent<UnitDatabaseFields>().movementFactor;
                     unit.GetComponent<UnitDatabaseFields>().supplySource = supplySource;
-                    GlobalDefinitions.unhighlightUnit(unit);
+                    GlobalDefinitions.UnhighlightUnit(unit);
                 }
         }
         //else
@@ -430,10 +430,10 @@ public class SupplyRoutines : MonoBehaviour
 
     }
 
-    public void highlightUnsuppliedUnits()
+    public void HighlightUnsuppliedUnits()
     {
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
-            GlobalDefinitions.unhighlightUnit(unit);
+            GlobalDefinitions.UnhighlightUnit(unit);
     }
 
     /// <summary>
@@ -443,7 +443,7 @@ public class SupplyRoutines : MonoBehaviour
     /// be highlighted in red
     /// </summary>
     /// <param name="supplySource"></param>
-    public void highlightUnitsAvailableForSupply(GameObject supplySource)
+    public void HighlightUnitsAvailableForSupply(GameObject supplySource)
     {
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
         {
@@ -452,18 +452,18 @@ public class SupplyRoutines : MonoBehaviour
             // if it is out of range of the supply hex it will be red
             if ((unit.GetComponent<UnitDatabaseFields>().inSupply) && (unit.GetComponent<UnitDatabaseFields>().supplySource == supplySource))
             {
-                GlobalDefinitions.writeToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " being supplied by current source - highlight yellow");
+                GlobalDefinitions.WriteToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " being supplied by current source - highlight yellow");
                 //GlobalDefinitions.highlightUnit(unit);
                 unit.GetComponent<SpriteRenderer>().material.color = Color.yellow;
             }
             else if (!unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().supplySources.Contains(supplySource))
             {
-                GlobalDefinitions.writeToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " could be supplied by current source - highlight red");
+                GlobalDefinitions.WriteToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " could be supplied by current source - highlight red");
                 unit.GetComponent<SpriteRenderer>().material.color = Color.red;
             }
             else if (!unit.GetComponent<UnitDatabaseFields>().inSupply)
             {
-                GlobalDefinitions.writeToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " out of supply - highlight gray");
+                GlobalDefinitions.WriteToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " out of supply - highlight gray");
                 unit.GetComponent<SpriteRenderer>().material.color = Color.gray;
             }
         }
@@ -473,38 +473,38 @@ public class SupplyRoutines : MonoBehaviour
     /// <summary>
     /// Serves as an entery point for the gui to call createSupplySourceGUI since the gui can't pass parameters
     /// </summary>
-    public void displaySupplySourceGUI()
+    public void DisplaySupplySourceGUI()
     {
         // Turn off the button
         GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = false;
 
-        createSupplySourceGUI(true);
+        CreateSupplySourceGUI(true);
     }
 
     /// <summary>
     /// This routine will create a GUI that displays all the current supply sources
     /// </summary>
-    public void createSupplySourceGUI(bool displayOnly)
+    public void CreateSupplySourceGUI(bool displayOnly)
     {
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DISPLAYALLIEDSUPPLYKEYWORD + " " + displayOnly);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DISPLAYALLIEDSUPPLYKEYWORD + " " + displayOnly);
 
         GameObject unassignedTextGameObject;
 
         // Only create the gui if there isn't already one active
         if (GlobalDefinitions.guiList.Count > 0)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve currently displayed menu before invoking another - gui list count = " + GlobalDefinitions.guiList.Count + " name[0] = " + GlobalDefinitions.guiList[0].name);
+            GlobalDefinitions.GuiUpdateStatusMessage("Resolve currently displayed menu before invoking another - gui list count = " + GlobalDefinitions.guiList.Count + " name[0] = " + GlobalDefinitions.guiList[0].name);
             return;
         }
 
         if (GlobalDefinitions.supplySources.Count == 0)
         {
             // When starting off with a saved game the supply status isn't set do regenerate in case we're in this situation.
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().determineAvailableReinforcementPorts();
-            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().setAlliedSupplyStatus(true);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().DetermineAvailableReinforcementPorts();
+            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetAlliedSupplyStatus(true);
 
             if (GlobalDefinitions.supplySources.Count == 0) {
-                GlobalDefinitions.guiUpdateStatusMessage("No Allied supply sources have been assigned");
+                GlobalDefinitions.GuiUpdateStatusMessage("No Allied supply sources have been assigned");
 
                 // Turn the button back on
                 GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
@@ -540,26 +540,26 @@ public class SupplyRoutines : MonoBehaviour
 
         if (panelHeight > (UnityEngine.Screen.height - 50))
             GlobalDefinitions.supplySourceGUIInstance =
-                    GlobalDefinitions.createScrollingGUICanvas("SupplyGUICanvas", panelWidth, panelHeight, ref supplyContentPanel, ref supplyCanvas);
+                    GlobalDefinitions.CreateScrollingGUICanvas("SupplyGUICanvas", panelWidth, panelHeight, ref supplyContentPanel, ref supplyCanvas);
         else
         {
-            GlobalDefinitions.supplySourceGUIInstance = GlobalDefinitions.createGUICanvas(name, panelWidth, panelHeight, ref supplyCanvas);
+            GlobalDefinitions.supplySourceGUIInstance = GlobalDefinitions.CreateGUICanvas(name, panelWidth, panelHeight, ref supplyCanvas);
             supplyContentPanel.transform.SetParent(GlobalDefinitions.supplySourceGUIInstance.transform, false);
         }
 
         yPosition = 0.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight;
 
         // Need an OK button to get out of the gui
-        okButton = GlobalDefinitions.createButton("SupplySourcesOKButton", "OK",
+        okButton = GlobalDefinitions.CreateButton("SupplySourcesOKButton", "OK",
                 5.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 yPosition,
                 supplyCanvas);
 
         okButton.gameObject.AddComponent<SupplyButtonRoutines>();
         if (!displayOnly)
-            okButton.onClick.AddListener(okButton.GetComponent<SupplyButtonRoutines>().okSupplyWithEndPhase);
+            okButton.onClick.AddListener(okButton.GetComponent<SupplyButtonRoutines>().OkSupplyWithEndPhase);
         else
-            okButton.onClick.AddListener(okButton.GetComponent<SupplyButtonRoutines>().okSupply);
+            okButton.onClick.AddListener(okButton.GetComponent<SupplyButtonRoutines>().OkSupply);
         GlobalDefinitions.combatResolutionOKButton = okButton.gameObject;
         GlobalDefinitions.combatResolutionOKButton.SetActive(true);
         okButton.transform.SetParent(supplyContentPanel.transform, false);
@@ -572,7 +572,7 @@ public class SupplyRoutines : MonoBehaviour
             yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
             // This creates a text box with the name of the source
-            (GlobalDefinitions.createText(GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().hexName,
+            (GlobalDefinitions.CreateText(GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().hexName,
                     "SourceNameText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -583,7 +583,7 @@ public class SupplyRoutines : MonoBehaviour
             if (!displayOnly)
             {
                 // In column three a toggle will be displayed to select the supply source
-                singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle = GlobalDefinitions.createToggle("SupplySourceSelectToggle" + index,
+                singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle = GlobalDefinitions.CreateToggle("SupplySourceSelectToggle" + index,
                         GlobalDefinitions.GUIUNITIMAGESIZE * 3 * 1.25f - 0.5f * panelWidth,
                         yPosition,
                         supplyCanvas).GetComponent<Toggle>();
@@ -594,11 +594,11 @@ public class SupplyRoutines : MonoBehaviour
                 // A separate Toggle object is needed otherwise the Listener won't work without it
                 Toggle tempToggle;
                 tempToggle = singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle.GetComponent<Toggle>();
-                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<SupplyButtonRoutines>().checkToggle());
+                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<SupplyButtonRoutines>().CheckToggle());
             }
 
             // In column four the range of the source will be displayed
-            (GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyRange).ToString(),
+            (GlobalDefinitions.CreateText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyRange).ToString(),
                     "supplySourceRangeText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -607,7 +607,7 @@ public class SupplyRoutines : MonoBehaviour
                     supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
             // In column six the total supply capacity will be listed
-            (GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyCapacity).ToString(),
+            (GlobalDefinitions.CreateText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyCapacity).ToString(),
                     "SupplySourceCapacityText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -616,7 +616,7 @@ public class SupplyRoutines : MonoBehaviour
                     supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
             // In column eight the unassigned capacity will be listed
-            unassignedTextGameObject = GlobalDefinitions.createText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().unassignedSupply).ToString(),
+            unassignedTextGameObject = GlobalDefinitions.CreateText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().unassignedSupply).ToString(),
                     "SupplySourceUnassignedText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -625,17 +625,17 @@ public class SupplyRoutines : MonoBehaviour
                     supplyCanvas);
             unassignedTextGameObject.transform.SetParent(supplyContentPanel.transform, false);
             GlobalDefinitions.unassignedTextObejcts.Add(unassignedTextGameObject);
-            GlobalDefinitions.writeToLogFile("createSupplySourceGUI: adding unassignedTextGameObject count = " + GlobalDefinitions.unassignedTextObejcts.Count);
+            GlobalDefinitions.WriteToLogFile("createSupplySourceGUI: adding unassignedTextGameObject count = " + GlobalDefinitions.unassignedTextObejcts.Count);
 
             // In column 10 add a button to locate the supply source
-            singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton = GlobalDefinitions.createButton("CombatResolutionLocateButton", "Locate",
+            singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton = GlobalDefinitions.CreateButton("CombatResolutionLocateButton", "Locate",
                    GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
                    yPosition,
                    supplyCanvas);
             singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.transform.SetParent(supplyContentPanel.transform, false);
             singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.gameObject.AddComponent<SupplyButtonRoutines>();
             singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.gameObject.GetComponent<SupplyButtonRoutines>().supplySource = GlobalDefinitions.supplySources[index];
-            singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.onClick.AddListener(singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.GetComponent<SupplyButtonRoutines>().locateSupplySource);
+            singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.onClick.AddListener(singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton.GetComponent<SupplyButtonRoutines>().LocateSupplySource);
 
             GlobalDefinitions.supplyGUI.Add(singleSupplyGUI);
         }
@@ -643,7 +643,7 @@ public class SupplyRoutines : MonoBehaviour
         // Put a series of text boxes along the top row to serve as the header
         yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
         // The first column contains the names of the supply sources
-        (GlobalDefinitions.createText("Supply Source", "SupplySourceNameHeaderText",
+        (GlobalDefinitions.CreateText("Supply Source", "SupplySourceNameHeaderText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
@@ -653,7 +653,7 @@ public class SupplyRoutines : MonoBehaviour
         if (!displayOnly)
         {
             // In column three a toggle for selection will be listed
-            (GlobalDefinitions.createText("Select", "SupplySelectionText",
+            (GlobalDefinitions.CreateText("Select", "SupplySelectionText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 3 * 1.25f - 0.5f * panelWidth,
@@ -662,7 +662,7 @@ public class SupplyRoutines : MonoBehaviour
         }
 
             // In column four the range of the source will be listed
-            (GlobalDefinitions.createText("Range", "SupplyRangeText",
+            (GlobalDefinitions.CreateText("Range", "SupplyRangeText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
@@ -670,7 +670,7 @@ public class SupplyRoutines : MonoBehaviour
                     supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
         // In column five the Total Supply Capacity will be listed
-        (GlobalDefinitions.createText("Total  Capacity", "SuppplyCapacityText",
+        (GlobalDefinitions.CreateText("Total  Capacity", "SuppplyCapacityText",
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
@@ -678,7 +678,7 @@ public class SupplyRoutines : MonoBehaviour
                 supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
         // In column six the Unassigned Capacity will be listed
-        (GlobalDefinitions.createText("Unassigned Supply", "UnassignedSupplyText",
+        (GlobalDefinitions.CreateText("Unassigned Supply", "UnassignedSupplyText",
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 6.5f * 1.25f - 0.5f * panelWidth,
@@ -691,10 +691,10 @@ public class SupplyRoutines : MonoBehaviour
     /// This routine will get the hex from the user input and swap the supply status of the unit on the hex
     /// </summary>
     /// <param name="unit"></param>
-    public void changeUnitSupplyStatus(GameObject hex)
+    public void ChangeUnitSupplyStatus(GameObject hex)
     {
         if (GlobalDefinitions.currentSupplySource == null)
-            GlobalDefinitions.guiUpdateStatusMessage("No supply source selected");
+            GlobalDefinitions.GuiUpdateStatusMessage("No supply source selected");
 
 
         if (hex != null)
@@ -708,26 +708,26 @@ public class SupplyRoutines : MonoBehaviour
 
             if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0)
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Hex selected doesn't have any units");
+                GlobalDefinitions.GuiUpdateStatusMessage("Hex selected doesn't have any units");
             }
             else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German)
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Allies cannot supply German units");
+                GlobalDefinitions.GuiUpdateStatusMessage("Allies cannot supply German units");
             }
             else if (number == 0)
             {
-                GlobalDefinitions.guiUpdateStatusMessage("No units on the hex are out of supply or supplied by the current supply source");
+                GlobalDefinitions.GuiUpdateStatusMessage("No units on the hex are out of supply or supplied by the current supply source");
             }
             else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 1)
             {
                 // Only swap the supply status if the unit is out of supply or supplied by the current supply source
                 if (!hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().inSupply)
-                    swapSupplyStatus(hex.GetComponent<HexDatabaseFields>().occupyingUnit[0]);
+                    SwapSupplyStatus(hex.GetComponent<HexDatabaseFields>().occupyingUnit[0]);
                 else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().supplySource == GlobalDefinitions.currentSupplySource)
-                    swapSupplyStatus(hex.GetComponent<HexDatabaseFields>().occupyingUnit[0]);
+                    SwapSupplyStatus(hex.GetComponent<HexDatabaseFields>().occupyingUnit[0]);
                 else
                 {
-                    GlobalDefinitions.guiUpdateStatusMessage("Single unit on the hex is not being supplied by the selected source");
+                    GlobalDefinitions.GuiUpdateStatusMessage("Single unit on the hex is not being supplied by the selected source");
                 }
             }
             else if (number == 1)
@@ -737,24 +737,24 @@ public class SupplyRoutines : MonoBehaviour
                     if (!hex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().inSupply ||
                             (hex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().supplySource == GlobalDefinitions.currentSupplySource))
                     {
-                        swapSupplyStatus(hex.GetComponent<HexDatabaseFields>().occupyingUnit[index]);
+                        SwapSupplyStatus(hex.GetComponent<HexDatabaseFields>().occupyingUnit[index]);
                     }
                 }
             }
             else
             {
-                callSupplyMultiUnitDisplay(hex, number);
+                CallSupplyMultiUnitDisplay(hex, number);
             }
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Valid hex not selected");
+            GlobalDefinitions.GuiUpdateStatusMessage("Valid hex not selected");
     }
 
     /// <summary>
     /// This routine switches the supply status of the unit passed
     /// </summary>
     /// <param name="unit"></param>
-    public void swapSupplyStatus(GameObject unit)
+    public void SwapSupplyStatus(GameObject unit)
     {
         if (unit != null)
         {
@@ -762,7 +762,7 @@ public class SupplyRoutines : MonoBehaviour
             {
                 // This unit is in supply so switch it to being out of supply
                 unit.GetComponent<UnitDatabaseFields>().supplySource.GetComponent<HexDatabaseFields>().unassignedSupply++;
-                updateUnassignedText(unit.GetComponent<UnitDatabaseFields>().supplySource);
+                UpdateUnassignedText(unit.GetComponent<UnitDatabaseFields>().supplySource);
                 unit.GetComponent<UnitDatabaseFields>().supplySource = null;
                 unit.GetComponent<UnitDatabaseFields>().inSupply = false;
                 // Remaining movement needs to be set here in preparation for movement
@@ -784,21 +784,21 @@ public class SupplyRoutines : MonoBehaviour
                             unit.GetComponent<UnitDatabaseFields>().remainingMovement = unit.GetComponent<UnitDatabaseFields>().movementFactor;
                             unit.GetComponent<UnitDatabaseFields>().supplySource = GlobalDefinitions.currentSupplySource;
                             GlobalDefinitions.currentSupplySource.GetComponent<HexDatabaseFields>().unassignedSupply--;
-                            updateUnassignedText(GlobalDefinitions.currentSupplySource);
+                            UpdateUnassignedText(GlobalDefinitions.currentSupplySource);
                             // Set the unit to a yellow highlight to indicate it is in supply
                             unit.GetComponent<SpriteRenderer>().material.color = Color.yellow;
                         }
                         else
-                            GlobalDefinitions.guiUpdateStatusMessage("The currently selected supply source is not a supply source for this unit");
+                            GlobalDefinitions.GuiUpdateStatusMessage("The currently selected supply source is not a supply source for this unit");
                     }
                     else
-                        GlobalDefinitions.guiUpdateStatusMessage("The supply source does not have unassigned supply capacity");
+                        GlobalDefinitions.GuiUpdateStatusMessage("The supply source does not have unassigned supply capacity");
                 }
                 else
-                    GlobalDefinitions.guiUpdateStatusMessage("No supply source selected.  Select a supply source on the display before selecting a unit.");
+                    GlobalDefinitions.GuiUpdateStatusMessage("No supply source selected.  Select a supply source on the display before selecting a unit.");
             }
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod =
-                    GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.GetComponent<SupplyState>().executeSelectUnit;
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                    GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<SupplyState>().ExecuteSelectUnit;
         }
     }
 
@@ -806,12 +806,12 @@ public class SupplyRoutines : MonoBehaviour
     /// This routine determines which object represents the unassigned text to change due to a change in supply
     /// </summary>
     /// <param name="supplySource"></param>
-    public static void updateUnassignedText(GameObject supplySource)
+    public static void UpdateUnassignedText(GameObject supplySource)
     {
         for (int index = 0; index < GlobalDefinitions.supplySources.Count; index++)
             if (supplySource == GlobalDefinitions.supplySources[index])
             {
-                GlobalDefinitions.writeToLogFile("updateUnassignedText: debug for out of range index  index = " + index + "  supplySources.Count = " + GlobalDefinitions.supplySources.Count);
+                GlobalDefinitions.WriteToLogFile("updateUnassignedText: debug for out of range index  index = " + index + "  supplySources.Count = " + GlobalDefinitions.supplySources.Count);
                 GlobalDefinitions.unassignedTextObejcts[index].GetComponent<Text>().text = supplySource.GetComponent<HexDatabaseFields>().unassignedSupply.ToString();
             }
     }
@@ -821,17 +821,17 @@ public class SupplyRoutines : MonoBehaviour
     /// </summary>
     /// <param name="hex"></param>
     /// <param name="numberUnitsToDisplay"></param>
-    public void callSupplyMultiUnitDisplay(GameObject hex, int numberUnitsToDisplay)
+    public void CallSupplyMultiUnitDisplay(GameObject hex, int numberUnitsToDisplay)
     {
         GlobalDefinitions.supplySourceGUIInstance.SetActive(false);
         Canvas supplyCanvas = new Canvas();
         float panelWidth = (numberUnitsToDisplay + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
         float panelHeight = 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
-        GlobalDefinitions.createGUICanvas("MultiUnitSupplyGUIInstance",
+        GlobalDefinitions.CreateGUICanvas("MultiUnitSupplyGUIInstance",
                 panelWidth,
                 panelHeight,
                 ref supplyCanvas);
-        GlobalDefinitions.createText("Select a unit", "multiUnitSupplyText",
+        GlobalDefinitions.CreateText("Select a unit", "multiUnitSupplyText",
                 (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 //0.5f * (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -856,7 +856,7 @@ public class SupplyRoutines : MonoBehaviour
 
                 Toggle tempToggle;
 
-                tempToggle = GlobalDefinitions.createUnitTogglePair("multiUnitSupplyUnitToggle" + index,
+                tempToggle = GlobalDefinitions.CreateUnitTogglePair("multiUnitSupplyUnitToggle" + index,
                         index * xSeperation + xOffset - 0.5f * panelWidth,
                         2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         supplyCanvas,
@@ -864,10 +864,10 @@ public class SupplyRoutines : MonoBehaviour
 
                 tempToggle.gameObject.AddComponent<SupplyButtonRoutines>();
                 tempToggle.GetComponent<SupplyButtonRoutines>().unit = unit;
-                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<SupplyButtonRoutines>().selectFromMultiUnits());
+                tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<SupplyButtonRoutines>().SelectFromMultiUnits());
 
                 if (!unit.GetComponent<UnitDatabaseFields>().inSupply)
-                    GlobalDefinitions.createText("Out of Supply",
+                    GlobalDefinitions.CreateText("Out of Supply",
                             "OutOfSupplyText",
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -875,7 +875,7 @@ public class SupplyRoutines : MonoBehaviour
                             0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                             supplyCanvas);
                 else
-                    GlobalDefinitions.createText("In Supply",
+                    GlobalDefinitions.CreateText("In Supply",
                             "InSupplyText",
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -892,7 +892,7 @@ public class SupplyRoutines : MonoBehaviour
     /// <param name="selectedHex"></param>
     /// <param name="selectedUnit"></param>
     /// <returns></returns>
-    public bool checkForAvailableSupplyCapacity(GameObject selectedHex)
+    public bool CheckForAvailableSupplyCapacity(GameObject selectedHex)
     {
         // This routine will check all the supply sources listed on the hex, not just the hex itself.  It will assign the unit to the source found
         for (int index = 0; index < selectedHex.GetComponent<HexDatabaseFields>().supplySources.Count; index++)
@@ -907,7 +907,7 @@ public class SupplyRoutines : MonoBehaviour
     /// </summary>
     /// <param name="selectedHex"></param>
     /// <param name="selectedUnit"></param>
-    public bool assignAvailableSupplyCapacity(GameObject selectedHex, GameObject selectedUnit)
+    public bool AssignAvailableSupplyCapacity(GameObject selectedHex, GameObject selectedUnit)
     {
         // This routine will check all the supply sources listed on the hex, not just the hex itself.  It will assign the unit to the source found
         for (int index = 0; index < selectedHex.GetComponent<HexDatabaseFields>().supplySources.Count; index++)
@@ -926,7 +926,7 @@ public class SupplyRoutines : MonoBehaviour
     /// an Allied hq unit on it in order to be able to provide supply.
     /// </summary>
     /// <returns></returns>
-    static public List<GameObject> returnAllAlliedSupplySources()
+    static public List<GameObject> ReturnAllAlliedSupplySources()
     {
         List<GameObject> returnList = new List<GameObject>();
 
@@ -959,7 +959,7 @@ public class SupplyRoutines : MonoBehaviour
     /// Returns the total supply available for Allied units
     /// </summary>
     /// <returns></returns>
-    static public int returnAlliedSupplyCapacity()
+    static public int ReturnAlliedSupplyCapacity()
     {
         int supplyCapacity = 0;
         foreach (GameObject hex in GlobalDefinitions.supplySources)
@@ -971,9 +971,9 @@ public class SupplyRoutines : MonoBehaviour
     /// Returns a positive number for the additional units that can be supplied.  Negative number if not enough supply.
     /// </summary>
     /// <returns></returns>
-    static public int returnAlliedExcessSupply()
+    static public int ReturnAlliedExcessSupply()
     {
         //GlobalDefinitions.writeToLogFile("returnAlliedExcessSupply: allied units on board = " + GlobalDefinitions.alliedUnitsOnBoard.Count);
-        return (returnAlliedSupplyCapacity() - GlobalDefinitions.alliedUnitsOnBoard.Count);
+        return (ReturnAlliedSupplyCapacity() - GlobalDefinitions.alliedUnitsOnBoard.Count);
     }
 }

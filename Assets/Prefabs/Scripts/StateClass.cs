@@ -19,7 +19,7 @@ public class InputMessage : MonoBehaviour
 /// <summary>
 /// This class is used as a singleton created in GameControl to track current state information and create the individual state instances and state transitions
 /// </summary>
-public class gameStateControl : MonoBehaviour
+public class GameStateControl : MonoBehaviour
 {
     //public enGameTypes currentGameType;
     public GameState currentState;
@@ -50,7 +50,7 @@ public class GameState : MonoBehaviour
     public GlobalDefinitions.Nationality currentNationality;
 
     //public virtual void initialize(InputMessage inputMessage)
-    public virtual void initialize()
+    public virtual void Initialize()
     {
         // Any state that starts need to have the next phase button available
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
@@ -58,24 +58,24 @@ public class GameState : MonoBehaviour
 
     public methodDelegateWithParameters executeMethod;
 
-    public virtual void executeUndo(InputMessage inputMessage) { }
+    public virtual void ExecuteUndo(InputMessage inputMessage) { }
 
-    public virtual void executeQuit()
+    public virtual void ExecuteQuit()
     {
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = nextGameState;
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
     }
 }
 
 public class SetUpState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
-        base.initialize();
+        base.Initialize();
 
         // If this is a network game the state will be handeled directly
         if (GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
-            executeMethod = executeTypeOfGame;
+            executeMethod = ExecuteTypeOfGame;
 
         GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = false;
         GlobalDefinitions.undoButton.GetComponent<Button>().interactable = false;
@@ -87,19 +87,19 @@ public class SetUpState : GameState
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
     }
 
-    public void executeTypeOfGame(InputMessage inputMessage)
+    public void ExecuteTypeOfGame(InputMessage inputMessage)
     {
-        GlobalDefinitions.guiUpdatePhase("Setup Mode");
+        GlobalDefinitions.GuiUpdatePhase("Setup Mode");
 
         // We only need to check for the type of game if it's hotseat or AI and not Network
         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Hotseat) || (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI))
-            GlobalDefinitions.getNewOrSavedGame();
+            GlobalDefinitions.GetNewOrSavedGame();
     }
 
     /// <summary>
     /// This executes when the Saved Game option is selected
     /// </summary>
-    public void executeSavedGame()
+    public void ExecuteSavedGame()
     {
         string turnFileName;
 
@@ -107,19 +107,19 @@ public class SetUpState : GameState
         if (!GlobalDefinitions.commandFileBeingRead)
             if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
             {
-                GlobalDefinitions.deleteCommandFile();
-                GlobalDefinitions.deleteFullCommandFile();
+                GlobalDefinitions.DeleteCommandFile();
+                GlobalDefinitions.DeleteFullCommandFile();
             }
 
         // This calls up the file browser
-        turnFileName = GlobalDefinitions.guiFileDialog();
+        turnFileName = GlobalDefinitions.GuiFileDialog();
 
         if (turnFileName == null)
-            executeNewGame();
+            ExecuteNewGame();
         else
         {
 
-            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(turnFileName);
+            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(turnFileName);
 
             // The normal command file is taken care of in the writeSavedTurnFile() routine since it is upated every time a new turn file is written
             // The full command file is taken care of here along with writing the difficulty and aggressiveness settings
@@ -140,7 +140,7 @@ public class SetUpState : GameState
     /// <summary>
     /// This executes when the New Game option is selected
     /// </summary>
-    public void executeNewGame()
+    public void ExecuteNewGame()
     {
         int fileNumber;
 
@@ -148,8 +148,8 @@ public class SetUpState : GameState
         if (!GlobalDefinitions.commandFileBeingRead)
             if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))
             {
-                GlobalDefinitions.deleteCommandFile();
-                GlobalDefinitions.deleteFullCommandFile();
+                GlobalDefinitions.DeleteCommandFile();
+                GlobalDefinitions.DeleteFullCommandFile();
             }
 
         // If the fileNumber is less than 100 the number to be used is being passed as part of a network game
@@ -163,8 +163,8 @@ public class SetUpState : GameState
             // The file to use has been set - this is a network game and the other computer is determining the file to use
             fileNumber = GlobalDefinitions.germanSetupFileUsed;
 
-        GlobalDefinitions.guiUpdateStatusMessage("German setup file number = " + fileNumber);
-        GameControl.createBoardInstance.GetComponent<CreateBoard>().readGermanPlacement(GameControl.path + "GermanSetup\\TGCGermanSetup" + fileNumber + ".txt");
+        GlobalDefinitions.GuiUpdateStatusMessage("German setup file number = " + fileNumber);
+        GameControl.createBoardInstance.GetComponent<CreateBoard>().ReadGermanPlacement(GameControl.path + "GermanSetup\\TGCGermanSetup" + fileNumber + ".txt");
 
         // The network communication is a little different for a new game so I can't use the routine to write to the command file
         // since I don't want it sending a message to the remote computer.
@@ -187,13 +187,13 @@ public class SetUpState : GameState
         // If this is a game where the computer is playing the Germans then exit out of setup at this point
         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.Nationality.Allied))
         {
-            executeQuit();
+            ExecuteQuit();
         }
         else
         {
-            executeMethod = executeSelectUnit;
-            GlobalDefinitions.guiUpdatePhase(currentNationality + " Setup Mode");
-            GlobalDefinitions.guiUpdateStatusMessage("German Setup Mode: Place units in preparation for an invasion.\n        Note that static units must go on coastal hexes, ports, or inland ports\n        German reserves must start on starred hexes in Germany");
+            executeMethod = ExecuteSelectUnit;
+            GlobalDefinitions.GuiUpdatePhase(currentNationality + " Setup Mode");
+            GlobalDefinitions.GuiUpdateStatusMessage("German Setup Mode: Place units in preparation for an invasion.\n        Note that static units must go on coastal hexes, ports, or inland ports\n        German reserves must start on starred hexes in Germany");
             GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
         }
     }
@@ -201,15 +201,15 @@ public class SetUpState : GameState
     /// <summary>
     /// wrapper needed to execute IEnumerator
     /// </summary>
-    public void readCommandFile()
+    public void ReadCommandFile()
     {
-        StartCoroutine("executeCommandFile");
+        StartCoroutine("ExecuteCommandFile");
     }
 
     /// <summary>
     /// Routine used to load the command file.  Needs to run as a parallel process to account for the fact that the AI runs as a parallel process
     /// </summary>
-    private IEnumerator executeCommandFile()
+    private IEnumerator ExecuteCommandFile()
     {
         char[] delimiterChars = { ' ' };
         string line;
@@ -222,12 +222,12 @@ public class SetUpState : GameState
             line = theReader.ReadLine();
             if (line != GlobalDefinitions.commandFileHeader)
             {
-                GlobalDefinitions.guiUpdateStatusMessage("The game mode selected does not match the game mode of the file\nFile game mode = " + line);
-                MainMenuRoutines.getGameModeUI();
+                GlobalDefinitions.GuiUpdateStatusMessage("The game mode selected does not match the game mode of the file\nFile game mode = " + line);
+                MainMenuRoutines.GetGameModeUI();
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Reading previous game, please wait...");
+                GlobalDefinitions.GuiUpdateStatusMessage("Reading previous game, please wait...");
                 GlobalDefinitions.commandFileBeingRead = true;
                 do
                 {
@@ -237,7 +237,7 @@ public class SetUpState : GameState
                         yield return new WaitForSeconds(1f);
                     }
                     line = theReader.ReadLine();
-                    GlobalDefinitions.writeToLogFile("readCommandFile: reading line - " + line);
+                    GlobalDefinitions.WriteToLogFile("readCommandFile: reading line - " + line);
                     Debug.Log("readCommandFile: reading line - " + line);
                     if (line != null)
                     {
@@ -253,19 +253,19 @@ public class SetUpState : GameState
                                     fileName = fileName + " " + switchEntries[a];
                                     a++;
                                 }
-                                GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(fileName);
+                                GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
                                 break;
                             case GlobalDefinitions.PLAYNEWGAMEKEYWORD:
-                                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
-                                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+                                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
+                                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
 
                                 // Set the global parameter on what file to use, can't pass it to the executeNoResponse since it is passed as a method delegate elsewhere
                                 GlobalDefinitions.germanSetupFileUsed = Convert.ToInt32(switchEntries[1]);
 
-                                GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
+                                GameControl.setUpStateInstance.GetComponent<SetUpState>().ExecuteNewGame();
                                 break;
                             default:
-                                ExecuteGameCommand.processCommand(line);
+                                ExecuteGameCommand.ProcessCommand(line);
                                 break;
                         }
                     }
@@ -273,29 +273,29 @@ public class SetUpState : GameState
                 while (line != null);
             }
             GlobalDefinitions.commandFileBeingRead = false;
-            GlobalDefinitions.guiUpdateStatusMessage("Read complete");
+            GlobalDefinitions.GuiUpdateStatusMessage("Read complete");
             theReader.Close();
         }  
     }
 
-    public void executeSelectUnit(InputMessage inputMessage)
+    public void ExecuteSelectUnit(InputMessage inputMessage)
     {
         GlobalDefinitions.selectedUnit =
-                GameControl.setupRoutinesInstance.GetComponent<SetupRoutines>().getUnitToSetup(currentNationality, inputMessage.unit);
+                GameControl.setupRoutinesInstance.GetComponent<SetupRoutines>().GetUnitToSetup(currentNationality, inputMessage.unit);
 
         if (GlobalDefinitions.selectedUnit == null)
-            executeMethod = executeSelectUnit;
+            executeMethod = ExecuteSelectUnit;
         else
-            executeMethod = executeSelectUnitDestination;
+            executeMethod = ExecuteSelectUnitDestination;
     }
 
-    public void executeSelectUnitDestination(InputMessage inputMessage)
+    public void ExecuteSelectUnitDestination(InputMessage inputMessage)
     {
-        GameControl.setupRoutinesInstance.GetComponent<SetupRoutines>().getUnitSetupDestination(GlobalDefinitions.selectedUnit, inputMessage.hex);
-        executeMethod = executeSelectUnit;
+        GameControl.setupRoutinesInstance.GetComponent<SetupRoutines>().GetUnitSetupDestination(GlobalDefinitions.selectedUnit, inputMessage.hex);
+        executeMethod = ExecuteSelectUnit;
     }
 
-    public override void executeQuit()
+    public override void ExecuteQuit()
     {
         // Generally the easiest difficulty setting used is updated in the combat state sine it is where it is used.  I'm setting it here
         // since a game is started with the setting from the last game and if it isn't reset it will represent the lowest setting ever used, not just in the current game
@@ -304,14 +304,14 @@ public class SetUpState : GameState
         // Just in case a Quit was issued in the middle of a move, unhighlight the selectedUnit
         if ((GlobalDefinitions.selectedUnit != null) && (GlobalDefinitions.selectedUnit.GetComponent<Renderer>() != null))
         {
-            GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+            GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
             GlobalDefinitions.selectedUnit = null;
         }
 
-        if (SetupRoutines.updateHexFields())
+        if (SetupRoutines.UpdateHexFields())
         {
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = nextGameState;
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
         }
     }
 }
@@ -319,15 +319,15 @@ public class SetUpState : GameState
 public class TurnInitializationState : GameState
 {
     // There are no modes in this state, all actions get executed by the initialization including the state transition
-    public override void initialize()
+    public override void Initialize()
     {
         // If this is a network game the control needs to be swapped here
         if (GlobalDefinitions.localControl && GlobalDefinitions.gameStarted && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German) && 
                 (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
         {
-            GlobalDefinitions.writeToLogFile("TurnInitializationState: passing control to remote computer");
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
-            GlobalDefinitions.switchLocalControl(false);
+            GlobalDefinitions.WriteToLogFile("TurnInitializationState: passing control to remote computer");
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
+            GlobalDefinitions.SwitchLocalControl(false);
         }
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -339,35 +339,35 @@ public class TurnInitializationState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
-        GlobalDefinitions.guiUpdatePhase("Turn initialization");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
+        GlobalDefinitions.GuiUpdatePhase("Turn initialization");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
 
         // Set flag for tracking how many turns without a successful attack.
-        if (GlobalDefinitions.successfulAttacksLastTurn() && (GlobalDefinitions.turnNumber > 2))
+        if (GlobalDefinitions.SuccessfulAttacksLastTurn() && (GlobalDefinitions.turnNumber > 2))
             GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack = 0;
         else
             GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack++;
-        GlobalDefinitions.writeToLogFile("Turn Initialization: number of turns without successful attack = " + GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack);
+        GlobalDefinitions.WriteToLogFile("Turn Initialization: number of turns without successful attack = " + GlobalDefinitions.numberOfTurnsWithoutSuccessfulAttack);
 
         // Write out an end of turn save file 
         if (GlobalDefinitions.turnNumber == 0)
-            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSaveTurnFile("Setup");
+            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().WriteSaveTurnFile("Setup");
         else
-            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSaveTurnFile("EndOfGerman");
+            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().WriteSaveTurnFile("EndOfGerman");
 
         // Increment the turn number
         GlobalDefinitions.turnNumber++;
-        GlobalDefinitions.writeToLogFile("TurnInitialization: Starting turn number " + GlobalDefinitions.turnNumber);
-        GlobalDefinitions.guiUpdateTurn();
+        GlobalDefinitions.WriteToLogFile("TurnInitialization: Starting turn number " + GlobalDefinitions.turnNumber);
+        GlobalDefinitions.GuiUpdateTurn();
 
         // Update Allied victory weeks display
-        GlobalDefinitions.guiDisplayAlliedVictoryStatus();
-        GlobalDefinitions.guiDisplayAlliedVictoryUnits();
+        GlobalDefinitions.GuiDisplayAlliedVictoryStatus();
+        GlobalDefinitions.GuiDisplayAlliedVictoryUnits();
 
         // One of the Free French units is the French 5th armor.  If it isn't available then check to see if the Free French units are available
         if ((GlobalDefinitions.turnNumber > 27) && (GameObject.Find("Armor-FR-5").GetComponent<UnitDatabaseFields>().turnAvailable > GlobalDefinitions.turnNumber))
-            CombatResolutionRoutines.checkForAvailableFreeFrenchUnits();
+            CombatResolutionRoutines.CheckForAvailableFreeFrenchUnits();
 
         // Increment the invasion turn parameters
         if ((GlobalDefinitions.firstInvasionAreaIndex > -1) &&
@@ -385,7 +385,7 @@ public class TurnInitializationState : GameState
             GlobalDefinitions.invasionAreas[GlobalDefinitions.secondInvasionAreaIndex].turn++;
         }
 
-        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().initializeAreaCounters();
+        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().InitializeAreaCounters();
 
         // Reset the count of the number of airborne drops this turn
         GlobalDefinitions.currentAirborneDropsThisTurn = 0;
@@ -398,7 +398,7 @@ public class TurnInitializationState : GameState
         {
             hex.GetComponent<HexDatabaseFields>().riverInterdiction = false;
             hex.GetComponent<HexDatabaseFields>().closeDefenseSupport = false;
-            GlobalDefinitions.unhighlightHex(hex.gameObject);
+            GlobalDefinitions.UnhighlightHex(hex.gameObject);
         }
 
         // Reset air mission unit highlights
@@ -410,22 +410,22 @@ public class TurnInitializationState : GameState
         GlobalDefinitions.interdictedUnits.Clear();
         GlobalDefinitions.closeDefenseHexes.Clear();
 
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().initializeUnits();
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().InitializeUnits();
 
-        GlobalDefinitions.numberOfHexesInAlliedControl = GlobalDefinitions.returnNumberOfHexesInAlliedControl();
-        GlobalDefinitions.writeToLogFile("TurnInitializationState: Number of hexes in Allied control = " + GlobalDefinitions.numberOfHexesInAlliedControl);
-        executeQuit();
+        GlobalDefinitions.numberOfHexesInAlliedControl = GlobalDefinitions.ReturnNumberOfHexesInAlliedControl();
+        GlobalDefinitions.WriteToLogFile("TurnInitializationState: Number of hexes in Allied control = " + GlobalDefinitions.numberOfHexesInAlliedControl);
+        ExecuteQuit();
     }
 }
 
 public class AlliedReplacementState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
-        GlobalDefinitions.guiUpdatePhase("Allied Replacement Mode");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
+        GlobalDefinitions.GuiUpdatePhase("Allied Replacement Mode");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -438,40 +438,40 @@ public class AlliedReplacementState : GameState
 
         // If it is turn 9 or later the check if the allied player gains replacement points
         if (GlobalDefinitions.turnNumber > 8)
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().calculateAlliedRelacementFactors();
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().CalculateAlliedRelacementFactors();
 
         if ((GlobalDefinitions.turnNumber > 8) && (GlobalDefinitions.alliedReplacementsRemaining > 3) &&
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().checkIfAlliedReplacementsAvailable())
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().CheckIfAlliedReplacementsAvailable())
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Allied replacement factors remaining = " + GlobalDefinitions.alliedReplacementsRemaining + " select an allied unit from the OOB sheet");
-            executeMethod = executeSelectUnit; // Initialize the current mode state
+            GlobalDefinitions.GuiUpdateStatusMessage("Allied replacement factors remaining = " + GlobalDefinitions.alliedReplacementsRemaining + " select an allied unit from the OOB sheet");
+            executeMethod = ExecuteSelectUnit; // Initialize the current mode state
         }
         else
         {
             // If no replacements are available then transition to the next state
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = nextGameState;
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
         }
     }
 
-    public void executeSelectUnit(InputMessage inputMessage)
+    public void ExecuteSelectUnit(InputMessage inputMessage)
     {
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().selectAlliedReplacementUnit(inputMessage.unit);
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().SelectAlliedReplacementUnit(inputMessage.unit);
         if (GlobalDefinitions.alliedReplacementsRemaining > 3)
-            GlobalDefinitions.guiUpdateStatusMessage("Allied replacement factors remaining = " + GlobalDefinitions.alliedReplacementsRemaining + " select an allied unit from the OOB sheet");
+            GlobalDefinitions.GuiUpdateStatusMessage("Allied replacement factors remaining = " + GlobalDefinitions.alliedReplacementsRemaining + " select an allied unit from the OOB sheet");
         else
-            executeQuit();
+            ExecuteQuit();
     }
 }
 
 public class SupplyState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
-        GlobalDefinitions.guiUpdatePhase("Allied Supply Mode");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
+        GlobalDefinitions.GuiUpdatePhase("Allied Supply Mode");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
 
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
         GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().interactable = false;
@@ -483,34 +483,34 @@ public class SupplyState : GameState
 
         // I'm using this to execute the available reinforcement ports since it has to execute once
         // Ports that are available for landing reinforcements this turn must be occupied during the supply phase (i.e. before movement)
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().determineAvailableReinforcementPorts();
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().DetermineAvailableReinforcementPorts();
 
-        if (GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().setAlliedSupplyStatus(false))
+        if (GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetAlliedSupplyStatus(false))
         {
-            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().highlightUnsuppliedUnits();
-            GlobalDefinitions.writeToLogFile("SupplyState: executing createSupplySourceGUI");
-            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().createSupplySourceGUI(false);
-            executeMethod = executeSelectUnit;
+            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().HighlightUnsuppliedUnits();
+            GlobalDefinitions.WriteToLogFile("SupplyState: executing createSupplySourceGUI");
+            GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CreateSupplySourceGUI(false);
+            executeMethod = ExecuteSelectUnit;
         }
         else
-            executeQuit();
+            ExecuteQuit();
     }
 
-    public void executeSelectUnit(InputMessage inputMessage)
+    public void ExecuteSelectUnit(InputMessage inputMessage)
     {
         // The mode stays here until the OK button on the gui is pressed to end the process
-        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().changeUnitSupplyStatus(inputMessage.hex);
+        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().ChangeUnitSupplyStatus(inputMessage.hex);
     }
 }
 
 public class AlliedInvasionState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
-        GlobalDefinitions.guiUpdatePhase("Allied Invasion Mode");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
+        GlobalDefinitions.GuiUpdatePhase("Allied Invasion Mode");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
 
         GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = false;
         GlobalDefinitions.undoButton.GetComponent<Button>().interactable = false;
@@ -523,21 +523,21 @@ public class AlliedInvasionState : GameState
 
         if (GlobalDefinitions.turnNumber == 1)
         {
-            GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().selectInvasionArea();
+            GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().SelectInvasionArea();
             // Initialize mode state - note this is the state that will be executed after the gui selection is made in the call above
-            executeMethod = executeSelectUnit;
+            executeMethod = ExecuteSelectUnit;
         }
         else if ((GlobalDefinitions.turnNumber >= 9) && (GlobalDefinitions.turnNumber <= 16) && GlobalDefinitions.secondInvasionAreaIndex == -1)
         {
             // I need to set the method here so the user can see the units while he is making his decision.
-            executeMethod = executeSelectUnit;
-            GlobalDefinitions.askUserYesNoQuestion("Do you want to launch a second invasion this turn?", ref GlobalDefinitions.SecondInvasionYesButton, ref GlobalDefinitions.SecondInvasionNoButton, executeSecondInvasion, executeNoSecondInvasion);
+            executeMethod = ExecuteSelectUnit;
+            GlobalDefinitions.AskUserYesNoQuestion("Do you want to launch a second invasion this turn?", ref GlobalDefinitions.SecondInvasionYesButton, ref GlobalDefinitions.SecondInvasionNoButton, ExecuteSecondInvasion, ExecuteNoSecondInvasion);
         }
         else
-            executeQuit();
+            ExecuteQuit();
     }
 
-    public void executeSelectUnit(InputMessage inputMessage)
+    public void ExecuteSelectUnit(InputMessage inputMessage)
     {
         // Check if the user has selected a German hex to see what's on it
         if ((inputMessage.unit == null) || (inputMessage.unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.Allied))
@@ -545,45 +545,45 @@ public class AlliedInvasionState : GameState
             // Don't do anything
         }
         else if (inputMessage.unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German)
-            GlobalDefinitions.guiDisplayUnitsOnHex(inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+            GlobalDefinitions.GuiDisplayUnitsOnHex(inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex);
 
         if (GlobalDefinitions.guiList.Count == 0)
         {
-            GlobalDefinitions.selectedUnit = GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().getInvadingUnit(inputMessage.unit);
+            GlobalDefinitions.selectedUnit = GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().GetInvadingUnit(inputMessage.unit);
             if (GlobalDefinitions.selectedUnit == null)
-                executeMethod = executeSelectUnit; // Stay with this mode if unit not selected
+                executeMethod = ExecuteSelectUnit; // Stay with this mode if unit not selected
             else
-                executeMethod = executeSelectUnitDestination;
+                executeMethod = ExecuteSelectUnitDestination;
         }
     }
 
-    public void executeSelectUnitDestination(InputMessage inputMessage)
+    public void ExecuteSelectUnitDestination(InputMessage inputMessage)
     {
-        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().getUnitInvasionHex(GlobalDefinitions.selectedUnit, inputMessage.hex);
-        executeMethod = executeSelectUnit;
+        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().GetUnitInvasionHex(GlobalDefinitions.selectedUnit, inputMessage.hex);
+        executeMethod = ExecuteSelectUnit;
     }
 
     /// <summary>
     /// This is the routine that get called if the player answers yes to a second invasion question
     /// </summary>
-    public void executeSecondInvasion()
+    public void ExecuteSecondInvasion()
     {
-        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().selectInvasionArea();
+        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().SelectInvasionArea();
         GlobalDefinitions.invasionsTookPlaceThisTurn = true;
         // Initialize mode state - note this is the state that will be executed after the gui selection is made in the call above
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
     }
 
     /// <summary>
     /// Placeholder for a no answer to the second invasion
     /// </summary>
-    public void executeNoSecondInvasion()
+    public void ExecuteNoSecondInvasion()
     {
         // Note I don't care what's in the input message I just need to pass something here
-        executeQuit();
+        ExecuteQuit();
     }
 
-    public override void executeUndo(InputMessage inputMessage)
+    public override void ExecuteUndo(InputMessage inputMessage)
     {
         if ((GlobalDefinitions.selectedUnit != null) && (GlobalDefinitions.selectedUnit.GetComponent<SpriteRenderer>() != null))
         {
@@ -592,7 +592,7 @@ public class AlliedInvasionState : GameState
             {
 
                 if (GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex != null)
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(
                             GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex,
                             GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex,
                             GlobalDefinitions.selectedUnit);
@@ -600,46 +600,46 @@ public class AlliedInvasionState : GameState
                 // If there is no beginning hex location on the unit that is because it started the turn in Britain
                 else if (currentNationality == GlobalDefinitions.Nationality.Allied)
                 {
-                    GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().decrementInvasionUnitLimits(GlobalDefinitions.selectedUnit);
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(
+                    GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().DecrementInvasionUnitLimits(GlobalDefinitions.selectedUnit);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(
                             GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex,
                             GlobalDefinitions.selectedUnit,
                             false);
                 }
 
                 GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().remainingMovement = GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().movementFactor;
-                GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Unit selected is committed to an attack.  Attack must be canceled in order to undo movement. \nIn order to cancel combat click the Display All Combats button");
-                GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                GlobalDefinitions.GuiUpdateStatusMessage("Unit selected is committed to an attack.  Attack must be canceled in order to undo movement. \nIn order to cancel combat click the Display All Combats button");
+                GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Undo failed - no unit selected");
+            GlobalDefinitions.GuiUpdateStatusMessage("Undo failed - no unit selected");
 
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
     }
 
-    public void loadCombat(InputMessage inputMessage)
+    public void LoadCombat(InputMessage inputMessage)
     {
         // Game flow controled by gui that gets called up
-        GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().prepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.German);
+        GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().PrepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.German);
     }
 }
 
 public class AlliedAirborneState : GameState
 {
     private bool alliedAirborneUnitsAvailable = false;
-    public override void initialize()
+    public override void Initialize()
     {
-        GlobalDefinitions.guiUpdatePhase("Allied Airborne Mode");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
+        GlobalDefinitions.GuiUpdatePhase("Allied Airborne Mode");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
@@ -651,18 +651,18 @@ public class AlliedAirborneState : GameState
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
 
         // Initilize mode state
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
 
         if (GlobalDefinitions.selectedUnit != null)
         {
-            GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+            GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
             GlobalDefinitions.selectedUnit = null;
         }
 
         foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         {
             hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
-            GlobalDefinitions.unhighlightHex(hex.gameObject);
+            GlobalDefinitions.UnhighlightHex(hex.gameObject);
         }
 
         alliedAirborneUnitsAvailable = false;
@@ -673,31 +673,31 @@ public class AlliedAirborneState : GameState
                 alliedAirborneUnitsAvailable = true;
 
         if (alliedAirborneUnitsAvailable)
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().setAirborneLimits();
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().SetAirborneLimits();
 
         if ((GlobalDefinitions.maxNumberAirborneDropsThisTurn == 0) || !alliedAirborneUnitsAvailable)
             // If there are no airborne units available move to next state
-            executeQuit();
+            ExecuteQuit();
     }
 
-    public void executeSelectUnit(InputMessage inputMessage)
+    public void ExecuteSelectUnit(InputMessage inputMessage)
     {
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().processAirborneUnitSelection(inputMessage.unit);
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ProcessAirborneUnitSelection(inputMessage.unit);
 
         // Change modes only if a valid unit has been selected
         if (GlobalDefinitions.selectedUnit != null)
-            executeMethod = executeSelectUnitDestination;
+            executeMethod = ExecuteSelectUnitDestination;
     }
 
-    public void executeSelectUnitDestination(InputMessage inputMessage)
+    public void ExecuteSelectUnitDestination(InputMessage inputMessage)
     {
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().processAirborneDrop(inputMessage.hex);
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ProcessAirborneDrop(inputMessage.hex);
 
         // Even if an invalid hex is selected we go back to unit selection since everything is cleared out regardles if the unit dropped
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
     }
 
-    public override void executeUndo(InputMessage inputMessage)
+    public override void ExecuteUndo(InputMessage inputMessage)
     {
         if ((GlobalDefinitions.selectedUnit != null) && (GlobalDefinitions.selectedUnit.GetComponent<SpriteRenderer>() != null))
         {
@@ -705,66 +705,66 @@ public class AlliedAirborneState : GameState
             if (!GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
             {
                 GlobalDefinitions.currentAirborneDropsThisTurn--;
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(
                         GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex,
                         GlobalDefinitions.selectedUnit,
                         false);
 
                 GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().remainingMovement = GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().movementFactor;
-                GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Unit selected is committed to an attack.  Attack must be canceled in order to undo movement. \nIn order to cancel combat click the Display All Combats button");
-                GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                GlobalDefinitions.GuiUpdateStatusMessage("Unit selected is committed to an attack.  Attack must be canceled in order to undo movement. \nIn order to cancel combat click the Display All Combats button");
+                GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Undo failed - no unit selected");
+            GlobalDefinitions.GuiUpdateStatusMessage("Undo failed - no unit selected");
 
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
     }
 
-    public void loadCombat(InputMessage inputMessage)
+    public void LoadCombat(InputMessage inputMessage)
     {
         // Game flow controled by gui that gets called up
-        GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().prepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.German);
+        GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().PrepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.German);
     }
 
-    public override void executeQuit()
+    public override void ExecuteQuit()
     {
-        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().moveUnopposedSeaUnits();
+        GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().MoveUnopposedSeaUnits();
 
         //  Just in case a unit is selected when Q was hit
         if ((GlobalDefinitions.selectedUnit != null) && (GlobalDefinitions.selectedUnit.GetComponent<SpriteRenderer>() != null))
         {
-            GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+            GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
         }
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().removeHexHighlighting();
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().RemoveHexHighlighting();
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = nextGameState;
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
     }
 }
 
 public class MovementState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
         if (currentNationality == GlobalDefinitions.Nationality.Allied)
         {
-            GlobalDefinitions.guiUpdatePhase("Allied Movement Mode");
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
+            GlobalDefinitions.GuiUpdatePhase("Allied Movement Mode");
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
         }
         else
         {
-            GlobalDefinitions.guiUpdatePhase("German Movement Mode");
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
+            GlobalDefinitions.GuiUpdatePhase("German Movement Mode");
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
         }
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
@@ -776,49 +776,49 @@ public class MovementState : GameState
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
 
         // Initialize mode
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
     }
 
-    public void executeSelectUnit(InputMessage inputMessage)
+    public void ExecuteSelectUnit(InputMessage inputMessage)
     {
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().processUnitSelectionForMovement(inputMessage.unit, currentNationality);
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().ProcessUnitSelectionForMovement(inputMessage.unit, currentNationality);
 
         if (inputMessage.unit != null)
             if ((currentNationality == GlobalDefinitions.Nationality.Allied) && inputMessage.unit.GetComponent<UnitDatabaseFields>().inBritain)
-                executeMethod = executeSelectReinforcementDestination;
+                executeMethod = ExecuteSelectReinforcementDestination;
             else if (GlobalDefinitions.startHex != null)
             {
-                executeMethod = executeSelectUnitDestination;
+                executeMethod = ExecuteSelectUnitDestination;
             }
 
         // Need to set this so that the desitination routines know what unit is moving
         GlobalDefinitions.selectedUnit = inputMessage.unit;
     }
 
-    public void executeSelectUnitDestination(InputMessage inputMessage)
+    public void ExecuteSelectUnitDestination(InputMessage inputMessage)
     {
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().getUnitMoveDestination(GlobalDefinitions.selectedUnit, GlobalDefinitions.startHex,
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().GetUnitMoveDestination(GlobalDefinitions.selectedUnit, GlobalDefinitions.startHex,
                 inputMessage.hex);
 
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
     }
 
-    public void executeSelectReinforcementDestination(InputMessage inputMessage)
+    public void ExecuteSelectReinforcementDestination(InputMessage inputMessage)
     {
-        if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landAlliedUnitFromOffBoard(GlobalDefinitions.selectedUnit, inputMessage.hex, true))
+        if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandAlliedUnitFromOffBoard(GlobalDefinitions.selectedUnit, inputMessage.hex, true))
         {
             GlobalDefinitions.startHex = GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex;
             // We will only be waiting for a destination selection if the hex landed in isn't in enemy ZOC
             if (!GlobalDefinitions.startHex.GetComponent<HexDatabaseFields>().inGermanZOC)
-                executeMethod = executeSelectUnitDestination;
+                executeMethod = ExecuteSelectUnitDestination;
             else
-                executeMethod = executeSelectUnit;
+                executeMethod = ExecuteSelectUnit;
         }
         else
-            executeMethod = executeSelectUnit;
+            executeMethod = ExecuteSelectUnit;
     }
 
-    public override void executeUndo(InputMessage inputMessage)
+    public override void ExecuteUndo(InputMessage inputMessage)
     {
         if ((GlobalDefinitions.selectedUnit != null) && (GlobalDefinitions.selectedUnit.GetComponent<SpriteRenderer>() != null))
         {
@@ -827,7 +827,7 @@ public class MovementState : GameState
             {
 
                 if (GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex != null)
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnit(
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnit(
                             GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().beginningTurnHex,
                             GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex,
                             GlobalDefinitions.selectedUnit);
@@ -835,82 +835,82 @@ public class MovementState : GameState
                 // If there is no beginning hex location on the unit that is because it started the turn in Britain
                 else if (currentNationality == GlobalDefinitions.Nationality.Allied)
                 {
-                    GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().decrementInvasionUnitLimits(GlobalDefinitions.selectedUnit);
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().moveUnitBackToBritain(
+                    GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().DecrementInvasionUnitLimits(GlobalDefinitions.selectedUnit);
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().MoveUnitBackToBritain(
                             GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().occupiedHex,
                             GlobalDefinitions.selectedUnit,
                             false);
                 }
 
                 GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().remainingMovement = GlobalDefinitions.selectedUnit.GetComponent<UnitDatabaseFields>().movementFactor;
-                GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
             else
             {
-                GlobalDefinitions.guiUpdateStatusMessage("Unit selected is committed to an attack.  Attack must be canceled in order to undo movement. \nIn order to cancel combat click the Display All Combats button");
-                GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                GlobalDefinitions.GuiUpdateStatusMessage("Unit selected is committed to an attack.  Attack must be canceled in order to undo movement. \nIn order to cancel combat click the Display All Combats button");
+                GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Undo failed - no unit selected");
+            GlobalDefinitions.GuiUpdateStatusMessage("Undo failed - no unit selected");
 
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
     }
 
-    public void loadCombat(InputMessage inputMessage)
+    public void LoadCombat(InputMessage inputMessage)
     {
         // Game flow controled by gui that gets called up
         if (currentNationality == GlobalDefinitions.Nationality.Allied)
-            GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().prepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.German);
+            GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().PrepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.German);
         else
-            GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().prepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.Allied);
+            GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().PrepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.Allied);
     }
 
-    public override void executeQuit()
+    public override void ExecuteQuit()
     {
         // Check if there are any units overstacked.  Can't leave movement with overstacked units.
-        if (MovementRoutines.checkIfMovementDone(currentNationality))
+        if (MovementRoutines.CheckIfMovementDone(currentNationality))
         {
 
             // At the end of the movement mode remove all HQ's in enemy ZOC
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().removeHQInEnemyZOC(currentNationality);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().RemoveHQInEnemyZOC(currentNationality);
 
             // Just in case a Q was issued in the middle of a move, unhighlight the selectedUnit
             if ((GlobalDefinitions.selectedUnit != null) && (GlobalDefinitions.selectedUnit.GetComponent<Renderer>() != null))
             {
-                GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
                 GlobalDefinitions.selectedUnit = null;
             }
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().removeHexHighlighting();
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().RemoveHexHighlighting();
 
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = nextGameState;
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
         }
         else
             // Units are overstacked so reset the state
-            executeMethod = executeSelectUnit;
+            executeMethod = ExecuteSelectUnit;
     }
 }
 
 public class CombatState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
         if (currentNationality == GlobalDefinitions.Nationality.Allied)
         {
-            GlobalDefinitions.guiUpdatePhase("Allied Combat Mode");
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
+            GlobalDefinitions.GuiUpdatePhase("Allied Combat Mode");
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
         }
         else
         {
-            GlobalDefinitions.guiUpdatePhase("German Combat Mode");
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
+            GlobalDefinitions.GuiUpdatePhase("German Combat Mode");
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
         }
 
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -934,7 +934,7 @@ public class CombatState : GameState
             GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
         }
 
-        CombatRoutines.checkIfRequiredUnitsAreUncommitted(currentNationality, true);
+        CombatRoutines.CheckIfRequiredUnitsAreUncommitted(currentNationality, true);
 
         // I'm deviating from the rules.  This was the original implementation of carpet bombing.  Per the rules it gets assigned at the beginning of the combat phase.
         // I'm allowing the user to assign carpet bombing just like air support.  It can happen during combat assignment or on the combat resolution screen, before resolution
@@ -956,31 +956,31 @@ public class CombatState : GameState
         if (GlobalDefinitions.turnNumber == 1)
             GlobalDefinitions.easiestDifficultySettingUsed = GlobalDefinitions.difficultySetting;
 
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
     }
 
-    public void executeSelectUnit(InputMessage inputMessage)
+    public void ExecuteSelectUnit(InputMessage inputMessage)
     {
         // Game flow controled by gui that gets called up
         if (currentNationality == GlobalDefinitions.Nationality.Allied)
-            GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().prepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.German);
+            GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().PrepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.German);
         else
-            GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().prepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.Allied);
+            GameControl.combatRoutinesInstance.GetComponent<CombatRoutines>().PrepForCombatDisplay(inputMessage.hex, GlobalDefinitions.Nationality.Allied);
     }
 
-    public void executeRetreatMovement(InputMessage inputMessage)
+    public void ExecuteRetreatMovement(InputMessage inputMessage)
     {
         // Game flow controlled by gui that gets called up
-        CombatResolutionRoutines.retreatHexSelection(inputMessage.hex, currentNationality);
+        CombatResolutionRoutines.RetreatHexSelection(inputMessage.hex, currentNationality);
     }
 
-    public void executePostCombatMovement(InputMessage inputMessage)
+    public void ExecutePostCombatMovement(InputMessage inputMessage)
     {
         // Game flow controled by gui that gets called up
-        CombatResolutionRoutines.executePostCombatMovement(inputMessage.hex);
+        CombatResolutionRoutines.ExecutePostCombatMovement(inputMessage.hex);
     }
 
-    public override void executeQuit()
+    public override void ExecuteQuit()
     {
         bool alliedVictory = false;
         bool germanVictory = false;
@@ -988,13 +988,13 @@ public class CombatState : GameState
         // If combat resolutin wasn't started then check to make sure that there aren't units that need to attack or be attacked
         // Note the check for combatResolutionStarted is needed because the result of combat can create must attack units for the next turn so we can't check if there has been resolution
         // not to mention that if combat resolution was started it was already checked that required units were involved in a combat already
-        if ((!GlobalDefinitions.combatResolutionStarted) && (CombatRoutines.checkIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality, true)))
+        if ((!GlobalDefinitions.combatResolutionStarted) && (CombatRoutines.CheckIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality, true)))
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Units highlighted are required to be involved in combat this turn and not committed to combat.  Cannot exit combat mode until this is resolved by adding units to combat.");
+            GlobalDefinitions.GuiUpdateStatusMessage("Units highlighted are required to be involved in combat this turn and not committed to combat.  Cannot exit combat mode until this is resolved by adding units to combat.");
         }
         else if (GlobalDefinitions.allCombats.Count > 0)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Must resolve committed combats before exiting combat mode.  Click the Display All Combats button and resolve all combats.");
+            GlobalDefinitions.GuiUpdateStatusMessage("Must resolve committed combats before exiting combat mode.  Click the Display All Combats button and resolve all combats.");
         }
         else
         {
@@ -1012,26 +1012,26 @@ public class CombatState : GameState
             GlobalDefinitions.combatResolutionStarted = false;
 
             if (currentNationality == GlobalDefinitions.Nationality.Allied)
-                CombatResolutionRoutines.endAlliedCombatPhase();
+                CombatResolutionRoutines.EndAlliedCombatPhase();
             else
             {
-                CombatResolutionRoutines.endGermanCombatPhase();
+                CombatResolutionRoutines.EndGermanCombatPhase();
 
                 // If this is the end of German combat, check if victory conditions have been met
-                alliedVictory = GlobalDefinitions.checkForAlliedVictory();
-                germanVictory = GlobalDefinitions.checkForGermanVictory();
+                alliedVictory = GlobalDefinitions.CheckForAlliedVictory();
+                germanVictory = GlobalDefinitions.CheckForGermanVictory();
             }
 
             if (GlobalDefinitions.AIExecuting)
                 GlobalDefinitions.AIExecuting = false;
 
-            GlobalDefinitions.guiUpdateLossRatioText();
+            GlobalDefinitions.GuiUpdateLossRatioText();
 
             // Only move to the next phase if the vicotry screen isn't being displayed
             if (!alliedVictory && !germanVictory)
             {
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = nextGameState;
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
             }
         }
     }
@@ -1039,11 +1039,11 @@ public class CombatState : GameState
 
 public class AlliedTacticalAirState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
-        GlobalDefinitions.guiUpdatePhase("Allied Tactical Air Mode");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
+        GlobalDefinitions.GuiUpdatePhase("Allied Tactical Air Mode");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
 
         GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
         GlobalDefinitions.undoButton.GetComponent<Button>().interactable = false;
@@ -1054,52 +1054,52 @@ public class AlliedTacticalAirState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
 
-        executeMethod = nonToggleSelection;
+        executeMethod = NonToggleSelection;
 
         // All game flow in this state is determined through the gui
-        CombatResolutionRoutines.createTacticalAirGUI();
+        CombatResolutionRoutines.CreateTacticalAirGUI();
     }
 
-    public void executeCloseDefenseSelection(InputMessage inputMessage)
+    public void ExecuteCloseDefenseSelection(InputMessage inputMessage)
     {
-        CombatResolutionRoutines.setCloseDefenseHex(inputMessage.hex);
+        CombatResolutionRoutines.SetCloseDefenseHex(inputMessage.hex);
     }
 
-    public void executeRiverInterdictionSelection(InputMessage inputMessage)
+    public void ExecuteRiverInterdictionSelection(InputMessage inputMessage)
     {
-        CombatResolutionRoutines.getRiverInterdictedHex(inputMessage.hex);
+        CombatResolutionRoutines.GetRiverInterdictedHex(inputMessage.hex);
     }
 
-    public void executeUnitInterdictionSelection(InputMessage inputMessage)
+    public void ExecuteUnitInterdictionSelection(InputMessage inputMessage)
     {
-        CombatResolutionRoutines.getInterdictedUnit(inputMessage.hex);
+        CombatResolutionRoutines.GetInterdictedUnit(inputMessage.hex);
     }
 
-    public void nonToggleSelection(InputMessage inputMessage)
+    public void NonToggleSelection(InputMessage inputMessage)
     {
-        GlobalDefinitions.guiUpdateStatusMessage("Must select the type of air mission from the menu before selecting unit or hex");
+        GlobalDefinitions.GuiUpdateStatusMessage("Must select the type of air mission from the menu before selecting unit or hex");
     }
 }
 
 public class GermanIsolationState : GameState
 {
     // There are no modes in this state, all actions get executed by the initialization including the state transition
-    public override void initialize()
+    public override void Initialize()
     {
         // If this is a network game the control needs to be swapped here
         if (GlobalDefinitions.localControl && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.Allied) && 
                 (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
         {
-            GlobalDefinitions.writeToLogFile("GermanIsolationState: passing control to remote computer");
-            GlobalDefinitions.writeToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
-            GlobalDefinitions.switchLocalControl(false);
+            GlobalDefinitions.WriteToLogFile("GermanIsolationState: passing control to remote computer");
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
+            GlobalDefinitions.SwitchLocalControl(false);
         }
 
-        GlobalDefinitions.guiUpdatePhase("German Isolation Check Mode");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
+        GlobalDefinitions.GuiUpdatePhase("German Isolation Check Mode");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -1110,24 +1110,24 @@ public class GermanIsolationState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
 
         //GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSaveTurnFile("EndOfAllied");
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().initializeUnits();
-        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().setGermanSupplyStatus(false);
-        GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSaveTurnFile("EndOfAllied");
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().InitializeUnits();
+        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetGermanSupplyStatus(false);
+        GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().WriteSaveTurnFile("EndOfAllied");
 
-        executeQuit();
+        ExecuteQuit();
     }
 }
 
 public class GermanReplacementState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
-        GlobalDefinitions.guiUpdatePhase("German Replacement Mode");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
+        GlobalDefinitions.GuiUpdatePhase("German Replacement Mode");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -1138,53 +1138,53 @@ public class GermanReplacementState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
 
         if (GlobalDefinitions.turnNumber > 15)
         {
             GlobalDefinitions.germanReplacementsRemaining += 5;
-            GlobalDefinitions.guiUpdateStatusMessage("German replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + "\nSelect a German replacement unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
+            GlobalDefinitions.GuiUpdateStatusMessage("German replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + "\nSelect a German replacement unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
             // Initialized mode
-            executeMethod = executeSelectUnit;
+            executeMethod = ExecuteSelectUnit;
         }
         else
-            executeQuit();
+            ExecuteQuit();
     }
 
-    public void executeSelectUnit(InputMessage inputMessage)
+    public void ExecuteSelectUnit(InputMessage inputMessage)
     {
-        if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().selectGermanReplacementUnit(inputMessage.unit))
+        if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().SelectGermanReplacementUnit(inputMessage.unit))
         {
-            GlobalDefinitions.highlightUnit(GlobalDefinitions.selectedUnit);
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().highlightGermanReplacementHexes();
-            GlobalDefinitions.guiUpdateStatusMessage("Select a highlighted hex to place the replacement unit");
-            executeMethod = executeSelectUnitDestination;
+            GlobalDefinitions.HighlightUnit(GlobalDefinitions.selectedUnit);
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().HighlightGermanReplacementHexes();
+            GlobalDefinitions.GuiUpdateStatusMessage("Select a highlighted hex to place the replacement unit");
+            executeMethod = ExecuteSelectUnitDestination;
         }
         else
-            GlobalDefinitions.guiUpdateStatusMessage("Selected unit has to be on the OOB sheet.\nGerman replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + "\nSelect a German replacement unit from the OOB sheet\nor click the End Current Phase button to save the factors for next turn");
+            GlobalDefinitions.GuiUpdateStatusMessage("Selected unit has to be on the OOB sheet.\nGerman replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + "\nSelect a German replacement unit from the OOB sheet\nor click the End Current Phase button to save the factors for next turn");
     }
 
-    public void executeSelectUnitDestination(InputMessage inputMessage)
+    public void ExecuteSelectUnitDestination(InputMessage inputMessage)
     {
-        if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().landGermanUnitFromOffBoard(GlobalDefinitions.selectedUnit, inputMessage.hex))
+        if (GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().LandGermanUnitFromOffBoard(GlobalDefinitions.selectedUnit, inputMessage.hex))
         {
             if (GlobalDefinitions.germanReplacementsRemaining > 0)
-                GlobalDefinitions.guiUpdateStatusMessage("German replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + " select an German unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
+                GlobalDefinitions.GuiUpdateStatusMessage("German replacement factors remaining = " + GlobalDefinitions.germanReplacementsRemaining + " select an German unit from the OOB sheet or click the End Current Phase button to save the factors for next turn");
         }
-        GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+        GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
         GlobalDefinitions.selectedUnit = null;
         if (GlobalDefinitions.germanReplacementsRemaining == 0)
-            executeQuit();
+            ExecuteQuit();
         else
-            executeMethod = executeSelectUnit;
+            executeMethod = ExecuteSelectUnit;
     }
 }
 
 public class GermanAISetupState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
-        base.initialize();
+        base.Initialize();
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -1199,43 +1199,43 @@ public class GermanAISetupState : GameState
         // since a game is started with the setting from the last game and if it isn't reset it will represent the lowest setting ever used, not just in the current game
         GlobalDefinitions.easiestDifficultySettingUsed = GlobalDefinitions.difficultySetting;
 
-        GlobalDefinitions.guiUpdatePhase("German AI Setup Mode");
-        GlobalDefinitions.getNewOrSavedGame();
+        GlobalDefinitions.GuiUpdatePhase("German AI Setup Mode");
+        GlobalDefinitions.GetNewOrSavedGame();
 
         //GlobalDefinitions.askUserYesNoQuestion("Do you want to load a saved game.  If you answer No a new game will begin", ref GlobalDefinitions.TypeOfGameYesButton, ref GlobalDefinitions.TypeOfGameNoButton, executeYesResponse, executeNoResponse);
     }
 
-    public void executeYesResponse()
+    public void ExecuteYesResponse()
     {
         string turnFileName;
 
         // This calls up the file browser
-        turnFileName = GlobalDefinitions.guiFileDialog();
+        turnFileName = GlobalDefinitions.GuiFileDialog();
 
         if (turnFileName != null)
-            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(turnFileName);
+            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(turnFileName);
     }
 
-    public void executeNoResponse()
+    public void ExecuteNoResponse()
     {
         // Randomly pick a German setup file
         int fileNumber = GlobalDefinitions.dieRoll.Next(1, 10);
 
-        GlobalDefinitions.guiUpdateStatusMessage("German setup file number = " + fileNumber);
-        GameControl.createBoardInstance.GetComponent<CreateBoard>().readGermanPlacement(GameControl.path + "GermanSetup\\TGCGermanSetup" + fileNumber + ".txt");
+        GlobalDefinitions.GuiUpdateStatusMessage("German setup file number = " + fileNumber);
+        GameControl.createBoardInstance.GetComponent<CreateBoard>().ReadGermanPlacement(GameControl.path + "GermanSetup\\TGCGermanSetup" + fileNumber + ".txt");
 
         // Executing this to set the ZOC's of the hexes
-        SetupRoutines.updateHexFields();
+        SetupRoutines.UpdateHexFields();
 
         //executeMethod = executeQuit;
         //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
     }
 
-    public override void executeQuit()
+    public override void ExecuteQuit()
     {
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = nextGameState;
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = nextGameState;
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
     }
 }
 
@@ -1250,13 +1250,13 @@ public class AlliedAIState : GameState
     {
         if (alliedAIExecuting)
         {
-            GlobalDefinitions.removeAllGUIs();
-            GlobalDefinitions.guiDisplayAIStatus(messageText);
+            GlobalDefinitions.RemoveAllGUIs();
+            GlobalDefinitions.GuiDisplayAIStatus(messageText);
         }
     }
 
     // There are no modes in this state, all actions get executed by the initialization including the state transition
-    public override void initialize()
+    public override void Initialize()
     {
         GlobalDefinitions.AIExecuting = true;
         alliedAIExecuting = true;
@@ -1270,37 +1270,37 @@ public class AlliedAIState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
-        GlobalDefinitions.switchLocalControl(false);
+        GlobalDefinitions.SwitchLocalControl(false);
         executeTime = DateTime.Now;
-        GlobalDefinitions.writeToLogFile("Starting Allied AI at: " + DateTime.Now);
-        GlobalDefinitions.guiUpdatePhase("Allied AI Mode");
-        GlobalDefinitions.guiUpdateStatusMessage("Executing AI turn");
+        GlobalDefinitions.WriteToLogFile("Starting Allied AI at: " + DateTime.Now);
+        GlobalDefinitions.GuiUpdatePhase("Allied AI Mode");
+        GlobalDefinitions.GuiUpdateStatusMessage("Executing AI turn");
         messageText = "Executing AI Turn";
-        base.initialize();
+        base.Initialize();
 
-        StartCoroutine("executeAlliedAIMode");
+        StartCoroutine("ExecuteAlliedAIMode");
     }
 
-    private IEnumerator executeAlliedAIMode()
+    private IEnumerator ExecuteAlliedAIMode()
     {
         messageText = "Initializing Units";
         yield return new WaitForSeconds(.1f);
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().initializeUnits();
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().InitializeUnits();
 
         messageText = "Determining Reinforcement Ports";
         yield return new WaitForSeconds(.1f);
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().determineAvailableReinforcementPorts();
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().DetermineAvailableReinforcementPorts();
 
         messageText = "Determining Supply Status";
         yield return new WaitForSeconds(.1f);
-        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().setAlliedSupplyStatus(false);
+        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetAlliedSupplyStatus(false);
 
         // If it's the first or ninth turn execute an invasion
         if ((GlobalDefinitions.turnNumber == 1) || (GlobalDefinitions.turnNumber == 9))
         {
             messageText = "Determine Invasion Site";
             yield return new WaitForSeconds(.1f);
-            AIRoutines.determineInvasionSite();
+            AIRoutines.DetermineInvasionSite();
         }
 
         // If it is turn 9 or later the check if the allied player gains replacement points
@@ -1308,39 +1308,39 @@ public class AlliedAIState : GameState
         {
             messageText = "Calculating Replacement Factors";
             yield return new WaitForSeconds(.1f);
-            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().calculateAlliedRelacementFactors();
+            GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().CalculateAlliedRelacementFactors();
         }
 
         // Check for replacements
         if ((GlobalDefinitions.turnNumber > 8) && (GlobalDefinitions.alliedReplacementsRemaining > 3) &&
-                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().checkIfAlliedReplacementsAvailable())
+                    GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().CheckIfAlliedReplacementsAvailable())
         {
             messageText = "Selecting Replacements";
             yield return new WaitForSeconds(.1f);
-            AIRoutines.selectAlliedAIReplacementUnits();
+            AIRoutines.SelectAlliedAIReplacementUnits();
         }
 
         // Make supply movements with HQ's before combat moves, supply is a problem for the Allies
         messageText = "Making Supply Movmements";
         yield return new WaitForSeconds(.1f);
-        AIRoutines.makeSupplyMovements();
+        AIRoutines.MakeSupplyMovements();
 
         // Set the airborne limits available this turn
         messageText = "Set Airborne Limits";
         yield return new WaitForSeconds(.1f);
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().setAirborneLimits();
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().SetAirborneLimits();
 
         // Make combat moves
         messageText = "Making Combat Movement";
         yield return new WaitForSeconds(.1f);
         List<GameObject> defendingHexes = new List<GameObject>();
-        AIRoutines.setAlliedAttackHexValues(defendingHexes);
-        AIRoutines.checkForAICombat(GlobalDefinitions.Nationality.Allied, defendingHexes, GlobalDefinitions.germanUnitsOnBoard);
+        AIRoutines.SetAlliedAttackHexValues(defendingHexes);
+        AIRoutines.CheckForAICombat(GlobalDefinitions.Nationality.Allied, defendingHexes, GlobalDefinitions.germanUnitsOnBoard);
 
         // Land any reinforcements that are available
         messageText = "Landing Reinforcements";
         yield return new WaitForSeconds(.1f);
-        AIRoutines.landAllAlliedReinforcementUnits();
+        AIRoutines.LandAllAlliedReinforcementUnits();
 
         // We don't want the HQ units moved by any of the coming routines because they don't deal with supply
         // Mark all HQ's as already being moved
@@ -1351,21 +1351,21 @@ public class AlliedAIState : GameState
         // Make strategic moves (units that are out of attack range)
         messageText = "Making Strategic Movement";
         yield return new WaitForSeconds(.1f);
-        AIRoutines.makeAlliedStrategicMoves(GlobalDefinitions.alliedUnitsOnBoard);
+        AIRoutines.MakeAlliedStrategicMoves(GlobalDefinitions.alliedUnitsOnBoard);
 
         // Determine movement actions
         messageText = "Moving Remaining Units";
         yield return new WaitForSeconds(.1f);
-        AIRoutines.moveAllUnits(GlobalDefinitions.Nationality.Allied);
+        AIRoutines.MoveAllUnits(GlobalDefinitions.Nationality.Allied);
 
         // At this point if there are hq units in an enemy ZOC they are eliminated
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().removeHQInEnemyZOC(GlobalDefinitions.Nationality.Allied);
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().RemoveHQInEnemyZOC(GlobalDefinitions.Nationality.Allied);
 
         // There are scenarios where a unit can be blocked from moving so they were not able to escape from an enemy ZOC
         // but were not able to meet the target odds.  Check for units in enemy ZOC here and assign combat regardless of odds
         messageText = "Set Remaining Attacks";
         yield return new WaitForSeconds(.1f);
-        AIRoutines.setDefaultAttacks(GlobalDefinitions.Nationality.Allied);
+        AIRoutines.SetDefaultAttacks(GlobalDefinitions.Nationality.Allied);
 
         // Since hex control doesn't change when the AI is moving units set ownership here
         foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
@@ -1376,36 +1376,36 @@ public class AlliedAIState : GameState
         //    GlobalDefinitions.writeToLogFile("executeAlliedAIState:    " + result);
         //GlobalDefinitions.writeToLogFile("executeAlliedAIState: Successful attacks = " + AIRoutines.successfulAttacksLastTurn());
 
-        GlobalDefinitions.writeToLogFile("Ending Allied AI at: " + DateTime.Now + " AI ran for " + (DateTime.Now - executeTime));
+        GlobalDefinitions.WriteToLogFile("Ending Allied AI at: " + DateTime.Now + " AI ran for " + (DateTime.Now - executeTime));
         GlobalDefinitions.AICombat = true;
-        GlobalDefinitions.switchLocalControl(true);
+        GlobalDefinitions.SwitchLocalControl(true);
 
         // Get rid of the last status message
-        GlobalDefinitions.removeAllGUIs();
+        GlobalDefinitions.RemoveAllGUIs();
 
         // This will stop the status message from executing in the update() routine
         alliedAIExecuting = false;
 
         // Pass to interactive control to resolve combats
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.alliedCombatStateInstance.GetComponent<CombatState>();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.alliedCombatStateInstance.GetComponent<CombatState>();
         //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessageParameter);
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
 
         if (GlobalDefinitions.allCombats.Count == 0)
         {
             // Quit the combat mode since there are no combats to resolve
-            GlobalDefinitions.guiUpdateStatusMessage("No Allied attacks being made this turn - moving to German movement mode");
+            GlobalDefinitions.GuiUpdateStatusMessage("No Allied attacks being made this turn - moving to German movement mode");
             //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit(inputMessageParameter);
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve Allied combats");
+            GlobalDefinitions.GuiUpdateStatusMessage("Resolve Allied combats");
 
-            AIRoutines.checkForAICarpetBombingShouldBeAdded();
+            AIRoutines.CheckForAICarpetBombingShouldBeAdded();
 
             // Call up the resolution gui to resolve combats
-            GameControl.GUIButtonRoutinesInstance.GetComponent<GUIButtonRoutines>().executeCombatResolution();
+            GameControl.GUIButtonRoutinesInstance.GetComponent<GUIButtonRoutines>().ExecuteCombatResolution();
         }
 
     }
@@ -1413,12 +1413,12 @@ public class AlliedAIState : GameState
 
 public class AlliedAITacticalAirState : GameState
 {
-    public override void initialize()
+    public override void Initialize()
     {
-        GlobalDefinitions.switchLocalControl(false);
-        GlobalDefinitions.guiUpdatePhase("Allied AI Tactical Air Mode");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
+        GlobalDefinitions.SwitchLocalControl(false);
+        GlobalDefinitions.GuiUpdatePhase("Allied AI Tactical Air Mode");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -1429,18 +1429,18 @@ public class AlliedAITacticalAirState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
 
         // When waiting for a second invasion after defeating the first invasion there isn't any need to assign air missions
-        GlobalDefinitions.writeToLogFile("AlliedAITacticalAirState: number of allied units on board = " + GlobalDefinitions.alliedUnitsOnBoard.Count);
+        GlobalDefinitions.WriteToLogFile("AlliedAITacticalAirState: number of allied units on board = " + GlobalDefinitions.alliedUnitsOnBoard.Count);
         if (GlobalDefinitions.alliedUnitsOnBoard.Count > 0)
         {
-            AIRoutines.assignAlliedAirMissions();
+            AIRoutines.AssignAlliedAirMissions();
         }
 
-        GlobalDefinitions.switchLocalControl(true);
+        GlobalDefinitions.SwitchLocalControl(true);
 
-        executeQuit();
+        ExecuteQuit();
     }
 }
 
@@ -1456,21 +1456,21 @@ public class GermanAIState : GameState
     {
         if (germanAIExecuting)
         {
-            GlobalDefinitions.removeAllGUIs();
-            GlobalDefinitions.guiDisplayAIStatus(messageText);
+            GlobalDefinitions.RemoveAllGUIs();
+            GlobalDefinitions.GuiDisplayAIStatus(messageText);
         }
     }
 
     // There are no modes in this state, all actions get executed by the initialization including the state transition
-    public override void initialize()
+    public override void Initialize()
     {
         GlobalDefinitions.AIExecuting = true;
         germanAIExecuting = true;
-        GlobalDefinitions.switchLocalControl(false);
+        GlobalDefinitions.SwitchLocalControl(false);
         executeTime = DateTime.Now;
-        GlobalDefinitions.writeToLogFile("Starting German AI at: " + DateTime.Now);
-        GlobalDefinitions.guiUpdatePhase("German AI Mode");
-        base.initialize();
+        GlobalDefinitions.WriteToLogFile("Starting German AI at: " + DateTime.Now);
+        GlobalDefinitions.GuiUpdatePhase("German AI Mode");
+        base.Initialize();
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -1483,63 +1483,63 @@ public class GermanAIState : GameState
 
         //inputMessageParameter = inputMessage;
 
-        StartCoroutine("executeGermanAIMode");
+        StartCoroutine("ExecuteGermanAIMode");
     }
-    private IEnumerator executeGermanAIMode()
+    private IEnumerator ExecuteGermanAIMode()
     {
 
         // Note that when the AI is running there are no state transitions.  It will run through all of the actions that need to be executed.
 
         // Execute the isolation check
         messageText = "AI Initializing Units";
-        GlobalDefinitions.writeToLogFile("executeGermanAIMode: initializing units");
+        GlobalDefinitions.WriteToLogFile("executeGermanAIMode: initializing units");
         yield return new WaitForSeconds(.1f);
-        GlobalDefinitions.guiClearUnitsOnHex();
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().initializeUnits();
-        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().setGermanSupplyStatus(false);
-        GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSaveTurnFile("EndOfAllied");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().InitializeUnits();
+        GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetGermanSupplyStatus(false);
+        GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().WriteSaveTurnFile("EndOfAllied");
 
         // Execute replacement selection
         if (GlobalDefinitions.turnNumber > 15)
         {
             messageText = "AI Selecting Replacement Units";
-            GlobalDefinitions.writeToLogFile("executeGermanAIMode: selecting replacement units");
+            GlobalDefinitions.WriteToLogFile("executeGermanAIMode: selecting replacement units");
             yield return new WaitForSeconds(.1f);
             GlobalDefinitions.germanReplacementsRemaining += 5;
-            AIRoutines.germanAIReplacementUnits();
+            AIRoutines.GermanAIReplacementUnits();
         }
 
         // Movement
         messageText = "AI Making Reinforcement Moves";
-        GlobalDefinitions.writeToLogFile("executeGermanAIMode: moving all reinforcement German units");
+        GlobalDefinitions.WriteToLogFile("executeGermanAIMode: moving all reinforcement German units");
         yield return new WaitForSeconds(.1f);
         // Make strategic moves (units that are out of attack range)
-        AIRoutines.makeGermanReinforcementMoves();
+        AIRoutines.MakeGermanReinforcementMoves();
 
         // Make combat moves
         messageText = "AI Making Combat Moves";
-        GlobalDefinitions.writeToLogFile("executeGermanAIMode: making combat moves");
+        GlobalDefinitions.WriteToLogFile("executeGermanAIMode: making combat moves");
         yield return new WaitForSeconds(.1f);
         List<GameObject> defendingHexes = new List<GameObject>();
-        AIRoutines.setGermanAttackHexValues(defendingHexes);
-        AIRoutines.checkForAICombat(GlobalDefinitions.Nationality.German, defendingHexes, GlobalDefinitions.alliedUnitsOnBoard);
+        AIRoutines.SetGermanAttackHexValues(defendingHexes);
+        AIRoutines.CheckForAICombat(GlobalDefinitions.Nationality.German, defendingHexes, GlobalDefinitions.alliedUnitsOnBoard);
 
         // Determine movement actions
         messageText = "AI Moving Units";
-        GlobalDefinitions.writeToLogFile("executeGermanAIMode: moving all units");
+        GlobalDefinitions.WriteToLogFile("executeGermanAIMode: moving all units");
         yield return new WaitForSeconds(.1f);
-        AIRoutines.moveAllUnits(GlobalDefinitions.Nationality.German);
+        AIRoutines.MoveAllUnits(GlobalDefinitions.Nationality.German);
 
         // If there are hq units in enemy ZOC at this point they are eliminated
-        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().removeHQInEnemyZOC(GlobalDefinitions.Nationality.German);
+        GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().RemoveHQInEnemyZOC(GlobalDefinitions.Nationality.German);
 
         // There are scenarios where a unit can be blocked from moving so they were not able to escape from an enemy ZOC
         // but were not able to meet the target odds.  Check for units in enemy ZOC here and assign combat regardless of odds
         messageText = "AI Assigning Default Attacks";
-        GlobalDefinitions.writeToLogFile("executeGermanAIMode: making default attacks");
+        GlobalDefinitions.WriteToLogFile("executeGermanAIMode: making default attacks");
         yield return new WaitForSeconds(.1f);
-        AIRoutines.setDefaultAttacks(GlobalDefinitions.Nationality.German);
+        AIRoutines.SetDefaultAttacks(GlobalDefinitions.Nationality.German);
 
         // Since hex control doesn't change when the AI is moving units set ownership here
         foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
@@ -1548,32 +1548,32 @@ public class GermanAIState : GameState
             unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().successfullyInvaded = false;
         }
 
-        GlobalDefinitions.writeToLogFile("Ending German AI at: " + DateTime.Now + " AI ran for " + (DateTime.Now - executeTime));
+        GlobalDefinitions.WriteToLogFile("Ending German AI at: " + DateTime.Now + " AI ran for " + (DateTime.Now - executeTime));
         GlobalDefinitions.AICombat = true;
-        GlobalDefinitions.switchLocalControl(true);
+        GlobalDefinitions.SwitchLocalControl(true);
 
         // Get rid of the last status gui
-        GlobalDefinitions.removeAllGUIs();
+        GlobalDefinitions.RemoveAllGUIs();
 
         // Stop the AI update messages
         germanAIExecuting = false;
 
         // Pass to interactive control to resolve combats
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.germanCombatStateInstance.GetComponent<CombatState>();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.germanCombatStateInstance.GetComponent<CombatState>();
         //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessageParameter);
-        GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
 
         if (GlobalDefinitions.allCombats.Count == 0)
         {
             // Quit the combat mode since there are no combats to resolve
-            GlobalDefinitions.guiUpdateStatusMessage("No German attacks being made this turn - moving to Allied movement mode");
-            GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
+            GlobalDefinitions.GuiUpdateStatusMessage("No German attacks being made this turn - moving to Allied movement mode");
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
         }
         else
         {
-            GlobalDefinitions.guiUpdateStatusMessage("Resolve German combats");
+            GlobalDefinitions.GuiUpdateStatusMessage("Resolve German combats");
             // Call up the resolution gui to resolve combats
-            GameControl.GUIButtonRoutinesInstance.GetComponent<GUIButtonRoutines>().executeCombatResolution();
+            GameControl.GUIButtonRoutinesInstance.GetComponent<GUIButtonRoutines>().ExecuteCombatResolution();
         }
     }
 }
@@ -1581,14 +1581,14 @@ public class GermanAIState : GameState
 public class VictoryState : GameState
 {
     // This is the state that is entered after a victory is achieved
-    public override void initialize()
+    public override void Initialize()
     {
         // Set the play to be in local control we're not looking to keep the two computers in sync anymore
-        GlobalDefinitions.switchLocalControl(true);
+        GlobalDefinitions.SwitchLocalControl(true);
 
-        GlobalDefinitions.guiUpdatePhase("Victory Mode");
-        GlobalDefinitions.guiClearUnitsOnHex();
-        base.initialize();
+        GlobalDefinitions.GuiUpdatePhase("Victory Mode");
+        GlobalDefinitions.GuiClearUnitsOnHex();
+        base.Initialize();
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
         GlobalDefinitions.undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -1599,13 +1599,13 @@ public class VictoryState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
-        executeMethod = executeSelectUnit;
+        executeMethod = ExecuteSelectUnit;
     }
 
-    public void executeSelectUnit(InputMessage inputMessage)
+    public void ExecuteSelectUnit(InputMessage inputMessage)
     {
         // If the hex selected has units on it display them in the gui
         if ((inputMessage.unit != null) && (inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex != null))
-            GlobalDefinitions.guiDisplayUnitsOnHex(inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex);
+            GlobalDefinitions.GuiDisplayUnitsOnHex(inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex);
     }
 }

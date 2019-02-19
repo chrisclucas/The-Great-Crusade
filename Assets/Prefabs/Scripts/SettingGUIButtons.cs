@@ -8,10 +8,10 @@ public class SettingGUIButtons : MonoBehaviour
     /// <summary>
     /// Called when the cancel button is selected
     /// </summary>
-    public void cancelSelected()
+    public void CancelSelected()
     {
         // Get rid of the gui
-        GlobalDefinitions.removeGUI(transform.parent.gameObject);
+        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
 
         // Bring back any gui's that were active before this was called
         foreach (GameObject gui in GlobalDefinitions.guiList)
@@ -24,16 +24,16 @@ public class SettingGUIButtons : MonoBehaviour
     /// <summary>
     /// Called when the ok button is selected
     /// </summary>
-    public void okSelected()
+    public void OkSelected()
     {
         GlobalDefinitions.aggressiveSetting = (int)GameObject.Find("AgressivenessSlider").GetComponent<Slider>().value;
         GlobalDefinitions.difficultySetting = (int)GameObject.Find("DifficultySlider").GetComponent<Slider>().value;
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + (int)GameObject.Find("AgressivenessSlider").GetComponent<Slider>().value);
-        GlobalDefinitions.writeToCommandFile(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + (int)GameObject.Find("DifficultySlider").GetComponent<Slider>().value);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + (int)GameObject.Find("AgressivenessSlider").GetComponent<Slider>().value);
+        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + (int)GameObject.Find("DifficultySlider").GetComponent<Slider>().value);
         // Write out the values of the sliders to the settings file
-        GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSettingsFile(GlobalDefinitions.difficultySetting, GlobalDefinitions.aggressiveSetting);
-        CombatResolutionRoutines.adjustAggressiveness();
+        GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().WriteSettingsFile(GlobalDefinitions.difficultySetting, GlobalDefinitions.aggressiveSetting);
+        CombatResolutionRoutines.AdjustAggressiveness();
 
-        cancelSelected();
+        CancelSelected();
     }
 }

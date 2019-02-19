@@ -10,7 +10,7 @@ public class ExecuteGameCommand : MonoBehaviour {
     /// This routine is what processes the message received from the opponent computer
     /// </summary>
     /// <param name="message"></param>
-    public static void processCommand(string message)
+    public static void ProcessCommand(string message)
     {
         char[] delimiterChars = { ' ' };
         string[] switchEntries = message.Split(delimiterChars);
@@ -30,8 +30,8 @@ public class ExecuteGameCommand : MonoBehaviour {
                     GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.Allied;
                 break;
             case GlobalDefinitions.PASSCONTROLKEYWORK:
-                GlobalDefinitions.switchLocalControl(true);
-                GlobalDefinitions.writeToLogFile("processNetworkMessage: Message received to set local control");
+                GlobalDefinitions.SwitchLocalControl(true);
+                GlobalDefinitions.WriteToLogFile("processNetworkMessage: Message received to set local control");
                 break;
             case GlobalDefinitions.SETCAMERAPOSITIONKEYWORD:
                 Camera.main.transform.position = new Vector3(float.Parse(switchEntries[1]), float.Parse(switchEntries[2]), float.Parse(switchEntries[3]));
@@ -48,7 +48,7 @@ public class ExecuteGameCommand : MonoBehaviour {
                 else
                     GameControl.inputMessage.GetComponent<InputMessage>().unit = null;
                 
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
                 break;
             case GlobalDefinitions.MOUSEDOUBLECLICKIONKEYWORD:
                 GlobalDefinitions.Nationality passedNationality;
@@ -60,65 +60,65 @@ public class ExecuteGameCommand : MonoBehaviour {
 
 
                 if (GlobalDefinitions.selectedUnit != null)
-                    GlobalDefinitions.unhighlightUnit(GlobalDefinitions.selectedUnit);
+                    GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
                 foreach (Transform hex in GameObject.Find("Board").transform)
-                    GlobalDefinitions.unhighlightHex(hex.gameObject);
+                    GlobalDefinitions.UnhighlightHex(hex.gameObject);
                 GlobalDefinitions.selectedUnit = null;
 
 
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().callMultiUnitDisplay(GameObject.Find(switchEntries[1]), passedNationality);
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().CallMultiUnitDisplay(GameObject.Find(switchEntries[1]), passedNationality);
                 break;
             case GlobalDefinitions.DISPLAYCOMBATRESOLUTIONKEYWORD:
-                CombatResolutionRoutines.combatResolutionDisplay();
+                CombatResolutionRoutines.CombatResolutionDisplay();
                 break;
             case GlobalDefinitions.NEXTPHASEKEYWORD:
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit();
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
                 break;
 
             case GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD:
-                TacticalAirToggleRoutines.tacticalAirOK();
+                TacticalAirToggleRoutines.TacticalAirOK();
                 break;
             case GlobalDefinitions.ADDCLOSEDEFENSEKEYWORD:
-                GameObject.Find("CloseDefense").GetComponent<TacticalAirToggleRoutines>().addCloseDefenseHex();
+                GameObject.Find("CloseDefense").GetComponent<TacticalAirToggleRoutines>().AddCloseDefenseHex();
                 break;
             case GlobalDefinitions.CANCELCLOSEDEFENSEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().cancelCloseDefense();
+                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().CancelCloseDefense();
                 break;
             case GlobalDefinitions.LOCATECLOSEDEFENSEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().locateCloseDefense();
+                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().LocateCloseDefense();
                 break;
             case GlobalDefinitions.ADDRIVERINTERDICTIONKEYWORD:
-                GameObject.Find("RiverInterdiction").GetComponent<TacticalAirToggleRoutines>().addRiverInterdiction();
+                GameObject.Find("RiverInterdiction").GetComponent<TacticalAirToggleRoutines>().AddRiverInterdiction();
                 break;
             case GlobalDefinitions.CANCELRIVERINTERDICTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().cancelRiverInterdiction();
+                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().CancelRiverInterdiction();
                 break;
             case GlobalDefinitions.LOCATERIVERINTERDICTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().locateRiverInterdiction();
+                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().LocateRiverInterdiction();
                 break;
             case GlobalDefinitions.ADDUNITINTERDICTIONKEYWORD:
-                GameObject.Find("UnitInterdiction").GetComponent<TacticalAirToggleRoutines>().addInterdictedUnit();
+                GameObject.Find("UnitInterdiction").GetComponent<TacticalAirToggleRoutines>().AddInterdictedUnit();
                 break;
             case GlobalDefinitions.CANCELUNITINTERDICTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().cancelInterdictedUnit();
+                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().CancelInterdictedUnit();
                 break;
             case GlobalDefinitions.LOCATEUNITINTERDICTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().locateInterdictedUnit();
+                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().LocateInterdictedUnit();
                 break;
             case GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().multiUnitSelection();
+                GameObject.Find(switchEntries[1]).GetComponent<TacticalAirToggleRoutines>().MultiUnitSelection();
                 break;
 
             case GlobalDefinitions.MULTIUNITSELECTIONKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
                 break;
             case GlobalDefinitions.MULTIUNITSELECTIONCANCELKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<MultiUnitMovementToggleRoutines>().cancelGui();
+                GameObject.Find(switchEntries[1]).GetComponent<MultiUnitMovementToggleRoutines>().CancelGui();
                 break;
             case GlobalDefinitions.LOADCOMBATKEYWORD:
                 GameObject GUIButtonInstance = new GameObject("GUIButtonInstance");
                 GUIButtonInstance.AddComponent<GUIButtonRoutines>();
-                GUIButtonInstance.GetComponent<GUIButtonRoutines>().loadCombat();
+                GUIButtonInstance.GetComponent<GUIButtonRoutines>().LoadCombat();
                 break;
 
             case GlobalDefinitions.SETCOMBATTOGGLEKEYWORD:
@@ -128,10 +128,10 @@ public class ExecuteGameCommand : MonoBehaviour {
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = false;
                 break;
             case GlobalDefinitions.COMBATGUIOKKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatGUIOK>().okCombatGUISelection();
+                GameObject.Find(switchEntries[1]).GetComponent<CombatGUIOK>().OkCombatGUISelection();
                 break;
             case GlobalDefinitions.COMBATGUICANCELKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatGUIOK>().cancelCombatGUISelection();
+                GameObject.Find(switchEntries[1]).GetComponent<CombatGUIOK>().CancelCombatGUISelection();
                 break;
 
             case GlobalDefinitions.ADDCOMBATAIRSUPPORTKEYWORD:
@@ -144,16 +144,16 @@ public class ExecuteGameCommand : MonoBehaviour {
                 // Load the combat results; the die roll is on the Global variable
                 //GlobalDefinitions.writeToLogFile("Die Roll 1 = " + GlobalDefinitions.dieRollResult1);
                 //GlobalDefinitions.writeToLogFile("Die Roll 2 = " + GlobalDefinitions.dieRollResult2);
-                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().resolutionSelected();
+                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().ResolutionSelected();
                 break;
             case GlobalDefinitions.COMBATLOCATIONSELECTEDKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().locateAttack();
+                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().LocateAttack();
                 break;
             case GlobalDefinitions.COMBATCANCELKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().cancelAttack();
+                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().CancelAttack();
                 break;
             case GlobalDefinitions.COMBATOKKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().ok();
+                GameObject.Find(switchEntries[1]).GetComponent<CombatResolutionButtonRoutines>().Ok();
                 break;
             case GlobalDefinitions.CARPETBOMBINGRESULTSSELECTEDKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
@@ -174,17 +174,17 @@ public class ExecuteGameCommand : MonoBehaviour {
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = false;
                 break;
             case GlobalDefinitions.OKEXCHANGEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<ExchangeOKRoutines>().exchangeOKSelected();
+                GameObject.Find(switchEntries[1]).GetComponent<ExchangeOKRoutines>().ExchangeOKSelected();
                 break;
             case GlobalDefinitions.POSTCOMBATOKKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<PostCombatMovementOkRoutines>().executePostCombatMovement();
+                GameObject.Find(switchEntries[1]).GetComponent<PostCombatMovementOkRoutines>().ExecutePostCombatMovement();
                 break;
             case GlobalDefinitions.DISPLAYALLIEDSUPPLYKEYWORD:
-                GlobalDefinitions.writeToLogFile("processCommand: executing DISPLAYALLIEDSUPPLY");
+                GlobalDefinitions.WriteToLogFile("processCommand: executing DISPLAYALLIEDSUPPLY");
                 if (switchEntries[1] == "True")
-                    GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().createSupplySourceGUI(true);
+                    GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CreateSupplySourceGUI(true);
                 else
-                    GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().createSupplySourceGUI(false);
+                    GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CreateSupplySourceGUI(false);
                 break;
             case GlobalDefinitions.SETSUPPLYKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
@@ -193,22 +193,22 @@ public class ExecuteGameCommand : MonoBehaviour {
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = false;
                 break;
             case GlobalDefinitions.LOCATESUPPLYKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().locateSupplySource();
+                GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().LocateSupplySource();
                 break;
             case GlobalDefinitions.OKSUPPLYKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().okSupply();
+                GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().OkSupply();
                 break;
             case GlobalDefinitions.OKSUPPLYWITHENDPHASEKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().okSupplyWithEndPhase();
+                GameObject.Find(switchEntries[1]).GetComponent<SupplyButtonRoutines>().OkSupplyWithEndPhase();
                 break;
             case GlobalDefinitions.CHANGESUPPLYSTATUSKEYWORD:
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
                 break;
             case GlobalDefinitions.YESBUTTONSELECTEDKEYWORD:
-                GameObject.Find("YesButton").GetComponent<YesNoButtonRoutines>().yesButtonSelected();
+                GameObject.Find("YesButton").GetComponent<YesNoButtonRoutines>().YesButtonSelected();
                 break;
             case GlobalDefinitions.NOBUTTONSELECTEDKEYWORD:
-                GameObject.Find("NoButton").GetComponent<YesNoButtonRoutines>().noButtonSelected();
+                GameObject.Find("NoButton").GetComponent<YesNoButtonRoutines>().NoButtonSelected();
                 break;
             case GlobalDefinitions.SAVEFILENAMEKEYWORD:
                 if (File.Exists(GameControl.path + "TGCOutputFiles\\TGCRemoteSaveFile.txt"))
@@ -223,13 +223,13 @@ public class ExecuteGameCommand : MonoBehaviour {
                 }
                 break;
             case GlobalDefinitions.PLAYNEWGAMEKEYWORD:
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
-                GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize();
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
 
                 // Set the global parameter on what file to use, can't pass it to the executeNoResponse since it is passed as a method delegate elsewhere
                 GlobalDefinitions.germanSetupFileUsed = Convert.ToInt32(switchEntries[1]);
 
-                GameControl.setUpStateInstance.GetComponent<SetUpState>().executeNewGame();
+                GameControl.setUpStateInstance.GetComponent<SetUpState>().ExecuteNewGame();
                 break;
 
             case GlobalDefinitions.INVASIONAREASELECTIONKEYWORD:
@@ -240,10 +240,10 @@ public class ExecuteGameCommand : MonoBehaviour {
                 GameObject.Find(switchEntries[1]).GetComponent<Toggle>().isOn = true;
                 break;
             case GlobalDefinitions.CARPETBOMBINGLOCATIONKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CarpetBombingToggleRoutines>().locateCarpetBombingHex();
+                GameObject.Find(switchEntries[1]).GetComponent<CarpetBombingToggleRoutines>().LocateCarpetBombingHex();
                 break;
             case GlobalDefinitions.CARPETBOMBINGOKKEYWORD:
-                GameObject.Find(switchEntries[1]).GetComponent<CarpetBombingOKRoutines>().carpetBombingOK();
+                GameObject.Find(switchEntries[1]).GetComponent<CarpetBombingOKRoutines>().CarpetBombingOK();
                 break;
 
             case GlobalDefinitions.DIEROLLRESULT1KEYWORD:
@@ -253,14 +253,14 @@ public class ExecuteGameCommand : MonoBehaviour {
                 GlobalDefinitions.dieRollResult2 = Convert.ToInt32(switchEntries[1]);
                 break;
             case GlobalDefinitions.UNDOKEYWORD:
-                GameControl.GUIButtonRoutinesInstance.GetComponent<GUIButtonRoutines>().executeUndo();
+                GameControl.GUIButtonRoutinesInstance.GetComponent<GUIButtonRoutines>().ExecuteUndo();
                 break;
             case GlobalDefinitions.CHATMESSAGEKEYWORD:
                 string chatMessage = "";
                 for (int index = 0; index < (switchEntries.Length - 1); index++)
                     chatMessage += switchEntries[index + 1] + " ";
-                GlobalDefinitions.writeToLogFile("Chat message received: " + chatMessage);
-                GlobalDefinitions.addChatMessage(chatMessage);
+                GlobalDefinitions.WriteToLogFile("Chat message received: " + chatMessage);
+                GlobalDefinitions.AddChatMessage(chatMessage);
                 break;
             case GlobalDefinitions.SENDTURNFILENAMEWORD:
                 // This command tells the remote computer what the name of the file is that will provide the saved turn file
@@ -271,7 +271,7 @@ public class ExecuteGameCommand : MonoBehaviour {
                 for (int i = 2; i < switchEntries.Length; i++)
                     receivedFileName = receivedFileName + " " + switchEntries[i];
 
-                GlobalDefinitions.writeToLogFile("Received name of save file, calling FileTransferServer: fileName = " + receivedFileName + "  path to save = " + GameControl.path);
+                GlobalDefinitions.WriteToLogFile("Received name of save file, calling FileTransferServer: fileName = " + receivedFileName + "  path to save = " + GameControl.path);
                 GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().RequestFile(GlobalDefinitions.opponentIPAddress, receivedFileName, GameControl.path, true);
                 break;
 
@@ -324,14 +324,14 @@ public class ExecuteGameCommand : MonoBehaviour {
                     // Quit the game and go back to the main menu
                     GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
                     guiButtonInstance.AddComponent<GUIButtonRoutines>();
-                    guiButtonInstance.GetComponent<GUIButtonRoutines>().yesMain();
+                    guiButtonInstance.GetComponent<GUIButtonRoutines>().YesMain();
                     break;
                 }
             case GlobalDefinitions.ALLIEDREPLACEMENTKEYWORD:
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().selectAlliedReplacementUnit(GameObject.Find(switchEntries[1]));
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().SelectAlliedReplacementUnit(GameObject.Find(switchEntries[1]));
                 break;
             case GlobalDefinitions.GERMANREPLACEMENTKEYWORD:
-                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().selectGermanReplacementUnit(GameObject.Find(switchEntries[1]));
+                GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().SelectGermanReplacementUnit(GameObject.Find(switchEntries[1]));
                 break;
             case GlobalDefinitions.AGGRESSIVESETTINGKEYWORD:
                 GlobalDefinitions.aggressiveSetting = Convert.ToInt32(switchEntries[1]);
@@ -341,7 +341,7 @@ public class ExecuteGameCommand : MonoBehaviour {
                 break;
 
             default:
-                GlobalDefinitions.writeToLogFile("processCommand: Unknown network command received: " + message);
+                GlobalDefinitions.WriteToLogFile("processCommand: Unknown network command received: " + message);
                 break;
         }
     }

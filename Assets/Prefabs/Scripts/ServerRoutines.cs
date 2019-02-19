@@ -30,22 +30,22 @@ public class ServerRoutines : MonoBehaviour
             switch (recNetworkEvent)
             {
                 case NetworkEventType.ConnectEvent:
-                    GlobalDefinitions.writeToLogFile("ServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    GlobalDefinitions.WriteToLogFile("ServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                     GlobalDefinitions.clientHostID = recHostId;
                     GlobalDefinitions.clientConnectionID = recConnectionId;
                     GlobalDefinitions.clientChannelID = recChannelId;
 
-                    sendClientMessage("Connection Confirmed", recHostId, recConnectionId, recChannelId);
+                    SendClientMessage("Connection Confirmed", recHostId, recConnectionId, recChannelId);
                     break;
 
                 case NetworkEventType.DisconnectEvent:
-                    GlobalDefinitions.guiUpdateStatusMessage("ServerRoutines update: Disconnect event received from remote computer - resetting connection");
-                    GlobalDefinitions.removeGUI(GameObject.Find("NetworkSettingsCanvas"));
+                    GlobalDefinitions.GuiUpdateStatusMessage("ServerRoutines update: Disconnect event received from remote computer - resetting connection");
+                    GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));
                     // Need to add code here to drop the specific client that is sending a disconnect event
                     break;
 
                 case NetworkEventType.DataEvent:
-                    GlobalDefinitions.writeToLogFile("ServerRoutines update: data event");
+                    GlobalDefinitions.WriteToLogFile("ServerRoutines update: data event");
                     Stream stream = new MemoryStream(recBuffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     string message = formatter.Deserialize(stream) as string;
@@ -56,7 +56,7 @@ public class ServerRoutines : MonoBehaviour
                 case NetworkEventType.Nothing:
                     break;
                 default:
-                    GlobalDefinitions.writeToLogFile("ServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    GlobalDefinitions.WriteToLogFile("ServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                     break;
             }
         }
@@ -64,7 +64,7 @@ public class ServerRoutines : MonoBehaviour
 
     public void StartListening()
     {
-        GlobalDefinitions.writeToLogFile("StartListening: executing");
+        GlobalDefinitions.WriteToLogFile("StartListening: executing");
 
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
@@ -74,7 +74,7 @@ public class ServerRoutines : MonoBehaviour
 
 
         reliableChannelId = config.AddChannel(QosType.AllCostDelivery);
-        GlobalDefinitions.writeToLogFile("StartListening: ReliableChannelID set to " + reliableChannelId);
+        GlobalDefinitions.WriteToLogFile("StartListening: ReliableChannelID set to " + reliableChannelId);
 
         config.PacketSize = 1400;
         config.MaxConnectionAttempt = Byte.MaxValue;
@@ -96,17 +96,17 @@ public class ServerRoutines : MonoBehaviour
         //    GlobalDefinitions.guiUpdateStatusMessage("StartListening: Server connection request successful");
     }
 
-    private void sendClientMessage(string message, int clientHostID, int clientConnectionID, int clientChannelID)
+    private void SendClientMessage(string message, int clientHostID, int clientConnectionID, int clientChannelID)
     {
         Stream stream = new MemoryStream(sendBuffer);
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(stream, message);
         NetworkTransport.Send(clientHostID, clientConnectionID, clientChannelID, sendBuffer, BUFFERSIZE, out sendError);
-        GlobalDefinitions.writeToLogFile("Sending client message - " + message + " HostID=" + hostId + "  ConnectionID=" + clientConnectionID + " ChannelID=" + clientChannelID + " Error: " + (NetworkError)sendError);
+        GlobalDefinitions.WriteToLogFile("Sending client message - " + message + " HostID=" + hostId + "  ConnectionID=" + clientConnectionID + " ChannelID=" + clientChannelID + " Error: " + (NetworkError)sendError);
 
         if ((NetworkError)sendError != NetworkError.Ok)
         {
-            GlobalDefinitions.guiUpdateStatusMessage("ERROR IN TRANSMISSION - Network Error returned = " + (NetworkError)sendError);
+            GlobalDefinitions.GuiUpdateStatusMessage("ERROR IN TRANSMISSION - Network Error returned = " + (NetworkError)sendError);
         }
     }
 }
