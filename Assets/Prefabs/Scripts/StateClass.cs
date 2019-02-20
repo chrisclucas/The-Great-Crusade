@@ -1388,14 +1388,12 @@ public class AlliedAIState : GameState
 
         // Pass to interactive control to resolve combats
         GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.alliedCombatStateInstance.GetComponent<CombatState>();
-        //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessageParameter);
         GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
 
         if (GlobalDefinitions.allCombats.Count == 0)
         {
             // Quit the combat mode since there are no combats to resolve
             GlobalDefinitions.GuiUpdateStatusMessage("No Allied attacks being made this turn - moving to German movement mode");
-            //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.executeQuit(inputMessageParameter);
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
         }
         else
@@ -1449,7 +1447,6 @@ public class GermanAIState : GameState
     DateTime executeTime;
     string messageText;
     bool germanAIExecuting;
-    InputMessage inputMessageParameter;
 
 
     private void Update()
@@ -1480,8 +1477,6 @@ public class GermanAIState : GameState
         GlobalDefinitions.AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
-
-        //inputMessageParameter = inputMessage;
 
         StartCoroutine("ExecuteGermanAIMode");
     }
@@ -1560,7 +1555,6 @@ public class GermanAIState : GameState
 
         // Pass to interactive control to resolve combats
         GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.germanCombatStateInstance.GetComponent<CombatState>();
-        //GameControl.gameStateControlInstance.GetComponent<gameStateControl>().currentState.initialize(inputMessageParameter);
         GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
 
         if (GlobalDefinitions.allCombats.Count == 0)

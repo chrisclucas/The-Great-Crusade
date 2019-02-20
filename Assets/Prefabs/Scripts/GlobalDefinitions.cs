@@ -2369,8 +2369,10 @@ public class GlobalDefinitions : MonoBehaviour
     /// <returns></returns>
     public static string GuiFileDialog()
     {
-        OpenFileDialog dialog = new OpenFileDialog();
-        dialog.InitialDirectory = GameControl.path + "\\TGCOutputFiles";
+        OpenFileDialog dialog = new OpenFileDialog
+        {
+            InitialDirectory = GameControl.path + "\\TGCOutputFiles"
+        };
         DialogResult dResult = dialog.ShowDialog();
         if (dResult == DialogResult.OK)
         {
