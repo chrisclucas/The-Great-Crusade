@@ -14,7 +14,7 @@ public class ServerRoutines : MonoBehaviour
     public static int receivedDataSize;
     public static byte receivedError;
 
-    //public static int hostId;
+    public static int hostId;
     public static int allCostDeliveryChannelId;
 
     static byte sendError;
@@ -91,7 +91,7 @@ public class ServerRoutines : MonoBehaviour
 
         NetworkTransport.Init(globalConfig);
 
-        //hostId = NetworkTransport.AddHost(topology, GlobalDefinitions.port);
+        hostId = NetworkTransport.AddHost(topology, GlobalDefinitions.port);
     }
 
     private void SendMessageToClient(string message, int clientHostID, int clientConnectionID, int clientChannelID)
