@@ -19,7 +19,7 @@ public class NetworkRoutines : MonoBehaviour
 
     private static byte sendError;
     private static byte[] sendBuffer = new byte[BUFFERSIZE];
-   
+
     public static int remoteComputerId;
     public static int remoteConnectionId;
     public static int remoteChannelId;
@@ -84,24 +84,18 @@ public class NetworkRoutines : MonoBehaviour
     /// <returns></returns>
     public static bool Connect(string opponentIPaddr)
     {
-        if (!channelEstablished)
-        {
-            byte error;
+        byte error;
 
-            NetworkTransport.Init();
+        NetworkTransport.Init();
 
-            remoteConnectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, socketPort, 0, out error);
+        remoteConnectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, socketPort, 0, out error);
 
-            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + remoteComputerId + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + remoteComputerId + ", Remote Connection Id = " + remoteConnectionId + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
-            if (remoteConnectionId <= 0)
-                return (false);
-            else
-            {
-                return (true);
-            }
-        }
-        return (true); // Connection already established
+        if (remoteConnectionId <= 0)
+            return (false);
+        else
+            return (true);
     }
 
     /// <summary>

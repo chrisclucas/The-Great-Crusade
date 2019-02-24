@@ -105,7 +105,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             Peer2PeerRoutines.playSavedGame = true;
             Peer2PeerRoutines.playNewGame = false;
 
-            if (Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>()  .isOn)
+            if (Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().isOn)
                 Peer2PeerRoutines.opponentIPaddr.interactable = true;
         }
         else
@@ -120,45 +120,23 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void OkNetworkSettings()
     {
-        GameControl.peer2PeerRoutinesInstance.GetComponent<Peer2PeerRoutines>().InitiatePeerConnection();
+        if (Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text.Length == 0)
+        {
+            GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
+            return;
+        }
         GlobalDefinitions.opponentIPAddress = Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text;
+        GameControl.peer2PeerRoutinesInstance.GetComponent<Peer2PeerRoutines>().InitiatePeerConnection();
 
         GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing  remote compter id = " + NetworkRoutines.remoteComputerId);
 
-        //if (NetworkRoutines.channelEstablished)
-        //{
-        //    if (GlobalDefinitions.userIsIntiating)
-        //    {
-        //        GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
-        //        NetworkRoutines.SendMessageToRemoteComputer("InControl");
-        //        GlobalDefinitions.userIsIntiating = true;
-        //        GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
-        //        NetworkRoutines.CheckForHandshakeReceipt("NotInControl");
-        //    }
-        //    else
-        //    {
-        //        GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
-        //        NetworkRoutines.SendMessageToRemoteComputer("NotInControl");
-        //        GlobalDefinitions.userIsIntiating = false;
-        //        GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
-        //        NetworkRoutines.CheckForHandshakeReceipt("InControl");
-        //    }
-        //}
-        //else
-        //{
-            if (Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
-            {
-                if (NetworkRoutines.Connect(Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text))
-                {
-                    NetworkRoutines.channelEstablished = true;
-                    GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
-                }
-                else
-                    GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
-            }
-            else
-                GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
-        //}
+        if (NetworkRoutines.Connect(GlobalDefinitions.opponentIPAddress))
+        {
+            NetworkRoutines.channelEstablished = true;
+            GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
+        }
+        else
+            GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
     }
 
     /// <summary>
