@@ -37,7 +37,7 @@ public class NetworkRoutines : MonoBehaviour
     /// </summary>
     public static void NetworkInit()
     {
-        byte error;
+        //byte error;
 
         GlobalDefinitions.WriteToLogFile("TransportScript networkInit(): executing");
         GlobalConfig globalConfig = new GlobalConfig
@@ -64,21 +64,21 @@ public class NetworkRoutines : MonoBehaviour
         NetworkTransport.Init(globalConfig);
 
         // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
-        if (serverSocket != -1)
-        {
-            GlobalDefinitions.WriteToLogFile("networkInit: server socket set to " + serverSocket + " - disconnecting and resetting to -1");
-            NetworkTransport.Disconnect(serverSocket, connectionId, out error);
-            serverSocket = -1;
-        }
-        if (clientSocket != -1)
-        {
-            GlobalDefinitions.WriteToLogFile("networkInit: client socket set to " + clientSocket + " - disconnecting and resetting to -1");
-            NetworkTransport.Disconnect(clientSocket, connectionId, out error);
-            clientSocket = -1;
-        }
+        //if (serverSocket != -1)
+        //{
+        //    GlobalDefinitions.WriteToLogFile("networkInit: server socket set to " + serverSocket + " - disconnecting and resetting to -1");
+        //    NetworkTransport.Disconnect(serverSocket, connectionId, out error);
+        //    serverSocket = -1;
+        //}
+        //if (clientSocket != -1)
+        //{
+        //    GlobalDefinitions.WriteToLogFile("networkInit: client socket set to " + clientSocket + " - disconnecting and resetting to -1");
+        //    NetworkTransport.Disconnect(clientSocket, connectionId, out error);
+        //    clientSocket = -1;
+        //}
 
-        serverSocket = NetworkTransport.AddHost(topology, socketPort);
-        clientSocket = NetworkTransport.AddHost(topology);
+        //serverSocket = NetworkTransport.AddHost(topology, socketPort);
+        //clientSocket = NetworkTransport.AddHost(topology);
     }
 
     /// <summary>
