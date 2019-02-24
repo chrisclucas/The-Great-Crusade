@@ -94,8 +94,6 @@ public class NetworkRoutines : MonoBehaviour
 
             NetworkTransport.Init();
 
-            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + remoteComputerID + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = )" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-
             connectionId = NetworkTransport.Connect(remoteComputerID, opponentIPaddr, socketPort, 0, out error);
 
             GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + remoteComputerID + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));

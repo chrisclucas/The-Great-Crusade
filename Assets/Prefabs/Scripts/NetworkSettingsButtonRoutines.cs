@@ -158,7 +158,6 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
                 if (NetworkRoutines.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
                     NetworkRoutines.channelEstablished = true;
-                    GlobalDefinitions.WriteToLogFile("okNetworkSettings: Channel Established");
                     GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
                 }
                 else

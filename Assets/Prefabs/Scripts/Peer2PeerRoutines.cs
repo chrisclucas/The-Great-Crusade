@@ -38,6 +38,12 @@ public class Peer2PeerRoutines : MonoBehaviour
         // This update() executes up until the game data is loaded and everything is set up.  Then the GameControl update() takes over.
         if (!GlobalDefinitions.gameStarted)
         {
+            GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1: executing");
+            GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    channelEstablished - " + NetworkRoutines.channelEstablished);
+            GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    opponentComputerConfirmsSync - " + opponentComputerConfirmsSync);
+            GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    handshakeConfirmed - " + handshakeConfirmed);
+            GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    gameDataSent - " + gameDataSent);
+            GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    gameStarted - " + GlobalDefinitions.gameStarted);
             // This goes from the intial connect attempt to the confirmation from the remote computer
             if (NetworkRoutines.channelEstablished && !opponentComputerConfirmsSync)
             {
@@ -46,9 +52,9 @@ public class Peer2PeerRoutines : MonoBehaviour
 
                 GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1: executing");
                 GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    channelEstablished - " + NetworkRoutines.channelEstablished);
-                GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    opponentComputerConfirmsSync - " + NetworkRoutines.opponentComputerConfirmsSync);
-                GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    handshakeConfirmed - " + NetworkRoutines.handshakeConfirmed);
-                GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    gameDataSent - " + NetworkRoutines.gameDataSent);
+                GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    opponentComputerConfirmsSync - " + opponentComputerConfirmsSync);
+                GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    handshakeConfirmed - " + handshakeConfirmed);
+                GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    gameDataSent - " + gameDataSent);
                 GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    gameStarted - " + GlobalDefinitions.gameStarted);
 
                 switch (recNetworkEvent)
