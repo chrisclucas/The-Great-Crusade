@@ -39,7 +39,7 @@ public class NetworkRoutines : MonoBehaviour
     {
         //byte error;
 
-        GlobalDefinitions.WriteToLogFile("TransportScript networkInit(): executing");
+        GlobalDefinitions.WriteToLogFile("networkInit(): executing");
         GlobalConfig globalConfig = new GlobalConfig
         {
             ReactorModel = ReactorModel.SelectReactor, // Process messages as soon as they come in (not good for mobile)

@@ -16,7 +16,6 @@ public class Peer2PeerRoutines : MonoBehaviour
     private static int serverSocket = -1;
     private static int clientSocket = -1;
 
-    public static bool channelEstablished = false;
     public static bool connectionConfirmed = false;
     public static bool handshakeConfirmed = false;
     public static bool opponentComputerConfirmsSync = false;
@@ -40,7 +39,7 @@ public class Peer2PeerRoutines : MonoBehaviour
         if (!GlobalDefinitions.gameStarted)
         {
             // This goes from the intial connect attempt to the confirmation from the remote computer
-            if (channelEstablished && !opponentComputerConfirmsSync)
+            if (NetworkRoutines.channelEstablished && !opponentComputerConfirmsSync)
             {
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
