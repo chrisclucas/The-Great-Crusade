@@ -14,7 +14,7 @@ public class NetworkRoutines : MonoBehaviour
     private static int connectionId = -1;
 
     private static int serverSocket = -1;
-    private static int clientSocket = -1;
+    private static int remoteComputerID = -1;
 
     public static bool channelEstablished = false;
     public static bool connectionConfirmed = false;
@@ -78,7 +78,7 @@ public class NetworkRoutines : MonoBehaviour
         //}
 
         //serverSocket = NetworkTransport.AddHost(topology, socketPort);
-        //clientSocket = NetworkTransport.AddHost(topology);
+        remoteComputerID = NetworkTransport.AddHost(topology);
     }
 
     /// <summary>
@@ -94,11 +94,11 @@ public class NetworkRoutines : MonoBehaviour
 
             NetworkTransport.Init();
 
-            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = )" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + remoteComputerID + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = )" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
-            connectionId = NetworkTransport.Connect(clientSocket, opponentIPaddr, socketPort, 0, out error);
+            connectionId = NetworkTransport.Connect(remoteComputerID, opponentIPaddr, socketPort, 0, out error);
 
-            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + remoteComputerID + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
             if (connectionId <= 0)
                 return (false);
@@ -228,10 +228,10 @@ public class NetworkRoutines : MonoBehaviour
             NetworkTransport.Disconnect(serverSocket, connectionId, out error);
             GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(serverSocket=" + serverSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
         }
-        else if (hostId == clientSocket)
+        else if (hostId == remoteComputerID)
         {
-            NetworkTransport.Disconnect(clientSocket, connectionId, out error);
-            GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(clientSocket=" + clientSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            NetworkTransport.Disconnect(remoteComputerID, connectionId, out error);
+            GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(clientSocket=" + remoteComputerID + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
             MainMenuRoutines.PeerToPeerNetworkSettingsUI();
         }
         else
