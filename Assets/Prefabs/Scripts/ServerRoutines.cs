@@ -3,22 +3,39 @@ using UnityEngine.Networking;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Generic;
 
 public class ServerRoutines : MonoBehaviour
 {
-    public const int BUFFERSIZE = 1024; // started with 512
-    public static int clientHostId;
-    public static int clientConnectionId;
-    public static int clientChannelId;
-    public static byte[] clientBuffer = new byte[BUFFERSIZE];
-    public static int receivedDataSize;
-    public static byte receivedError;
+    private const int BUFFERSIZE = 1024; // started with 512
+    private int clientHostId;
+    private int clientConnectionId;
+    private int clientChannelId;
+    private byte[] clientBuffer = new byte[BUFFERSIZE];
+    private int receivedDataSize;
+    private byte receivedError;
 
-    public static int hostId;
-    public static int allCostDeliveryChannelId;
+    private int hostId;
+    private int allCostDeliveryChannelId;
 
-    static byte sendError;
-    static byte[] sendBuffer = new byte[BUFFERSIZE];
+    private byte sendError;
+    private byte[] sendBuffer = new byte[BUFFERSIZE];
+
+    private class ClientCommunicationInformationStructure
+    {
+        public int hostId;
+        public int connectionId;
+        public int channelId;
+        public byte[] buffer;
+    }
+
+    private class GameCommunicationInformationStructure
+    {
+        ClientCommunicationInformationStructure player1;
+        ClientCommunicationInformationStructure player2;
+    }
+
+    List<GameCommunicationInformationStructure> clientList = new List<GameCommunicationInformationStructure>();
 
     // Update is called once per frame
     void Update ()
@@ -31,9 +48,14 @@ public class ServerRoutines : MonoBehaviour
             {
                 case NetworkEventType.ConnectEvent:
                     GlobalDefinitions.WriteToLogFile("ServerRoutines update: ConnectEvent (hostId = " + clientHostId + ", connectionId = " + clientConnectionId + ", error = " + receivedError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                    GlobalDefinitions.clientHostID = clientHostId;
-                    GlobalDefinitions.clientConnectionID = clientConnectionId;
-                    GlobalDefinitions.clientChannelID = clientChannelId;
+                    ClientCommunicationInformationStructure clientInfo = new ClientCommunicationInformationStructure
+                    {
+                        hostId = clientHostId,
+                        connectionId = clientConnectionId,
+                        channelId = clientChannelId,
+                        buffer = clientBuffer
+                    };
+
 
                     SendMessageToClient("Connection Confirmed", clientHostId, clientConnectionId, clientChannelId);
                     break;
@@ -49,7 +71,7 @@ public class ServerRoutines : MonoBehaviour
                     Stream stream = new MemoryStream(clientBuffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     string message = formatter.Deserialize(stream) as string;
-                    TransportScript.OnData(clientHostId, clientConnectionId, clientChannelId, message, receivedDataSize, (NetworkError)receivedError);
+                    NetworkRoutines.OnData(clientHostId, clientConnectionId, clientChannelId, message, receivedDataSize, (NetworkError)receivedError);
 
                     break;
 
@@ -82,7 +104,7 @@ public class ServerRoutines : MonoBehaviour
         config.PacketSize = 1400;
         config.MaxConnectionAttempt = Byte.MaxValue;
 
-        int maxConnections = 2;
+        int maxConnections = 2; // Need to change this because this is the server
         HostTopology topology = new HostTopology(config, maxConnections)
         {
             ReceivedMessagePoolSize = 128,
@@ -91,6 +113,7 @@ public class ServerRoutines : MonoBehaviour
 
         NetworkTransport.Init(globalConfig);
 
+        // Note, while the hostId below doesn't get used anywhere the line is needed to start the server listening, I know I should probably not assign the result, but ...
         hostId = NetworkTransport.AddHost(topology, GlobalDefinitions.port);
     }
 

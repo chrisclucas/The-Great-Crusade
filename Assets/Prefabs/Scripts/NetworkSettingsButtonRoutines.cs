@@ -14,7 +14,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = true;
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = true;
         GlobalDefinitions.userIsIntiating = true;
-        if (TransportScript.channelEstablished)
+        if (NetworkRoutines.channelEstablished)
         {
             // This executes when the channel is established but the two computers have the same intiating state
             GlobalDefinitions.userIsIntiating = true;
@@ -32,7 +32,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
-        if (TransportScript.channelEstablished)
+        if (NetworkRoutines.channelEstablished)
         {
             // This executes when the channel is established but the two computers have the same intiating state
             GlobalDefinitions.userIsIntiating = false;
@@ -120,44 +120,44 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void OkNetworkSettings()
     {
-        TransportScript.NetworkInit();
+        NetworkRoutines.NetworkInit();
         GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
 
         GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing");
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    channelEstablished - " + TransportScript.channelEstablished);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    channelEstablished - " + NetworkRoutines.channelEstablished);
         GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameStarted - " + GlobalDefinitions.gameStarted);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + NetworkRoutines.opponentComputerConfirmsSync);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    handshakeConfirmed - " + NetworkRoutines.handshakeConfirmed);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + NetworkRoutines.gameDataSent);
 
 
-        if (TransportScript.channelEstablished)
+        if (NetworkRoutines.channelEstablished)
         {
             // This executes when the channel is established but the two computers have the same intiating state
             if (GlobalDefinitions.userIsIntiating)
             {
                 GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
-                TransportScript.SendSocketMessage("InControl");
+                NetworkRoutines.SendSocketMessage("InControl");
                 GlobalDefinitions.userIsIntiating = true;
                 GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
-                TransportScript.CheckForHandshakeReceipt("NotInControl");
+                NetworkRoutines.CheckForHandshakeReceipt("NotInControl");
             }
             else
             {
                 GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
-                TransportScript.SendSocketMessage("NotInControl");
+                NetworkRoutines.SendSocketMessage("NotInControl");
                 GlobalDefinitions.userIsIntiating = false;
                 GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
-                TransportScript.CheckForHandshakeReceipt("InControl");
+                NetworkRoutines.CheckForHandshakeReceipt("InControl");
             }
         }
         else
         {
             if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
             {
-                if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
+                if (NetworkRoutines.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
-                    TransportScript.channelEstablished = true;
+                    NetworkRoutines.channelEstablished = true;
                     GlobalDefinitions.WriteToLogFile("okNetworkSettings: Channel Established");
                     GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
                 }

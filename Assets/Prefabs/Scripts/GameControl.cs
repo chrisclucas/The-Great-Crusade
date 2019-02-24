@@ -275,15 +275,15 @@ public class GameControl : MonoBehaviour
                 // Even though this is for when the player is in control, still need to check for chat messages
                 if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
                 {
-                    NetworkEventType recNetworkEvent = NetworkTransport.Receive(out TransportScript.recHostId, out TransportScript.recConnectionId, out TransportScript.recChannelId, TransportScript.recBuffer, TransportScript.BUFFERSIZE, out TransportScript.dataSize, out TransportScript.recError);
+                    NetworkEventType recNetworkEvent = NetworkTransport.Receive(out NetworkRoutines.recHostId, out NetworkRoutines.recConnectionId, out NetworkRoutines.recChannelId, NetworkRoutines.recBuffer, NetworkRoutines.BUFFERSIZE, out NetworkRoutines.dataSize, out NetworkRoutines.recError);
 
                     switch (recNetworkEvent)
                     {
                         case NetworkEventType.DataEvent:
-                            Stream stream = new MemoryStream(TransportScript.recBuffer);
+                            Stream stream = new MemoryStream(NetworkRoutines.recBuffer);
                             BinaryFormatter formatter = new BinaryFormatter();
                             string message = formatter.Deserialize(stream) as string;
-                            TransportScript.OnData(TransportScript.recHostId, TransportScript.recConnectionId, TransportScript.recChannelId, message, TransportScript.dataSize, (NetworkError)TransportScript.recError);
+                            NetworkRoutines.OnData(NetworkRoutines.recHostId, NetworkRoutines.recConnectionId, NetworkRoutines.recChannelId, message, NetworkRoutines.dataSize, (NetworkError)NetworkRoutines.recError);
 
                             // The only message that is valid when in control is a chat message
 
@@ -323,15 +323,15 @@ public class GameControl : MonoBehaviour
 
             else if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
             {
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out TransportScript.recHostId, out TransportScript.recConnectionId, out TransportScript.recChannelId, TransportScript.recBuffer, TransportScript.BUFFERSIZE, out TransportScript.dataSize, out TransportScript.recError);
+                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out NetworkRoutines.recHostId, out NetworkRoutines.recConnectionId, out NetworkRoutines.recChannelId, NetworkRoutines.recBuffer, NetworkRoutines.BUFFERSIZE, out NetworkRoutines.dataSize, out NetworkRoutines.recError);
 
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.WriteToLogFile("GameControl udpate() OnDisconnect: (hostId = " + TransportScript.recHostId + ", connectionId = "
-                                + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        GlobalDefinitions.WriteToLogFile("GameControl udpate() OnDisconnect: (hostId = " + NetworkRoutines.recHostId + ", connectionId = "
+                                + NetworkRoutines.recConnectionId + ", error = " + NetworkRoutines.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                        TransportScript.ResetConnection(TransportScript.recHostId);
+                        NetworkRoutines.ResetConnection(NetworkRoutines.recHostId);
 
                         // Since the connetion has been broken, quit the game and go back to the main menu
                         GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
@@ -339,17 +339,17 @@ public class GameControl : MonoBehaviour
                         guiButtonInstance.GetComponent<GUIButtonRoutines>().YesMain();
                         break;
                     case NetworkEventType.DataEvent:
-                        Stream stream = new MemoryStream(TransportScript.recBuffer);
+                        Stream stream = new MemoryStream(NetworkRoutines.recBuffer);
                         BinaryFormatter formatter = new BinaryFormatter();
                         string message = formatter.Deserialize(stream) as string;
-                        TransportScript.OnData(TransportScript.recHostId, TransportScript.recConnectionId, TransportScript.recChannelId, message, TransportScript.dataSize, (NetworkError)TransportScript.recError);
+                        NetworkRoutines.OnData(NetworkRoutines.recHostId, NetworkRoutines.recConnectionId, NetworkRoutines.recChannelId, message, NetworkRoutines.dataSize, (NetworkError)NetworkRoutines.recError);
                         ExecuteGameCommand.ProcessCommand(message);
                         break;
                     case NetworkEventType.Nothing:
                         break;
                     case NetworkEventType.ConnectEvent:
                         {
-                            GlobalDefinitions.WriteToLogFile("TransportScript.OnConnect: (hostId = " + TransportScript.recHostId + ", connectionId = " + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                            GlobalDefinitions.WriteToLogFile("TransportScript.OnConnect: (hostId = " + NetworkRoutines.recHostId + ", connectionId = " + NetworkRoutines.recConnectionId + ", error = " + NetworkRoutines.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                             break;
                         }
                     default:
@@ -482,7 +482,7 @@ public class GameControl : MonoBehaviour
         fileTransferServerInstance.AddComponent<FileTransferServer>();
 
         transpostScriptInstance = new GameObject("transportScriptInstance");
-        transpostScriptInstance.AddComponent<TransportScript>();
+        transpostScriptInstance.AddComponent<NetworkRoutines>();
 
         setupRoutinesInstance = new GameObject("setupRoutinesInstance");
         setupRoutinesInstance.AddComponent<SetupRoutines>();

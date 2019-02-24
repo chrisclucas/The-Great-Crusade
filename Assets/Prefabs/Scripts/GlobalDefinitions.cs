@@ -105,7 +105,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static int clientConnectionID;
     public static int clientChannelID;
 
-    // During network and AI games this determines when the player is in control
+    // During network games this determines when the player is in control, in AI games it signifies whether the player is in control (true) or the AI (false)
     public static bool localControl = false;
     public static bool userIsIntiating = false;
     public static bool isServer = false;
@@ -410,11 +410,11 @@ public class GlobalDefinitions : MonoBehaviour
         isServer = false;
         hasReceivedConfirmation = false;
         gameStarted = false;
-        TransportScript.channelEstablished = false;
-        TransportScript.connectionConfirmed = false;
-        TransportScript.handshakeConfirmed = false;
-        TransportScript.opponentComputerConfirmsSync = false;
-        TransportScript.gameDataSent = false;
+        NetworkRoutines.channelEstablished = false;
+        NetworkRoutines.connectionConfirmed = false;
+        NetworkRoutines.handshakeConfirmed = false;
+        NetworkRoutines.opponentComputerConfirmsSync = false;
+        NetworkRoutines.gameDataSent = false;
 
         // When resetting I am going to regenerate the invasion areas.  If I don't the AI will come up with different results based on the arrays being seeded diferently
         GameControl.createBoardInstance.GetComponent<CreateBoard>().SetupInvasionAreas();
@@ -2487,7 +2487,7 @@ public class GlobalDefinitions : MonoBehaviour
 
             if (localControl && (gameMode == GameModeValues.Peer2PeerNetwork))
             {
-                TransportScript.SendSocketMessage(commandString);
+                NetworkRoutines.SendSocketMessage(commandString);
             }
         }
     }
@@ -2539,7 +2539,7 @@ public class GlobalDefinitions : MonoBehaviour
     {
         string messageText = GameObject.Find("ChatInputField").GetComponent<InputField>().text;
         GameObject.Find("ChatText").GetComponent<Text>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<Text>().text;
-        TransportScript.SendSocketMessage(CHATMESSAGEKEYWORD + " " + messageText);
+        NetworkRoutines.SendSocketMessage(CHATMESSAGEKEYWORD + " " + messageText);
         GameObject.Find("ChatInputField").GetComponent<InputField>().text = "";
     }
 

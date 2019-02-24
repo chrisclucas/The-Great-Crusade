@@ -77,7 +77,7 @@ public class GUIButtonRoutines : MonoBehaviour
         // If this is a network game I've already checked that the player is in control
         if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
         {
-            TransportScript.ResetConnection(TransportScript.recHostId);
+            NetworkRoutines.ResetConnection(NetworkRoutines.recHostId);
         }
 
         // Copy list so the guis can be removed

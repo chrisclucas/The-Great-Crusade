@@ -11,7 +11,7 @@ public class ChooseSideButtonRoutines : MonoBehaviour
         GlobalDefinitions.commandFileHeader += " Allied";
         GameControl.CreateStatesForAI(GlobalDefinitions.Nationality.Allied);
         GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
-        GlobalDefinitions.gameStarted = true;
+        GlobalDefinitions.gameStarted = true; // Set true here since there is no network setup
         GlobalDefinitions.SwitchLocalControl(true);
         GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
 
@@ -30,7 +30,7 @@ public class ChooseSideButtonRoutines : MonoBehaviour
         GlobalDefinitions.commandFileHeader += " German";
         GameControl.CreateStatesForAI(GlobalDefinitions.Nationality.German);
         GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
-        GlobalDefinitions.gameStarted = true;
+        GlobalDefinitions.gameStarted = true; // Set true here since there is no network setup
         GlobalDefinitions.SwitchLocalControl(true);
         GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
 
