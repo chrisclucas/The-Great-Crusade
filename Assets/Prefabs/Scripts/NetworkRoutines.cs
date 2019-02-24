@@ -9,7 +9,7 @@ public class NetworkRoutines : MonoBehaviour
     public const int BUFFERSIZE = 1024; // started with 512
     private static int reliableChannelId;
     private static int unreliableChannelId;
-    private static int socketPort = 5016;
+    private static int gamePort = 5016;
 
     public static bool channelEstablished = false;
     public static bool connectionConfirmed = false;
@@ -84,13 +84,14 @@ public class NetworkRoutines : MonoBehaviour
     /// <returns></returns>
     public static bool Connect(string opponentIPaddr)
     {
+
         byte error;
 
         NetworkTransport.Init();
 
-        remoteConnectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, socketPort, 0, out error);
+        remoteConnectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, gamePort, 0, out error);
 
-        GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + remoteComputerId + ", Remote Connection Id = " + remoteConnectionId + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        GlobalDefinitions.WriteToLogFile("Initial Connection(Remote Computer Id = " + remoteComputerId + ", Remote Connection Id = " + remoteConnectionId + ", Port = " + gamePort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
         if (remoteConnectionId <= 0)
             return (false);
