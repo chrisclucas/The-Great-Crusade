@@ -99,9 +99,9 @@ public class ClientServerRoutines : MonoBehaviour
 
             NetworkTransport.Init();
 
-            connectionId = NetworkTransport.Connect(hostId, GlobalDefinitions.serverIPAddress, GlobalDefinitions.port, 0, out error);
+            connectionId = NetworkTransport.Connect(hostId, NetworkRoutines.remoteComputerIPAddress, NetworkRoutines.gamePort, 0, out error);
 
-            GlobalDefinitions.WriteToLogFile("ConnectToServer: ConnectionID set to " + connectionId + " hostId = " + hostId + ", IP addr = " + GlobalDefinitions.serverIPAddress + ", port = " + GlobalDefinitions.port + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            GlobalDefinitions.WriteToLogFile("ConnectToServer: ConnectionID set to " + connectionId + " hostId = " + hostId + ", IP addr = " + NetworkRoutines.remoteComputerIPAddress + ", port = " + NetworkRoutines.gamePort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
             if (connectionId <= 0)
                 return (false);

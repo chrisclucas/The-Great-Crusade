@@ -280,9 +280,6 @@ public class GlobalDefinitions : MonoBehaviour
     public static GameObject chatPanel; // Need to grab the chat panel and store it since the default will have it turned off and I can't find it with it off
 
     public static InputField fileBrowserSelectionLabel;
-    public static string opponentIPAddress;
-    public static string serverIPAddress = "192.168.1.67";
-    public static int port = 5016;
 
     public static bool displayAlliedSupplyStatus = false;
     public static bool displayGermanSupplyStatus = false;
@@ -396,7 +393,7 @@ public class GlobalDefinitions : MonoBehaviour
         germanSetupFileUsed = 100;
 
         // The following is for resetting the variables associated with a network game
-        opponentIPAddress = "";
+        NetworkRoutines.remoteComputerIPAddress = "";
         userIsIntiating = false;
         isServer = false;
         hasReceivedConfirmation = false;

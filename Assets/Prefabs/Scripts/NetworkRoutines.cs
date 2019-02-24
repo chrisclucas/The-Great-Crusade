@@ -9,7 +9,7 @@ public class NetworkRoutines : MonoBehaviour
     public const int BUFFERSIZE = 1024; // started with 512
     private static int reliableChannelId;
     private static int unreliableChannelId;
-    private static int gamePort = 5016;
+    public static int gamePort = 5016;
 
     public static bool channelEstablished = false;
     public static bool connectionConfirmed = false;
@@ -26,6 +26,8 @@ public class NetworkRoutines : MonoBehaviour
     public static byte[] remoteBuffer = new byte[BUFFERSIZE];
     public static int dataSize;
     public static byte receivedError;
+
+    public static string remoteComputerIPAddress = "192.168.1.67";
 
     /// <summary>
     /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
@@ -201,7 +203,7 @@ public class NetworkRoutines : MonoBehaviour
         SendMessageToRemoteComputer(GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER);
 
         GlobalDefinitions.SwitchLocalControl(false);
-        GlobalDefinitions.opponentIPAddress = "";
+        NetworkRoutines.remoteComputerIPAddress = "";
         GlobalDefinitions.userIsIntiating = false;
         GlobalDefinitions.isServer = false;
         GlobalDefinitions.hasReceivedConfirmation = false;
