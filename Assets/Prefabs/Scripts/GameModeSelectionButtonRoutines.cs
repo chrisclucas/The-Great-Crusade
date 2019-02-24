@@ -60,7 +60,7 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.commandFileHeader = "Peer2PeerNetwork";
             GameControl.CreateStatesForHotSeatOrNetwork();
             GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
-            MainMenuRoutines.PeerToPeerNetworkSettingsUI();
+            GameControl.peer2PeerRoutinesInstance.GetComponent<Peer2PeerRoutines>().PeerToPeerNetworkSettingsUI();
 
             GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         }

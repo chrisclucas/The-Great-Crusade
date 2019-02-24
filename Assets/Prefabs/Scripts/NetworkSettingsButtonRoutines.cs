@@ -9,10 +9,10 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void YesInitiate()
     {
-        MainMenuRoutines.alliedToggle.GetComponent<Toggle>().interactable = true;
-        MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = true;
-        MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = true;
-        MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = true;
+        Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().interactable = true;
+        Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().interactable = true;
+        Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().interactable = true;
+        Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().interactable = true;
         GlobalDefinitions.userIsIntiating = true;
         if (NetworkRoutines.channelEstablished)
         {
@@ -27,11 +27,11 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void NoInitiate()
     {
-        MainMenuRoutines.alliedToggle.GetComponent<Toggle>().interactable = false;
-        MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = false;
-        MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
-        MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
-        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
+        Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().interactable = false;
+        Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().interactable = false;
+        Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
+        Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
+        Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
         if (NetworkRoutines.channelEstablished)
         {
             // This executes when the channel is established but the two computers have the same intiating state
@@ -44,16 +44,16 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void GermanSelection()
     {
-        if (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn == true)
+        if (Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn == true)
         {
-            MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn = false;
+            Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().isOn = false;
             GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.German;
 
-            if (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
-                MainMenuRoutines.opponentIPaddr.interactable = true;
+            if (Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
+                Peer2PeerRoutines.opponentIPaddr.interactable = true;
         }
         else
-            MainMenuRoutines.opponentIPaddr.interactable = false;
+            Peer2PeerRoutines.opponentIPaddr.interactable = false;
     }
 
     /// <summary>
@@ -61,16 +61,16 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void AlliedSelection()
     {
-        if (MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn == true)
+        if (Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().isOn == true)
         {
-            MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn = false;
+            Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn = false;
             GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.Allied;
 
-            if (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
-                MainMenuRoutines.opponentIPaddr.interactable = true;
+            if (Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
+                Peer2PeerRoutines.opponentIPaddr.interactable = true;
         }
         else
-            MainMenuRoutines.opponentIPaddr.interactable = false;
+            Peer2PeerRoutines.opponentIPaddr.interactable = false;
     }
 
     /// <summary>
@@ -78,19 +78,19 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void NewGameSelection()
     {
-        if (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn == true)
+        if (Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().isOn == true)
         {
-            MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn = false;
-            MainMenuRoutines.playNewGame = true;
-            MainMenuRoutines.playSavedGame = false;
+            Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().isOn = false;
+            Peer2PeerRoutines.playNewGame = true;
+            Peer2PeerRoutines.playSavedGame = false;
 
-            if (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn)
-                MainMenuRoutines.opponentIPaddr.interactable = true;
+            if (Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().isOn)
+                Peer2PeerRoutines.opponentIPaddr.interactable = true;
         }
         else
         {
-            MainMenuRoutines.playNewGame = false;
-            MainMenuRoutines.opponentIPaddr.interactable = false;
+            Peer2PeerRoutines.playNewGame = false;
+            Peer2PeerRoutines.opponentIPaddr.interactable = false;
         }
     }
 
@@ -99,19 +99,19 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void SavedGameSelection()
     {
-        if (MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn == true)
+        if (Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().isOn == true)
         {
-            MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn = false;
-            MainMenuRoutines.playSavedGame = true;
-            MainMenuRoutines.playNewGame = false;
+            Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().isOn = false;
+            Peer2PeerRoutines.playSavedGame = true;
+            Peer2PeerRoutines.playNewGame = false;
 
-            if (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.alliedToggle.GetComponent<Toggle>()  .isOn)
-                MainMenuRoutines.opponentIPaddr.interactable = true;
+            if (Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>()  .isOn)
+                Peer2PeerRoutines.opponentIPaddr.interactable = true;
         }
         else
         {
-            MainMenuRoutines.playSavedGame = false;
-            MainMenuRoutines.opponentIPaddr.interactable = false;
+            Peer2PeerRoutines.playSavedGame = false;
+            Peer2PeerRoutines.opponentIPaddr.interactable = false;
         }
     }
 
@@ -120,42 +120,35 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void OkNetworkSettings()
     {
-        NetworkRoutines.NetworkInit();
-        GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+        GameControl.peer2PeerRoutinesInstance.GetComponent<Peer2PeerRoutines>().InitiatePeerConnection();
+        GlobalDefinitions.opponentIPAddress = Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text;
 
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing");
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    channelEstablished - " + NetworkRoutines.channelEstablished);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameStarted - " + GlobalDefinitions.gameStarted);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + NetworkRoutines.opponentComputerConfirmsSync);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    handshakeConfirmed - " + NetworkRoutines.handshakeConfirmed);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + NetworkRoutines.gameDataSent);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing  remote compter id = " + NetworkRoutines.remoteComputerId);
 
-
-        if (NetworkRoutines.channelEstablished)
-        {
-            // This executes when the channel is established but the two computers have the same intiating state
-            if (GlobalDefinitions.userIsIntiating)
+        //if (NetworkRoutines.channelEstablished)
+        //{
+        //    if (GlobalDefinitions.userIsIntiating)
+        //    {
+        //        GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
+        //        NetworkRoutines.SendMessageToRemoteComputer("InControl");
+        //        GlobalDefinitions.userIsIntiating = true;
+        //        GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
+        //        NetworkRoutines.CheckForHandshakeReceipt("NotInControl");
+        //    }
+        //    else
+        //    {
+        //        GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
+        //        NetworkRoutines.SendMessageToRemoteComputer("NotInControl");
+        //        GlobalDefinitions.userIsIntiating = false;
+        //        GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
+        //        NetworkRoutines.CheckForHandshakeReceipt("InControl");
+        //    }
+        //}
+        //else
+        //{
+            if (Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
             {
-                GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
-                NetworkRoutines.SendSocketMessage("InControl");
-                GlobalDefinitions.userIsIntiating = true;
-                GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
-                NetworkRoutines.CheckForHandshakeReceipt("NotInControl");
-            }
-            else
-            {
-                GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
-                NetworkRoutines.SendSocketMessage("NotInControl");
-                GlobalDefinitions.userIsIntiating = false;
-                GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
-                NetworkRoutines.CheckForHandshakeReceipt("InControl");
-            }
-        }
-        else
-        {
-            if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
-            {
-                if (NetworkRoutines.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
+                if (NetworkRoutines.Connect(Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
                     NetworkRoutines.channelEstablished = true;
                     GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
@@ -165,7 +158,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             }
             else
                 GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
-        }
+        //}
     }
 
     /// <summary>
@@ -182,8 +175,8 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public static void ExecuteConnect()
     {
-        if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
-            GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+        if (Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
+            GlobalDefinitions.opponentIPAddress = Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text;
         //if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
         //{
         //    GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;

@@ -96,15 +96,6 @@ public class GlobalDefinitions : MonoBehaviour
     //  Use to determine if Combat Assignment is available
     public static bool AICombat = false;
 
-    // Communication information for peer-peer network games
-    public static int communicationSocket;
-    public static int communicationChannel;
-
-    // Communication information for client/server network games
-    public static int clientHostID;
-    public static int clientConnectionID;
-    public static int clientChannelID;
-
     // During network games this determines when the player is in control, in AI games it signifies whether the player is in control (true) or the AI (false)
     public static bool localControl = false;
     public static bool userIsIntiating = false;
@@ -2487,7 +2478,7 @@ public class GlobalDefinitions : MonoBehaviour
 
             if (localControl && (gameMode == GameModeValues.Peer2PeerNetwork))
             {
-                NetworkRoutines.SendSocketMessage(commandString);
+                NetworkRoutines.SendMessageToRemoteComputer(commandString);
             }
         }
     }
@@ -2539,7 +2530,7 @@ public class GlobalDefinitions : MonoBehaviour
     {
         string messageText = GameObject.Find("ChatInputField").GetComponent<InputField>().text;
         GameObject.Find("ChatText").GetComponent<Text>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<Text>().text;
-        NetworkRoutines.SendSocketMessage(CHATMESSAGEKEYWORD + " " + messageText);
+        NetworkRoutines.SendMessageToRemoteComputer(CHATMESSAGEKEYWORD + " " + messageText);
         GameObject.Find("ChatInputField").GetComponent<InputField>().text = "";
     }
 

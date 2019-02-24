@@ -11,11 +11,6 @@ public class NetworkRoutines : MonoBehaviour
     private static int unreliableChannelId;
     private static int socketPort = 5016;
 
-    private static int connectionId = -1;
-
-    private static int serverSocket = -1;
-    private static int remoteComputerID = -1;
-
     public static bool channelEstablished = false;
     public static bool connectionConfirmed = false;
     public static bool handshakeConfirmed = false;
@@ -24,18 +19,18 @@ public class NetworkRoutines : MonoBehaviour
 
     private static byte sendError;
     private static byte[] sendBuffer = new byte[BUFFERSIZE];
-
-    public static int recHostId;
-    public static int recConnectionId;
-    public static int recChannelId;
-    public static byte[] recBuffer = new byte[BUFFERSIZE];
+   
+    public static int remoteComputerId;
+    public static int remoteConnectionId;
+    public static int remoteChannelId;
+    public static byte[] remoteBuffer = new byte[BUFFERSIZE];
     public static int dataSize;
-    public static byte recError;
+    public static byte receivedError;
 
     /// <summary>
     /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
     /// </summary>
-    public static void NetworkInit()
+    public static int NetworkInit()
     {
         //byte error;
 
@@ -54,6 +49,8 @@ public class NetworkRoutines : MonoBehaviour
 
         reliableChannelId = config.AddChannel(QosType.AllCostDelivery);
 
+        NetworkTransport.Init(globalConfig);
+
         int maxConnections = 2;
         HostTopology topology = new HostTopology(config, maxConnections)
         {
@@ -61,7 +58,7 @@ public class NetworkRoutines : MonoBehaviour
             SentMessagePoolSize = 1024 // Default 128
         };
 
-        NetworkTransport.Init(globalConfig);
+        return (NetworkTransport.AddHost(topology));
 
         // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
         //if (serverSocket != -1)
@@ -78,7 +75,6 @@ public class NetworkRoutines : MonoBehaviour
         //}
 
         //serverSocket = NetworkTransport.AddHost(topology, socketPort);
-        remoteComputerID = NetworkTransport.AddHost(topology);
     }
 
     /// <summary>
@@ -94,11 +90,11 @@ public class NetworkRoutines : MonoBehaviour
 
             NetworkTransport.Init();
 
-            connectionId = NetworkTransport.Connect(remoteComputerID, opponentIPaddr, socketPort, 0, out error);
+            remoteConnectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, socketPort, 0, out error);
 
-            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + remoteComputerID + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + remoteComputerId + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
-            if (connectionId <= 0)
+            if (remoteConnectionId <= 0)
                 return (false);
             else
             {
@@ -112,15 +108,15 @@ public class NetworkRoutines : MonoBehaviour
     /// This is the routine that sends messages to the opposing computer
     /// </summary>
     /// <param name="message"></param>
-    public static void SendSocketMessage(string message)
+    public static void SendMessageToRemoteComputer(string message)
     {
         if (connectionConfirmed)
         {
             Stream stream = new MemoryStream(sendBuffer);
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, message);
-            NetworkTransport.Send(GlobalDefinitions.communicationSocket, GlobalDefinitions.communicationChannel, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
-            GlobalDefinitions.WriteToLogFile("Sending message - " + message + " serverSocket=" + GlobalDefinitions.communicationSocket + "  communicationChannel=" + GlobalDefinitions.communicationChannel + " Error: " + (NetworkError)sendError);
+            NetworkTransport.Send(remoteComputerId, remoteConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
+            GlobalDefinitions.WriteToLogFile("Sending message - " + message + " remoteComputerId=" + remoteComputerId + "  remoteConnectionId=" + remoteConnectionId + " Error: " + (NetworkError)sendError);
 
             if ((NetworkError)sendError != NetworkError.Ok)
             {
@@ -141,12 +137,12 @@ public class NetworkRoutines : MonoBehaviour
         if (GlobalDefinitions.userIsIntiating)
         {
             GlobalDefinitions.WriteToLogFile("sendHandshakeMessage: sending InControl");
-            SendSocketMessage("InControl");
+            SendMessageToRemoteComputer("InControl");
         }
         else
         {
             GlobalDefinitions.WriteToLogFile("sendHandshakeMessage: sending NotInControl");
-            SendSocketMessage("NotInControl");
+            SendMessageToRemoteComputer("NotInControl");
         }
     }
 
@@ -204,10 +200,10 @@ public class NetworkRoutines : MonoBehaviour
         byte error;
 
         GlobalDefinitions.WriteToLogFile("TransportScript.resetConnection: (hostId = " + hostId + ", connectionId = "
-                + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                + remoteConnectionId + ", error = " + receivedError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
         // Send a disconnect command to the remote computer
-        SendSocketMessage(GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER);
+        SendMessageToRemoteComputer(GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER);
 
         GlobalDefinitions.SwitchLocalControl(false);
         GlobalDefinitions.opponentIPAddress = "";
@@ -221,16 +217,10 @@ public class NetworkRoutines : MonoBehaviour
         NetworkRoutines.opponentComputerConfirmsSync = false;
         NetworkRoutines.gameDataSent = false;
 
-        if (hostId == serverSocket)
+        if (hostId == remoteComputerId)
         {
-            NetworkTransport.Disconnect(serverSocket, connectionId, out error);
-            GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(serverSocket=" + serverSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-        }
-        else if (hostId == remoteComputerID)
-        {
-            NetworkTransport.Disconnect(remoteComputerID, connectionId, out error);
-            GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(clientSocket=" + remoteComputerID + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-            MainMenuRoutines.PeerToPeerNetworkSettingsUI();
+            NetworkTransport.Disconnect(remoteComputerId, remoteConnectionId, out error);
+            GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(serverSocket=" + remoteComputerId + ", connectionId=" + remoteConnectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
         }
         else
             GlobalDefinitions.WriteToLogFile("resetConnectin: Request recieved to disconnect unknown host - " + hostId);

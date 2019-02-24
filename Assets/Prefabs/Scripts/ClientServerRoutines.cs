@@ -16,7 +16,6 @@ public class ClientServerRoutines : MonoBehaviour
     private static int hostId;
 
     private static bool channelRequested = false;
-    private static bool channelEstablished = false;
 
     private static byte sendError;
     private static byte[] sendBuffer = new byte[BUFFERSIZE];
@@ -41,7 +40,7 @@ public class ClientServerRoutines : MonoBehaviour
                 case NetworkEventType.ConnectEvent:
                     GlobalDefinitions.WriteToLogFile("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
-                    channelEstablished = true;
+                    NetworkRoutines.channelEstablished = true;
                     
                     // At this point I need to pass off control to the normal game flow depending on whether this client in control or waiting on the other computer
 
@@ -77,29 +76,7 @@ public class ClientServerRoutines : MonoBehaviour
     {
         GlobalDefinitions.WriteToLogFile("initiateServerConnection: executing");
 
-        GlobalConfig globalConfig = new GlobalConfig
-        {
-            ReactorModel = ReactorModel.SelectReactor, // Process messages as soon as they come in (not good for mobile)
-            MaxPacketSize = 1500
-        };
-
-        ConnectionConfig config = new ConnectionConfig();
-
-        allCostDeliveryChannelId = config.AddChannel(QosType.AllCostDelivery);
-
-        config.PacketSize = 1400;
-        config.MaxConnectionAttempt = Byte.MaxValue;
-
-        int maxConnections = 2;
-        HostTopology topology = new HostTopology(config, maxConnections)
-        {
-            ReceivedMessagePoolSize = 128,
-            SentMessagePoolSize = 1024 // Default 128
-        };
-
-        NetworkTransport.Init(globalConfig);
-
-        hostId = NetworkTransport.AddHost(topology);
+        NetworkRoutines.remoteComputerId = NetworkRoutines.NetworkInit();
 
         if (ConnectToServer())
         {
@@ -116,7 +93,7 @@ public class ClientServerRoutines : MonoBehaviour
     /// <returns></returns>
     public static bool ConnectToServer()
     {
-        if (!channelEstablished)
+        if (!NetworkRoutines.channelEstablished)
         {
             byte error;
 

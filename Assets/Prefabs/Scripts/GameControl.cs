@@ -276,15 +276,15 @@ public class GameControl : MonoBehaviour
                 // Even though this is for when the player is in control, still need to check for chat messages
                 if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
                 {
-                    NetworkEventType recNetworkEvent = NetworkTransport.Receive(out NetworkRoutines.recHostId, out NetworkRoutines.recConnectionId, out NetworkRoutines.recChannelId, NetworkRoutines.recBuffer, NetworkRoutines.BUFFERSIZE, out NetworkRoutines.dataSize, out NetworkRoutines.recError);
+                    NetworkEventType recNetworkEvent = NetworkTransport.Receive(out NetworkRoutines.remoteComputerId, out NetworkRoutines.remoteConnectionId, out NetworkRoutines.remoteChannelId, NetworkRoutines.remoteBuffer, NetworkRoutines.BUFFERSIZE, out NetworkRoutines.dataSize, out NetworkRoutines.receivedError);
 
                     switch (recNetworkEvent)
                     {
                         case NetworkEventType.DataEvent:
-                            Stream stream = new MemoryStream(NetworkRoutines.recBuffer);
+                            Stream stream = new MemoryStream(NetworkRoutines.remoteBuffer);
                             BinaryFormatter formatter = new BinaryFormatter();
                             string message = formatter.Deserialize(stream) as string;
-                            NetworkRoutines.OnData(NetworkRoutines.recHostId, NetworkRoutines.recConnectionId, NetworkRoutines.recChannelId, message, NetworkRoutines.dataSize, (NetworkError)NetworkRoutines.recError);
+                            NetworkRoutines.OnData(NetworkRoutines.remoteComputerId, NetworkRoutines.remoteConnectionId, NetworkRoutines.remoteChannelId, message, NetworkRoutines.dataSize, (NetworkError)NetworkRoutines.receivedError);
 
                             // The only message that is valid when in control is a chat message
 
@@ -324,15 +324,15 @@ public class GameControl : MonoBehaviour
 
             else if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
             {
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out NetworkRoutines.recHostId, out NetworkRoutines.recConnectionId, out NetworkRoutines.recChannelId, NetworkRoutines.recBuffer, NetworkRoutines.BUFFERSIZE, out NetworkRoutines.dataSize, out NetworkRoutines.recError);
+                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out NetworkRoutines.remoteComputerId, out NetworkRoutines.remoteConnectionId, out NetworkRoutines.remoteChannelId, NetworkRoutines.remoteBuffer, NetworkRoutines.BUFFERSIZE, out NetworkRoutines.dataSize, out NetworkRoutines.receivedError);
 
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.WriteToLogFile("GameControl udpate() OnDisconnect: (hostId = " + NetworkRoutines.recHostId + ", connectionId = "
-                                + NetworkRoutines.recConnectionId + ", error = " + NetworkRoutines.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        GlobalDefinitions.WriteToLogFile("GameControl udpate() OnDisconnect: (hostId = " + NetworkRoutines.remoteComputerId + ", connectionId = "
+                                + NetworkRoutines.remoteConnectionId + ", error = " + NetworkRoutines.receivedError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                        NetworkRoutines.ResetConnection(NetworkRoutines.recHostId);
+                        NetworkRoutines.ResetConnection(NetworkRoutines.remoteComputerId);
 
                         // Since the connetion has been broken, quit the game and go back to the main menu
                         GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
@@ -340,17 +340,17 @@ public class GameControl : MonoBehaviour
                         guiButtonInstance.GetComponent<GUIButtonRoutines>().YesMain();
                         break;
                     case NetworkEventType.DataEvent:
-                        Stream stream = new MemoryStream(NetworkRoutines.recBuffer);
+                        Stream stream = new MemoryStream(NetworkRoutines.remoteBuffer);
                         BinaryFormatter formatter = new BinaryFormatter();
                         string message = formatter.Deserialize(stream) as string;
-                        NetworkRoutines.OnData(NetworkRoutines.recHostId, NetworkRoutines.recConnectionId, NetworkRoutines.recChannelId, message, NetworkRoutines.dataSize, (NetworkError)NetworkRoutines.recError);
+                        NetworkRoutines.OnData(NetworkRoutines.remoteComputerId, NetworkRoutines.remoteConnectionId, NetworkRoutines.remoteChannelId, message, NetworkRoutines.dataSize, (NetworkError)NetworkRoutines.receivedError);
                         ExecuteGameCommand.ProcessCommand(message);
                         break;
                     case NetworkEventType.Nothing:
                         break;
                     case NetworkEventType.ConnectEvent:
                         {
-                            GlobalDefinitions.WriteToLogFile("TransportScript.OnConnect: (hostId = " + NetworkRoutines.recHostId + ", connectionId = " + NetworkRoutines.recConnectionId + ", error = " + NetworkRoutines.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                            GlobalDefinitions.WriteToLogFile("TransportScript.OnConnect: (hostId = " + NetworkRoutines.remoteComputerId + ", connectionId = " + NetworkRoutines.remoteConnectionId + ", error = " + NetworkRoutines.receivedError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                             break;
                         }
                     default:
@@ -519,7 +519,7 @@ public class GameControl : MonoBehaviour
         serverRoutinesInstance.AddComponent<ServerRoutines>();
 
         peer2PeerRoutinesInstance = new GameObject("Peer2PeerRoutinesInstance");
-        peer2PeerRoutinesInstance.AddComponent<ServerRoutines>();
+        peer2PeerRoutinesInstance.AddComponent<Peer2PeerRoutines>();
     }
 
     /// <summary>
