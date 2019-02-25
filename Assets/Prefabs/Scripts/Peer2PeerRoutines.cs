@@ -53,11 +53,10 @@ public class Peer2PeerRoutines : MonoBehaviour
 
     void Update()
     {
-        NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
-
         // This update() executes up until the game data is loaded and everything is set up.  Then the GameControl update() takes over.
         if ((NetworkRoutines.channelEstablished) && (!GlobalDefinitions.gameStarted) && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
-        {            
+        {
+            NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
             // This goes from the intial connect attempt to the confirmation from the remote computer
             if (NetworkRoutines.channelEstablished && !opponentComputerConfirmsSync)
             {
