@@ -13,8 +13,6 @@ public class ClientServerRoutines : MonoBehaviour
 
     private static int connectionId = -1;
 
-    //private static int hostId;
-
     private static bool channelRequested = false;
 
     private static byte sendError;
@@ -41,7 +39,7 @@ public class ClientServerRoutines : MonoBehaviour
                     GlobalDefinitions.WriteToLogFile("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
                     NetworkRoutines.channelEstablished = true;
-                    
+
                     // At this point I need to pass off control to the normal game flow depending on whether this client in control or waiting on the other computer
 
                     break;
@@ -93,24 +91,17 @@ public class ClientServerRoutines : MonoBehaviour
     /// <returns></returns>
     public static bool ConnectToServer()
     {
-        if (!NetworkRoutines.channelEstablished)
-        {
-            byte error;
+        byte error;
 
-            NetworkTransport.Init();
+        NetworkTransport.Init();
+        connectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, NetworkRoutines.remoteComputerIPAddress, NetworkRoutines.gamePort, 0, out error);
 
-            connectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, NetworkRoutines.remoteComputerIPAddress, NetworkRoutines.gamePort, 0, out error);
+        GlobalDefinitions.WriteToLogFile("ConnectToServer: ConnectionID set to " + connectionId + " hostId = " + NetworkRoutines.remoteComputerId + ", IP addr = " + NetworkRoutines.remoteComputerIPAddress + ", port = " + NetworkRoutines.gamePort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
-            GlobalDefinitions.WriteToLogFile("ConnectToServer: ConnectionID set to " + connectionId + " hostId = " + NetworkRoutines.remoteComputerId + ", IP addr = " + NetworkRoutines.remoteComputerIPAddress + ", port = " + NetworkRoutines.gamePort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-
-            if (connectionId <= 0)
-                return (false);
-            else
-            {
-                return (true);
-            }
-        }
-        return (true); // Connection already established
+        if (connectionId <= 0)
+            return (false);
+        else
+            return (true);
     }
 
     /// <summary>

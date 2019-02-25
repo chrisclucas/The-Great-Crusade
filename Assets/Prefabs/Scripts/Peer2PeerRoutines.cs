@@ -53,6 +53,7 @@ public class Peer2PeerRoutines : MonoBehaviour
 
     void Update()
     {
+        NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
         // This update() executes up until the game data is loaded and everything is set up.  Then the GameControl update() takes over.
         if ((NetworkRoutines.channelEstablished) && (!GlobalDefinitions.gameStarted) && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
@@ -67,7 +68,6 @@ public class Peer2PeerRoutines : MonoBehaviour
                 //GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    handshakeConfirmed - " + handshakeConfirmed);
                 //GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()1:    gameDataSent - " + gameDataSent);
                 // Check if there is a network event
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
                 switch (recNetworkEvent)
                 {
@@ -124,7 +124,7 @@ public class Peer2PeerRoutines : MonoBehaviour
             else if (opponentComputerConfirmsSync && !handshakeConfirmed)
             {
                 // Check if there is a network event
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
+                //NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
                 GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()2: executing");
                 GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()2:    channelEstablished - " + NetworkRoutines.channelEstablished);
@@ -265,7 +265,7 @@ public class Peer2PeerRoutines : MonoBehaviour
                 GlobalDefinitions.WriteToLogFile("Peer2PeerRoutines update()4:    gameStarted - " + GlobalDefinitions.gameStarted);
 
                 // Check if there is a network event
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
+                //NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
                 switch (recNetworkEvent)
                 {
