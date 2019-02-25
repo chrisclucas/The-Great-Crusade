@@ -13,7 +13,7 @@ public class ClientServerRoutines : MonoBehaviour
 
     private static int connectionId = -1;
 
-    private static int hostId;
+    //private static int hostId;
 
     private static bool channelRequested = false;
 
@@ -99,9 +99,9 @@ public class ClientServerRoutines : MonoBehaviour
 
             NetworkTransport.Init();
 
-            connectionId = NetworkTransport.Connect(hostId, NetworkRoutines.remoteComputerIPAddress, NetworkRoutines.gamePort, 0, out error);
+            connectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, NetworkRoutines.remoteComputerIPAddress, NetworkRoutines.gamePort, 0, out error);
 
-            GlobalDefinitions.WriteToLogFile("ConnectToServer: ConnectionID set to " + connectionId + " hostId = " + hostId + ", IP addr = " + NetworkRoutines.remoteComputerIPAddress + ", port = " + NetworkRoutines.gamePort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            GlobalDefinitions.WriteToLogFile("ConnectToServer: ConnectionID set to " + connectionId + " hostId = " + NetworkRoutines.remoteComputerId + ", IP addr = " + NetworkRoutines.remoteComputerIPAddress + ", port = " + NetworkRoutines.gamePort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
             if (connectionId <= 0)
                 return (false);
@@ -122,8 +122,8 @@ public class ClientServerRoutines : MonoBehaviour
         Stream stream = new MemoryStream(sendBuffer);
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(stream, message);
-        NetworkTransport.Send(hostId, connectionId, allCostDeliveryChannelId, sendBuffer, BUFFERSIZE, out sendError);
-        GlobalDefinitions.WriteToLogFile("Sending message - " + message + " HostID=" + hostId + "  ConnectionID=" + connectionId + " ChannelID=" + allCostDeliveryChannelId + " Error: " + (NetworkError)sendError);
+        NetworkTransport.Send(NetworkRoutines.remoteComputerId, connectionId, allCostDeliveryChannelId, sendBuffer, BUFFERSIZE, out sendError);
+        GlobalDefinitions.WriteToLogFile("Sending message - " + message + " HostID=" + NetworkRoutines.remoteComputerId + "  ConnectionID=" + connectionId + " ChannelID=" + allCostDeliveryChannelId + " Error: " + (NetworkError)sendError);
 
         if ((NetworkError)sendError != NetworkError.Ok)
         {
