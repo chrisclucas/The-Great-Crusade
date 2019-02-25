@@ -90,10 +90,9 @@ public class NetworkRoutines : MonoBehaviour
         byte error;
 
         NetworkTransport.Init();
-
         remoteConnectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, gamePort, 0, out error);
 
-        GlobalDefinitions.WriteToLogFile("Initial Connection(Remote Computer Id = " + remoteComputerId + ", Remote Connection Id = " + remoteConnectionId + ", Port = " + gamePort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        GlobalDefinitions.WriteToLogFile("Connect: Remote Computer Id = " + remoteComputerId + ", Remote Connection Id = " + remoteConnectionId + ", Port = " + gamePort + ", error = " + error.ToString() + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
         if (remoteConnectionId <= 0)
             return (false);
