@@ -125,19 +125,10 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
             return;
         }
-        NetworkRoutines.remoteComputerIPAddress = Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text;
+
         GameControl.peer2PeerRoutinesInstance.GetComponent<Peer2PeerRoutines>().InitiatePeerConnection();
 
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing  remote compter id = " + NetworkRoutines.remoteComputerId);
-
-        if (NetworkRoutines.Connect(NetworkRoutines.remoteComputerIPAddress))
-        {
-            NetworkRoutines.channelEstablished = true;
-            GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
-        }
-        else
-            GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
+        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
     }
 
     /// <summary>

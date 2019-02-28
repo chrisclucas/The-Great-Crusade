@@ -320,7 +320,19 @@ public class Peer2PeerRoutines : MonoBehaviour
 
     public void InitiatePeerConnection()
     {
+        NetworkRoutines.remoteComputerIPAddress = opponentIPaddr.GetComponent<InputField>().text;
+        GlobalDefinitions.WriteToLogFile("InitiatePeerConnection: executing  remote compter id = " + NetworkRoutines.remoteComputerId);
+
         NetworkRoutines.remoteComputerId = NetworkRoutines.NetworkInit();
+
+        if (NetworkRoutines.Connect())
+        {
+            NetworkRoutines.channelEstablished = true;
+            GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
+            
+        }
+        else
+            GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
     }
 
 

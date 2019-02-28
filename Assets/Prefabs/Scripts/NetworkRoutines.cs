@@ -82,15 +82,14 @@ public class NetworkRoutines : MonoBehaviour
     /// <summary>
     /// This is the routine that runs when the connect button on the gui is clicked
     /// </summary>
-    /// <param name="opponentIPaddr"></param>
     /// <returns></returns>
-    public static bool Connect(string opponentIPaddr)
+    public static bool Connect()
     {
 
         byte error;
 
         NetworkTransport.Init();
-        remoteConnectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, gamePort, 0, out error);
+        remoteConnectionId = NetworkTransport.Connect(remoteComputerId, remoteComputerIPAddress, gamePort, 0, out error);
 
         GlobalDefinitions.WriteToLogFile("Connect: Remote Computer Id = " + remoteComputerId + ", Remote Connection Id = " + remoteConnectionId + ", Port = " + gamePort + ", error = " + error.ToString() + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
