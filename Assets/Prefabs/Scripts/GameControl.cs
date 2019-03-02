@@ -513,7 +513,7 @@ public class GameControl : MonoBehaviour
         AIRoutinesInstance.AddComponent<AIRoutines>();
 
         clientServerRoutinesInstance = new GameObject("ClientServerRoutinesInstance");
-        //clientServerRoutinesInstance.AddComponent<ClientServerRoutines>();
+        clientServerRoutinesInstance.AddComponent<ClientServerRoutines>();
 
         serverRoutinesInstance = new GameObject("ServerRoutinesInstance");
         serverRoutinesInstance.AddComponent<ServerRoutines>();
