@@ -131,8 +131,8 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
 
 
-        //if (TransportScript.channelEstablished)
-        //{
+        if (TransportScript.channelEstablished)
+        {
             // This executes when the channel is established but the two computers have the same intiating state
             if (GlobalDefinitions.userIsIntiating)
             {
@@ -177,7 +177,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
                         GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
                 }
             }
-        //}
+        }
     }
 
     /// <summary>
@@ -195,19 +195,18 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     public static void ExecuteConnect()
     {
         if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
+        {
             NetworkRoutines.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
-        //if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
-        //{
-        //    GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
-        //    if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
-        //    {
-        //        TransportScript.channelEstablished = true;
-        //        GlobalDefinitions.guiUpdateStatusMessage("Channel Established");
-        //    }
-        //    else
-        //        GlobalDefinitions.guiUpdateStatusMessage("Connection Failed");
-        //}
-        //else
-        //    GlobalDefinitions.guiUpdateStatusMessage("No IP address entered");
+            GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+            if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
+            {
+                TransportScript.channelEstablished = true;
+                GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
+            }
+            else
+                GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
+        }
+        else
+            GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
     }
 }
