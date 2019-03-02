@@ -133,7 +133,7 @@ public class SetUpState : GameState
             // If this is a network game send the file name to the remote computer so it can be reSquested through the file transfer routines.  It's silly that 
             // I have to tell it what to ask for but I bought the code and that is how it works
             if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && (GlobalDefinitions.localControl))
-                NetworkRoutines.SendMessageToRemoteComputer(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
+                TransportScript.SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
         }
     }
 
