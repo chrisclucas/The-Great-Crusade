@@ -512,11 +512,11 @@ public class GameControl : MonoBehaviour
         AIRoutinesInstance = new GameObject("AIRoutinesInstance");
         AIRoutinesInstance.AddComponent<AIRoutines>();
 
-        //clientServerRoutinesInstance = new GameObject("ClientServerRoutinesInstance");
+        clientServerRoutinesInstance = new GameObject("ClientServerRoutinesInstance");
         //clientServerRoutinesInstance.AddComponent<ClientServerRoutines>();
 
-        //serverRoutinesInstance = new GameObject("ServerRoutinesInstance");
-        //serverRoutinesInstance.AddComponent<ServerRoutines>();
+        serverRoutinesInstance = new GameObject("ServerRoutinesInstance");
+        serverRoutinesInstance.AddComponent<ServerRoutines>();
 
         //peer2PeerRoutinesInstance = new GameObject("Peer2PeerRoutinesInstance");
         //peer2PeerRoutinesInstance.AddComponent<Peer2PeerRoutines>();
