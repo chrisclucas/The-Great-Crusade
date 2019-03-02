@@ -247,7 +247,7 @@ public class TransportScript : MonoBehaviour
                             GlobalDefinitions.SwitchLocalControl(false);
                         }
 
-                        GlobalDefinitions.WriteToLogFile(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
+                        SendSocketMessage(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                     }
                     // Playing a saved game
                     else
@@ -273,7 +273,7 @@ public class TransportScript : MonoBehaviour
                         if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
                         {
                             GlobalDefinitions.WriteToLogFile("TransportScript Update()3: Sending file name to remote computer");
-                            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
+                            SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
                         }
 
                         //GlobalDefinitions.writeToLogFile("TranportScript: setting gameDataSent to ture");
