@@ -2,8 +2,6 @@
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 public class Peer2PeerRoutines : MonoBehaviour
 {
