@@ -325,7 +325,7 @@ public class Peer2PeerRoutines : MonoBehaviour
 
         NetworkRoutines.remoteComputerId = NetworkRoutines.NetworkInit();
 
-        if (NetworkRoutines.Connect())
+        if (PeerConnect())
         {
             NetworkRoutines.channelEstablished = true;
             GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
@@ -333,6 +333,22 @@ public class Peer2PeerRoutines : MonoBehaviour
         }
         else
             GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
+    }
+
+    public static bool PeerConnect()
+    {
+
+        byte error;
+
+        NetworkTransport.Init();
+        NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, NetworkRoutines.remoteComputerIPAddress, NetworkRoutines.gamePort, 0, out error);
+
+        GlobalDefinitions.WriteToLogFile("Connect: Remote Computer Id = " + NetworkRoutines.remoteComputerId + ", Remote Connection Id = " + NetworkRoutines.remoteConnectionId + ", Port = " + NetworkRoutines.gamePort + ", error = " + error.ToString() + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+
+        if (NetworkRoutines.remoteConnectionId <= 0)
+            return (false);
+        else
+            return (true);
     }
 
 
