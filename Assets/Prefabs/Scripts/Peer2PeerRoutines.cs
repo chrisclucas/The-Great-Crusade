@@ -325,7 +325,7 @@ public class Peer2PeerRoutines : MonoBehaviour
 
         NetworkRoutines.remoteComputerId = NetworkRoutines.NetworkInit();
 
-        if (PeerConnect())
+        if (ClientServerRoutines.ConnectToServer())
         {
             NetworkRoutines.channelEstablished = true;
             GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");

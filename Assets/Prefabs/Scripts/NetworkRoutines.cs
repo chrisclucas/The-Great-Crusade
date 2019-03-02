@@ -80,26 +80,6 @@ public class NetworkRoutines : MonoBehaviour
     }
 
     /// <summary>
-    /// This is the routine that runs when the connect button on the gui is clicked
-    /// </summary>
-    /// <returns></returns>
-    public static bool Connect()
-    {
-
-        byte error;
-
-        NetworkTransport.Init();
-        remoteConnectionId = NetworkTransport.Connect(remoteComputerId, remoteComputerIPAddress, gamePort, 0, out error);
-
-        GlobalDefinitions.WriteToLogFile("Connect: Remote Computer Id = " + remoteComputerId + ", Remote Connection Id = " + remoteConnectionId + ", Port = " + gamePort + ", error = " + error.ToString() + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-
-        if (remoteConnectionId <= 0)
-            return (false);
-        else
-            return (true);
-    }
-
-    /// <summary>
     /// This is the routine that sends messages to the opposing computer
     /// </summary>
     /// <param name="message"></param>
