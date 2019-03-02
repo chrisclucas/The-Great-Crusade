@@ -9,10 +9,10 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void YesInitiate()
     {
-        Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().interactable = true;
-        Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().interactable = true;
-        Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().interactable = true;
-        Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().interactable = true;
+        MainMenuRoutines.alliedToggle.GetComponent<Toggle>().interactable = true;
+        MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = true;
+        MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = true;
+        MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = true;
         GlobalDefinitions.userIsIntiating = true;
         if (NetworkRoutines.channelEstablished)
         {
@@ -27,11 +27,11 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void NoInitiate()
     {
-        Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().interactable = false;
-        Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().interactable = false;
-        Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
-        Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
-        Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
+        MainMenuRoutines.alliedToggle.GetComponent<Toggle>().interactable = false;
+        MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = false;
+        MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
+        MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
+        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
         if (NetworkRoutines.channelEstablished)
         {
             // This executes when the channel is established but the two computers have the same intiating state
@@ -44,16 +44,16 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void GermanSelection()
     {
-        if (Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn == true)
+        if (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn == true)
         {
-            Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().isOn = false;
+            MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn = false;
             GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.German;
 
-            if (Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
-                Peer2PeerRoutines.opponentIPaddr.interactable = true;
+            if (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
+                MainMenuRoutines.opponentIPaddr.interactable = true;
         }
         else
-            Peer2PeerRoutines.opponentIPaddr.interactable = false;
+            MainMenuRoutines.opponentIPaddr.interactable = false;
     }
 
     /// <summary>
@@ -61,16 +61,16 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void AlliedSelection()
     {
-        if (Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().isOn == true)
+        if (MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn == true)
         {
-            Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn = false;
+            MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn = false;
             GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.Allied;
 
-            if (Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
-                Peer2PeerRoutines.opponentIPaddr.interactable = true;
+            if (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
+                MainMenuRoutines.opponentIPaddr.interactable = true;
         }
         else
-            Peer2PeerRoutines.opponentIPaddr.interactable = false;
+            MainMenuRoutines.opponentIPaddr.interactable = false;
     }
 
     /// <summary>
@@ -78,19 +78,19 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void NewGameSelection()
     {
-        if (Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().isOn == true)
+        if (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn == true)
         {
-            Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().isOn = false;
-            Peer2PeerRoutines.playNewGame = true;
-            Peer2PeerRoutines.playSavedGame = false;
+            MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn = false;
+            MainMenuRoutines.playNewGame = true;
+            MainMenuRoutines.playSavedGame = false;
 
-            if (Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().isOn)
-                Peer2PeerRoutines.opponentIPaddr.interactable = true;
+            if (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn)
+                MainMenuRoutines.opponentIPaddr.interactable = true;
         }
         else
         {
-            Peer2PeerRoutines.playNewGame = false;
-            Peer2PeerRoutines.opponentIPaddr.interactable = false;
+            MainMenuRoutines.playNewGame = false;
+            MainMenuRoutines.opponentIPaddr.interactable = false;
         }
     }
 
@@ -99,19 +99,19 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void SavedGameSelection()
     {
-        if (Peer2PeerRoutines.savedGameToggle.GetComponent<Toggle>().isOn == true)
+        if (MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn == true)
         {
-            Peer2PeerRoutines.newGameToggle.GetComponent<Toggle>().isOn = false;
-            Peer2PeerRoutines.playSavedGame = true;
-            Peer2PeerRoutines.playNewGame = false;
+            MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn = false;
+            MainMenuRoutines.playSavedGame = true;
+            MainMenuRoutines.playNewGame = false;
 
-            if (Peer2PeerRoutines.germanToggle.GetComponent<Toggle>().isOn || Peer2PeerRoutines.alliedToggle.GetComponent<Toggle>().isOn)
-                Peer2PeerRoutines.opponentIPaddr.interactable = true;
+            if (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn)
+                MainMenuRoutines.opponentIPaddr.interactable = true;
         }
         else
         {
-            Peer2PeerRoutines.playSavedGame = false;
-            Peer2PeerRoutines.opponentIPaddr.interactable = false;
+            MainMenuRoutines.playSavedGame = false;
+            MainMenuRoutines.opponentIPaddr.interactable = false;
         }
     }
 
@@ -194,8 +194,8 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public static void ExecuteConnect()
     {
-        if (Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
-            NetworkRoutines.remoteComputerIPAddress = Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text;
+        if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
+            NetworkRoutines.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
         //if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
         //{
         //    GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
