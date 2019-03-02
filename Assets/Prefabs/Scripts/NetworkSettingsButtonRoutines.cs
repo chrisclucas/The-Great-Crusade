@@ -131,8 +131,8 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
 
 
-        if (TransportScript.channelEstablished)
-        {
+        //if (TransportScript.channelEstablished)
+        //{
             // This executes when the channel is established but the two computers have the same intiating state
             if (GlobalDefinitions.userIsIntiating)
             {
@@ -177,7 +177,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
                         GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
                 }
             }
-        }
+        //}
     }
 
     /// <summary>
