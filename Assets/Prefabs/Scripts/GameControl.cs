@@ -11,7 +11,7 @@ using System.Windows.Forms;
 public class GameControl : MonoBehaviour
 {
     // These are the singletons that will be used to access routines in the different classes
-    public static GameObject transpostScriptInstance;
+    public static GameObject transportScriptInstance;
     public static GameObject createBoardInstance;
     public static GameObject setupRoutinesInstance;
     public static GameObject supplyRoutinesInstance;
@@ -482,8 +482,8 @@ public class GameControl : MonoBehaviour
         fileTransferServerInstance = new GameObject("fileTransferServerInstance");
         fileTransferServerInstance.AddComponent<FileTransferServer>();
 
-        transpostScriptInstance = new GameObject("transportScriptInstance");
-        transpostScriptInstance.AddComponent<NetworkRoutines>();
+        transportScriptInstance = new GameObject("transportScriptInstance");
+        transportScriptInstance.AddComponent<TransportScript>();
 
         setupRoutinesInstance = new GameObject("setupRoutinesInstance");
         setupRoutinesInstance.AddComponent<SetupRoutines>();
