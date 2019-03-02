@@ -120,15 +120,64 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void OkNetworkSettings()
     {
-        if (Peer2PeerRoutines.opponentIPaddr.GetComponent<InputField>().text.Length == 0)
+        TransportScript.networkInit();
+        GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing");
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    channelEstablished - " + TransportScript.channelEstablished);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameStarted - " + GlobalDefinitions.gameStarted);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
+
+
+        if (TransportScript.channelEstablished)
         {
-            GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
-            return;
+            // This executes when the channel is established but the two computers have the same intiating state
+            if (GlobalDefinitions.userIsIntiating)
+            {
+                GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
+                TransportScript.SendSocketMessage("InControl");
+                GlobalDefinitions.userIsIntiating = true;
+
+                if (TransportScript.channelEstablished)
+                {
+                    // This executes when the channel is established but the two computers have the same intiating state
+                    if (GlobalDefinitions.userIsIntiating)
+                    {
+                        GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
+                        TransportScript.SendSocketMessage("InControl");
+                        GlobalDefinitions.userIsIntiating = true;
+                        GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
+                        TransportScript.checkForHandshakeReceipt("NotInControl");
+                    }
+                    else
+                    {
+                        GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
+                        TransportScript.SendSocketMessage("NotInControl");
+                        GlobalDefinitions.userIsIntiating = false;
+                        GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
+                        TransportScript.checkForHandshakeReceipt("InControl");
+                    }
+                }
+                else
+                {
+                    if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
+                    {
+                        if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
+                        {
+                            TransportScript.channelEstablished = true;
+                            GlobalDefinitions.WriteToLogFile("okNetworkSettings: Channel Established");
+                            GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
+                        }
+                        else
+                            GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
+                    }
+                    else
+                        GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
+                }
+            }
         }
-
-        GameControl.peer2PeerRoutinesInstance.GetComponent<Peer2PeerRoutines>().InitiatePeerConnection();
-
-        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
     }
 
     /// <summary>
