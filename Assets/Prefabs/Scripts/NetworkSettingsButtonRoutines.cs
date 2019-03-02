@@ -133,50 +133,38 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
 
         if (TransportScript.channelEstablished)
         {
-            // This executes when the channel is established but the two computers have the same intiating state
             if (GlobalDefinitions.userIsIntiating)
             {
                 GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
                 TransportScript.SendSocketMessage("InControl");
                 GlobalDefinitions.userIsIntiating = true;
-
-                if (TransportScript.channelEstablished)
+                GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
+                TransportScript.checkForHandshakeReceipt("NotInControl");
+            }
+            else
+            {
+                GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
+                TransportScript.SendSocketMessage("NotInControl");
+                GlobalDefinitions.userIsIntiating = false;
+                GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
+                TransportScript.checkForHandshakeReceipt("InControl");
+            }
+        }
+        else
+        {
+            if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
+            {
+                if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
-                    // This executes when the channel is established but the two computers have the same intiating state
-                    if (GlobalDefinitions.userIsIntiating)
-                    {
-                        GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
-                        TransportScript.SendSocketMessage("InControl");
-                        GlobalDefinitions.userIsIntiating = true;
-                        GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
-                        TransportScript.checkForHandshakeReceipt("NotInControl");
-                    }
-                    else
-                    {
-                        GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
-                        TransportScript.SendSocketMessage("NotInControl");
-                        GlobalDefinitions.userIsIntiating = false;
-                        GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
-                        TransportScript.checkForHandshakeReceipt("InControl");
-                    }
+                    TransportScript.channelEstablished = true;
+                    GlobalDefinitions.WriteToLogFile("okNetworkSettings: Channel Established");
+                    GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
                 }
                 else
-                {
-                    if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
-                    {
-                        if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
-                        {
-                            TransportScript.channelEstablished = true;
-                            GlobalDefinitions.WriteToLogFile("okNetworkSettings: Channel Established");
-                            GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
-                        }
-                        else
-                            GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
-                    }
-                    else
-                        GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
-                }
+                    GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
             }
+            else
+                GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
         }
     }
 
@@ -198,15 +186,15 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         {
             NetworkRoutines.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
             GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
-            if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
-            {
-                TransportScript.channelEstablished = true;
-                GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
-            }
-            else
-                GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
+            //    if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
+            //    {
+            //        TransportScript.channelEstablished = true;
+            //        GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
+            //    }
+            //    else
+            //        GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
         }
-        else
-            GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
+        //else
+        //    GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
     }
 }
