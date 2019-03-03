@@ -100,7 +100,7 @@ public class FileTransferServer : MonoBehaviour
     //void Awake()
     public void initiateFileTransferServer()
     {
-        GlobalDefinitions.WriteToLogFile("[FileTransferServer.Awake] Persitent data path: " + Application.persistentDataPath);
+        //GlobalDefinitions.WriteToLogFile("[FileTransferServer.Awake] Persitent data path: " + Application.persistentDataPath);
         // UDP client:
         if (client == null)
         {
@@ -109,9 +109,7 @@ public class FileTransferServer : MonoBehaviour
                 client = new UdpClient(port);
                 client.EnableBroadcast = true;
                 client.Client.ReceiveBufferSize = 65536;	// Forces the highest value (64KB).
-                GlobalDefinitions.WriteToLogFile("[FIleTransferServer.Awake] Input buffer: " + client.Client.ReceiveBufferSize);
                 client.Client.SendBufferSize = 65536;		// Forces the highest value (64KB).
-                GlobalDefinitions.WriteToLogFile("[FIleTransferServer.Awake] Output buffer: " + client.Client.SendBufferSize);
                 SetMaxChunkSize(maxChunkSize);              // Sets the maximum available.
             }
             catch (System.Exception e)
@@ -130,10 +128,12 @@ public class FileTransferServer : MonoBehaviour
             FileManagement.CreateDirectory(tempFolder);
         // Delete last possible incomplete previous download:
         FileManagement.EmptyDirectory(tempFolder);
+        GlobalDefinitions.WriteToLogFile("initiateFileTransferServer: client = " + client);
     }
     /// <summary>Listening thread</summary>
     void ReceiveData()
     {
+        GlobalDefinitions.WriteToLogFile("ReceiveData: any IP = " + anyIP + " client = " + client);
         while (client != null)
         {
             try
