@@ -263,7 +263,7 @@ public class TransportScript : MonoBehaviour
                             SendSocketMessage(GlobalDefinitions.PLAYSIDEKEYWORD + " German");
 
                         // Call the routine to read a saved file
-                        //GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().readTurnFile(savedFileName); // Note this will set the currentState based on the saved file
+                        GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(savedFileName); // Note this will set the currentState based on the saved file
 
                         GlobalDefinitions.GuiUpdateStatusMessage("TransportScript Update()3: Waiting on remote data load...");
 
@@ -276,8 +276,8 @@ public class TransportScript : MonoBehaviour
                             SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
                         }
 
-                        //GlobalDefinitions.writeToLogFile("TranportScript: setting gameDataSent to ture");
-                        //gameDataSent = true;
+                        GlobalDefinitions.WriteToLogFile("TranportScript: setting gameDataSent to ture");
+                        gameDataSent = true;
                     }
                 }
                 else
