@@ -176,6 +176,8 @@ public class FileTransferServer : MonoBehaviour
 
         string[] fields = message.Split(';');   // Retrieves message fields.
 
+        GlobalDefinitions.WriteToLogFile("MessageAnalysis: message = " + message);
+
         // Echo filter:
         string remoteIp = fields[1];
         if (Network.player.ipAddress != remoteIp)

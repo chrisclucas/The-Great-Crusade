@@ -293,12 +293,12 @@ public class TransportScript : MonoBehaviour
             else if (gameDataSent)
             {
 
-                GlobalDefinitions.WriteToLogFile("TransportScript update()4: executing");
-                GlobalDefinitions.WriteToLogFile("TransportScript update()4:    channelEstablished - " + TransportScript.channelEstablished);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()4:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()4:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()4:    gameDataSent - " + TransportScript.gameDataSent);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()4:    gameStarted - " + GlobalDefinitions.gameStarted);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()4: executing");
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    channelEstablished - " + channelEstablished);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    opponentComputerConfirmsSync - " + opponentComputerConfirmsSync);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    handshakeConfirmed - " + handshakeConfirmed);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    gameDataSent - " + gameDataSent);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    gameStarted - " + GlobalDefinitions.gameStarted);
 
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
