@@ -213,7 +213,7 @@ public class FileTransferServer : MonoBehaviour
                         SendPartialFile(fields[1], fields[2], fields[3]);
                     break;
                 case "F4":  // Receiving a requested partial file.
-                    GlobalDefinitions.WriteToLogFile("[FIleTransferServer.MessageAnalysis] Receiving a requested file");
+                    GlobalDefinitions.WriteToLogFile("[FileTransferServer.MessageAnalysis] Receiving a requested file  downloadList.Count = " + downloadList.Count);
                     if (downloadList.Count > 0 && fields[1] == downloadList[0].serverIP && fields[2] == downloadList[0].file)
                     {
                         rxFileRetryCounter = 0;                 // Reset the "file request" retry counter.
@@ -246,6 +246,7 @@ public class FileTransferServer : MonoBehaviour
                                 completeCnt++;
                         }
                         // Is it complete?
+                        GlobalDefinitions.WriteToLogFile("[FileTransferServer.MessageAnalysis]: completeCnt = " + completeCnt + " partialFileList.Length = " + partialFileList.Length);
                         if (completeCnt == partialFileList.Length)
                         {
                             RestorePartialFile(fileName, downloadList[0].savePath, downloadList[0].fullPath);
@@ -257,7 +258,7 @@ public class FileTransferServer : MonoBehaviour
                             if (onFileDownload != null)
                                 onFileDownload.Invoke();
 
-                            GlobalDefinitions.WriteToLogFile("[FileManagement] Calling RemoveFileFromDownload");
+                            GlobalDefinitions.WriteToLogFile("[FileManagement] Calling RemoveFileFromDownload field 1 = " + fields[1] + " field 2 = " + fields[2]);
                             // Remove from the "download list":
                             RemoveFileFromDownload(fields[1], fields[2]);
 
@@ -364,7 +365,7 @@ public class FileTransferServer : MonoBehaviour
         if (messageBuffer.Count > 0)
         {
             // Analyze incoming message:
-            GlobalDefinitions.WriteToLogFile("FileTransferServer update(): Analyze incoming message - " + messageBuffer[0]);
+            GlobalDefinitions.WriteToLogFile("FileTransferServer update(): Analyze incoming message");
             string message = messageBuffer[0];
             messageBuffer.RemoveAt(0);
             MessageAnalysis(message);
@@ -384,7 +385,7 @@ public class FileTransferServer : MonoBehaviour
                     // Request first part of the file (or retry):
                     rxFileTimer = rxFileTimeout;    // Reset file request timer.
                     FileRequest item = downloadList[0];
-                    GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + item.serverIP + " F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
+                    GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + GlobalDefinitions.opponentIPAddress + " F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                     //SendString(item.serverIP, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                     SendString(GlobalDefinitions.opponentIPAddress, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                 }
