@@ -123,30 +123,30 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         TransportScript.networkInit();
         GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
 
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing");
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    channelEstablished - " + TransportScript.channelEstablished);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameStarted - " + GlobalDefinitions.gameStarted);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-        GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
+        //GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing");
+        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    channelEstablished - " + TransportScript.channelEstablished);
+        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameStarted - " + GlobalDefinitions.gameStarted);
+        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
 
 
         if (TransportScript.channelEstablished)
         {
             if (GlobalDefinitions.userIsIntiating)
             {
-                GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
+                //GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
                 TransportScript.SendSocketMessage("InControl");
                 GlobalDefinitions.userIsIntiating = true;
-                GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
+                //GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
                 TransportScript.checkForHandshakeReceipt("NotInControl");
             }
             else
             {
-                GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
+                //GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
                 TransportScript.SendSocketMessage("NotInControl");
                 GlobalDefinitions.userIsIntiating = false;
-                GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
+                //GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
                 TransportScript.checkForHandshakeReceipt("InControl");
             }
         }
@@ -157,7 +157,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
                 if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
                     TransportScript.channelEstablished = true;
-                    GlobalDefinitions.WriteToLogFile("okNetworkSettings: Channel Established");
+                    //GlobalDefinitions.WriteToLogFile("okNetworkSettings: Channel Established");
                     GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
                 }
                 else
