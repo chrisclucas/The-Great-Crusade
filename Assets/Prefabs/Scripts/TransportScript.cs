@@ -145,7 +145,7 @@ public class TransportScript : MonoBehaviour
                                 SendSocketMessage("NotInControl");
                         }
                         else
-                            //GlobalDefinitions.WriteToLogFile("TransportScript update()1: Expecting ConfirmSync and received = " + message);
+                            GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Expecting ConfirmSync and received = " + message);
                         break;
 
                     case NetworkEventType.Nothing:
@@ -340,7 +340,7 @@ public class TransportScript : MonoBehaviour
                             }
                         }
                         else
-                            //GlobalDefinitions.WriteToLogFile("TransportScript update()4: Checking for data load complete - unknown message - " + message);
+                            GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()4: Checking for data load complete - unknown message - " + message);
 
                         break;
 
