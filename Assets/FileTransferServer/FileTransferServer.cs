@@ -393,7 +393,6 @@ public class FileTransferServer : MonoBehaviour
                 else
                 {
                     // We are downloading some file:
-                    //GlobalDefinitions.WriteToLogFile("FileTransferServer update(): downloading a file");
                     for (int p = 0; p < partialFileList.Length; p++)
                     {
                         if (partialFileList[p] == null)
@@ -401,7 +400,8 @@ public class FileTransferServer : MonoBehaviour
                             // Request next part of the file (or retry):
                             rxFileTimer = rxFileTimeout;    // Reset file request timer.
                             FileRequest item = downloadList[0];
-                            SendString(item.serverIP, "F3;" + Network.player.ipAddress + ";" + item.file + ";" + (p + 1).ToString() + ";#");
+                            SendString(GlobalDefinitions.opponentIPAddress, "F3;" + Network.player.ipAddress + ";" + item.file + ";" + (p + 1).ToString() + ";#");
+                            GlobalDefinitions.WriteToLogFile("FileTransferServer update(): remaining file parts  SendString(" + GlobalDefinitions.opponentIPAddress + " F3;" + Network.player.ipAddress + ";" + item.file + " " + p); 
                             // Counter of retry attempts, fire event if maximum reached:
                             rxFileRetryCounter++;
                             if (rxFileRetryCounter == rxFileRetryMaxCnt && onFileTimeout != null)
@@ -542,8 +542,11 @@ public class FileTransferServer : MonoBehaviour
                 //break;
             }
         }
-        GlobalDefinitions.WriteToLogFile("RemoveFileFromDownload: removing file - " + deleteItem.file);
+        
         downloadList.Remove(deleteItem);
+
+        GlobalDefinitions.WriteToLogFile("RemoveFileFromDownload: removed file - " + deleteItem + " count = " + downloadList.Count);
+
         // Download list complete event:
         if (downloadList.Count == 0 && onListDownload != null)
             onListDownload.Invoke();
