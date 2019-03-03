@@ -208,13 +208,14 @@ public class FileTransferServer : MonoBehaviour
                     rxFileTimer = 0f;
                     break;
                 case "F3":  // Send a partial file message.
-                    GlobalDefinitions.WriteToLogFile("[FIleTransferServer.MessageAnalysis] Send a file message");
+                    GlobalDefinitions.WriteToLogFile("[FIleTransferServer.MessageAnalysis] Send a file message - fields 1 = " + fields[1] + " 2 = " + fields[2] + " 3 = " + fields[3]);
                     if (enableServer)
                         SendPartialFile(fields[1], fields[2], fields[3]);
                     break;
                 case "F4":  // Receiving a requested partial file.
-                    GlobalDefinitions.WriteToLogFile("[FileTransferServer.MessageAnalysis] Receiving a requested file  downloadList.Count = " + downloadList.Count);
-                    if (downloadList.Count > 0 && fields[1] == downloadList[0].serverIP && fields[2] == downloadList[0].file)
+                    GlobalDefinitions.WriteToLogFile("[FileTransferServer.MessageAnalysis] Receiving a requested file  downloadList.Count = " + downloadList.Count + "  fields 1 = " + fields[1] + " 2 = " + fields[2] + " downloadList[0].file = " + downloadList[0].file);
+                    //
+                    if (downloadList.Count > 0 && fields[1] == GlobalDefinitions.opponentIPAddress && fields[2] == downloadList[0].file)
                     {
                         rxFileRetryCounter = 0;                 // Reset the "file request" retry counter.
                         string part = fields[3].Split(',')[0];  // Partial file order.
