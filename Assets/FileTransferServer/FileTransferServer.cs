@@ -375,7 +375,7 @@ public class FileTransferServer : MonoBehaviour
         // The File Update list starts the single file download process:
         if (downloadList.Count > 0)
         {
-            ////GlobalDefinitions.WriteToLogFile("FileTransferServer update(): downloadList.Count = " + downloadList.Count);
+            GlobalDefinitions.WriteToLogFile("FileTransferServer update(): downloadList.Count = " + downloadList.Count);
             // Retry timeout:
             rxFileTimer -= Time.deltaTime;
             if (rxFileTimer <= 0f)
@@ -386,7 +386,7 @@ public class FileTransferServer : MonoBehaviour
                     // Request first part of the file (or retry):
                     rxFileTimer = rxFileTimeout;    // Reset file request timer.
                     FileRequest item = downloadList[0];
-                    //GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + GlobalDefinitions.opponentIPAddress + " F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
+                    GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + GlobalDefinitions.opponentIPAddress + " F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                     //SendString(item.serverIP, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                     SendString(GlobalDefinitions.opponentIPAddress, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                 }
@@ -542,7 +542,7 @@ public class FileTransferServer : MonoBehaviour
                 //break;
             }
         }
-        //GlobalDefinitions.WriteToLogFile("RemoveFileFromDownload: removing file - " + deleteItem.file);
+        GlobalDefinitions.WriteToLogFile("RemoveFileFromDownload: removing file - " + deleteItem.file);
         downloadList.Remove(deleteItem);
         // Download list complete event:
         if (downloadList.Count == 0 && onListDownload != null)
