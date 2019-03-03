@@ -536,7 +536,8 @@ public class FileTransferServer : MonoBehaviour
         FileRequest deleteItem = new FileRequest();
         foreach (FileRequest item in downloadList)
         {
-            if (item.serverIP == serverIP && item.file == file)
+            //if (item.serverIP == serverIP && item.file == file)
+            if (item.file == file)
             {
                 deleteItem = item;
                 //break;
