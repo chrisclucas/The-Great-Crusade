@@ -360,7 +360,6 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Timers and timeout controls</summary>
     void Update()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer update() executing...");
         // Messages can't be analyzed into the receive thread or Unity may crash:
         if (messageBuffer.Count > 0)
         {
@@ -386,7 +385,8 @@ public class FileTransferServer : MonoBehaviour
                     rxFileTimer = rxFileTimeout;    // Reset file request timer.
                     FileRequest item = downloadList[0];
                     GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + item.serverIP + " F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
-                    SendString(item.serverIP, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
+                    //SendString(item.serverIP, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
+                    SendString(GlobalDefinitions.opponentIPAddress, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                 }
                 else
                 {
@@ -503,7 +503,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Request a file by Server IP or Server index</summary>
     public void RequestFile(string serverIP, string file, string savePath = "", bool fullPath = false)
     {
-        GlobalDefinitions.WriteToLogFile("RequestFile: file - " + file);
+        //GlobalDefinitions.WriteToLogFile("RequestFile: file - " + file);
         AddFileToDownload(serverIP, file, savePath, fullPath);
     }
     public void RequestFile(int serverIndex, string file, string savePath = "", bool fullPath = false)
