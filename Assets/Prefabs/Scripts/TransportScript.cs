@@ -43,7 +43,7 @@ public class TransportScript : MonoBehaviour
     {
         byte error;
 
-        GlobalDefinitions.WriteToLogFile("TransportScript networkInit(): executing");
+        //GlobalDefinitions.WriteToLogFile("TransportScript networkInit(): executing");
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
         globalConfig.MaxPacketSize = 1500;
@@ -64,26 +64,26 @@ public class TransportScript : MonoBehaviour
         // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
         if (serverSocket != -1)
         {
-            GlobalDefinitions.WriteToLogFile("networkInit: server socket set to " + serverSocket + " - disconnecting and resetting to -1");
+            //GlobalDefinitions.WriteToLogFile("networkInit: server socket set to " + serverSocket + " - disconnecting and resetting to -1");
             NetworkTransport.Disconnect(serverSocket, connectionId, out error);
             serverSocket = -1;
         }
         if (clientSocket != -1)
         {
-            GlobalDefinitions.WriteToLogFile("networkInit: client socket set to " + clientSocket + " - disconnecting and resetting to -1");
+            //GlobalDefinitions.WriteToLogFile("networkInit: client socket set to " + clientSocket + " - disconnecting and resetting to -1");
             NetworkTransport.Disconnect(clientSocket, connectionId, out error);
             clientSocket = -1;
         }
 
         serverSocket = NetworkTransport.AddHost(topology, socketPort);
         clientSocket = NetworkTransport.AddHost(topology);
-        GlobalDefinitions.WriteToLogFile("networkInit: set server socket = " + serverSocket);
-        GlobalDefinitions.WriteToLogFile("networkInit: set client socket = " + clientSocket);
+        //GlobalDefinitions.WriteToLogFile("networkInit: set server socket = " + serverSocket);
+        //GlobalDefinitions.WriteToLogFile("networkInit: set client socket = " + clientSocket);
     }
 
     void Start()
     {
-        //GlobalDefinitions.writeToLogFile("TransportScript executing start()");
+        ////GlobalDefinitions.WriteToLogFile("TransportScript executing start()");
         //networkInit();
     }
 
@@ -98,23 +98,23 @@ public class TransportScript : MonoBehaviour
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
-                GlobalDefinitions.WriteToLogFile("TransportScript update()1: executing");
-                GlobalDefinitions.WriteToLogFile("TransportScript update()1:    channelEstablished - " + TransportScript.channelEstablished);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()1:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()1:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()1:    gameDataSent - " + TransportScript.gameDataSent);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()1:    gameStarted - " + GlobalDefinitions.gameStarted);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()1: executing");
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()1:    channelEstablished - " + TransportScript.channelEstablished);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()1:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()1:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()1:    gameDataSent - " + TransportScript.gameDataSent);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()1:    gameStarted - " + GlobalDefinitions.gameStarted);
 
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.ConnectEvent:
-                        GlobalDefinitions.WriteToLogFile("TransportScript update()1: OnConnect: (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                        GlobalDefinitions.WriteToLogFile("TransportScript update()1: Setting connectionConfirmed to true");
+                        //GlobalDefinitions.WriteToLogFile("TransportScript update()1: OnConnect: (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        //GlobalDefinitions.WriteToLogFile("TransportScript update()1: Setting connectionConfirmed to true");
                         connectionConfirmed = true;
                         GlobalDefinitions.communicationSocket = recHostId;
                         GlobalDefinitions.communicationChannel = recConnectionId;
 
-                        GlobalDefinitions.WriteToLogFile("TransportScript update()1: connect event, sending message - ConfirmSync");
+                        //GlobalDefinitions.WriteToLogFile("TransportScript update()1: connect event, sending message - ConfirmSync");
                         SendSocketMessage("ConfirmSync");
 
                         break;
@@ -126,7 +126,7 @@ public class TransportScript : MonoBehaviour
                         break;
 
                     case NetworkEventType.DataEvent:
-                        GlobalDefinitions.WriteToLogFile("TransportScript update()1: data event");
+                        //GlobalDefinitions.WriteToLogFile("TransportScript update()1: data event");
                         Stream stream = new MemoryStream(recBuffer);
                         BinaryFormatter formatter = new BinaryFormatter();
                         string message = formatter.Deserialize(stream) as string;
@@ -136,7 +136,7 @@ public class TransportScript : MonoBehaviour
                         if (message == "ConfirmSync")
                         {
                             opponentComputerConfirmsSync = true;
-                            GlobalDefinitions.WriteToLogFile("TransportScript update()1: Confirmed sync with remote computer = " + message);
+                            //GlobalDefinitions.WriteToLogFile("TransportScript update()1: Confirmed sync with remote computer = " + message);
 
                             // Send out the handshake message
                             if (GlobalDefinitions.userIsIntiating)
@@ -145,13 +145,13 @@ public class TransportScript : MonoBehaviour
                                 SendSocketMessage("NotInControl");
                         }
                         else
-                            GlobalDefinitions.WriteToLogFile("TransportScript update()1: Expecting ConfirmSync and received = " + message);
+                            //GlobalDefinitions.WriteToLogFile("TransportScript update()1: Expecting ConfirmSync and received = " + message);
                         break;
 
                     case NetworkEventType.Nothing:
                         break;
                     default:
-                        GlobalDefinitions.WriteToLogFile("TransportScript update()1: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        //GlobalDefinitions.WriteToLogFile("TransportScript update()1: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         break;
                 }
             }
@@ -162,12 +162,12 @@ public class TransportScript : MonoBehaviour
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
-                GlobalDefinitions.WriteToLogFile("TransportScript update()2: executing");
-                GlobalDefinitions.WriteToLogFile("TransportScript update()2:    channelEstablished - " + TransportScript.channelEstablished);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()2:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()2:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()2:    gameDataSent - " + TransportScript.gameDataSent);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()2:    gameStarted - " + GlobalDefinitions.gameStarted);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()2: executing");
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()2:    channelEstablished - " + TransportScript.channelEstablished);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()2:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()2:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()2:    gameDataSent - " + TransportScript.gameDataSent);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()2:    gameStarted - " + GlobalDefinitions.gameStarted);
 
                 switch (recNetworkEvent)
                 {
@@ -178,7 +178,7 @@ public class TransportScript : MonoBehaviour
                         break;
 
                     case NetworkEventType.DataEvent:
-                        GlobalDefinitions.WriteToLogFile("TransportScript update()2: data event");
+                        //GlobalDefinitions.WriteToLogFile("TransportScript update()2: data event");
                         Stream stream = new MemoryStream(recBuffer);
                         BinaryFormatter formatter = new BinaryFormatter();
                         string message = formatter.Deserialize(stream) as string;
@@ -190,7 +190,7 @@ public class TransportScript : MonoBehaviour
                         break;
 
                     default:
-                        GlobalDefinitions.WriteToLogFile("TransportScript update()2:Checking for handshake: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        //GlobalDefinitions.WriteToLogFile("TransportScript update()2:Checking for handshake: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         break;
                 }
             }
@@ -199,17 +199,17 @@ public class TransportScript : MonoBehaviour
             else if (handshakeConfirmed && !gameDataSent)
             {
 
-                GlobalDefinitions.WriteToLogFile("TransportScript update()3: executing");
-                GlobalDefinitions.WriteToLogFile("TransportScript update()3:    channelEstablished - " + TransportScript.channelEstablished);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()3:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()3:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()3:    gameDataSent - " + TransportScript.gameDataSent);
-                GlobalDefinitions.WriteToLogFile("TransportScript update()3:    gameStarted - " + GlobalDefinitions.gameStarted);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()3: executing");
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()3:    channelEstablished - " + TransportScript.channelEstablished);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()3:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()3:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()3:    gameDataSent - " + TransportScript.gameDataSent);
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()3:    gameStarted - " + GlobalDefinitions.gameStarted);
 
                 GlobalDefinitions.chatPanel.SetActive(true);
                 GameObject.Find("ChatInputField").SetActive(true);
                 GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));  // Get rid of the gui, we don't need it if we got here.
-                GlobalDefinitions.WriteToLogFile("TransportScript update()3: Computers in sync - Waiting on intial data load");
+                //GlobalDefinitions.WriteToLogFile("TransportScript update()3: Computers in sync - Waiting on intial data load");
                 GlobalDefinitions.GuiUpdateStatusMessage("Waiting on intial data load");
 
                 gameDataSent = true;
@@ -242,7 +242,7 @@ public class TransportScript : MonoBehaviour
                         {
                             // Pass control to the remote computer
                             SendSocketMessage(GlobalDefinitions.PLAYSIDEKEYWORD + " German");
-                            GlobalDefinitions.WriteToLogFile("TransportScript update()3: passing control to remote computer");
+                            //GlobalDefinitions.WriteToLogFile("TransportScript update()3: passing control to remote computer");
                             SendSocketMessage(GlobalDefinitions.PASSCONTROLKEYWORK);
                             GlobalDefinitions.SwitchLocalControl(false);
                         }
@@ -269,20 +269,20 @@ public class TransportScript : MonoBehaviour
 
                         // If this is a network game send the file name to the remote computer so it can be requested through the file transfer routines.  It's silly that 
                         // I have to tell it what to ask for but I bought the code and that is how it works
-                        GlobalDefinitions.WriteToLogFile("TransportScript Update()3: GameMode = " + GlobalDefinitions.gameMode + " localControl" + GlobalDefinitions.localControl);
+                        //GlobalDefinitions.WriteToLogFile("TransportScript Update()3: GameMode = " + GlobalDefinitions.gameMode + " localControl" + GlobalDefinitions.localControl);
                         if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
                         {
-                            GlobalDefinitions.WriteToLogFile("TransportScript Update()3: Sending file name to remote computer");
+                            //GlobalDefinitions.WriteToLogFile("TransportScript Update()3: Sending file name to remote computer");
                             SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
                         }
 
-                        GlobalDefinitions.WriteToLogFile("TranportScript: setting gameDataSent to ture");
+                        //GlobalDefinitions.WriteToLogFile("TranportScript: setting gameDataSent to ture");
                         gameDataSent = true;
                     }
                 }
                 else
                 {
-                    GlobalDefinitions.WriteToLogFile("TransportScript Update()3:Computer is not initiating game - setting gameStarted to true and localControl to false");
+                    //GlobalDefinitions.WriteToLogFile("TransportScript Update()3:Computer is not initiating game - setting gameStarted to true and localControl to false");
                     // The non-initiating computer will move on to game mode since the read of the game data is conducted with gameStarted set
                     GlobalDefinitions.gameStarted = true;
                     GlobalDefinitions.SwitchLocalControl(false);
@@ -293,12 +293,12 @@ public class TransportScript : MonoBehaviour
             else if (gameDataSent)
             {
 
-                //GlobalDefinitions.WriteToLogFile("TransportScript update()4: executing");
-                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    channelEstablished - " + channelEstablished);
-                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    opponentComputerConfirmsSync - " + opponentComputerConfirmsSync);
-                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    handshakeConfirmed - " + handshakeConfirmed);
-                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    gameDataSent - " + gameDataSent);
-                //GlobalDefinitions.WriteToLogFile("TransportScript update()4:    gameStarted - " + GlobalDefinitions.gameStarted);
+                ////GlobalDefinitions.WriteToLogFile("TransportScript update()4: executing");
+                ////GlobalDefinitions.WriteToLogFile("TransportScript update()4:    channelEstablished - " + channelEstablished);
+                ////GlobalDefinitions.WriteToLogFile("TransportScript update()4:    opponentComputerConfirmsSync - " + opponentComputerConfirmsSync);
+                ////GlobalDefinitions.WriteToLogFile("TransportScript update()4:    handshakeConfirmed - " + handshakeConfirmed);
+                ////GlobalDefinitions.WriteToLogFile("TransportScript update()4:    gameDataSent - " + gameDataSent);
+                ////GlobalDefinitions.WriteToLogFile("TransportScript update()4:    gameStarted - " + GlobalDefinitions.gameStarted);
 
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
@@ -312,7 +312,7 @@ public class TransportScript : MonoBehaviour
                         break;
 
                     case NetworkEventType.DataEvent:
-                        GlobalDefinitions.WriteToLogFile("TransportScript update()4: data event");
+                        //GlobalDefinitions.WriteToLogFile("TransportScript update()4: data event");
                         char[] delimiterChars = { ' ' };
 
                         Stream stream = new MemoryStream(recBuffer);
@@ -340,7 +340,7 @@ public class TransportScript : MonoBehaviour
                             }
                         }
                         else
-                            GlobalDefinitions.WriteToLogFile("TransportScript update()4: Checking for data load complete - unknown message - " + message);
+                            //GlobalDefinitions.WriteToLogFile("TransportScript update()4: Checking for data load complete - unknown message - " + message);
 
                         break;
 
@@ -348,7 +348,7 @@ public class TransportScript : MonoBehaviour
                         break;
 
                     default:
-                        GlobalDefinitions.WriteToLogFile("TransportScript update() 4: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        //GlobalDefinitions.WriteToLogFile("TransportScript update() 4: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         break;
                 }
             }
@@ -370,11 +370,11 @@ public class TransportScript : MonoBehaviour
 
             NetworkTransport.Init();
 
-            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = )" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            //GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = )" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
             connectionId = NetworkTransport.Connect(clientSocket, opponentIPaddr, socketPort, 0, out error);
 
-            GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            //GlobalDefinitions.WriteToLogFile("Initial Connection(clientSocket (hostId) = " + clientSocket + ", IP addr = " + opponentIPaddr + ", socketPort = " + socketPort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
             if (connectionId <= 0)
                 return (false);
@@ -398,7 +398,7 @@ public class TransportScript : MonoBehaviour
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, message);
             NetworkTransport.Send(GlobalDefinitions.communicationSocket, GlobalDefinitions.communicationChannel, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
-            GlobalDefinitions.WriteToLogFile("Sending message - " + message + " serverSocket=" + GlobalDefinitions.communicationSocket + "  communicationChannel=" + GlobalDefinitions.communicationChannel + " Error: " + (NetworkError)sendError);
+            //GlobalDefinitions.WriteToLogFile("Sending message - " + message + " serverSocket=" + GlobalDefinitions.communicationSocket + "  communicationChannel=" + GlobalDefinitions.communicationChannel + " Error: " + (NetworkError)sendError);
 
             if ((NetworkError)sendError != NetworkError.Ok)
             {
@@ -407,7 +407,7 @@ public class TransportScript : MonoBehaviour
         }
         else
         {
-            GlobalDefinitions.WriteToLogFile("Connection hasn't been confirmed message = " + message + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+            //GlobalDefinitions.WriteToLogFile("Connection hasn't been confirmed message = " + message + "  " + DateTime.Now.ToString("h:mm:ss tt"));
         }
     }
 
@@ -415,12 +415,12 @@ public class TransportScript : MonoBehaviour
     {
         if (GlobalDefinitions.userIsIntiating)
         {
-            GlobalDefinitions.WriteToLogFile("sendHandshakeMessage: sending InControl");
+            //GlobalDefinitions.WriteToLogFile("sendHandshakeMessage: sending InControl");
             SendSocketMessage("InControl");
         }
         else
         {
-            GlobalDefinitions.WriteToLogFile("sendHandshakeMessage: sending NotInControl");
+            //GlobalDefinitions.WriteToLogFile("sendHandshakeMessage: sending NotInControl");
             SendSocketMessage("NotInControl");
         }
     }
@@ -446,7 +446,7 @@ public class TransportScript : MonoBehaviour
             }
             else
             {
-                GlobalDefinitions.WriteToLogFile("checkForHandshakeReceipt: Unknown message received (user is initiating) - " + message);
+                //GlobalDefinitions.WriteToLogFile("checkForHandshakeReceipt: Unknown message received (user is initiating) - " + message);
                 handshakeConfirmed = false;
             }
         }
@@ -459,12 +459,12 @@ public class TransportScript : MonoBehaviour
             }
             else if (message == "InControl")
             {
-                GlobalDefinitions.WriteToLogFile("Handshaking confirmed" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                //GlobalDefinitions.WriteToLogFile("Handshaking confirmed" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                 handshakeConfirmed = true;
             }
             else
             {
-                GlobalDefinitions.WriteToLogFile("checkForHandshakeReceipt: Unknown message received - (user is not initiating)" + message);
+                //GlobalDefinitions.WriteToLogFile("checkForHandshakeReceipt: Unknown message received - (user is not initiating)" + message);
                 handshakeConfirmed = false;
             }
         }
@@ -474,7 +474,7 @@ public class TransportScript : MonoBehaviour
     {
         byte error;
 
-        GlobalDefinitions.WriteToLogFile("TransportScript.resetConnection: (hostId = " + hostId + ", connectionId = "
+        //GlobalDefinitions.WriteToLogFile("TransportScript.resetConnection: (hostId = " + hostId + ", connectionId = "
                 + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
         // Send a disconnect command to the remote computer
@@ -493,24 +493,24 @@ public class TransportScript : MonoBehaviour
         gameDataSent = false;
 
         NetworkTransport.Disconnect(hostId, connectionId, out error);
-        GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(host id =" + hostId + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        //GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(host id =" + hostId + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
         if ((hostId != serverSocket) && (hostId != clientSocket))
-            GlobalDefinitions.WriteToLogFile("resetConnecti0n: Request recieved to disconnect unknown host id - " + hostId);
+            //GlobalDefinitions.WriteToLogFile("resetConnecti0n: Request recieved to disconnect unknown host id - " + hostId);
 
         //if (hostId == serverSocket)
         //{
         //    NetworkTransport.Disconnect(serverSocket, connectionId, out error);
-        //    GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(serverSocket=" + serverSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        //    //GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(serverSocket=" + serverSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
         //}
         //else if (hostId == clientSocket)
         //{
         //    NetworkTransport.Disconnect(clientSocket, connectionId, out error);
-        //    GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(clientSocket=" + clientSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        //    //GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(clientSocket=" + clientSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
         //    MainMenuRoutines.NetworkSettingsUI();
         //}
         //else
-        //    GlobalDefinitions.WriteToLogFile("resetConnecti0n: Request recieved to disconnect unknown host - " + hostId);
+        //    //GlobalDefinitions.WriteToLogFile("resetConnecti0n: Request recieved to disconnect unknown host - " + hostId);
 
         //networkInit();
     }
@@ -526,7 +526,7 @@ public class TransportScript : MonoBehaviour
     /// <param name="error"></param>
     public static void OnData(int hostId, int connectionId, int channelId, string message, int size, NetworkError error)
     {
-        GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
+        //GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
             + connectionId + ", channelId = " + channelId + ", data = "
             + message + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
     }
