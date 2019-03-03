@@ -253,7 +253,7 @@ public class TransportScript : MonoBehaviour
                     else
                     {
                         string savedFileName = "";
-                        GlobalDefinitions.SwitchLocalControl(true);
+                        //GlobalDefinitions.SwitchLocalControl(true);
                         savedFileName = GlobalDefinitions.GuiFileDialog();
                         fileName = savedFileName;
 
@@ -262,7 +262,7 @@ public class TransportScript : MonoBehaviour
                         else
                             SendSocketMessage(GlobalDefinitions.PLAYSIDEKEYWORD + " German");
 
-                        // Call the routine to read a saved file
+                        // Call the routine to read a saved file note that this call will set the localControl variable
                         GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(savedFileName); // Note this will set the currentState based on the saved file
 
                         GlobalDefinitions.GuiUpdateStatusMessage("TransportScript Update()3: Waiting on remote data load...");
@@ -270,11 +270,11 @@ public class TransportScript : MonoBehaviour
                         // If this is a network game send the file name to the remote computer so it can be requested through the file transfer routines.  It's silly that 
                         // I have to tell it what to ask for but I bought the code and that is how it works
                         //GlobalDefinitions.WriteToLogFile("TransportScript Update()3: GameMode = " + GlobalDefinitions.gameMode + " localControl" + GlobalDefinitions.localControl);
-                        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
-                        {
+                        //if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
+                        //{
                             //GlobalDefinitions.WriteToLogFile("TransportScript Update()3: Sending file name to remote computer");
                             SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
-                        }
+                        //}
 
                         //GlobalDefinitions.WriteToLogFile("TranportScript: setting gameDataSent to ture");
                         gameDataSent = true;
