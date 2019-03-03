@@ -475,7 +475,7 @@ public class TransportScript : MonoBehaviour
         byte error;
 
         //GlobalDefinitions.WriteToLogFile("TransportScript.resetConnection: (hostId = " + hostId + ", connectionId = "
-                + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        //        + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
         // Send a disconnect command to the remote computer
         //SendSocketMessage(GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER);
@@ -496,7 +496,7 @@ public class TransportScript : MonoBehaviour
         //GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(host id =" + hostId + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
         if ((hostId != serverSocket) && (hostId != clientSocket))
-            //GlobalDefinitions.WriteToLogFile("resetConnecti0n: Request recieved to disconnect unknown host id - " + hostId);
+            GlobalDefinitions.WriteToLogFile("ERROR - resetConnecti0n: Request recieved to disconnect unknown host id - " + hostId);
 
         //if (hostId == serverSocket)
         //{
@@ -526,7 +526,7 @@ public class TransportScript : MonoBehaviour
     /// <param name="error"></param>
     public static void OnData(int hostId, int connectionId, int channelId, string message, int size, NetworkError error)
     {
-        //GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
+        GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
             + connectionId + ", channelId = " + channelId + ", data = "
             + message + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
     }
