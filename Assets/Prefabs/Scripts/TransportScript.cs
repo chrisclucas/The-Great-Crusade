@@ -270,7 +270,7 @@ public class TransportScript : MonoBehaviour
                         // If this is a network game send the file name to the remote computer so it can be requested through the file transfer routines.  It's silly that 
                         // I have to tell it what to ask for but I bought the code and that is how it works
                         GlobalDefinitions.WriteToLogFile("TransportScript Update()3: GameMode = " + GlobalDefinitions.gameMode + " localControl" + GlobalDefinitions.localControl);
-                        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Network))
+                        if (GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
                         {
                             GlobalDefinitions.WriteToLogFile("TransportScript Update()3: Sending file name to remote computer");
                             SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
@@ -478,7 +478,7 @@ public class TransportScript : MonoBehaviour
                 + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
         // Send a disconnect command to the remote computer
-        SendSocketMessage(GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER);
+        //SendSocketMessage(GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER);
 
         GlobalDefinitions.SwitchLocalControl(false);
         GlobalDefinitions.opponentIPAddress = "";
@@ -486,27 +486,33 @@ public class TransportScript : MonoBehaviour
         GlobalDefinitions.isServer = false;
         GlobalDefinitions.hasReceivedConfirmation = false;
         GlobalDefinitions.gameStarted = false;
-        TransportScript.channelEstablished = false;
-        TransportScript.connectionConfirmed = false;
-        TransportScript.handshakeConfirmed = false;
-        TransportScript.opponentComputerConfirmsSync = false;
-        TransportScript.gameDataSent = false;
+        channelEstablished = false;
+        connectionConfirmed = false;
+        handshakeConfirmed = false;
+        opponentComputerConfirmsSync = false;
+        gameDataSent = false;
 
-        if (hostId == serverSocket)
-        {
-            NetworkTransport.Disconnect(serverSocket, connectionId, out error);
-            GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(serverSocket=" + serverSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-        }
-        else if (hostId == clientSocket)
-        {
-            NetworkTransport.Disconnect(clientSocket, connectionId, out error);
-            GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(clientSocket=" + clientSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-            MainMenuRoutines.NetworkSettingsUI();
-        }
-        else
-            GlobalDefinitions.WriteToLogFile("resetConnectin: Request recieved to disconnect unknown host - " + hostId);
+        NetworkTransport.Disconnect(hostId, connectionId, out error);
+        GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(host id =" + hostId + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
-        networkInit();
+        if ((hostId != serverSocket) && (hostId != clientSocket))
+            GlobalDefinitions.WriteToLogFile("resetConnecti0n: Request recieved to disconnect unknown host id - " + hostId);
+
+        //if (hostId == serverSocket)
+        //{
+        //    NetworkTransport.Disconnect(serverSocket, connectionId, out error);
+        //    GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(serverSocket=" + serverSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        //}
+        //else if (hostId == clientSocket)
+        //{
+        //    NetworkTransport.Disconnect(clientSocket, connectionId, out error);
+        //    GlobalDefinitions.WriteToLogFile("resetConnection: NetworkTransport.Disconnect(clientSocket=" + clientSocket + ", connectionId=" + connectionId + ", error = " + ((NetworkError)error).ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        //    MainMenuRoutines.NetworkSettingsUI();
+        //}
+        //else
+        //    GlobalDefinitions.WriteToLogFile("resetConnecti0n: Request recieved to disconnect unknown host - " + hostId);
+
+        //networkInit();
     }
 
     /// <summary>

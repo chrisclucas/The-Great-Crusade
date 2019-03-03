@@ -100,7 +100,7 @@ public class FileTransferServer : MonoBehaviour
     //void Awake()
     public void initiateFileTransferServer()
     {
-        //GlobalDefinitions.writeToLogFile("[FileTransferServer.Awake] Persitent data path: " + Application.persistentDataPath);
+        GlobalDefinitions.WriteToLogFile("[FileTransferServer.Awake] Persitent data path: " + Application.persistentDataPath);
         // UDP client:
         if (client == null)
         {
@@ -109,9 +109,9 @@ public class FileTransferServer : MonoBehaviour
                 client = new UdpClient(port);
                 client.EnableBroadcast = true;
                 client.Client.ReceiveBufferSize = 65536;	// Forces the highest value (64KB).
-                //GlobalDefinitions.writeToLogFile("[FIleTransferServer.Awake] Input buffer: " + client.Client.ReceiveBufferSize);
+                GlobalDefinitions.WriteToLogFile("[FIleTransferServer.Awake] Input buffer: " + client.Client.ReceiveBufferSize);
                 client.Client.SendBufferSize = 65536;		// Forces the highest value (64KB).
-                //GlobalDefinitions.writeToLogFile("[FIleTransferServer.Awake] Output buffer: " + client.Client.SendBufferSize);
+                GlobalDefinitions.WriteToLogFile("[FIleTransferServer.Awake] Output buffer: " + client.Client.SendBufferSize);
                 SetMaxChunkSize(maxChunkSize);              // Sets the maximum available.
             }
             catch (System.Exception e)
@@ -199,7 +199,7 @@ public class FileTransferServer : MonoBehaviour
                     remoteStatusTimer = 0f;
                     break;
                 case "F2":  // The requested file doesn't exists.
-                    //GlobalDefinitions.writeToLogFile("[FIleTransferServer.MessageAnalysis] Requested file not found: " + fields[2]);
+                    GlobalDefinitions.WriteToLogFile("[FIleTransferServer.MessageAnalysis] Requested file not found: " + fields[2]);
                     if (onFileNotFound != null)
                         onFileNotFound.Invoke();
                     // Remove from the "download list":
@@ -207,12 +207,12 @@ public class FileTransferServer : MonoBehaviour
                     rxFileTimer = 0f;
                     break;
                 case "F3":  // Send a partial file message.
-                    //GlobalDefinitions.writeToLogFile("[FIleTransferServer.MessageAnalysis] Send a file message");
+                    GlobalDefinitions.WriteToLogFile("[FIleTransferServer.MessageAnalysis] Send a file message");
                     if (enableServer)
                         SendPartialFile(fields[1], fields[2], fields[3]);
                     break;
                 case "F4":  // Receiving a requested partial file.
-                    //GlobalDefinitions.writeToLogFile("[FIleTransferServer.MessageAnalysis] Receiving a requested file");
+                    GlobalDefinitions.WriteToLogFile("[FIleTransferServer.MessageAnalysis] Receiving a requested file");
                     if (downloadList.Count > 0 && fields[1] == downloadList[0].serverIP && fields[2] == downloadList[0].file)
                     {
                         rxFileRetryCounter = 0;                 // Reset the "file request" retry counter.
@@ -252,16 +252,16 @@ public class FileTransferServer : MonoBehaviour
                             partialFileList = new string[0];
                             FileManagement.EmptyDirectory(tempFolder);
                             // File download event:
-                            //GlobalDefinitions.writeToLogFile("[FileManagement] Downloaded file: " + fileName);
+                            GlobalDefinitions.WriteToLogFile("[FileManagement] Downloaded file: " + fileName);
                             if (onFileDownload != null)
                                 onFileDownload.Invoke();
 
-                            //GlobalDefinitions.writeToLogFile("[FileManagement] Calling RemoveFileFromDownload");
+                            GlobalDefinitions.WriteToLogFile("[FileManagement] Calling RemoveFileFromDownload");
                             // Remove from the "download list":
                             RemoveFileFromDownload(fields[1], fields[2]);
 
                             // Note that this code could be executed through an event since the event is invoked above
-                            //GlobalDefinitions.writeToLogFile("FileTransferServer: Reading file that was downloaded");
+                            GlobalDefinitions.WriteToLogFile("FileTransferServer: Reading file that was downloaded");
                             TransportScript.SendSocketMessage(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
                             GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
                         }
@@ -298,7 +298,7 @@ public class FileTransferServer : MonoBehaviour
                     RequestUpdateList(fields[1], fields[2]);
                     break;
                 default:
-                    //GlobalDefinitions.writeToLogFile("[FIleTransferServer.MessageAnalysis] Unknown message: " + message);
+                    GlobalDefinitions.WriteToLogFile("[FIleTransferServer.MessageAnalysis] Unknown message: " + message);
                     break;
             }   // Switch.
         }   // Echo filter.
@@ -306,7 +306,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send a string message through UDP</summary>
     void SendString(string ip, string msg)
     {
-        //GlobalDefinitions.writeToLogFile("SendString: ip - " + ip + " message - " + msg);
+        GlobalDefinitions.WriteToLogFile("SendString: ip - " + ip + " message - " + msg);
         byte[] data = new byte[msg.Length];
         for (int c = 0; c < msg.Length; c++)
             data[c] = (byte)msg[c];    // Safe convertion from string to byte[]
@@ -332,7 +332,7 @@ public class FileTransferServer : MonoBehaviour
             // If the message is too big will fail:
             if (data.Length > client.Client.SendBufferSize)
             {
-                //GlobalDefinitions.writeToLogFile("[FIleTransferServer.SendData] Message bigger than " + client.Client.SendBufferSize.ToString() + " bytes. Please reduce the chunk size.");
+                GlobalDefinitions.WriteToLogFile("[FIleTransferServer.SendData] Message bigger than " + client.Client.SendBufferSize.ToString() + " bytes. Please reduce the chunk size.");
             }
             else
             {
@@ -363,7 +363,7 @@ public class FileTransferServer : MonoBehaviour
         if (messageBuffer.Count > 0)
         {
             // Analyze incoming message:
-            //GlobalDefinitions.writeToLogFile("FileTransferServer update(): Analyze incoming message - " + messageBuffer[0]);
+            GlobalDefinitions.WriteToLogFile("FileTransferServer update(): Analyze incoming message - " + messageBuffer[0]);
             string message = messageBuffer[0];
             messageBuffer.RemoveAt(0);
             MessageAnalysis(message);
@@ -372,7 +372,7 @@ public class FileTransferServer : MonoBehaviour
         // The File Update list starts the single file download process:
         if (downloadList.Count > 0)
         {
-            //GlobalDefinitions.writeToLogFile("FileTransferServer update(): downloadList.Count = " + downloadList.Count);
+            GlobalDefinitions.WriteToLogFile("FileTransferServer update(): downloadList.Count = " + downloadList.Count);
             // Retry timeout:
             rxFileTimer -= Time.deltaTime;
             if (rxFileTimer <= 0f)
@@ -383,13 +383,13 @@ public class FileTransferServer : MonoBehaviour
                     // Request first part of the file (or retry):
                     rxFileTimer = rxFileTimeout;    // Reset file request timer.
                     FileRequest item = downloadList[0];
-                    //GlobalDefinitions.writeToLogFile("FileTransferServer update(): SendString(" + item.serverIP + "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
+                    GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + item.serverIP + "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                     SendString(item.serverIP, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                 }
                 else
                 {
                     // We are downloading some file:
-                    //GlobalDefinitions.writeToLogFile("FileTransferServer update(): downloading a file");
+                    GlobalDefinitions.WriteToLogFile("FileTransferServer update(): downloading a file");
                     for (int p = 0; p < partialFileList.Length; p++)
                     {
                         if (partialFileList[p] == null)
@@ -501,7 +501,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Request a file by Server IP or Server index</summary>
     public void RequestFile(string serverIP, string file, string savePath = "", bool fullPath = false)
     {
-        //GlobalDefinitions.writeToLogFile("RequestFile: file - " + file);
+        GlobalDefinitions.WriteToLogFile("RequestFile: file - " + file);
         AddFileToDownload(serverIP, file, savePath, fullPath);
     }
     public void RequestFile(int serverIndex, string file, string savePath = "", bool fullPath = false)
@@ -512,7 +512,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Batch list control</summary>
     void AddFileToDownload(string serverIP, string file, string savePath = "", bool fullPath = false)
     {
-        //GlobalDefinitions.writeToLogFile("AddFileToDownload: file - " + file);
+        GlobalDefinitions.WriteToLogFile("AddFileToDownload: file - " + file);
         FileRequest item = new FileRequest();
         item.file = file;
         item.serverIP = serverIP;
@@ -523,7 +523,7 @@ public class FileTransferServer : MonoBehaviour
             return;
         else
         {
-            //GlobalDefinitions.writeToLogFile("AddFileToDownload: adding item to downloadList");
+            GlobalDefinitions.WriteToLogFile("AddFileToDownload: adding item to downloadList");
             downloadList.Add(item);
         }
     }
@@ -538,7 +538,7 @@ public class FileTransferServer : MonoBehaviour
                 //break;
             }
         }
-        //GlobalDefinitions.writeToLogFile("RemoveFileFromDownload: removing file - " + deleteItem.file);
+        GlobalDefinitions.WriteToLogFile("RemoveFileFromDownload: removing file - " + deleteItem.file);
         downloadList.Remove(deleteItem);
         // Download list complete event:
         if (downloadList.Count == 0 && onListDownload != null)
@@ -665,7 +665,7 @@ public class FileTransferServer : MonoBehaviour
         if (!FileManagement.FileExists(name))
         {
             SendString(ip, "F2;" + Network.player.ipAddress + ";" + name + ";#");
-            //GlobalDefinitions.writeToLogFile("[FIleTransferServer.SendPartialFile] File not found: " + name);
+            GlobalDefinitions.WriteToLogFile("[FIleTransferServer.SendPartialFile] File not found: " + name);
             return;
         }
         // Configure the partial file message:
@@ -686,7 +686,7 @@ public class FileTransferServer : MonoBehaviour
         //i++;
         data[data.Length - 1] = (byte)'#';
         // Send the partial file message:
-        //GlobalDefinitions.writeToLogFile("[FIleTransferServer.SendPartialFile] Sending " + name + " " + part + "/" + parts + " ->Len:" + data.Length);
+        GlobalDefinitions.WriteToLogFile("[FIleTransferServer.SendPartialFile] Sending " + name + " " + part + "/" + parts + " ->Len:" + data.Length);
         SendData(ip, data);
     }
     /// <summary>Sends the "file update" batch list</summary>
@@ -712,7 +712,7 @@ public class FileTransferServer : MonoBehaviour
         else
         {
             SendString(ip, "F5;" + Network.player.ipAddress + ";" + name + ";#");
-            //GlobalDefinitions.writeToLogFile("[FIleTransferServer.SendUpdateList] The '" + file + "' batch file doesn't exists.");
+            GlobalDefinitions.WriteToLogFile("[FIleTransferServer.SendUpdateList] The '" + file + "' batch file doesn't exists.");
         }
     }
     /// <summary>Calculates the partial files count</summary>
@@ -733,7 +733,7 @@ public class FileTransferServer : MonoBehaviour
             }
             else
             {
-                //GlobalDefinitions.writeToLogFile("[FileTransferServer.SendFile] File not found: " + name);
+                GlobalDefinitions.WriteToLogFile("[FileTransferServer.SendFile] File not found: " + name);
             }
         }
     }
@@ -749,7 +749,7 @@ public class FileTransferServer : MonoBehaviour
             }
             else
             {
-                //GlobalDefinitions.writeToLogFile("[FileTransferServer.SendUpdate] List not found: " + list);
+                GlobalDefinitions.WriteToLogFile("[FileTransferServer.SendUpdate] List not found: " + list);
             }
         }
     }
