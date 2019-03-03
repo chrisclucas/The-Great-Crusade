@@ -265,8 +265,8 @@ public class FileTransferServer : MonoBehaviour
 
                             // Note that this code could be executed through an event since the event is invoked above
                             //GlobalDefinitions.WriteToLogFile("FileTransferServer: Reading file that was downloaded");
-                            TransportScript.SendSocketMessage(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
-                            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
+                            //TransportScript.SendSocketMessage(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
+                            //GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
                         }
                     }
                     break;
