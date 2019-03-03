@@ -372,7 +372,7 @@ public class FileTransferServer : MonoBehaviour
         // The File Update list starts the single file download process:
         if (downloadList.Count > 0)
         {
-            GlobalDefinitions.WriteToLogFile("FileTransferServer update(): downloadList.Count = " + downloadList.Count);
+            //GlobalDefinitions.WriteToLogFile("FileTransferServer update(): downloadList.Count = " + downloadList.Count);
             // Retry timeout:
             rxFileTimer -= Time.deltaTime;
             if (rxFileTimer <= 0f)
