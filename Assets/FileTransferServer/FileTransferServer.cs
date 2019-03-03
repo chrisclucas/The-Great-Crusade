@@ -176,10 +176,9 @@ public class FileTransferServer : MonoBehaviour
 
         string[] fields = message.Split(';');   // Retrieves message fields.
 
-        GlobalDefinitions.WriteToLogFile("MessageAnalysis: message = " + message);
-
         // Echo filter:
         string remoteIp = fields[1];
+        GlobalDefinitions.WriteToLogFile("MessageAnalysis: remote IP = " + remoteIp + " Network.player.ipAddress = " + Network.player.ipAddress);
         if (Network.player.ipAddress != remoteIp)
         {
             switch (fields[0])
@@ -308,7 +307,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send a string message through UDP</summary>
     void SendString(string ip, string msg)
     {
-        GlobalDefinitions.WriteToLogFile("SendString: ip - " + ip + " message - " + msg);
+        //GlobalDefinitions.WriteToLogFile("SendString: ip - " + ip + " message - " + msg);
         byte[] data = new byte[msg.Length];
         for (int c = 0; c < msg.Length; c++)
             data[c] = (byte)msg[c];    // Safe convertion from string to byte[]
@@ -361,6 +360,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Timers and timeout controls</summary>
     void Update()
     {
+        GlobalDefinitions.WriteToLogFile("FileTransferServer update() executing...");
         // Messages can't be analyzed into the receive thread or Unity may crash:
         if (messageBuffer.Count > 0)
         {
@@ -385,7 +385,7 @@ public class FileTransferServer : MonoBehaviour
                     // Request first part of the file (or retry):
                     rxFileTimer = rxFileTimeout;    // Reset file request timer.
                     FileRequest item = downloadList[0];
-                    GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + item.serverIP + "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
+                    GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + item.serverIP + " F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                     SendString(item.serverIP, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
                 }
                 else
