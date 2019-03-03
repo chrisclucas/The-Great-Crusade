@@ -309,7 +309,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send a string message through UDP</summary>
     void SendString(string ip, string msg)
     {
-        ////GlobalDefinitions.WriteToLogFile("SendString: ip - " + ip + " message - " + msg);
+        //GlobalDefinitions.WriteToLogFile("SendString: ip - " + ip + " message - " + msg);
         byte[] data = new byte[msg.Length];
         for (int c = 0; c < msg.Length; c++)
             data[c] = (byte)msg[c];    // Safe convertion from string to byte[]
@@ -375,7 +375,6 @@ public class FileTransferServer : MonoBehaviour
         // The File Update list starts the single file download process:
         if (downloadList.Count > 0)
         {
-            GlobalDefinitions.WriteToLogFile("FileTransferServer update(): downloadList.Count = " + downloadList.Count);
             // Retry timeout:
             rxFileTimer -= Time.deltaTime;
             if (rxFileTimer <= 0f)
@@ -546,7 +545,7 @@ public class FileTransferServer : MonoBehaviour
         
         downloadList.Remove(deleteItem);
 
-        GlobalDefinitions.WriteToLogFile("RemoveFileFromDownload: removed file - " + deleteItem + " count = " + downloadList.Count);
+        //GlobalDefinitions.WriteToLogFile("RemoveFileFromDownload: removed file - " + deleteItem + " count = " + downloadList.Count);
 
         // Download list complete event:
         if (downloadList.Count == 0 && onListDownload != null)
