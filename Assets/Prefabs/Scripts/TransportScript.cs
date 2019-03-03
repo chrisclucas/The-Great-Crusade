@@ -323,10 +323,10 @@ public class TransportScript : MonoBehaviour
 
                         if (switchEntries[0] == GlobalDefinitions.GAMEDATALOADEDKEYWORD)
                         {
-                            GlobalDefinitions.GuiUpdateStatusMessage("TransportScript Update()4:Remote data load complete - read the file sent = " + fileName);
+                            GlobalDefinitions.GuiUpdateStatusMessage("TransportScript Update()4:Remote data load complete");
 
                             // Call the routine to read a saved file
-                            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName); // Note this will set the currentState based on the saved file
+                            //GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName); // Note this will set the currentState based on the saved file
 
                             GlobalDefinitions.gameStarted = true;
                             if (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.sideControled)
