@@ -32,6 +32,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
+
         if (NetworkRoutines.channelEstablished)
         {
             // This executes when the channel is established but the two computers have the same intiating state
@@ -120,45 +121,16 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void OkNetworkSettings()
     {
-        TransportScript.networkInit();
-        GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
-
-        //GlobalDefinitions.WriteToLogFile("okNetworkSettings: executing");
-        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    channelEstablished - " + TransportScript.channelEstablished);
-        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameStarted - " + GlobalDefinitions.gameStarted);
-        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    opponentComputerConfirmsSync - " + TransportScript.opponentComputerConfirmsSync);
-        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    handshakeConfirmed - " + TransportScript.handshakeConfirmed);
-        //GlobalDefinitions.WriteToLogFile("okNetworkSettings:    gameDataSent - " + TransportScript.gameDataSent);
-
-
-        if (TransportScript.channelEstablished)
+        if (!TransportScript.channelRequested)
         {
-            if (GlobalDefinitions.userIsIntiating)
-            {
-                //GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message InControl");
-                TransportScript.SendSocketMessage("InControl");
-                GlobalDefinitions.userIsIntiating = true;
-                //GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(NotInControl)");
-                TransportScript.checkForHandshakeReceipt("NotInControl");
-            }
-            else
-            {
-                //GlobalDefinitions.WriteToLogFile("okNetworkSettings: sending message NotInControl");
-                TransportScript.SendSocketMessage("NotInControl");
-                GlobalDefinitions.userIsIntiating = false;
-                //GlobalDefinitions.WriteToLogFile("okNetworkSettings: checkForHandshakeReceipt(InControl)");
-                TransportScript.checkForHandshakeReceipt("InControl");
-            }
-        }
-        else
-        {
+            GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
             if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
             {
+                TransportScript.networkInit();
                 if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
-                    TransportScript.channelEstablished = true;
-                    //GlobalDefinitions.WriteToLogFile("okNetworkSettings: Channel Established");
-                    GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
+                    TransportScript.channelRequested = true;
+                    GlobalDefinitions.GuiUpdateStatusMessage("Connection with Remote Computer Requested");
                 }
                 else
                     GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
@@ -189,7 +161,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             //    if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
             //    {
             //        TransportScript.channelEstablished = true;
-            //        GlobalDefinitions.GuiUpdateStatusMessage("Channel Established");
+            //        GlobalDefinitions.GuiUpdateStatusMessage("Connection with Remote Computer Requested");
             //    }
             //    else
             //        GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");

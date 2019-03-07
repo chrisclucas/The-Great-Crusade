@@ -17,7 +17,7 @@ public class TransportScript : MonoBehaviour
     public static int serverSocket = -1;
     public static int clientSocket = -1;
 
-    public static bool channelEstablished = false;
+    public static bool channelRequested = false;
     public static bool connectionConfirmed = false;
     public static bool handshakeConfirmed = false;
     public static bool opponentComputerConfirmsSync = false;
@@ -87,7 +87,7 @@ public class TransportScript : MonoBehaviour
         if (!GlobalDefinitions.gameStarted)
         {
             // This goes from the intial connect attempt to the confirmation from the remote computer
-            if (channelEstablished && !opponentComputerConfirmsSync)
+            if (channelRequested && !opponentComputerConfirmsSync)
             {
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
@@ -118,6 +118,7 @@ public class TransportScript : MonoBehaviour
                         // Check for confirmation
                         if (message == "ConfirmSync")
                         {
+                            GlobalDefinitions.WriteToLogFile("Update: remote computer confirms sync through data message");
                             opponentComputerConfirmsSync = true;
 
                             // Send out the handshake message
@@ -306,7 +307,7 @@ public class TransportScript : MonoBehaviour
     /// <returns></returns>
     public static bool Connect(string opponentIPaddr)
     {
-        if (!channelEstablished)
+        if (!channelRequested)
         {
             byte error;
 
@@ -410,7 +411,7 @@ public class TransportScript : MonoBehaviour
         GlobalDefinitions.isServer = false;
         GlobalDefinitions.hasReceivedConfirmation = false;
         GlobalDefinitions.gameStarted = false;
-        channelEstablished = false;
+        channelRequested = false;
         connectionConfirmed = false;
         handshakeConfirmed = false;
         opponentComputerConfirmsSync = false;
