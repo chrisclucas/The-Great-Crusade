@@ -31,7 +31,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
-        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
+        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = false;
 
         if (NetworkRoutines.channelEstablished)
         {

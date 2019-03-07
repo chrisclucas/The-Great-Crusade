@@ -10,12 +10,12 @@ public class TransportScript : MonoBehaviour
     public const int BUFFERSIZE = 1024; // started with 512
     public static int reliableChannelId;
     public static int unreliableChannelId;
-    public static int socketPort = 5016;
+    public static int gamePort = 5016;
 
     public static int connectionId = -1;
 
     public static int serverSocket = -1;
-    public static int clientSocket = -1;
+    public static int remoteComputerId = -1;
 
     public static bool channelRequested = false;
     public static bool connectionConfirmed = false;
@@ -65,14 +65,14 @@ public class TransportScript : MonoBehaviour
             NetworkTransport.Disconnect(serverSocket, connectionId, out error);
             serverSocket = -1;
         }
-        if (clientSocket != -1)
+        if (remoteComputerId != -1)
         {
-            NetworkTransport.Disconnect(clientSocket, connectionId, out error);
-            clientSocket = -1;
+            NetworkTransport.Disconnect(remoteComputerId, connectionId, out error);
+            remoteComputerId = -1;
         }
 
-        serverSocket = NetworkTransport.AddHost(topology, socketPort);
-        clientSocket = NetworkTransport.AddHost(topology);
+        serverSocket = NetworkTransport.AddHost(topology, gamePort);
+        remoteComputerId = NetworkTransport.AddHost(topology);
 
     }
 
@@ -86,8 +86,57 @@ public class TransportScript : MonoBehaviour
         // This update() executes up until the game data is loaded and everything is set up.  Then the GameControl update() takes over.
         if (!GlobalDefinitions.gameStarted)
         {
+            // This is needed by the computer that is not intiating.  It will wait for a connection event.
+            if (!channelRequested && GlobalDefinitions.userIsIntiating)
+            {
+                // Check if there is a network event
+                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
+
+                switch (recNetworkEvent)
+                {
+                    case NetworkEventType.ConnectEvent:
+                        connectionConfirmed = true;
+                        channelRequested = true;    // Since this is being executed by the computer that isn't requesting a channel it isn't symantically correct 
+                                                    // but it needs to be set so that this doesn't keep exeuting
+                        GlobalDefinitions.communicationSocket = recHostId;
+                        GlobalDefinitions.communicationChannel = recConnectionId;
+
+                        SendMessageToRemoteComputer("ConfirmSync");
+
+                        break;
+
+                    case NetworkEventType.DataEvent:
+                        Stream stream = new MemoryStream(recBuffer);
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        string message = formatter.Deserialize(stream) as string;
+                        OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
+
+                        // Check for confirmation
+                        if (message == "ConfirmSync")
+                        {
+                            GlobalDefinitions.WriteToLogFile("Update: remote computer confirms sync through data message");
+                            opponentComputerConfirmsSync = true;
+
+                            // Send out the handshake message
+                            if (GlobalDefinitions.userIsIntiating)
+                                SendMessageToRemoteComputer("InControl");
+                            else
+                                SendMessageToRemoteComputer("NotInControl");
+                        }
+                        else
+                            GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Expecting ConfirmSync and received = " + message);
+                        break;
+
+                    case NetworkEventType.Nothing:
+                        break;
+                    default:
+                        GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        break;
+                }
+            }
+
             // This goes from the intial connect attempt to the confirmation from the remote computer
-            if (channelRequested && !opponentComputerConfirmsSync)
+            else if (channelRequested && !opponentComputerConfirmsSync)
             {
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
@@ -99,7 +148,7 @@ public class TransportScript : MonoBehaviour
                         GlobalDefinitions.communicationSocket = recHostId;
                         GlobalDefinitions.communicationChannel = recConnectionId;
 
-                        SendSocketMessage("ConfirmSync");
+                        SendMessageToRemoteComputer("ConfirmSync");
 
                         break;
 
@@ -123,9 +172,9 @@ public class TransportScript : MonoBehaviour
 
                             // Send out the handshake message
                             if (GlobalDefinitions.userIsIntiating)
-                                SendSocketMessage("InControl");
+                                SendMessageToRemoteComputer("InControl");
                             else
-                                SendSocketMessage("NotInControl");
+                                SendMessageToRemoteComputer("NotInControl");
                         }
                         else
                             GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Expecting ConfirmSync and received = " + message);
@@ -202,17 +251,17 @@ public class TransportScript : MonoBehaviour
                         if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
                         {
                             GlobalDefinitions.SwitchLocalControl(true);
-                            SendSocketMessage(GlobalDefinitions.PLAYSIDEKEYWORD + " Allied");
+                            SendMessageToRemoteComputer(GlobalDefinitions.PLAYSIDEKEYWORD + " Allied");
                         }
                         else
                         {
                             // Pass control to the remote computer
-                            SendSocketMessage(GlobalDefinitions.PLAYSIDEKEYWORD + " German");
-                            SendSocketMessage(GlobalDefinitions.PASSCONTROLKEYWORK);
+                            SendMessageToRemoteComputer(GlobalDefinitions.PLAYSIDEKEYWORD + " German");
+                            SendMessageToRemoteComputer(GlobalDefinitions.PASSCONTROLKEYWORK);
                             GlobalDefinitions.SwitchLocalControl(false);
                         }
 
-                        SendSocketMessage(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
+                        SendMessageToRemoteComputer(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                     }
 
                     // Playing a saved game
@@ -223,9 +272,9 @@ public class TransportScript : MonoBehaviour
                         fileName = savedFileName;
 
                         if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
-                            SendSocketMessage(GlobalDefinitions.PLAYSIDEKEYWORD + " Allied");
+                            SendMessageToRemoteComputer(GlobalDefinitions.PLAYSIDEKEYWORD + " Allied");
                         else
-                            SendSocketMessage(GlobalDefinitions.PLAYSIDEKEYWORD + " German");
+                            SendMessageToRemoteComputer(GlobalDefinitions.PLAYSIDEKEYWORD + " German");
 
                         // Call the routine to read a saved file note that this call will set the localControl variable
                         GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(savedFileName); // Note this will set the currentState based on the saved file
@@ -233,7 +282,7 @@ public class TransportScript : MonoBehaviour
                         GlobalDefinitions.GuiUpdateStatusMessage("TransportScript Update()3: Waiting on remote data load...");
 
                         // Tell the remote computer what file to load.  It will then turn around and request it
-                        SendSocketMessage(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
+                        SendMessageToRemoteComputer(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
 
                         gameDataSent = true;
                     }
@@ -280,7 +329,7 @@ public class TransportScript : MonoBehaviour
                             }
                             else
                             {
-                                SendSocketMessage(GlobalDefinitions.PASSCONTROLKEYWORK);
+                                SendMessageToRemoteComputer(GlobalDefinitions.PASSCONTROLKEYWORK);
                                 GlobalDefinitions.SwitchLocalControl(false);
                             }
                         }
@@ -312,7 +361,7 @@ public class TransportScript : MonoBehaviour
             byte error;
 
             NetworkTransport.Init();
-            connectionId = NetworkTransport.Connect(clientSocket, opponentIPaddr, socketPort, 0, out error);
+            connectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, gamePort, 0, out error);
 
             if (connectionId <= 0)
                 return (false);
@@ -326,7 +375,7 @@ public class TransportScript : MonoBehaviour
     /// This is the routine that sends messages to the opposing computer
     /// </summary>
     /// <param name="message"></param>
-    public static void SendSocketMessage(string message)
+    public static void SendMessageToRemoteComputer(string message)
     {
         if (connectionConfirmed)
         {
@@ -345,14 +394,6 @@ public class TransportScript : MonoBehaviour
         {
             GlobalDefinitions.WriteToLogFile("ERROR - SendSocketMessage - Connection hasn't been confirmed message not sent: " + message + "  " + DateTime.Now.ToString("h:mm:ss tt"));
         }
-    }
-
-    public void sendHandshakeMessage()
-    {
-        if (GlobalDefinitions.userIsIntiating)
-            SendSocketMessage("InControl");
-        else
-            SendSocketMessage("NotInControl");
     }
 
     /// <summary>
@@ -419,7 +460,7 @@ public class TransportScript : MonoBehaviour
 
         NetworkTransport.Disconnect(hostId, connectionId, out error);
 
-        if ((hostId != serverSocket) && (hostId != clientSocket))
+        if ((hostId != serverSocket) && (hostId != remoteComputerId))
             GlobalDefinitions.WriteToLogFile("ERROR - resetConnecti0n: Request recieved to disconnect unknown host id - " + hostId);
     }
 

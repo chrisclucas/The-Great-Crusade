@@ -2479,7 +2479,7 @@ public class GlobalDefinitions : MonoBehaviour
 
             if (localControl && (gameMode == GameModeValues.Peer2PeerNetwork))
             {
-                TransportScript.SendSocketMessage(commandString);
+                TransportScript.SendMessageToRemoteComputer(commandString);
             }
         }
     }
@@ -2531,7 +2531,7 @@ public class GlobalDefinitions : MonoBehaviour
     {
         string messageText = GameObject.Find("ChatInputField").GetComponent<InputField>().text;
         GameObject.Find("ChatText").GetComponent<Text>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<Text>().text;
-        TransportScript.SendSocketMessage(CHATMESSAGEKEYWORD + " " + messageText);
+        TransportScript.SendMessageToRemoteComputer(CHATMESSAGEKEYWORD + " " + messageText);
         GameObject.Find("ChatInputField").GetComponent<InputField>().text = "";
     }
 

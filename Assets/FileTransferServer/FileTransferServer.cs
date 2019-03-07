@@ -253,7 +253,7 @@ public class FileTransferServer : MonoBehaviour
                             // Remove from the "download list":
                             RemoveFileFromDownload(fields[1], fields[2]);
 
-                            TransportScript.SendSocketMessage(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
+                            TransportScript.SendMessageToRemoteComputer(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
                             GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
                         }
                     }
