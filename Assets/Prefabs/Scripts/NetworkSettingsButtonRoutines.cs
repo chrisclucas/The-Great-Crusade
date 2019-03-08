@@ -32,12 +32,10 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = false;
-
-        if (NetworkRoutines.channelEstablished)
-        {
-            // This executes when the channel is established but the two computers have the same intiating state
-            GlobalDefinitions.userIsNotInitiating = false;
-        }
+        GlobalDefinitions.userIsNotInitiating = true;
+        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text = "";
+        GameObject.Find("initiatingGameNoButton").GetComponent<Button>().interactable = false;
+        GameObject.Find("initiatingGameYesButton").GetComponent<Button>().interactable = false;
     }
 
     /// <summary>
@@ -121,7 +119,15 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void OkNetworkSettings()
     {
-        if (!TransportScript.channelRequested)
+        // If the user is not initiating, then just exit out since the next step is to wait for a connection request
+        if (GlobalDefinitions.userIsNotInitiating)
+        {
+            TransportScript.networkInit();
+            GlobalDefinitions.GuiUpdateStatusMessage("Waiting on connection request");
+            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+        }
+
+        else if (!TransportScript.channelRequested)
         {
             GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
             if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
