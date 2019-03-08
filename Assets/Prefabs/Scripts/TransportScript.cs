@@ -89,9 +89,16 @@ public class TransportScript : MonoBehaviour
             // This is needed by the computer that is not intiating.  It will wait for a connection event.
             if (!channelRequested && GlobalDefinitions.userIsNotInitiating)
             {
+                NetworkEventType recNetworkEvent;
                 // Check if there is a network event
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
-
+                try
+                {
+                    recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
+                }
+                catch
+                {
+                    return;
+                }
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.ConnectEvent:
@@ -133,7 +140,7 @@ public class TransportScript : MonoBehaviour
                         GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         break;
                 }
-            }
+                }
 
             // This goes from the intial connect attempt to the confirmation from the remote computer
             else if (channelRequested && !opponentComputerConfirmsSync)
