@@ -87,7 +87,7 @@ public class TransportScript : MonoBehaviour
         if (!GlobalDefinitions.gameStarted)
         {
             // This is needed by the computer that is not intiating.  It will wait for a connection event.
-            if (!channelRequested && GlobalDefinitions.userIsIntiating)
+            if (!channelRequested && GlobalDefinitions.userIsNotInitiating)
             {
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
@@ -449,6 +449,7 @@ public class TransportScript : MonoBehaviour
         GlobalDefinitions.SwitchLocalControl(false);
         GlobalDefinitions.opponentIPAddress = "";
         GlobalDefinitions.userIsIntiating = false;
+        GlobalDefinitions.userIsNotInitiating = false;
         GlobalDefinitions.isServer = false;
         GlobalDefinitions.hasReceivedConfirmation = false;
         GlobalDefinitions.gameStarted = false;
