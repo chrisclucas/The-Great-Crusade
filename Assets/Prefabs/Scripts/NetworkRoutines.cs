@@ -183,6 +183,7 @@ public class NetworkRoutines : MonoBehaviour
         GlobalDefinitions.SwitchLocalControl(false);
         NetworkRoutines.remoteComputerIPAddress = "";
         GlobalDefinitions.userIsIntiating = false;
+        GlobalDefinitions.userIsNotInitiating = false;
         GlobalDefinitions.isServer = false;
         GlobalDefinitions.hasReceivedConfirmation = false;
         GlobalDefinitions.gameStarted = false;

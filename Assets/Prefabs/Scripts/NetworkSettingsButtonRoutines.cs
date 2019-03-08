@@ -36,7 +36,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         if (NetworkRoutines.channelEstablished)
         {
             // This executes when the channel is established but the two computers have the same intiating state
-            GlobalDefinitions.userIsIntiating = false;
+            GlobalDefinitions.userIsNotInitiating = false;
         }
     }
 

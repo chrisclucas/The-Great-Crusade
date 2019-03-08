@@ -99,6 +99,7 @@ public class GlobalDefinitions : MonoBehaviour
     // During network games this determines when the player is in control, in AI games it signifies whether the player is in control (true) or the AI (false)
     public static bool localControl = false;
     public static bool userIsIntiating = false;
+    public static bool userIsNotInitiating = false;
     public static bool isServer = false;
     public static bool hasReceivedConfirmation = false;
     public static Nationality sideControled; // Used for network play
