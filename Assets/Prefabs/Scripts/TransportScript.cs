@@ -50,7 +50,7 @@ public class TransportScript : MonoBehaviour
 
         reliableChannelId = config.AddChannel(QosType.AllCostDelivery);
 
-        int maxConnections = 65000;
+        int maxConnections = 2;
         HostTopology topology = new HostTopology(config, maxConnections);
         topology.ReceivedMessagePoolSize = 128;
         topology.SentMessagePoolSize = 1024; // Default 128
