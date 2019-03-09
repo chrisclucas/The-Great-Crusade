@@ -30,8 +30,11 @@ public class MainMenuRoutines : MonoBehaviour
         Button okButton;
         GameObject tempText;
 
+        // Set the localControl to true in order to enable the buttons and toggles
+        GlobalDefinitions.localControl = true; 
+
         float panelWidth = 6 * GlobalDefinitions.GUIUNITIMAGESIZE;
-        float panelHeight = 7 * GlobalDefinitions.GUIUNITIMAGESIZE; // If email game is an option this needs to change to 7
+        float panelHeight = 7 * GlobalDefinitions.GUIUNITIMAGESIZE;
         Canvas getGameModeCanvas = new Canvas();
         GlobalDefinitions.CreateGUICanvas("GameModeCanvas", 
                 panelWidth, 
