@@ -23,7 +23,6 @@ public class GameControl : MonoBehaviour
     public static GameObject AIRoutinesInstance;
     public static GameObject clientServerRoutinesInstance;
     public static GameObject serverRoutinesInstance;
-    public static GameObject peer2PeerRoutinesInstance;
 
     // These are the objects that contain the different game states
     public static GameObject gameStateControlInstance;

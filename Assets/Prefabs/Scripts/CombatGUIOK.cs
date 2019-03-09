@@ -50,14 +50,11 @@ public class CombatGUIOK : MonoBehaviour
 
         else
         {
-
-            //GlobalDefinitions.writeToLogFile("okCombatGUISelection: ok button selected");
             foreach (Transform childTransform in transform.parent.transform)
                 if ((childTransform.GetComponent<CombatToggleRoutines>() != null) &&
                         (childTransform.GetComponent<CombatToggleRoutines>().unit != null))
-                    if (childTransform.GetComponent<Toggle>().isOn)
+                    if (childTransform.GetComponent<Toggle>().isOn && GlobalDefinitions.localControl)
                     {
-                        //GlobalDefinitions.writeToLogFile("okCombatGUISelection: committing and unhighlighting unit = " + childTransform.GetComponent<CombatToggleRoutines>().unit.name);
                         GlobalDefinitions.UnhighlightUnit(childTransform.GetComponent<CombatToggleRoutines>().unit);
                         childTransform.GetComponent<CombatToggleRoutines>().unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = true;
                     }

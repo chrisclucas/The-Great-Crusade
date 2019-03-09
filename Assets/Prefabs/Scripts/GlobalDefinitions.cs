@@ -1323,6 +1323,10 @@ public class GlobalDefinitions : MonoBehaviour
         tempButton.image.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
         tempButton.name = name;
         tempButton.GetComponentInChildren<Text>().text = buttonText;
+
+        if (!localControl)
+            tempButton.interactable = false;
+
         return (tempButton);
     }
 
@@ -1499,6 +1503,10 @@ public class GlobalDefinitions : MonoBehaviour
         tempToggle.transform.SetParent(canvasInstance.transform, false);
         tempToggle.transform.localScale = new Vector2(0.5f, 0.5f);
         tempToggle.name = name;
+
+        if (!localControl)
+            tempToggle.interactable = false;
+
         return (tempPrefab);
     }
 
