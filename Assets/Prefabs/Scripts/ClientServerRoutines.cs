@@ -74,7 +74,7 @@ public class ClientServerRoutines : MonoBehaviour
     {
         GlobalDefinitions.WriteToLogFile("initiateServerConnection: executing");
 
-        NetworkRoutines.remoteComputerId = NetworkRoutines.NetworkInit();
+        NetworkRoutines.remoteComputerId = TransportScript.NetworkInit();
 
         if (ConnectToServer())
         {
@@ -94,9 +94,7 @@ public class ClientServerRoutines : MonoBehaviour
         byte error;
 
         NetworkTransport.Init();
-        NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, NetworkRoutines.remoteComputerIPAddress, NetworkRoutines.gamePort, 0, out error);
-
-        GlobalDefinitions.WriteToLogFile("ConnectToServer: ConnectionID set to " + NetworkRoutines.remoteConnectionId + " hostId = " + NetworkRoutines.remoteComputerId + ", IP addr = " + NetworkRoutines.remoteComputerIPAddress + ", port = " + NetworkRoutines.gamePort + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, GlobalDefinitions.opponentIPAddress, NetworkRoutines.gamePort, 0, out error);
 
         if (NetworkRoutines.remoteConnectionId <= 0)
             return (false);

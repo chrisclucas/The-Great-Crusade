@@ -398,7 +398,7 @@ public class GlobalDefinitions : MonoBehaviour
         germanSetupFileUsed = 100;
 
         // The following is for resetting the variables associated with a network game
-        NetworkRoutines.remoteComputerIPAddress = "";
+        GlobalDefinitions.opponentIPAddress = "";
         userIsIntiating = false;
         isServer = false;
         hasReceivedConfirmation = false;

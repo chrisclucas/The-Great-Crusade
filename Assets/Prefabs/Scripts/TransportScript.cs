@@ -33,12 +33,10 @@ public class TransportScript : MonoBehaviour
     public static int dataSize;
     public static byte recError;
 
-    public static string fileName;
-
     /// <summary>
     /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
     /// </summary>
-    public static void networkInit()
+    public static int NetworkInit()
     {
         byte error;
 
@@ -52,7 +50,7 @@ public class TransportScript : MonoBehaviour
 
         reliableChannelId = config.AddChannel(QosType.AllCostDelivery);
 
-        int maxConnections = 2;
+        int maxConnections = 65000;
         HostTopology topology = new HostTopology(config, maxConnections);
         topology.ReceivedMessagePoolSize = 128;
         topology.SentMessagePoolSize = 1024; // Default 128
@@ -74,6 +72,8 @@ public class TransportScript : MonoBehaviour
         serverSocket = NetworkTransport.AddHost(topology, gamePort);
         remoteComputerId = NetworkTransport.AddHost(topology);
 
+        return (remoteComputerId);
+
     }
 
     void Start()
@@ -91,6 +91,9 @@ public class TransportScript : MonoBehaviour
             {
                 NetworkEventType recNetworkEvent;
                 // Check if there is a network event
+
+                // This try is needed since this will start executing once the user indicates that he isn't initiating the game but the
+                // init of the network doesn't take place until OK is selected
                 try
                 {
                     recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
@@ -276,7 +279,6 @@ public class TransportScript : MonoBehaviour
                     {
                         string savedFileName = "";
                         savedFileName = GlobalDefinitions.GuiFileDialog();
-                        fileName = savedFileName;
 
                         if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
                             SendMessageToRemoteComputer(GlobalDefinitions.PLAYSIDEKEYWORD + " Allied");

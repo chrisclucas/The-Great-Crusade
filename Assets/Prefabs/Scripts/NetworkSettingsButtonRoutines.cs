@@ -14,11 +14,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = true;
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = true;
         GlobalDefinitions.userIsIntiating = true;
-        if (NetworkRoutines.channelEstablished)
-        {
-            // This executes when the channel is established but the two computers have the same intiating state
-            GlobalDefinitions.userIsIntiating = true;
-        }
+        GlobalDefinitions.userIsNotInitiating = false;
     }
 
     /// <summary>
@@ -33,6 +29,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = false;
         GlobalDefinitions.userIsNotInitiating = true;
+        GlobalDefinitions.userIsIntiating = false;
         MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text = "";
         GameObject.Find("initiatingGameNoButton").GetComponent<Button>().interactable = false;
         GameObject.Find("initiatingGameYesButton").GetComponent<Button>().interactable = false;
@@ -122,7 +119,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         // If the user is not initiating, then just exit out since the next step is to wait for a connection request
         if (GlobalDefinitions.userIsNotInitiating)
         {
-            TransportScript.networkInit();
+            TransportScript.NetworkInit();
             GlobalDefinitions.GuiUpdateStatusMessage("Waiting on connection request");
             GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         }
@@ -132,7 +129,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
             if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
             {
-                TransportScript.networkInit();
+                TransportScript.NetworkInit();
                 if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
                     TransportScript.channelRequested = true;
@@ -162,17 +159,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     {
         if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
         {
-            NetworkRoutines.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
             GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
-            //    if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
-            //    {
-            //        TransportScript.channelEstablished = true;
-            //        GlobalDefinitions.GuiUpdateStatusMessage("Connection with Remote Computer Requested");
-            //    }
-            //    else
-            //        GlobalDefinitions.GuiUpdateStatusMessage("Connection Failed");
         }
-        //else
-        //    GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
     }
 }

@@ -36,7 +36,6 @@ public class NetworkRoutines : MonoBehaviour
     {
         //byte error;
 
-        GlobalDefinitions.WriteToLogFile("networkInit(): executing");
         GlobalConfig globalConfig = new GlobalConfig
         {
             ReactorModel = ReactorModel.SelectReactor, // Process messages as soon as they come in (not good for mobile)
@@ -61,22 +60,6 @@ public class NetworkRoutines : MonoBehaviour
         };
 
         return (NetworkTransport.AddHost(topology));
-
-        // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
-        //if (serverSocket != -1)
-        //{
-        //    GlobalDefinitions.WriteToLogFile("networkInit: server socket set to " + serverSocket + " - disconnecting and resetting to -1");
-        //    NetworkTransport.Disconnect(serverSocket, connectionId, out error);
-        //    serverSocket = -1;
-        //}
-        //if (clientSocket != -1)
-        //{
-        //    GlobalDefinitions.WriteToLogFile("networkInit: client socket set to " + clientSocket + " - disconnecting and resetting to -1");
-        //    NetworkTransport.Disconnect(clientSocket, connectionId, out error);
-        //    clientSocket = -1;
-        //}
-
-        //serverSocket = NetworkTransport.AddHost(topology, socketPort);
     }
 
     /// <summary>
@@ -181,7 +164,7 @@ public class NetworkRoutines : MonoBehaviour
         SendMessageToRemoteComputer(GlobalDefinitions.DISCONNECTFROMREMOTECOMPUTER);
 
         GlobalDefinitions.SwitchLocalControl(false);
-        NetworkRoutines.remoteComputerIPAddress = "";
+        GlobalDefinitions.opponentIPAddress = "";
         GlobalDefinitions.userIsIntiating = false;
         GlobalDefinitions.userIsNotInitiating = false;
         GlobalDefinitions.isServer = false;
