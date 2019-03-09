@@ -87,7 +87,9 @@ public class TransportScript : MonoBehaviour
         if (!GlobalDefinitions.gameStarted)
         {
             // This is needed by the computer that is not intiating.  It will wait for a connection event.
-            if (!channelRequested && GlobalDefinitions.userIsNotInitiating)
+            if ((!channelRequested && GlobalDefinitions.userIsNotInitiating) ||
+                    (channelRequested && !opponentComputerConfirmsSync) ||
+                    (opponentComputerConfirmsSync && !handshakeConfirmed))
             {
                 NetworkEventType recNetworkEvent;
                 // Check if there is a network event
@@ -105,23 +107,23 @@ public class TransportScript : MonoBehaviour
                 processNetworkEvent(recNetworkEvent);
             }
 
-            // This goes from the intial connect attempt to the confirmation from the remote computer
-            else if (channelRequested && !opponentComputerConfirmsSync)
-            {
-                // Check if there is a network event
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
+            //// This goes from the intial connect attempt to the confirmation from the remote computer
+            //else if (channelRequested && !opponentComputerConfirmsSync)
+            //{
+            //    // Check if there is a network event
+            //    NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
-                processNetworkEvent(recNetworkEvent);
-            }
+            //    processNetworkEvent(recNetworkEvent);
+            //}
 
-            // This executes until the two computers agree on who is intiating the game
-            else if (opponentComputerConfirmsSync && !handshakeConfirmed)
-            {
-                // Check if there is a network event
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
+            //// This executes until the two computers agree on who is intiating the game
+            //else if (opponentComputerConfirmsSync && !handshakeConfirmed)
+            //{
+            //    // Check if there is a network event
+            //    NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
-                processNetworkEvent(recNetworkEvent);
-            }
+            //    processNetworkEvent(recNetworkEvent);
+            //}
 
             // Executes from confirmation of handshake to sending of game data
             else if (handshakeConfirmed && !gameDataSent)
