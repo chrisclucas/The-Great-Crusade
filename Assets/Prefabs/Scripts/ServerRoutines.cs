@@ -47,7 +47,7 @@ public class ServerRoutines : MonoBehaviour
             switch (recieveNetworkEvent)
             {
                 case NetworkEventType.ConnectEvent:
-                    GlobalDefinitions.WriteToLogFile("ServerRoutines update: ConnectEvent (hostId = " + clientHostId + ", connectionId = " + clientConnectionId + ", error = " + receivedError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    GlobalDefinitions.GuiUpdateStatusMessage("ServerRoutines update: ConnectEvent (hostId = " + clientHostId + ", connectionId = " + clientConnectionId + ", error = " + receivedError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                     ClientCommunicationInformationStructure clientInfo = new ClientCommunicationInformationStructure
                     {
                         hostId = clientHostId,
@@ -67,18 +67,18 @@ public class ServerRoutines : MonoBehaviour
                     break;
 
                 case NetworkEventType.DataEvent:
-                    GlobalDefinitions.WriteToLogFile("ServerRoutines update: data event");
                     Stream stream = new MemoryStream(clientBuffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     string message = formatter.Deserialize(stream) as string;
                     NetworkRoutines.OnData(clientHostId, clientConnectionId, clientChannelId, message, receivedDataSize, (NetworkError)receivedError);
+                    GlobalDefinitions.GuiUpdateStatusMessage("ServerRoutines update: data event - message = " + message);
 
                     break;
 
                 case NetworkEventType.Nothing:
                     break;
                 default:
-                    GlobalDefinitions.WriteToLogFile("ServerRoutines update(): Unknown network event type received - " + recieveNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    GlobalDefinitions.GuiUpdateStatusMessage("ServerRoutines update(): Unknown network event type received - " + recieveNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                     break;
             }
         }

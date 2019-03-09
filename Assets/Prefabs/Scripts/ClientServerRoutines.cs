@@ -36,7 +36,7 @@ public class ClientServerRoutines : MonoBehaviour
             switch (recNetworkEvent)
             {
                 case NetworkEventType.ConnectEvent:
-                    GlobalDefinitions.WriteToLogFile("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    GlobalDefinitions.GuiUpdateStatusMessage("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
                     NetworkRoutines.channelEstablished = true;
 
@@ -50,7 +50,7 @@ public class ClientServerRoutines : MonoBehaviour
                     break;
 
                 case NetworkEventType.DataEvent:
-                    GlobalDefinitions.WriteToLogFile("ClientServerRoutines update: data event");
+                    GlobalDefinitions.GuiUpdateStatusMessage("ClientServerRoutines update: data event");
                     Stream stream = new MemoryStream(recBuffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     string message = formatter.Deserialize(stream) as string;
@@ -61,7 +61,7 @@ public class ClientServerRoutines : MonoBehaviour
                 case NetworkEventType.Nothing:
                     break;
                 default:
-                    GlobalDefinitions.WriteToLogFile("ClientServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    GlobalDefinitions.GuiUpdateStatusMessage("ClientServerRoutines update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                     break;
             }
         }
@@ -93,8 +93,10 @@ public class ClientServerRoutines : MonoBehaviour
     {
         byte error;
 
+        TransportScript.remoteComputerId = TransportScript.NetworkInit();
         NetworkTransport.Init();
-        NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, GlobalDefinitions.opponentIPAddress, NetworkRoutines.gamePort, 0, out error);
+        //NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, GlobalDefinitions.opponentIPAddress, NetworkRoutines.gamePort, 0, out error);
+        NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(TransportScript.remoteComputerId, GlobalDefinitions.opponentIPAddress, NetworkRoutines.gamePort, 0, out error);
 
         if (NetworkRoutines.remoteConnectionId <= 0)
             return (false);
@@ -112,7 +114,7 @@ public class ClientServerRoutines : MonoBehaviour
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(stream, message);
         NetworkTransport.Send(NetworkRoutines.remoteComputerId, NetworkRoutines.remoteConnectionId, allCostDeliveryChannelId, sendBuffer, BUFFERSIZE, out sendError);
-        GlobalDefinitions.WriteToLogFile("Sending message - " + message + " HostID=" + NetworkRoutines.remoteComputerId + "  ConnectionID=" + NetworkRoutines.remoteConnectionId + " ChannelID=" + allCostDeliveryChannelId + " Error: " + (NetworkError)sendError);
+        GlobalDefinitions.GuiUpdateStatusMessage("Sending message - " + message + " HostID=" + NetworkRoutines.remoteComputerId + "  ConnectionID=" + NetworkRoutines.remoteConnectionId + " ChannelID=" + allCostDeliveryChannelId + " Error: " + (NetworkError)sendError);
 
         if ((NetworkError)sendError != NetworkError.Ok)
         {
