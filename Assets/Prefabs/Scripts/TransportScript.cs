@@ -86,13 +86,12 @@ public class TransportScript : MonoBehaviour
         // This update() executes up until the game data is loaded and everything is set up.  Then the GameControl update() takes over.
         if (!GlobalDefinitions.gameStarted)
         {
-            // This is needed by the computer that is not intiating.  It will wait for a connection event.
-            if ((!channelRequested && GlobalDefinitions.userIsNotInitiating) ||
+            // Walk through the three statges of connection - channel requested, confirming sync, and handshake
+            if ((GlobalDefinitions.userIsNotInitiating && !channelRequested) ||
                     (channelRequested && !opponentComputerConfirmsSync) ||
                     (opponentComputerConfirmsSync && !handshakeConfirmed))
             {
                 NetworkEventType recNetworkEvent;
-                // Check if there is a network event
 
                 // This try is needed since this will start executing once the user indicates that he isn't initiating the game but the
                 // init of the network doesn't take place until OK is selected
@@ -104,26 +103,9 @@ public class TransportScript : MonoBehaviour
                 {
                     return;
                 }
+
                 processNetworkEvent(recNetworkEvent);
             }
-
-            //// This goes from the intial connect attempt to the confirmation from the remote computer
-            //else if (channelRequested && !opponentComputerConfirmsSync)
-            //{
-            //    // Check if there is a network event
-            //    NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
-
-            //    processNetworkEvent(recNetworkEvent);
-            //}
-
-            //// This executes until the two computers agree on who is intiating the game
-            //else if (opponentComputerConfirmsSync && !handshakeConfirmed)
-            //{
-            //    // Check if there is a network event
-            //    NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
-
-            //    processNetworkEvent(recNetworkEvent);
-            //}
 
             // Executes from confirmation of handshake to sending of game data
             else if (handshakeConfirmed && !gameDataSent)
@@ -388,29 +370,40 @@ public class TransportScript : MonoBehaviour
                 break;
 
             case NetworkEventType.DataEvent:
+                char[] delimiterChars = { ' ' };
                 Stream stream = new MemoryStream(recBuffer);
                 BinaryFormatter formatter = new BinaryFormatter();
                 string message = formatter.Deserialize(stream) as string;
                 OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
+                string[] switchEntries = message.Split(delimiterChars);
 
                 // Check for confirmation
-                if (message == "ConfirmSync")
+                switch (switchEntries[0])
                 {
-                    GlobalDefinitions.WriteToLogFile("Update: remote computer confirms sync through data message");
-                    opponentComputerConfirmsSync = true;
+                    case "ConfirmSync":
+                        GlobalDefinitions.WriteToLogFile("Update: remote computer confirms sync through data message");
+                        opponentComputerConfirmsSync = true;
 
-                    // Send out the handshake message
-                    if (GlobalDefinitions.userIsIntiating)
-                        SendMessageToRemoteComputer("InControl");
-                    else
-                        SendMessageToRemoteComputer("NotInControl");
+                        // Send out the handshake message
+                        if (GlobalDefinitions.userIsIntiating)
+                            SendMessageToRemoteComputer("InControl");
+                        else
+                            SendMessageToRemoteComputer("NotInControl");
+                        break;
+
+                    case "InControl":
+                    case "NotInControl":
+                        checkForHandshakeReceipt(message);
+                        break;
+
+                    case "RemoteIPAddress":
+                        GlobalDefinitions.opponentIPAddress = switchEntries[1];
+                        break;
+
+                    default:
+                        GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update(): unknown data message recevied - " + message);
+                        break;
                 }
-                else if ((message == "InControl") || (message == "NotInControl"))
-                {
-                    checkForHandshakeReceipt(message);
-                }
-                else
-                    GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Expecting ConfirmSync and received = " + message);
                 break;
 
             case NetworkEventType.DisconnectEvent:
@@ -426,19 +419,19 @@ public class TransportScript : MonoBehaviour
         }
     }
 
-        /// <summary>
-        /// Writes data event to log file
-        /// </summary>
-        /// <param name="hostId"></param>
-        /// <param name="connectionId"></param>
-        /// <param name="channelId"></param>
-        /// <param name="message"></param>
-        /// <param name="size"></param>
-        /// <param name="error"></param>
-        public static void OnData(int hostId, int connectionId, int channelId, string message, int size, NetworkError error)
-        {
-            GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
-                + connectionId + ", channelId = " + channelId + ", data = "
-                + message + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-        }
+    /// <summary>
+    /// Writes data event to log file
+    /// </summary>
+    /// <param name="hostId"></param>
+    /// <param name="connectionId"></param>
+    /// <param name="channelId"></param>
+    /// <param name="message"></param>
+    /// <param name="size"></param>
+    /// <param name="error"></param>
+    public static void OnData(int hostId, int connectionId, int channelId, string message, int size, NetworkError error)
+    {
+        GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
+            + connectionId + ", channelId = " + channelId + ", data = "
+            + message + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
     }
+}
