@@ -38,7 +38,7 @@ public class ClientServerRoutines : MonoBehaviour
                 case NetworkEventType.ConnectEvent:
                     GlobalDefinitions.GuiUpdateStatusMessage("ClientServerRoutines update: ConnectEvent (hostId = " + recHostId + ", connectionId = " + recConnectionId + ", error = " + recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
-                    NetworkRoutines.channelEstablished = true;
+                    TransportScript.channelRequested = true;
 
                     // At this point I need to pass off control to the normal game flow depending on whether this client in control or waiting on the other computer
 
@@ -46,7 +46,7 @@ public class ClientServerRoutines : MonoBehaviour
 
                 case NetworkEventType.DisconnectEvent:
                     GlobalDefinitions.GuiUpdateStatusMessage("ClientServerRoutines update: Disconnect event received from remote computer - resetting connection");
-                    NetworkRoutines.ResetConnection(recHostId);
+                    TransportScript.resetConnection(recHostId);
                     break;
 
                 case NetworkEventType.DataEvent:
@@ -54,7 +54,7 @@ public class ClientServerRoutines : MonoBehaviour
                     Stream stream = new MemoryStream(recBuffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     string message = formatter.Deserialize(stream) as string;
-                    NetworkRoutines.OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
+                    TransportScript.OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
 
                     break;
 
@@ -74,7 +74,10 @@ public class ClientServerRoutines : MonoBehaviour
     {
         GlobalDefinitions.WriteToLogFile("initiateServerConnection: executing");
 
-        NetworkRoutines.remoteComputerId = TransportScript.NetworkInit();
+        // Set the ip address of the server
+        GlobalDefinitions.opponentIPAddress = "192.168.1.67";
+
+        TransportScript.remoteComputerId = TransportScript.NetworkInit();
 
         if (ConnectToServer())
         {
@@ -93,12 +96,10 @@ public class ClientServerRoutines : MonoBehaviour
     {
         byte error;
 
-        TransportScript.remoteComputerId = TransportScript.NetworkInit();
-        NetworkTransport.Init();
         //NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, GlobalDefinitions.opponentIPAddress, NetworkRoutines.gamePort, 0, out error);
-        NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(TransportScript.remoteComputerId, GlobalDefinitions.opponentIPAddress, NetworkRoutines.gamePort, 0, out error);
+        TransportScript.recConnectionId = NetworkTransport.Connect(TransportScript.remoteComputerId, GlobalDefinitions.opponentIPAddress, TransportScript.gamePort, 0, out error);
 
-        if (NetworkRoutines.remoteConnectionId <= 0)
+        if (TransportScript.recConnectionId <= 0)
             return (false);
         else
             return (true);
@@ -113,8 +114,8 @@ public class ClientServerRoutines : MonoBehaviour
         Stream stream = new MemoryStream(sendBuffer);
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(stream, message);
-        NetworkTransport.Send(NetworkRoutines.remoteComputerId, NetworkRoutines.remoteConnectionId, allCostDeliveryChannelId, sendBuffer, BUFFERSIZE, out sendError);
-        GlobalDefinitions.GuiUpdateStatusMessage("Sending message - " + message + " HostID=" + NetworkRoutines.remoteComputerId + "  ConnectionID=" + NetworkRoutines.remoteConnectionId + " ChannelID=" + allCostDeliveryChannelId + " Error: " + (NetworkError)sendError);
+        NetworkTransport.Send(TransportScript.recHostId, TransportScript.recConnectionId, allCostDeliveryChannelId, sendBuffer, BUFFERSIZE, out sendError);
+        GlobalDefinitions.GuiUpdateStatusMessage("Sending message - " + message + " HostID=" + TransportScript.recHostId + "  ConnectionID=" + TransportScript.recConnectionId + " ChannelID=" + allCostDeliveryChannelId + " Error: " + (NetworkError)sendError);
 
         if ((NetworkError)sendError != NetworkError.Ok)
         {

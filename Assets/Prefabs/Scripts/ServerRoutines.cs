@@ -70,7 +70,7 @@ public class ServerRoutines : MonoBehaviour
                     Stream stream = new MemoryStream(clientBuffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     string message = formatter.Deserialize(stream) as string;
-                    NetworkRoutines.OnData(clientHostId, clientConnectionId, clientChannelId, message, receivedDataSize, (NetworkError)receivedError);
+                    TransportScript.OnData(clientHostId, clientConnectionId, clientChannelId, message, receivedDataSize, (NetworkError)receivedError);
                     GlobalDefinitions.GuiUpdateStatusMessage("ServerRoutines update: data event - message = " + message);
 
                     break;
@@ -114,7 +114,7 @@ public class ServerRoutines : MonoBehaviour
         NetworkTransport.Init(globalConfig);
 
         // Note, while the hostId below doesn't get used anywhere the line is needed to start the server listening, I know I should probably not assign the result, but ...
-        hostId = NetworkTransport.AddHost(topology, NetworkRoutines.gamePort);
+        hostId = NetworkTransport.AddHost(topology, TransportScript.gamePort);
     }
 
     private void SendMessageToClient(string message, int clientHostID, int clientConnectionID, int clientChannelID)

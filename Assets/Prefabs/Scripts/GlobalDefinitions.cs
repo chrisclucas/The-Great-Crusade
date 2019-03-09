@@ -403,11 +403,11 @@ public class GlobalDefinitions : MonoBehaviour
         isServer = false;
         hasReceivedConfirmation = false;
         gameStarted = false;
-        NetworkRoutines.channelEstablished = false;
-        NetworkRoutines.connectionConfirmed = false;
-        NetworkRoutines.handshakeConfirmed = false;
-        NetworkRoutines.opponentComputerConfirmsSync = false;
-        NetworkRoutines.gameDataSent = false;
+        TransportScript.channelRequested = false;
+        TransportScript.connectionConfirmed = false;
+        TransportScript.handshakeConfirmed = false;
+        TransportScript.opponentComputerConfirmsSync = false;
+        TransportScript.gameDataSent = false;
 
         // When resetting I am going to regenerate the invasion areas.  If I don't the AI will come up with different results based on the arrays being seeded diferently
         GameControl.createBoardInstance.GetComponent<CreateBoard>().SetupInvasionAreas();
