@@ -46,7 +46,7 @@ public class ClientServerRoutines : MonoBehaviour
 
                 case NetworkEventType.DisconnectEvent:
                     GlobalDefinitions.GuiUpdateStatusMessage("ClientServerRoutines update: Disconnect event received from remote computer - resetting connection");
-                    TransportScript.resetConnection(recHostId);
+                    TransportScript.ResetConnection(recHostId);
                     break;
 
                 case NetworkEventType.DataEvent:

@@ -332,7 +332,7 @@ public class GameControl : MonoBehaviour
                         GlobalDefinitions.WriteToLogFile("GameControl udpate() OnDisconnect: (hostId = " + TransportScript.recHostId + ", connectionId = "
                                 + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                        TransportScript.resetConnection(TransportScript.recHostId);
+                        TransportScript.ResetConnection(TransportScript.recHostId);
 
                         // Since the connetion has been broken, quit the game and go back to the main menu
                         GameObject guiButtonInstance = new GameObject("GUIButtonInstance");

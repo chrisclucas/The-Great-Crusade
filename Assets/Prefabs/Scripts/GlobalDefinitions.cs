@@ -290,8 +290,6 @@ public class GlobalDefinitions : MonoBehaviour
     public static int germanSetupFileUsed = 100;
 
     public static string opponentIPAddress;
-    public static int communicationSocket;
-    public static int communicationChannel;
 
     /// <summary>
     /// Goes through and resets all variables 

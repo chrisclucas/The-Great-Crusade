@@ -102,51 +102,8 @@ public class TransportScript : MonoBehaviour
                 {
                     return;
                 }
-                switch (recNetworkEvent)
-                {
-                    case NetworkEventType.ConnectEvent:
-                        connectionConfirmed = true;
-                        channelRequested = true;    // Since this is being executed by the computer that isn't requesting a channel it isn't symantically correct 
-                                                    // but it needs to be set so that this doesn't keep exeuting
-                        GlobalDefinitions.communicationSocket = recHostId;
-                        GlobalDefinitions.communicationChannel = recConnectionId;
-
-                        // This code executes when the non-initiating computer gets a connection request.
-                        // The other computer doesn't have the ip address of this computer so send it since it is needed if a saved game is going to be played
-                        SendMessageToRemoteComputer("RemoteIPAddress " + Network.player.ipAddress);
-                        SendMessageToRemoteComputer("ConfirmSync");
-
-                        break;
-
-                    case NetworkEventType.DataEvent:
-                        Stream stream = new MemoryStream(recBuffer);
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        string message = formatter.Deserialize(stream) as string;
-                        OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
-
-                        // Check for confirmation
-                        if (message == "ConfirmSync")
-                        {
-                            GlobalDefinitions.WriteToLogFile("Update: remote computer confirms sync through data message");
-                            opponentComputerConfirmsSync = true;
-
-                            // Send out the handshake message
-                            if (GlobalDefinitions.userIsIntiating)
-                                SendMessageToRemoteComputer("InControl");
-                            else
-                                SendMessageToRemoteComputer("NotInControl");
-                        }
-                        else
-                            GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Expecting ConfirmSync and received = " + message);
-                        break;
-
-                    case NetworkEventType.Nothing:
-                        break;
-                    default:
-                        GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                        break;
-                }
-                }
+                processNetworkEvent(recNetworkEvent);
+            }
 
             // This goes from the intial connect attempt to the confirmation from the remote computer
             else if (channelRequested && !opponentComputerConfirmsSync)
@@ -154,51 +111,7 @@ public class TransportScript : MonoBehaviour
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
-                switch (recNetworkEvent)
-                {
-                    case NetworkEventType.ConnectEvent:
-                        connectionConfirmed = true;
-                        GlobalDefinitions.communicationSocket = recHostId;
-                        GlobalDefinitions.communicationChannel = recConnectionId;
-
-                        SendMessageToRemoteComputer("ConfirmSync");
-
-                        break;
-
-                    case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                        GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));
-                        resetConnection(recHostId);
-                        break;
-
-                    case NetworkEventType.DataEvent:
-                        Stream stream = new MemoryStream(recBuffer);
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        string message = formatter.Deserialize(stream) as string;
-                        OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
-
-                        // Check for confirmation
-                        if (message == "ConfirmSync")
-                        {
-                            GlobalDefinitions.WriteToLogFile("Update: remote computer confirms sync through data message");
-                            opponentComputerConfirmsSync = true;
-
-                            // Send out the handshake message
-                            if (GlobalDefinitions.userIsIntiating)
-                                SendMessageToRemoteComputer("InControl");
-                            else
-                                SendMessageToRemoteComputer("NotInControl");
-                        }
-                        else
-                            GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Expecting ConfirmSync and received = " + message);
-                        break;
-
-                    case NetworkEventType.Nothing:
-                        break;
-                    default:
-                        GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                        break;
-                }
+                processNetworkEvent(recNetworkEvent);
             }
 
             // This executes until the two computers agree on who is intiating the game
@@ -207,29 +120,7 @@ public class TransportScript : MonoBehaviour
                 // Check if there is a network event
                 NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recHostId, out recConnectionId, out recChannelId, recBuffer, BUFFERSIZE, out dataSize, out recError);
 
-                switch (recNetworkEvent)
-                {
-                    case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                        GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));
-                        resetConnection(recHostId);
-                        break;
-
-                    case NetworkEventType.DataEvent:
-                        Stream stream = new MemoryStream(recBuffer);
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        string message = formatter.Deserialize(stream) as string;
-                        OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
-                        checkForHandshakeReceipt(message);
-                        break;
-
-                    case NetworkEventType.Nothing:
-                        break;
-
-                    default:
-                        GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()2:Checking for handshake: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                        break;
-                }
+                processNetworkEvent(recNetworkEvent);
             }
 
             // Executes from confirmation of handshake to sending of game data
@@ -318,7 +209,7 @@ public class TransportScript : MonoBehaviour
                     case NetworkEventType.DisconnectEvent:
                         GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
                         GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));
-                        resetConnection(recHostId);
+                        ResetConnection(recHostId);
                         break;
 
                     case NetworkEventType.DataEvent:
@@ -394,8 +285,8 @@ public class TransportScript : MonoBehaviour
             Stream stream = new MemoryStream(sendBuffer);
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, message);
-            NetworkTransport.Send(GlobalDefinitions.communicationSocket, GlobalDefinitions.communicationChannel, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
-            GlobalDefinitions.WriteToLogFile("Sending message - " + message + " serverSocket=" + GlobalDefinitions.communicationSocket + "  communicationChannel=" + GlobalDefinitions.communicationChannel + " Error: " + (NetworkError)sendError);
+            NetworkTransport.Send(recHostId, recConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
+            GlobalDefinitions.WriteToLogFile("Sending message - " + message + " hostId=" + recHostId + "  communicationChannel=" + recConnectionId + " Error: " + (NetworkError)sendError);
 
             if ((NetworkError)sendError != NetworkError.Ok)
             {
@@ -454,7 +345,7 @@ public class TransportScript : MonoBehaviour
     /// This executes when a disconnect event is received
     /// </summary>
     /// <param name="hostId"></param>
-    public static void resetConnection(int hostId)
+    public static void ResetConnection(int hostId)
     {
         byte error;
 
@@ -477,19 +368,74 @@ public class TransportScript : MonoBehaviour
             GlobalDefinitions.WriteToLogFile("ERROR - resetConnecti0n: Request recieved to disconnect unknown host id - " + hostId);
     }
 
-    /// <summary>
-    /// Writes data event to log file
-    /// </summary>
-    /// <param name="hostId"></param>
-    /// <param name="connectionId"></param>
-    /// <param name="channelId"></param>
-    /// <param name="message"></param>
-    /// <param name="size"></param>
-    /// <param name="error"></param>
-    public static void OnData(int hostId, int connectionId, int channelId, string message, int size, NetworkError error)
+    private static void processNetworkEvent(NetworkEventType currentNetworkEvent)
     {
-        GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
-            + connectionId + ", channelId = " + channelId + ", data = "
-            + message + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        switch (currentNetworkEvent)
+        {
+            case NetworkEventType.ConnectEvent:
+                connectionConfirmed = true;
+                channelRequested = true;    // Since this is can be executed by the computer that isn't requesting a channel it isn't symantically correct 
+                                            // but it needs to be set
+
+                // This code executes when the non-initiating computer gets a connection request.
+                // The other computer doesn't have the ip address of this computer so send it since it is needed if a saved game is going to be played
+                SendMessageToRemoteComputer("RemoteIPAddress " + Network.player.ipAddress);
+                SendMessageToRemoteComputer("ConfirmSync");
+
+                break;
+
+            case NetworkEventType.DataEvent:
+                Stream stream = new MemoryStream(recBuffer);
+                BinaryFormatter formatter = new BinaryFormatter();
+                string message = formatter.Deserialize(stream) as string;
+                OnData(recHostId, recConnectionId, recChannelId, message, dataSize, (NetworkError)recError);
+
+                // Check for confirmation
+                if (message == "ConfirmSync")
+                {
+                    GlobalDefinitions.WriteToLogFile("Update: remote computer confirms sync through data message");
+                    opponentComputerConfirmsSync = true;
+
+                    // Send out the handshake message
+                    if (GlobalDefinitions.userIsIntiating)
+                        SendMessageToRemoteComputer("InControl");
+                    else
+                        SendMessageToRemoteComputer("NotInControl");
+                }
+                else if ((message == "InControl") || (message == "NotInControl"))
+                {
+                    checkForHandshakeReceipt(message);
+                }
+                else
+                    GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Expecting ConfirmSync and received = " + message);
+                break;
+
+            case NetworkEventType.DisconnectEvent:
+                GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
+                GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));
+                ResetConnection(recHostId);
+                break;
+            case NetworkEventType.Nothing:
+                break;
+            default:
+                GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()1: Unknown network event type received - " + currentNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                break;
+        }
     }
-}
+
+        /// <summary>
+        /// Writes data event to log file
+        /// </summary>
+        /// <param name="hostId"></param>
+        /// <param name="connectionId"></param>
+        /// <param name="channelId"></param>
+        /// <param name="message"></param>
+        /// <param name="size"></param>
+        /// <param name="error"></param>
+        public static void OnData(int hostId, int connectionId, int channelId, string message, int size, NetworkError error)
+        {
+            GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + hostId + ", connectionId = "
+                + connectionId + ", channelId = " + channelId + ", data = "
+                + message + ", size = " + size + ", error = " + error.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        }
+    }
