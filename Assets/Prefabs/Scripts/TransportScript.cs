@@ -111,6 +111,9 @@ public class TransportScript : MonoBehaviour
                         GlobalDefinitions.communicationSocket = recHostId;
                         GlobalDefinitions.communicationChannel = recConnectionId;
 
+                        // This code executes when the non-initiating computer gets a connection request.
+                        // The other computer doesn't have the ip address of this computer so send it since it is needed if a saved game is going to be played
+                        SendMessageToRemoteComputer("RemoteIPAddress " + Network.player.ipAddress);
                         SendMessageToRemoteComputer("ConfirmSync");
 
                         break;
