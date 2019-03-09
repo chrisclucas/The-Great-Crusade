@@ -143,7 +143,7 @@ public class SetUpState : GameState
     public void ExecuteNewGame()
     {
         int fileNumber;
-
+        GlobalDefinitions.WriteToLogFile("ExecuteNewGame: executing");
         // Since at this point we know we are starting a new game and not running the command file, remove the command file
         if (!GlobalDefinitions.commandFileBeingRead)
             if (File.Exists(GameControl.path + GlobalDefinitions.commandFile))

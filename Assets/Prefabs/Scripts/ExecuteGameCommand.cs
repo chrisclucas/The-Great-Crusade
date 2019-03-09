@@ -180,7 +180,6 @@ public class ExecuteGameCommand : MonoBehaviour {
                 GameObject.Find(switchEntries[1]).GetComponent<PostCombatMovementOkRoutines>().ExecutePostCombatMovement();
                 break;
             case GlobalDefinitions.DISPLAYALLIEDSUPPLYKEYWORD:
-                GlobalDefinitions.WriteToLogFile("processCommand: executing DISPLAYALLIEDSUPPLY");
                 if (switchEntries[1] == "True")
                     GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CreateSupplySourceGUI(true);
                 else

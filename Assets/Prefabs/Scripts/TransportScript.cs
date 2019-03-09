@@ -158,16 +158,17 @@ public class TransportScript : MonoBehaviour
                         {
                             GlobalDefinitions.SwitchLocalControl(true);
                             SendMessageToRemoteComputer(GlobalDefinitions.PLAYSIDEKEYWORD + " Allied");
+                            SendMessageToRemoteComputer(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                         }
                         else
                         {
                             // Pass control to the remote computer
                             SendMessageToRemoteComputer(GlobalDefinitions.PLAYSIDEKEYWORD + " German");
+                            SendMessageToRemoteComputer(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                             SendMessageToRemoteComputer(GlobalDefinitions.PASSCONTROLKEYWORK);
                             GlobalDefinitions.SwitchLocalControl(false);
                         }
 
-                        SendMessageToRemoteComputer(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + GlobalDefinitions.germanSetupFileUsed);
                     }
 
                     // Playing a saved game

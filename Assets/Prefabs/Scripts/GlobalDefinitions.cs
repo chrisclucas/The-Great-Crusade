@@ -88,7 +88,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static int turnsAlliedMetVictoryCondition = 0;
 
     // Contains the current game mode
-    public enum GameModeValues { Hotseat, AI, Peer2PeerNetwork, ClientServerNetwork, Server, EMail, Network }
+    public enum GameModeValues { Hotseat, AI, Peer2PeerNetwork, ClientServerNetwork, Server, EMail }
     public static GameModeValues gameMode;
     public static string commandFileHeader; // Used to log what type of game the command file was generated with
     public static bool gameStarted = false;
