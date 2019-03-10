@@ -2557,6 +2557,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="localControlValue"></param>
     public static void SwitchLocalControl(bool localControlValue)
     {
+        GlobalDefinitions.WriteToLogFile("SwitchLocalControl: executing with value = " + localControlValue);
         localControl = localControlValue;
 
         if (localControlValue)

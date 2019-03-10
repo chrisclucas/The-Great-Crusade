@@ -16,14 +16,6 @@ public class InvasionSelectionToggleRoutines : MonoBehaviour
                     GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedInvasionState>().ExecuteSelectUnit;
 
             GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
-            GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
-            GlobalDefinitions.undoButton.GetComponent<Button>().interactable = true;
-            GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().interactable = true;
-            GlobalDefinitions.AssignCombatButton.GetComponent<Button>().interactable = true;
-            GlobalDefinitions.DisplayAllCombatsButton.GetComponent<Button>().interactable = true;
-            GlobalDefinitions.AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
-            GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
-            GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
         }
     }
 }
