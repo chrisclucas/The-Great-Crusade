@@ -20,7 +20,7 @@ public class GUIButtonRoutines : MonoBehaviour
             // Need to do this first since during changes in control the next phase routine passes control so this would never be sent
             GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.NEXTPHASEKEYWORD);
 
-            // Button to quit the current game state
+            // Quit the current game state
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
         }
         else

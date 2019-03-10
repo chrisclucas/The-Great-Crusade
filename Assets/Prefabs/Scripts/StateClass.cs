@@ -169,7 +169,7 @@ public class SetUpState : GameState
         // The network communication is a little different for a new game so I can't use the routine to write to the command file
         // since I don't want it sending a message to the remote computer.
         if (!GlobalDefinitions.commandFileBeingRead)
-        {            
+        {
             using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalDefinitions.fullCommandFile))
             {
                 writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
@@ -275,7 +275,7 @@ public class SetUpState : GameState
             GlobalDefinitions.commandFileBeingRead = false;
             GlobalDefinitions.GuiUpdateStatusMessage("Read complete");
             theReader.Close();
-        }  
+        }
     }
 
     public void ExecuteSelectUnit(InputMessage inputMessage)
@@ -322,12 +322,20 @@ public class TurnInitializationState : GameState
     public override void Initialize()
     {
         // If this is a network game the control needs to be swapped here
-        if (GlobalDefinitions.localControl && GlobalDefinitions.gameStarted && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German) && 
-                (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
+        //if (GlobalDefinitions.localControl && GlobalDefinitions.gameStarted && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German) && 
+        //        (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
+        //{
+        //    GlobalDefinitions.WriteToLogFile("TurnInitializationState: passing control to remote computer");
+        //    GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
+        //    GlobalDefinitions.SwitchLocalControl(false);
+        //}
+
+        if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
         {
-            GlobalDefinitions.WriteToLogFile("TurnInitializationState: passing control to remote computer");
-            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
-            GlobalDefinitions.SwitchLocalControl(false);
+            if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
+                GlobalDefinitions.SwitchLocalControl(false);
+            else
+                GlobalDefinitions.SwitchLocalControl(true);
         }
 
         GlobalDefinitions.nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
@@ -1089,12 +1097,20 @@ public class GermanIsolationState : GameState
     public override void Initialize()
     {
         // If this is a network game the control needs to be swapped here
-        if (GlobalDefinitions.localControl && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.Allied) && 
-                (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
+        //if (GlobalDefinitions.localControl && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.Allied) && 
+        //        (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
+        //{
+        //    GlobalDefinitions.WriteToLogFile("GermanIsolationState: passing control to remote computer");
+        //    GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
+        //    GlobalDefinitions.SwitchLocalControl(false);
+        //}
+
+        if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
         {
-            GlobalDefinitions.WriteToLogFile("GermanIsolationState: passing control to remote computer");
-            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
-            GlobalDefinitions.SwitchLocalControl(false);
+            if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.Allied)
+                GlobalDefinitions.SwitchLocalControl(false);
+            else
+                GlobalDefinitions.SwitchLocalControl(true);
         }
 
         GlobalDefinitions.GuiUpdatePhase("German Isolation Check Mode");
