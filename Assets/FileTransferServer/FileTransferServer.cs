@@ -107,7 +107,7 @@ public class FileTransferServer : MonoBehaviour
             try
             {
                 //client = new UdpClient(port);
-                client = new UdpClient(TransportScript.remoteGamePort);
+                client = new UdpClient(TransportScript.localGamePort);
                 client.EnableBroadcast = true;
                 client.Client.ReceiveBufferSize = 65536;	// Forces the highest value (64KB).
                 client.Client.SendBufferSize = 65536;		// Forces the highest value (64KB).
