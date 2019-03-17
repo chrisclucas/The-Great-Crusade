@@ -410,6 +410,8 @@ public class TransportScript : MonoBehaviour
                         remoteGamePort = Convert.ToInt32(switchEntries[2]);
                         remoteFileTransferPort = Convert.ToInt32(switchEntries[3]);
 
+                        GlobalDefinitions.WriteToLogFile("processNetworkEvent: setting remote game port to " + remoteGamePort + " remote file transfer port to " + remoteFileTransferPort);
+
                         // Now that we know what the remote port is init the file transfer code
                         GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
 

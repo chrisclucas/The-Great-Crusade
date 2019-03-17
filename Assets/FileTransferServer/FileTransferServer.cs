@@ -106,6 +106,7 @@ public class FileTransferServer : MonoBehaviour
             try
             {
                 //client = new UdpClient(port);
+                GlobalDefinitions.WriteToLogFile("initiateFileTransferServer: listening on port " + TransportScript.localFileTransferPort);
                 client = new UdpClient(TransportScript.localFileTransferPort);
                 client.EnableBroadcast = true;
                 client.Client.ReceiveBufferSize = 65536;	// Forces the highest value (64KB).
@@ -306,7 +307,8 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send byte[] message through UDP.</summary>
     void SendData(string ip, byte[] data)
     {
-        GlobalDefinitions.WriteToLogFile("SendData: remote port = " + TransportScript.remoteGamePort + " local port = " + TransportScript.localGamePort);
+        GlobalDefinitions.WriteToLogFile("SendData: remote game port = " + TransportScript.remoteGamePort + " local game port = " + TransportScript.localGamePort);
+        GlobalDefinitions.WriteToLogFile("SendData: remote file transfer port = " + TransportScript.remoteFileTransferPort + " local file transfer port = " + TransportScript.localFileTransferPort);
         if (client != null)
         {
             // Create the remote connection address:
