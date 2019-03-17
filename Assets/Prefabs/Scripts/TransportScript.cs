@@ -8,11 +8,14 @@ using System.Runtime.Serialization.Formatters.Binary;
 public class TransportScript : MonoBehaviour
 {
     public const int defaultGamePort = 5016;
+    public const int defaultFileTransferPort = 5017;
     public const int BUFFERSIZE = 1024; // started with 512
     public static int reliableChannelId;
     public static int unreliableChannelId;
     public static int remoteGamePort;
     public static int localGamePort;
+    public static int remoteFileTransferPort;
+    public static int localFileTransferPort;
 
     public static int connectionId = -1;
 
@@ -370,7 +373,7 @@ public class TransportScript : MonoBehaviour
 
                 // This code executes when the non-initiating computer gets a connection request.
                 // The other computer doesn't have the ip address of this computer so send it since it is needed if a saved game is going to be played
-                SendMessageToRemoteComputer("RemoteIPAddress " + GlobalDefinitions.thisComputerIPAddress + " " + TransportScript.localGamePort);
+                SendMessageToRemoteComputer("RemoteIPAddress " + GlobalDefinitions.thisComputerIPAddress + " " + localGamePort +  " " + localFileTransferPort);
                 SendMessageToRemoteComputer("ConfirmSync");
 
                 break;
@@ -405,6 +408,7 @@ public class TransportScript : MonoBehaviour
                     case "RemoteIPAddress":
                         GlobalDefinitions.opponentIPAddress = switchEntries[1];
                         remoteGamePort = Convert.ToInt32(switchEntries[2]);
+                        remoteFileTransferPort = Convert.ToInt32(switchEntries[3]);
 
                         // Now that we know what the remote port is init the file transfer code
                         GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();

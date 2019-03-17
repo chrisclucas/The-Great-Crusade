@@ -1436,7 +1436,7 @@ public class GlobalDefinitions : MonoBehaviour
         //tempInputField.image.rectTransform.sizeDelta = new Vector2(180, 30);
         tempInputField.image.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
         tempInputField.name = name + "InputField";
-        tempInputField.text = "43.30.112.248";
+        tempInputField.text = "45.30.112.248";
         return (tempInputField);
     }
 

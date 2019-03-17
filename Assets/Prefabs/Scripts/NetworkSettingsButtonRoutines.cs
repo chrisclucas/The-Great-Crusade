@@ -18,14 +18,22 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         GlobalDefinitions.userIsIntiating = true;
         GlobalDefinitions.userIsNotInitiating = false;
 
-        // Since this computer is intiating, I need to find an open port
+        // Since this computer is intiating, I need to find an open port for the game
         TcpListener l = new TcpListener(IPAddress.Loopback, 0);
         l.Start();
         int port = ((IPEndPoint)l.LocalEndpoint).Port;
         l.Stop();
-        GlobalDefinitions.WriteToLogFile("YesInitiate: open port found = " + port);
+        GlobalDefinitions.WriteToLogFile("YesInitiate: open game port found = " + port);
         TransportScript.localGamePort = port;
         TransportScript.remoteGamePort = TransportScript.defaultGamePort;
+
+        // Now I need a port for file transfer
+        l.Start();
+        port = ((IPEndPoint)l.LocalEndpoint).Port;
+        l.Stop();
+        GlobalDefinitions.WriteToLogFile("YesInitiate: open file transfer port found = " + port);
+        TransportScript.localFileTransferPort = port;
+        TransportScript.remoteGamePort = TransportScript.defaultFileTransferPort;
     }
 
     /// <summary>
@@ -46,6 +54,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         GameObject.Find("initiatingGameYesButton").GetComponent<Button>().interactable = false;
 
         TransportScript.localGamePort = TransportScript.defaultGamePort;
+        TransportScript.localFileTransferPort = TransportScript.defaultFileTransferPort;
     }
 
     /// <summary>
