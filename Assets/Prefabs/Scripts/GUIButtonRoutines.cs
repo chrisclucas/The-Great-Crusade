@@ -200,7 +200,6 @@ public class GUIButtonRoutines : MonoBehaviour
     {
         if (GlobalDefinitions.guiList.Count == 0)
         {
-            GlobalDefinitions.WriteToLogFile("executeCombatResolution: Executing  combat count = " + GlobalDefinitions.allCombats.Count);
             if (GlobalDefinitions.allCombats.Count > 0)
             {
                 // Turn off the button

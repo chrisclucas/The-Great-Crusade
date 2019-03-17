@@ -1139,8 +1139,6 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="unit"></param>
     public static void MoveUnitToDeadPile(GameObject unit)
     {
-        WriteToLogFile("moveUnitToDeadPile: unit " + unit.name + " is being eliminated");
-
         // Remove the unit from the hex
         RemoveUnitFromHex(unit, unit.GetComponent<UnitDatabaseFields>().occupiedHex);
 
@@ -1437,7 +1435,7 @@ public class GlobalDefinitions : MonoBehaviour
         //tempInputField.image.rectTransform.sizeDelta = new Vector2(180, 30);
         tempInputField.image.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
         tempInputField.name = name + "InputField";
-        tempInputField.text = "192.168.1.73";
+        tempInputField.text = "43.30.112.248";
         return (tempInputField);
     }
 
@@ -2557,7 +2555,6 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="localControlValue"></param>
     public static void SwitchLocalControl(bool localControlValue)
     {
-        GlobalDefinitions.WriteToLogFile("SwitchLocalControl: executing with value = " + localControlValue);
         localControl = localControlValue;
 
         if (localControlValue)

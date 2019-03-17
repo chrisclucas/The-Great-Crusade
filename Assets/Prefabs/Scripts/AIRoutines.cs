@@ -2773,7 +2773,6 @@ public class AIRoutines : MonoBehaviour
         List<GameObject> tempListOfNewAttackHexesAdded = new List<GameObject>();
         bool oddsMet = false;
 
-        GlobalDefinitions.WriteToLogFile("determineInvasionSite: executing");
         GlobalDefinitions.invasionsTookPlaceThisTurn = true;
         foreach (InvasionArea invasionArea in GlobalDefinitions.invasionAreas)
         {

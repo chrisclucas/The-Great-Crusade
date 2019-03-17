@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Net;
+using System.Net.Sockets;
 
 public class NetworkSettingsButtonRoutines : MonoBehaviour
 {
@@ -15,6 +17,15 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = true;
         GlobalDefinitions.userIsIntiating = true;
         GlobalDefinitions.userIsNotInitiating = false;
+
+        // Since this computer is intiating, I need to find an open port
+        TcpListener l = new TcpListener(IPAddress.Loopback, 0);
+        l.Start();
+        int port = ((IPEndPoint)l.LocalEndpoint).Port;
+        l.Stop();
+        GlobalDefinitions.WriteToLogFile("YesInitiate: open port found = " + port);
+        TransportScript.localGamePort = port;
+        TransportScript.remoteGamePort = TransportScript.defaultGamePort;
     }
 
     /// <summary>
@@ -33,6 +44,8 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text = "";
         GameObject.Find("initiatingGameNoButton").GetComponent<Button>().interactable = false;
         GameObject.Find("initiatingGameYesButton").GetComponent<Button>().interactable = false;
+
+        TransportScript.localGamePort = TransportScript.defaultGamePort;
     }
 
     /// <summary>

@@ -96,8 +96,6 @@ public class CombatResolutionRoutines : MonoBehaviour
         Button okButton;
         bool playerControl = true;
 
-        GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: executing");
-
         GameObject combatResolutionGuiInstance;
 
         // I'm going to set a flag to indicate when the display is being presented to resolve the AI's combats.

@@ -217,7 +217,6 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
             // Get rid of the locate button on the attack being resolved, can't gaurantee that the units are still there after resolution
             DestroyImmediate(curentCombat.GetComponent<Combat>().locateButton.gameObject);
             //Get rid of the resolve button since the battle has been resolved.  This is also used to determine if all combats have been resolved.
-            GlobalDefinitions.WriteToLogFile("resolutionSelected: removing resolve button " + gameObject.name);
             //DestroyImmediate(GameObject.Find(GlobalDefinitions.CombatResultToggleName));
             GlobalDefinitions.RemoveGUI(gameObject);
         }

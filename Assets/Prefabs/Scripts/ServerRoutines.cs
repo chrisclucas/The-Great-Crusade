@@ -114,7 +114,7 @@ public class ServerRoutines : MonoBehaviour
         NetworkTransport.Init(globalConfig);
 
         // Note, while the hostId below doesn't get used anywhere the line is needed to start the server listening, I know I should probably not assign the result, but ...
-        hostId = NetworkTransport.AddHost(topology, TransportScript.gamePort);
+        hostId = NetworkTransport.AddHost(topology, TransportScript.defaultGamePort);
     }
 
     private void SendMessageToClient(string message, int clientHostID, int clientConnectionID, int clientChannelID)

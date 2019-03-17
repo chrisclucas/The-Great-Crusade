@@ -7,10 +7,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class TransportScript : MonoBehaviour
 {
+    public const int defaultGamePort = 5016;
     public const int BUFFERSIZE = 1024; // started with 512
     public static int reliableChannelId;
     public static int unreliableChannelId;
-    public static int gamePort = 5016;
+    public static int remoteGamePort;
+    public static int localGamePort;
 
     public static int connectionId = -1;
 
@@ -69,7 +71,7 @@ public class TransportScript : MonoBehaviour
             remoteComputerId = -1;
         }
 
-        serverSocket = NetworkTransport.AddHost(topology, gamePort);
+        serverSocket = NetworkTransport.AddHost(topology, localGamePort);
         remoteComputerId = NetworkTransport.AddHost(topology);
 
         return (remoteComputerId);
@@ -249,7 +251,7 @@ public class TransportScript : MonoBehaviour
             byte error;
 
             NetworkTransport.Init();
-            connectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, gamePort, 0, out error);
+            connectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, remoteGamePort, 0, out error);
 
             if (connectionId <= 0)
                 return (false);

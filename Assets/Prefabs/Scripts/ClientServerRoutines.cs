@@ -97,7 +97,7 @@ public class ClientServerRoutines : MonoBehaviour
         byte error;
 
         //NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, GlobalDefinitions.opponentIPAddress, NetworkRoutines.gamePort, 0, out error);
-        TransportScript.recConnectionId = NetworkTransport.Connect(TransportScript.remoteComputerId, GlobalDefinitions.opponentIPAddress, TransportScript.gamePort, 0, out error);
+        TransportScript.recConnectionId = NetworkTransport.Connect(TransportScript.remoteComputerId, GlobalDefinitions.opponentIPAddress, TransportScript.defaultGamePort, 0, out error);
 
         if (TransportScript.recConnectionId <= 0)
             return (false);
