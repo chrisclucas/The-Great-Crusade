@@ -42,6 +42,8 @@ public class TransportScript : MonoBehaviour
     {
         byte error;
 
+        GlobalDefinitions.WriteToLogFile("NetworkInit: localGamePort = " + localGamePort + " remoteGamePort = " + remoteGamePort);
+
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
         globalConfig.MaxPacketSize = 1500;
@@ -252,6 +254,8 @@ public class TransportScript : MonoBehaviour
 
             NetworkTransport.Init();
             connectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, remoteGamePort, 0, out error);
+
+            GlobalDefinitions.WriteToLogFile("Connect: opponentIPaddr = " + opponentIPaddr + " remoteGamePort = " + remoteGamePort + " localGamePort = " + localGamePort);
 
             if (connectionId <= 0)
                 return (false);
