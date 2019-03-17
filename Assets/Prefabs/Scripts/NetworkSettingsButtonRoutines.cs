@@ -184,8 +184,6 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             else
                 GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
         }
-        // If we're playing a saved game init the file transfer routines.  Need to be run without checks because the non-intiating computer doesn't know if it needs this
-        GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
     }
 
     /// <summary>

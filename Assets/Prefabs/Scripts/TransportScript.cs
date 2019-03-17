@@ -405,6 +405,10 @@ public class TransportScript : MonoBehaviour
                     case "RemoteIPAddress":
                         GlobalDefinitions.opponentIPAddress = switchEntries[1];
                         remoteGamePort = Convert.ToInt32(switchEntries[2]);
+
+                        // Now that we know what the remote port is init the file transfer code
+                        GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
+
                         break;
 
                     default:
