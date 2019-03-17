@@ -100,6 +100,7 @@ public class FileTransferServer : MonoBehaviour
     //void Awake()
     public void initiateFileTransferServer()
     {
+        GlobalDefinitions.WriteToLogFile("initiateFileTransferServer: remote port = " + TransportScript.remoteGamePort + " local port = " + TransportScript.localGamePort);
         // UDP client:
         if (client == null)
         {
@@ -129,6 +130,7 @@ public class FileTransferServer : MonoBehaviour
         // Delete last possible incomplete previous download:
         FileManagement.EmptyDirectory(tempFolder);
     }
+
     /// <summary>Listening thread</summary>
     void ReceiveData()
     {
@@ -305,6 +307,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send byte[] message through UDP.</summary>
     void SendData(string ip, byte[] data)
     {
+        GlobalDefinitions.WriteToLogFile("SendData: remote port = " + TransportScript.remoteGamePort + " local port = " + TransportScript.localGamePort);
         if (client != null)
         {
             // Create the remote connection address:
