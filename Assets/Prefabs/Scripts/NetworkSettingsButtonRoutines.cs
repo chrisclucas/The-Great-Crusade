@@ -33,7 +33,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         l.Stop();
         GlobalDefinitions.WriteToLogFile("YesInitiate: open file transfer port found = " + port);
         TransportScript.localFileTransferPort = port;
-        TransportScript.remoteGamePort = TransportScript.defaultFileTransferPort;
+        TransportScript.remoteFileTransferPort = TransportScript.defaultFileTransferPort;
     }
 
     /// <summary>
