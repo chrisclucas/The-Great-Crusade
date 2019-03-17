@@ -370,7 +370,7 @@ public class TransportScript : MonoBehaviour
 
                 // This code executes when the non-initiating computer gets a connection request.
                 // The other computer doesn't have the ip address of this computer so send it since it is needed if a saved game is going to be played
-                SendMessageToRemoteComputer("RemoteIPAddress " + GlobalDefinitions.thisComputerIPAddress);
+                SendMessageToRemoteComputer("RemoteIPAddress " + GlobalDefinitions.thisComputerIPAddress + " " + TransportScript.localGamePort);
                 SendMessageToRemoteComputer("ConfirmSync");
 
                 break;
@@ -404,6 +404,7 @@ public class TransportScript : MonoBehaviour
 
                     case "RemoteIPAddress":
                         GlobalDefinitions.opponentIPAddress = switchEntries[1];
+                        remoteGamePort = Convert.ToInt32(switchEntries[2]);
                         break;
 
                     default:
