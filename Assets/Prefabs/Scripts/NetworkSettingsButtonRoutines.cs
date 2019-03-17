@@ -184,6 +184,10 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             else
                 GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
         }
+
+        // If we're playing a saved game init the file transfer routines
+        if (MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn == true)
+            GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
     }
 
     /// <summary>
