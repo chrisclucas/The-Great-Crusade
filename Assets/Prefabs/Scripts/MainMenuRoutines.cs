@@ -5,6 +5,8 @@ public class MainMenuRoutines : MonoBehaviour
 {
     public static GameObject germanToggle;
     public static GameObject alliedToggle;
+    public static GameObject LANGameToggle;
+    public static GameObject WWWGameToggle;
     public static GameObject newGameToggle;
     public static GameObject savedGameToggle;
     public static Button yesInitiateButton;
@@ -207,10 +209,38 @@ public class MainMenuRoutines : MonoBehaviour
         opponentIPaddr.interactable = false;
 
         // Display the local ip address
-        tempText = GlobalDefinitions.CreateText("Local IP address = " + GlobalDefinitions.GetLocalPublicIPAddress(), "localIPAddrText",
+        GlobalDefinitions.CreateText("LAN", "LANGameText",
+                GlobalDefinitions.GUIUNITIMAGESIZE,
+                GlobalDefinitions.GUIUNITIMAGESIZE,
+                1 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelWidth),
+                3 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                networkSettingsCanvas);
+
+        LANGameToggle = GlobalDefinitions.CreateToggle("LANGameToggle",
+        2 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelWidth),
+        3 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+        networkSettingsCanvas);
+        LANGameToggle.gameObject.AddComponent<NetworkSettingsButtonRoutines>();
+        LANGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => LANGameToggle.gameObject.GetComponent<NetworkSettingsButtonRoutines>().LANGameSelection());
+
+        GlobalDefinitions.CreateText("WWW", "WWWGameText",
+        GlobalDefinitions.GUIUNITIMAGESIZE,
+        GlobalDefinitions.GUIUNITIMAGESIZE,
+        3 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelWidth),
+        3 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+        networkSettingsCanvas);
+
+        WWWGameToggle = GlobalDefinitions.CreateToggle("WWWGameToggle",
+        4 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelWidth),
+        3 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
+        networkSettingsCanvas);
+        WWWGameToggle.gameObject.AddComponent<NetworkSettingsButtonRoutines>();
+        WWWGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => WWWGameToggle.gameObject.GetComponent<NetworkSettingsButtonRoutines>().WWWGameSelection());
+
+        tempText = GlobalDefinitions.CreateText("This computer IP address = " + GlobalDefinitions.thisComputerIPAddress, "localIPAddrText",
                 5 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
-                3 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelWidth),
+                8 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelWidth),
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 networkSettingsCanvas);
         tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;

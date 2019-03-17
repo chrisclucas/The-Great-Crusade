@@ -129,6 +129,36 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     /// </summary>
     public void OkNetworkSettings()
     {
+        bool foundAnError = false;
+        // Check to make sure the user indicated whether this is a LAN or WWW game
+        if ((MainMenuRoutines.LANGameToggle.GetComponent<Toggle>().isOn == false) && (MainMenuRoutines.WWWGameToggle.GetComponent<Toggle>().isOn == false))
+        {
+            GlobalDefinitions.GuiUpdateStatusMessage("Must select LAN or WWW game");
+            foundAnError = true;          
+        }
+
+        // Check that the user selected a side to play
+        if ((MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable == true) && 
+                (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn == false) && 
+                (MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn == false))
+        {
+            GlobalDefinitions.GuiUpdateStatusMessage("Must which side to play: German or Allied");
+            foundAnError = true;
+        }
+
+        // Check that the user selected a type of game to play
+        if ((MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable == true) && 
+                (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn == false) && 
+                (MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn == false))
+        {
+            GlobalDefinitions.GuiUpdateStatusMessage("Must select a new or saved game");
+            foundAnError = true; 
+        }
+
+        if (foundAnError)
+            return;
+
+
         // If the user is not initiating, then just exit out since the next step is to wait for a connection request
         if (GlobalDefinitions.userIsNotInitiating)
         {
@@ -173,6 +203,32 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
         {
             GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+        }
+    }
+
+    /// <summary>
+    /// This executes when the player indicates that the game is a LAN game
+    /// </summary>
+    public void LANGameSelection()
+    {
+        if (MainMenuRoutines.LANGameToggle.GetComponent<Toggle>().isOn == true)
+        {
+            MainMenuRoutines.WWWGameToggle.GetComponent<Toggle>().isOn = false;
+            GlobalDefinitions.thisComputerIPAddress = Network.player.ipAddress;
+            GameObject.Find("localIPAddrText").GetComponent<Text>().text = GlobalDefinitions.thisComputerIPAddress;
+        }
+    }
+
+    /// <summary>
+    /// This executes when the player indicates that the game is a WWW game
+    /// </summary>
+    public void WWWGameSelection()
+    {
+        if (MainMenuRoutines.WWWGameToggle.GetComponent<Toggle>().isOn == true)
+        {
+            MainMenuRoutines.LANGameToggle.GetComponent<Toggle>().isOn = false;
+            GlobalDefinitions.thisComputerIPAddress = GlobalDefinitions.GetLocalPublicIPAddress();
+            GameObject.Find("localIPAddrText").GetComponent<Text>().text = GlobalDefinitions.thisComputerIPAddress;
         }
     }
 }

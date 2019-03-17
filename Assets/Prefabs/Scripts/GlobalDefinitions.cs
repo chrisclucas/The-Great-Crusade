@@ -290,6 +290,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static int germanSetupFileUsed = 100;
 
     public static string opponentIPAddress;
+    public static string thisComputerIPAddress;
 
     /// <summary>
     /// Goes through and resets all variables 
