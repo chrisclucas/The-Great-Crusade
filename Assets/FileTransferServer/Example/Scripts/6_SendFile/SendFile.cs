@@ -27,7 +27,7 @@ public class SendFile : MonoBehaviour {
         {
             validServerList.ClearOptions();
             // Add possibility of broadcast:
-            string[] ipParts = Network.player.ipAddress.Split('.');
+            string[] ipParts = GlobalDefinitions.thisComputerIPAddress.Split('.');
             ipParts[3] = "255";
             validServerList.options.Add(new Dropdown.OptionData() { text = ipParts[0] + "." + ipParts[1] + "." + ipParts[2] + "." + ipParts[3] });
             // Updates the available server list:

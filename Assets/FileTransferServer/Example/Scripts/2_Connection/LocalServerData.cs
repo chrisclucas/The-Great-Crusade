@@ -14,7 +14,7 @@ public class LocalServerData : MonoBehaviour {
         fts = GameObject.Find("FileTransferServer").GetComponent<FileTransferServer>();
         localServer = transform.Find("ToggleLocalServer").GetComponent<Toggle>();
         localIP = transform.Find("LabelLocalIP").Find("Text").GetComponent<Text>();
-        localIP.text = Network.player.ipAddress;
+        localIP.text = GlobalDefinitions.thisComputerIPAddress;
         inputChunk = transform.Find("InputChunk").GetComponent<InputField>();
         inputChunk.text = fts.GetMaxChunkSize().ToString();
     }

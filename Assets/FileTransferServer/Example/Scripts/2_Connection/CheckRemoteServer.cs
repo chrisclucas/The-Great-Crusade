@@ -14,7 +14,7 @@ public class CheckRemoteServer : MonoBehaviour {
 	    serverIP = transform.Find("InputField").GetComponent<InputField>();
         validServerList = transform.Find("DropdownServers").GetComponent<Dropdown>();
         // Default broadcast IP:
-        string[] ipParts = Network.player.ipAddress.Split('.');
+        string[] ipParts = GlobalDefinitions.thisComputerIPAddress.Split('.');
         ipParts[3] = "255";
         serverIP.text = ipParts[0] + "."+ ipParts[1] + "."+ ipParts[2] + "." + ipParts[3];
     }

@@ -106,7 +106,7 @@ public class FileTransferServer : MonoBehaviour
             try
             {
                 //client = new UdpClient(port);
-                client = new UdpClient(TransportScript.localGamePort);
+                client = new UdpClient(TransportScript.remoteGamePort);
                 client.EnableBroadcast = true;
                 client.Client.ReceiveBufferSize = 65536;	// Forces the highest value (64KB).
                 client.Client.SendBufferSize = 65536;		// Forces the highest value (64KB).
@@ -176,13 +176,13 @@ public class FileTransferServer : MonoBehaviour
 
         // Echo filter:
         string remoteIp = fields[1];
-        if (Network.player.ipAddress != remoteIp)
+        if (GlobalDefinitions.thisComputerIPAddress != GlobalDefinitions.opponentIPAddress)
         {
             switch (fields[0])
             {
                 case "F0":  // Someone wants to know if this server is active.
                     Thread.Sleep(Random.Range(200, 800));
-                    SendString(remoteIp, "F1;" + Network.player.ipAddress + ";" + enableServer.ToString() + ";#");
+                    SendString(remoteIp, "F1;" + GlobalDefinitions.thisComputerIPAddress + ";" + enableServer.ToString() + ";#");
                     break;
                 case "F1":  // Server polling response (can be disabled):
                     bool activity = bool.Parse(fields[2]);
@@ -373,8 +373,8 @@ public class FileTransferServer : MonoBehaviour
                     // Request first part of the file (or retry):
                     rxFileTimer = rxFileTimeout;    // Reset file request timer.
                     FileRequest item = downloadList[0];
-                    GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + GlobalDefinitions.opponentIPAddress + " F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
-                    SendString(GlobalDefinitions.opponentIPAddress, "F3;" + Network.player.ipAddress + ";" + item.file + ";1;#");
+                    GlobalDefinitions.WriteToLogFile("FileTransferServer update(): SendString(" + GlobalDefinitions.opponentIPAddress + " F3;" + GlobalDefinitions.thisComputerIPAddress + ";" + item.file + ";1;#");
+                    SendString(GlobalDefinitions.opponentIPAddress, "F3;" + GlobalDefinitions.thisComputerIPAddress + ";" + item.file + ";1;#");
                 }
                 else
                 {
@@ -386,7 +386,7 @@ public class FileTransferServer : MonoBehaviour
                             // Request next part of the file (or retry):
                             rxFileTimer = rxFileTimeout;    // Reset file request timer.
                             FileRequest item = downloadList[0];
-                            SendString(GlobalDefinitions.opponentIPAddress, "F3;" + Network.player.ipAddress + ";" + item.file + ";" + (p + 1).ToString() + ";#");
+                            SendString(GlobalDefinitions.opponentIPAddress, "F3;" + GlobalDefinitions.thisComputerIPAddress + ";" + item.file + ";" + (p + 1).ToString() + ";#");
                             // Counter of retry attempts, fire event if maximum reached:
                             rxFileRetryCounter++;
                             if (rxFileRetryCounter == rxFileRetryMaxCnt && onFileTimeout != null)
@@ -456,7 +456,7 @@ public class FileTransferServer : MonoBehaviour
         waitForRemoteStatus = true;
         remoteStatusTimer = statusTimeout;
         // Send the response:
-        SendString(serverIP, "F0;" + Network.player.ipAddress + ";#");
+        SendString(serverIP, "F0;" + GlobalDefinitions.thisComputerIPAddress + ";#");
     }
     /// <summary>Valid server list control</summary>
     public List<string> GetServerList()
@@ -534,7 +534,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Request the "file update" batch list by IP or Server index</summary>
     public void RequestUpdateList(string serverIP, string file, string savePath = "", bool fullPath = false)
     {
-        SendString(serverIP, "F6;" + Network.player.ipAddress + ";" + file + ";#");
+        SendString(serverIP, "F6;" + GlobalDefinitions.thisComputerIPAddress + ";" + file + ";#");
         waitForUpdateList = true;
         updateListTimer = rxListTimeout;
         updateSavePath = savePath;
@@ -651,12 +651,12 @@ public class FileTransferServer : MonoBehaviour
         // Verify if file exists (also StreamingAssets folder):
         if (!FileManagement.FileExists(name))
         {
-            SendString(ip, "F2;" + Network.player.ipAddress + ";" + name + ";#");
+            SendString(ip, "F2;" + GlobalDefinitions.thisComputerIPAddress + ";" + name + ";#");
             return;
         }
         // Configure the partial file message:
         int parts = GetFileParts(name);   // Total parts count of the requested file.
-        string tempCmd = "F4;" + Network.player.ipAddress + ";" + name + ";" + part + "," + parts.ToString() + ";";
+        string tempCmd = "F4;" + GlobalDefinitions.thisComputerIPAddress + ";" + name + ";" + part + "," + parts.ToString() + ";";
         byte[] cmd = new byte[tempCmd.Length];
         for (int c = 0; c < cmd.Length; c++)
             cmd[c] = (byte)tempCmd[c];
@@ -682,7 +682,7 @@ public class FileTransferServer : MonoBehaviour
         {
             string listFile = FileManagement.ReadFile<string>(file);
             string[] list = listFile.Split(';');
-            string cmd = "F7;" + Network.player.ipAddress + ";";
+            string cmd = "F7;" + GlobalDefinitions.thisComputerIPAddress + ";";
             for (int c = 0; c < list.Length; c++)
             {
                 if (list[c] != "")
@@ -696,7 +696,7 @@ public class FileTransferServer : MonoBehaviour
         }
         else
         {
-            SendString(ip, "F5;" + Network.player.ipAddress + ";" + name + ";#");
+            SendString(ip, "F5;" + GlobalDefinitions.thisComputerIPAddress + ";" + name + ";#");
         }
     }
     /// <summary>Calculates the partial files count</summary>
@@ -712,7 +712,7 @@ public class FileTransferServer : MonoBehaviour
         {
             if (FileManagement.FileExists(name))
             {
-                string cmd = "F8;" + Network.player.ipAddress + ";" + name + ";#";    // F8;ServerIP;name;#
+                string cmd = "F8;" + GlobalDefinitions.thisComputerIPAddress + ";" + name + ";#";    // F8;ServerIP;name;#
                 SendString(ip, cmd);
             }
             else
@@ -728,7 +728,7 @@ public class FileTransferServer : MonoBehaviour
         {
             if (FileManagement.FileExists(list))
             {
-                string cmd = "F9;" + Network.player.ipAddress + ";" + list + ";#";    // F9;ServerIP;list;#
+                string cmd = "F9;" + GlobalDefinitions.thisComputerIPAddress + ";" + list + ";#";    // F9;ServerIP;list;#
                 SendString(ip, cmd);
             }
             else
