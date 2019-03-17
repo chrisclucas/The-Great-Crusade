@@ -134,12 +134,12 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         if ((MainMenuRoutines.LANGameToggle.GetComponent<Toggle>().isOn == false) && (MainMenuRoutines.WWWGameToggle.GetComponent<Toggle>().isOn == false))
         {
             GlobalDefinitions.GuiUpdateStatusMessage("Must select LAN or WWW game");
-            foundAnError = true;          
+            foundAnError = true;
         }
 
         // Check that the user selected a side to play
-        if ((MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable == true) && 
-                (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn == false) && 
+        if ((MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable == true) &&
+                (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn == false) &&
                 (MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn == false))
         {
             GlobalDefinitions.GuiUpdateStatusMessage("Must which side to play: German or Allied");
@@ -147,12 +147,12 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         }
 
         // Check that the user selected a type of game to play
-        if ((MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable == true) && 
-                (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn == false) && 
+        if ((MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable == true) &&
+                (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn == false) &&
                 (MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn == false))
         {
             GlobalDefinitions.GuiUpdateStatusMessage("Must select a new or saved game");
-            foundAnError = true; 
+            foundAnError = true;
         }
 
         if (foundAnError)
@@ -184,10 +184,8 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             else
                 GlobalDefinitions.GuiUpdateStatusMessage("No IP address entered");
         }
-
-        // If we're playing a saved game init the file transfer routines
-        if (MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn == true)
-            GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
+        // If we're playing a saved game init the file transfer routines.  Need to be run without checks because the non-intiating computer doesn't know if it needs this
+        GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
     }
 
     /// <summary>
