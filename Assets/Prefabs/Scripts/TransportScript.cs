@@ -257,8 +257,11 @@ public class TransportScript : MonoBehaviour
 
             NetworkTransport.Init();
             connectionId = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, remoteGamePort, 0, out error);
-
             GlobalDefinitions.WriteToLogFile("Connect: opponentIPaddr = " + opponentIPaddr + " remoteGamePort = " + remoteGamePort + " localGamePort = " + localGamePort);
+
+            // Also need to make a connection for the file transfer
+            NetworkTransport.Connect(remoteComputerId, opponentIPaddr, remoteFileTransferPort, 0, out error);
+            GlobalDefinitions.WriteToLogFile("Connect: opponentIPaddr = " + opponentIPaddr + " remoteFileTransferPort = " + remoteFileTransferPort + " localFileTransferPort = " + localFileTransferPort);
 
             if (connectionId <= 0)
                 return (false);
