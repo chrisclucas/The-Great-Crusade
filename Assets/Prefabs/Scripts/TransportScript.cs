@@ -18,6 +18,7 @@ public class TransportScript : MonoBehaviour
     public static int localFileTransferPort;
 
     public static int connectionId = -1;
+    public static int fileTransferConnectionID = -1;
 
     public static int serverSocket = -1;
     public static int remoteComputerId = -1;
@@ -163,6 +164,9 @@ public class TransportScript : MonoBehaviour
                     // Playing a saved game
                     else
                     {
+                        // Create a channel so the file transfer listener will get the request from the remote computer for the turn file
+                        InitiateFileTransferChannel();
+
                         string savedFileName = "";
                         savedFileName = GlobalDefinitions.GuiFileDialog();
 
@@ -260,7 +264,7 @@ public class TransportScript : MonoBehaviour
             GlobalDefinitions.WriteToLogFile("Connect: opponentIPaddr = " + opponentIPaddr + " remoteGamePort = " + remoteGamePort + " localGamePort = " + localGamePort);
 
             // Also need to make a connection for the file transfer
-            NetworkTransport.Connect(remoteComputerId, opponentIPaddr, remoteFileTransferPort, 0, out error);
+            fileTransferConnectionID = NetworkTransport.Connect(remoteComputerId, opponentIPaddr, remoteFileTransferPort, 0, out error);
             GlobalDefinitions.WriteToLogFile("Connect: opponentIPaddr = " + opponentIPaddr + " remoteFileTransferPort = " + remoteFileTransferPort + " localFileTransferPort = " + localFileTransferPort);
 
             if (connectionId <= 0)
@@ -293,6 +297,31 @@ public class TransportScript : MonoBehaviour
         else
         {
             GlobalDefinitions.WriteToLogFile("ERROR - SendSocketMessage - Connection hasn't been confirmed message not sent: " + message + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+        }
+    }
+
+    /// <summary>
+    /// Called by the initiating computer to allow the remote computer to requst the turn file
+    /// </summary>
+    /// <param name="message"></param>
+    public static void InitiateFileTransferChannel()
+    {
+        if (connectionConfirmed)
+        {
+            Stream stream = new MemoryStream(sendBuffer);
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(stream, "InitiateFileTransferChannel");
+            NetworkTransport.Send(recHostId, fileTransferConnectionID, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
+            GlobalDefinitions.WriteToLogFile("Sending message - " + "InitiateFileTransferChannel" + " hostId=" + recHostId + "  fileTransferConnectionID =" + fileTransferConnectionID + " Error: " + (NetworkError)sendError);
+
+            if ((NetworkError)sendError != NetworkError.Ok)
+            {
+                GlobalDefinitions.GuiUpdateStatusMessage("ERROR IN TRANSMISSION InitiateFileTransferChannel - Network Error returned = " + (NetworkError)sendError);
+            }
+        }
+        else
+        {
+            GlobalDefinitions.WriteToLogFile("ERROR - InitiateFileTransferChannel - Connection hasn't been confirmed " + DateTime.Now.ToString("h:mm:ss tt"));
         }
     }
 
