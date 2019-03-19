@@ -172,6 +172,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         if (GlobalDefinitions.userIsNotInitiating)
         {
             TransportScript.NetworkInit();
+            TransportScript.configureFileTransferConnection();
             GlobalDefinitions.GuiUpdateStatusMessage("Waiting on connection request");
             GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         }
@@ -182,6 +183,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
             {
                 TransportScript.NetworkInit();
+                TransportScript.configureFileTransferConnection();
                 if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
                     TransportScript.channelRequested = true;
