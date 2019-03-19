@@ -106,7 +106,7 @@ public class FileTransferServer : MonoBehaviour
             try
             {
                 //client = new UdpClient(port);
-                //GlobalDefinitions.WriteToLogFile("initiateFileTransferServer: listening on port " + TransportScript.localFileTransferPort);
+                GlobalDefinitions.WriteToLogFile("initiateFileTransferServer: listening on port " + TransportScript.localGamePort);
                 client = new UdpClient(TransportScript.localGamePort);
                 client.EnableBroadcast = true;
                 client.Client.ReceiveBufferSize = 65536;	// Forces the highest value (64KB).
