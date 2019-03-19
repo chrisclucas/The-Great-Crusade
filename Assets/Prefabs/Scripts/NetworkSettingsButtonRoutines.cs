@@ -28,12 +28,12 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         TransportScript.remoteGamePort = TransportScript.defaultGamePort;
 
         // Now I need a port for file transfer
-        l.Start();
-        port = ((IPEndPoint)l.LocalEndpoint).Port;
-        l.Stop();
-        GlobalDefinitions.WriteToLogFile("YesInitiate: open file transfer port found = " + port);
-        TransportScript.localFileTransferPort = port;
-        TransportScript.remoteFileTransferPort = TransportScript.defaultFileTransferPort;
+        //l.Start();
+        //port = ((IPEndPoint)l.LocalEndpoint).Port;
+        //l.Stop();
+        //GlobalDefinitions.WriteToLogFile("YesInitiate: open file transfer port found = " + port);
+        //TransportScript.localFileTransferPort = port;
+        //TransportScript.remoteFileTransferPort = TransportScript.defaultFileTransferPort;
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         GameObject.Find("initiatingGameYesButton").GetComponent<Button>().interactable = false;
 
         TransportScript.localGamePort = TransportScript.defaultGamePort;
-        TransportScript.localFileTransferPort = TransportScript.defaultFileTransferPort;
+        //TransportScript.localFileTransferPort = TransportScript.defaultFileTransferPort;
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         if (GlobalDefinitions.userIsNotInitiating)
         {
             TransportScript.NetworkInit();
-            TransportScript.configureFileTransferConnection();
+            //TransportScript.configureFileTransferConnection();
             GlobalDefinitions.GuiUpdateStatusMessage("Waiting on connection request");
             GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         }
@@ -183,7 +183,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
             {
                 TransportScript.NetworkInit();
-                TransportScript.configureFileTransferConnection();
+                //TransportScript.configureFileTransferConnection();
                 if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
                     TransportScript.channelRequested = true;
