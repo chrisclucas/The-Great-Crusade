@@ -105,9 +105,8 @@ public class FileTransferServer : MonoBehaviour
         {
             try
             {
-                //client = new UdpClient(port);
-                GlobalDefinitions.WriteToLogFile("initiateFileTransferServer: listening on port " + TransportScript.localGamePort);
-                client = new UdpClient(TransportScript.localGamePort);
+                client = new UdpClient(port);
+                //client = new UdpClient(TransportScript.localGamePort);
                 client.EnableBroadcast = true;
                 client.Client.ReceiveBufferSize = 65536;	// Forces the highest value (64KB).
                 client.Client.SendBufferSize = 65536;		// Forces the highest value (64KB).
@@ -307,7 +306,8 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send byte[] message through UDP.</summary>
     void SendData(string ip, byte[] data)
     {
-        GlobalDefinitions.WriteToLogFile("SendData: remote game port = " + TransportScript.remoteGamePort + " local game port = " + TransportScript.localGamePort);
+        GlobalDefinitions.WriteToLogFile("SendData: ip = " + ip + " data = " + data);
+        //GlobalDefinitions.WriteToLogFile("SendData: remote game port = " + TransportScript.remoteGamePort + " local game port = " + TransportScript.localGamePort);
         //GlobalDefinitions.WriteToLogFile("SendData: remote file transfer port = " + TransportScript.remoteFileTransferPort + " local file transfer port = " + TransportScript.localFileTransferPort);
         if (client != null)
         {
@@ -317,13 +317,13 @@ public class FileTransferServer : MonoBehaviour
             {
                 IPHostEntry ipHostInfo = Dns.GetHostEntry(ip);          // Gets the IP from a URL
                 ipAddress = ipHostInfo.AddressList[0];
-                //remoteEndPoint = new IPEndPoint(ipAddress, port);       // Remote point generated from URL.
-                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteGamePort);
+                remoteEndPoint = new IPEndPoint(ipAddress, port);       // Remote point generated from URL.
+                //remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteGamePort);
             }
             else
             {
-                //remoteEndPoint = new IPEndPoint(ipAddress, port);       // Remote point generated from IP.
-                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteGamePort);
+                remoteEndPoint = new IPEndPoint(ipAddress, port);       // Remote point generated from IP.
+                //remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteGamePort);
             }
             // If the message is too big will fail:
             if (data.Length > client.Client.SendBufferSize)
