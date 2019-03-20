@@ -439,8 +439,8 @@ public class FileTransferServer : MonoBehaviour
         GlobalDefinitions.WriteToLogFile("FileTransferServer Disconnect; executing");
         if (receiveThread != null)
             receiveThread.Abort();
-        if (client != null)
-            client.Close();
+        //if (client != null)
+        //    client.Close();
     }
     void OnApplicationQuit()
     {
