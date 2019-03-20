@@ -149,6 +149,7 @@ public class FileTransferServer : MonoBehaviour
                 // Basic message integrity verification:
                 if (message.Length > 0 && message[message.Length - 1] == '#')
                     messageBuffer.Add(message);     // Add received message to buffer.
+                GlobalDefinitions.WriteToLogFile("ReceiveData: received message - " + message);
             }
             catch { }
         }
@@ -306,7 +307,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send byte[] message through UDP.</summary>
     void SendData(string ip, byte[] data)
     {
-        GlobalDefinitions.WriteToLogFile("SendData: ip = " + ip + " data = " + data);
+        GlobalDefinitions.WriteToLogFile("SendData: ip = " + ip + " data length = " + data.Length);
         //GlobalDefinitions.WriteToLogFile("SendData: remote game port = " + TransportScript.remoteGamePort + " local game port = " + TransportScript.localGamePort);
         //GlobalDefinitions.WriteToLogFile("SendData: remote file transfer port = " + TransportScript.remoteFileTransferPort + " local file transfer port = " + TransportScript.localFileTransferPort);
         if (client != null)
