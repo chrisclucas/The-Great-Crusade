@@ -437,19 +437,21 @@ public class FileTransferServer : MonoBehaviour
     void Disconnect()
     {
         GlobalDefinitions.WriteToLogFile("FileTransferServer Disconnect; executing");
-        //if (receiveThread != null)
-        //    receiveThread.Abort();
-        //if (client != null)
-        //    client.Close();
+        if (receiveThread != null)
+            receiveThread.Abort();
+        if (client != null)
+            client.Close();
     }
-    //void OnApplicationQuit()
-    //{
-    //    Disconnect();
-    //}
-    //void OnDestroy()
-    //{
-    //    Disconnect();
-    //}
+    void OnApplicationQuit()
+    {
+        GlobalDefinitions.WriteToLogFile("OnApplicationQuit: executing");
+        Disconnect();
+    }
+    void OnDestroy()
+    {
+        GlobalDefinitions.WriteToLogFile("OnDestroy: executing");
+        Disconnect();
+    }
 
     /********************
      * Client interfaces:
