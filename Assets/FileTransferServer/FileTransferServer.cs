@@ -442,14 +442,14 @@ public class FileTransferServer : MonoBehaviour
         //if (client != null)
         //    client.Close();
     }
-    void OnApplicationQuit()
-    {
-        Disconnect();
-    }
-    void OnDestroy()
-    {
-        Disconnect();
-    }
+    //void OnApplicationQuit()
+    //{
+    //    Disconnect();
+    //}
+    //void OnDestroy()
+    //{
+    //    Disconnect();
+    //}
 
     /********************
      * Client interfaces:
