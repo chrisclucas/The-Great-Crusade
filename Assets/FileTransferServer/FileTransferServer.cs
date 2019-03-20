@@ -436,6 +436,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Disconnects UDP port on closing, scene switching and object destroy</summary>
     void Disconnect()
     {
+        GlobalDefinitions.WriteToLogFile("FileTransferServer Disconnect; executing");
         if (receiveThread != null)
             receiveThread.Abort();
         if (client != null)

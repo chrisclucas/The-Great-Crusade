@@ -270,6 +270,7 @@ public class ExecuteGameCommand : MonoBehaviour {
                 for (int i = 2; i < switchEntries.Length; i++)
                     receivedFileName = receivedFileName + " " + switchEntries[i];
 
+                GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
                 GlobalDefinitions.WriteToLogFile("Received name of save file, calling FileTransferServer: fileName = " + receivedFileName + "  path to save = " + GameControl.path);
                 GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().RequestFile(GlobalDefinitions.opponentIPAddress, receivedFileName, GameControl.path, true);
                 break;
