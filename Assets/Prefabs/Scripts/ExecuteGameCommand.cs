@@ -23,6 +23,12 @@ public class ExecuteGameCommand : MonoBehaviour {
 
         switch (switchEntries[0])
         {
+            case "TURNFILELINE":
+                GlobalDefinitions.WriteToLogFile(message);
+                break;
+
+
+
             case GlobalDefinitions.PLAYSIDEKEYWORD:
                 if (switchEntries[1] == "German")
                     GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.German;
