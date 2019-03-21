@@ -224,20 +224,7 @@ public class TransportScript : MonoBehaviour
                         SendMessageToRemoteComputer(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
 
                         // Now initiate file transfer setup
-                        //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
-
-                        string line;
-                        StreamReader theReader = new StreamReader(savedFileName);
-                        using (theReader)
-                        {
-                            do
-                            {
-                                line = theReader.ReadLine();
-                                SendMessageToRemoteComputer("TURNFILELINE " + line);
-                            }
-                            while (line != null);
-                            theReader.Close();
-                        }
+                        GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
 
                         gameDataSent = true;
                     }

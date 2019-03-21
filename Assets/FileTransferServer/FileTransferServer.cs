@@ -149,7 +149,6 @@ public class FileTransferServer : MonoBehaviour
                 // Basic message integrity verification:
                 if (message.Length > 0 && message[message.Length - 1] == '#')
                     messageBuffer.Add(message);     // Add received message to buffer.
-                GlobalDefinitions.WriteToLogFile("ReceiveData: received message - " + message);
             }
             catch { }
         }
