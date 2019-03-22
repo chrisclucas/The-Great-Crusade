@@ -78,7 +78,7 @@ public class GUIButtonRoutines : MonoBehaviour
         if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
         {
             GlobalDefinitions.WriteToLogFile("YesMain: Calling ResetConnection()");
-            TransportScript.ResetConnection(TransportScript.remoteComputerId);
+            TransportScript.ResetConnection(TransportScript.remoteGameComputerId);
         }
 
         // Copy list so the guis can be removed
