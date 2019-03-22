@@ -237,7 +237,7 @@ public class MainMenuRoutines : MonoBehaviour
         WWWGameToggle.gameObject.AddComponent<NetworkSettingsButtonRoutines>();
         WWWGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => WWWGameToggle.gameObject.GetComponent<NetworkSettingsButtonRoutines>().WWWGameSelection());
 
-        tempText = GlobalDefinitions.CreateText("This computer IP address = " + GlobalDefinitions.localComputerIPAddress, "localIPAddrText",
+        tempText = GlobalDefinitions.CreateText("This computer IP address = " + TransportScript.localComputerIPAddress, "localIPAddrText",
                 5 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 8 * GlobalDefinitions.GUIUNITIMAGESIZE - (0.5f * panelWidth),
