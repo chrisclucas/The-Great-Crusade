@@ -289,9 +289,6 @@ public class GlobalDefinitions : MonoBehaviour
 
     public static int germanSetupFileUsed = 100;
 
-    public static string opponentIPAddress;
-    public static string thisComputerIPAddress;
-
     /// <summary>
     /// Goes through and resets all variables 
     /// </summary>
@@ -397,7 +394,7 @@ public class GlobalDefinitions : MonoBehaviour
         germanSetupFileUsed = 100;
 
         // The following is for resetting the variables associated with a network game
-        GlobalDefinitions.opponentIPAddress = "";
+        TransportScript.remoteComputerIPAddress = "";
         userIsIntiating = false;
         isServer = false;
         hasReceivedConfirmation = false;
@@ -1436,7 +1433,7 @@ public class GlobalDefinitions : MonoBehaviour
         //tempInputField.image.rectTransform.sizeDelta = new Vector2(180, 30);
         tempInputField.image.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
         tempInputField.name = name + "InputField";
-        tempInputField.text = "45.30.112.248";
+        tempInputField.text = TransportScript.defaultRemoteComputerIPAddress;
         return (tempInputField);
     }
 

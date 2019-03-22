@@ -179,7 +179,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
 
         else if (!TransportScript.channelRequested)
         {
-            GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+            GlobalDefinitions.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
             if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
             {
                 TransportScript.NetworkInit();
@@ -213,7 +213,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
     {
         if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
         {
-            GlobalDefinitions.opponentIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+            GlobalDefinitions.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
         }
     }
 
@@ -225,8 +225,8 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         if (MainMenuRoutines.LANGameToggle.GetComponent<Toggle>().isOn == true)
         {
             MainMenuRoutines.WWWGameToggle.GetComponent<Toggle>().isOn = false;
-            GlobalDefinitions.thisComputerIPAddress = Network.player.ipAddress;
-            GameObject.Find("localIPAddrText").GetComponent<Text>().text = GlobalDefinitions.thisComputerIPAddress;
+            GlobalDefinitions.localComputerIPAddress = Network.player.ipAddress;
+            GameObject.Find("localIPAddrText").GetComponent<Text>().text = GlobalDefinitions.localComputerIPAddress;
         }
     }
 
@@ -238,8 +238,8 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         if (MainMenuRoutines.WWWGameToggle.GetComponent<Toggle>().isOn == true)
         {
             MainMenuRoutines.LANGameToggle.GetComponent<Toggle>().isOn = false;
-            GlobalDefinitions.thisComputerIPAddress = GlobalDefinitions.GetLocalPublicIPAddress();
-            GameObject.Find("localIPAddrText").GetComponent<Text>().text = GlobalDefinitions.thisComputerIPAddress;
+            GlobalDefinitions.localComputerIPAddress = GlobalDefinitions.GetLocalPublicIPAddress();
+            GameObject.Find("localIPAddrText").GetComponent<Text>().text = GlobalDefinitions.localComputerIPAddress;
         }
     }
 }

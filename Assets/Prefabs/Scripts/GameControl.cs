@@ -275,32 +275,30 @@ public class GameControl : MonoBehaviour
                 // Even though this is for when the player is in control, still need to check for chat messages
                 if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
                 {
-                    NetworkEventType recNetworkEvent = NetworkTransport.Receive(out TransportScript.recHostId, out TransportScript.recConnectionId, out TransportScript.recChannelId, TransportScript.recBuffer, TransportScript.BUFFERSIZE, out TransportScript.dataSize, out TransportScript.recError);
+                    string message;
 
-                    switch (recNetworkEvent)
+                    NetworkEventType receivedNetworkEvent = TransportScript.checkForNetworkEvent(out message);
+
+                    if (receivedNetworkEvent == NetworkEventType.DataEvent)
                     {
-                        case NetworkEventType.DataEvent:
-                            Stream stream = new MemoryStream(TransportScript.recBuffer);
-                            BinaryFormatter formatter = new BinaryFormatter();
-                            string message = formatter.Deserialize(stream) as string;
-                            TransportScript.OnData(TransportScript.recHostId, TransportScript.recConnectionId, TransportScript.recChannelId, message, TransportScript.dataSize, (NetworkError)TransportScript.recError);
+                        // The only message that is valid when in control is a chat message
 
-                            // The only message that is valid when in control is a chat message
+                        char[] delimiterChars = { ' ' };
+                        string[] switchEntries = message.Split(delimiterChars);
 
-                            char[] delimiterChars = { ' ' };
-                            string[] switchEntries = message.Split(delimiterChars);
-
-                            switch (switchEntries[0])
-                            {
-                                case GlobalDefinitions.CHATMESSAGEKEYWORD:
-                                    string chatMessage = "";
-                                    for (int index = 0; index < (switchEntries.Length - 1); index++)
-                                        chatMessage += switchEntries[index + 1] + " ";
-                                    GlobalDefinitions.WriteToLogFile("Chat message received: " + chatMessage);
-                                    GlobalDefinitions.AddChatMessage(chatMessage);
-                                    break;
-                            }
-                            break;
+                        switch (switchEntries[0])
+                        {
+                            case GlobalDefinitions.CHATMESSAGEKEYWORD:
+                                string chatMessage = "";
+                                for (int index = 0; index < (switchEntries.Length - 1); index++)
+                                    chatMessage += switchEntries[index + 1] + " ";
+                                GlobalDefinitions.WriteToLogFile("Chat message received: " + chatMessage);
+                                GlobalDefinitions.AddChatMessage(chatMessage);
+                                break;
+                            default:
+                                GlobalDefinitions.WriteToLogFile("ERROR: unexpected data message received when in control (only chat message valid - message = " + message);
+                                break;
+                        }
                     }
                 }
 
@@ -323,39 +321,11 @@ public class GameControl : MonoBehaviour
 
             else if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
             {
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out TransportScript.recHostId, out TransportScript.recConnectionId, out TransportScript.recChannelId, TransportScript.recBuffer, TransportScript.BUFFERSIZE, out TransportScript.dataSize, out TransportScript.recError);
+                string message;
+                NetworkEventType receivedNetworkEvent = TransportScript.checkForNetworkEvent(out message);
 
-                switch (recNetworkEvent)
-                {
-                    case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.WriteToLogFile("GameControl udpate() OnDisconnect: (hostId = " + TransportScript.recHostId + ", connectionId = "
-                                + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                        GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                        TransportScript.ResetConnection(TransportScript.recHostId);
-
-                        // Since the connetion has been broken, quit the game and go back to the main menu
-                        GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
-                        guiButtonInstance.AddComponent<GUIButtonRoutines>();
-                        guiButtonInstance.GetComponent<GUIButtonRoutines>().YesMain();
-                        break;
-                    case NetworkEventType.DataEvent:
-                        Stream stream = new MemoryStream(TransportScript.recBuffer);
-                        BinaryFormatter formatter = new BinaryFormatter();
-                        string message = formatter.Deserialize(stream) as string;
-                        TransportScript.OnData(TransportScript.recHostId, TransportScript.recConnectionId, TransportScript.recChannelId, message, TransportScript.dataSize, (NetworkError)TransportScript.recError);
-                        ExecuteGameCommand.ProcessCommand(message);
-                        break;
-                    case NetworkEventType.Nothing:
-                        break;
-                    case NetworkEventType.ConnectEvent:
-                        {
-                            GlobalDefinitions.WriteToLogFile("TransportScript.OnConnect: (hostId = " + TransportScript.recHostId + ", connectionId = " + TransportScript.recConnectionId + ", error = " + TransportScript.recError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
-                            break;
-                        }
-                    default:
-                        GlobalDefinitions.WriteToLogFile("GameControl Update(): Unknown network message type received: " + recNetworkEvent);
-                        break;
-                }
+                if (receivedNetworkEvent == NetworkEventType.DataEvent)
+                    ExecuteGameCommand.ProcessCommand(message);
             }
 
             else if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)

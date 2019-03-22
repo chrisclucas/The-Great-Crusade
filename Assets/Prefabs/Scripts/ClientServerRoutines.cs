@@ -75,7 +75,7 @@ public class ClientServerRoutines : MonoBehaviour
         GlobalDefinitions.WriteToLogFile("initiateServerConnection: executing");
 
         // Set the ip address of the server
-        GlobalDefinitions.opponentIPAddress = "192.168.1.67";
+        TransportScript.remoteComputerIPAddress = "192.168.1.67";
 
         TransportScript.remoteComputerId = TransportScript.NetworkInit();
 
@@ -97,9 +97,9 @@ public class ClientServerRoutines : MonoBehaviour
         byte error;
 
         //NetworkRoutines.remoteConnectionId = NetworkTransport.Connect(NetworkRoutines.remoteComputerId, GlobalDefinitions.opponentIPAddress, NetworkRoutines.gamePort, 0, out error);
-        TransportScript.recConnectionId = NetworkTransport.Connect(TransportScript.remoteComputerId, GlobalDefinitions.opponentIPAddress, TransportScript.defaultGamePort, 0, out error);
+        TransportScript.connectionId = NetworkTransport.Connect(TransportScript.remoteComputerId, TransportScript.remoteComputerIPAddress, TransportScript.defaultGamePort, 0, out error);
 
-        if (TransportScript.recConnectionId <= 0)
+        if (TransportScript.connectionId <= 0)
             return (false);
         else
             return (true);
@@ -114,8 +114,8 @@ public class ClientServerRoutines : MonoBehaviour
         Stream stream = new MemoryStream(sendBuffer);
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(stream, message);
-        NetworkTransport.Send(TransportScript.recHostId, TransportScript.recConnectionId, allCostDeliveryChannelId, sendBuffer, BUFFERSIZE, out sendError);
-        GlobalDefinitions.GuiUpdateStatusMessage("Sending message - " + message + " HostID=" + TransportScript.recHostId + "  ConnectionID=" + TransportScript.recConnectionId + " ChannelID=" + allCostDeliveryChannelId + " Error: " + (NetworkError)sendError);
+        NetworkTransport.Send(TransportScript.remoteComputerId, TransportScript.connectionId, allCostDeliveryChannelId, sendBuffer, BUFFERSIZE, out sendError);
+        GlobalDefinitions.GuiUpdateStatusMessage("Sending message - " + message + " HostID=" + TransportScript.remoteComputerId + "  ConnectionID=" + TransportScript.connectionId + " ChannelID=" + allCostDeliveryChannelId + " Error: " + (NetworkError)sendError);
 
         if ((NetworkError)sendError != NetworkError.Ok)
         {

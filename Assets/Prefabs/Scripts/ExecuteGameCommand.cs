@@ -272,7 +272,7 @@ public class ExecuteGameCommand : MonoBehaviour {
 
                 GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
                 GlobalDefinitions.WriteToLogFile("Received name of save file, calling FileTransferServer: fileName = " + receivedFileName + "  path to save = " + GameControl.path);
-                GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().RequestFile(GlobalDefinitions.opponentIPAddress, receivedFileName, GameControl.path, true);
+                GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().RequestFile(GlobalDefinitions.remoteComputerIPAddress, receivedFileName, GameControl.path, true);
                 break;
 
             case GlobalDefinitions.DISPLAYALLIEDSUPPLYRANGETOGGLEWORD:
