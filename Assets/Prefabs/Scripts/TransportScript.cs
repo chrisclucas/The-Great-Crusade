@@ -69,11 +69,13 @@ public class TransportScript : MonoBehaviour
         // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
         if (serverSocket != -1)
         {
+            GlobalDefinitions.WriteToLogFile("NetworkInit: sending disconnect serverSocket = -1");
             NetworkTransport.Disconnect(serverSocket, connectionId, out error);
             serverSocket = -1;
         }
         if (remoteComputerId != -1)
         {
+            GlobalDefinitions.WriteToLogFile("NetworkInit: sending disconnect remoteComputerId = -1");
             NetworkTransport.Disconnect(remoteComputerId, connectionId, out error);
             remoteComputerId = -1;
         }
@@ -406,6 +408,7 @@ public class TransportScript : MonoBehaviour
         opponentComputerConfirmsSync = false;
         gameDataSent = false;
 
+        GlobalDefinitions.WriteToLogFile("ResetConnection: sending disconnect");
         NetworkTransport.Disconnect(hostId, connectionId, out error);
 
         if ((hostId != serverSocket) && (hostId != remoteComputerId))
