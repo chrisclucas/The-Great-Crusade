@@ -273,7 +273,8 @@ public class TransportScript : MonoBehaviour
 
                         if (switchEntries[0] == GlobalDefinitions.GAMEDATALOADEDKEYWORD)
                         {
-                            GlobalDefinitions.GuiUpdateStatusMessage("TransportScript Update()4:Remote data load complete");
+                            GlobalDefinitions.GuiUpdateStatusMessage("Remote data load complete");
+                            NetworkTransport.Disconnect(remoteFileTransferComputerId, fileTransferConnectionId, out recievedError);
 
                             GlobalDefinitions.gameStarted = true;
                             if (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.sideControled)
@@ -287,7 +288,7 @@ public class TransportScript : MonoBehaviour
                             }
                         }
                         else
-                            GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update()4: Checking for data load complete - unknown message - " + message);
+                            GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update(): Checking for data load complete - unknown message - " + message);
 
                         break;
 
@@ -423,7 +424,7 @@ public class TransportScript : MonoBehaviour
         NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
 
         if ((hostId != localGameComputerId) && (hostId != remoteGameComputerId))
-            GlobalDefinitions.WriteToLogFile("ERROR - resetConnecti0n: Request recieved to disconnect unknown host id - " + hostId);
+            GlobalDefinitions.WriteToLogFile("ERROR - resetConnection: Request recieved to disconnect unknown host id - " + hostId);
     }
 
     private static void processNetworkEvent(NetworkEventType currentNetworkEvent)

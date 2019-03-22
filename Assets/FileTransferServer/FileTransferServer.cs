@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using UnityEngine.Networking;
+using System;
 
 /*
  * File Transferer / File Server V1.2:
@@ -185,7 +187,7 @@ public class FileTransferServer : MonoBehaviour
             switch (fields[0])
             {
                 case "F0":  // Someone wants to know if this server is active.
-                    Thread.Sleep(Random.Range(200, 800));
+                    Thread.Sleep(UnityEngine.Random.Range(200, 800));
                     SendString(remoteIp, "F1;" + TransportScript.localComputerIPAddress + ";" + enableServer.ToString() + ";#");
                     break;
                 case "F1":  // Server polling response (can be disabled):
@@ -258,7 +260,9 @@ public class FileTransferServer : MonoBehaviour
                             // Remove from the "download list":
                             RemoveFileFromDownload(fields[1], fields[2]);
 
+                            byte error;
                             TransportScript.SendMessageToRemoteComputer(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
+                            NetworkTransport.Disconnect(TransportScript.remoteFileTransferComputerId, TransportScript.fileTransferConnectionId, out error);
                             GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
                         }
                     }
