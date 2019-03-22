@@ -107,7 +107,7 @@ public class FileTransferServer : MonoBehaviour
             try
             {
                 //client = new UdpClient(port);
-                client = new UdpClient(TransportScript.localGamePort);
+                client = new UdpClient(TransportScript.localFileTransferPort);
                 client.EnableBroadcast = true;
                 client.Client.ReceiveBufferSize = 65536;	// Forces the highest value (64KB).
                 client.Client.SendBufferSize = 65536;		// Forces the highest value (64KB).
@@ -320,12 +320,12 @@ public class FileTransferServer : MonoBehaviour
                 IPHostEntry ipHostInfo = Dns.GetHostEntry(ip);          // Gets the IP from a URL
                 ipAddress = ipHostInfo.AddressList[0];
                 //remoteEndPoint = new IPEndPoint(ipAddress, port);       // Remote point generated from URL.
-                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteGamePort);
+                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteFileTransferPort);
             }
             else
             {
                 //remoteEndPoint = new IPEndPoint(ipAddress, port);       // Remote point generated from IP.
-                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteGamePort);
+                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteFileTransferPort);
             }
             // If the message is too big will fail:
             if (data.Length > client.Client.SendBufferSize)
