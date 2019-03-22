@@ -310,10 +310,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send byte[] message through UDP.</summary>
     void SendData(string ip, byte[] data)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer SendData: executing");
-        GlobalDefinitions.WriteToLogFile("SendData: ip = " + ip + " data length = " + data.Length);
-        //GlobalDefinitions.WriteToLogFile("SendData: remote game port = " + TransportScript.remoteGamePort + " local game port = " + TransportScript.localGamePort);
-        //GlobalDefinitions.WriteToLogFile("SendData: remote file transfer port = " + TransportScript.remoteFileTransferPort + " local file transfer port = " + TransportScript.localFileTransferPort);
+        GlobalDefinitions.WriteToLogFile("FileTransferServer SendData: executing ip = " + ip + " port = " + TransportScript.remoteGamePort + " data length = " + data.Length);
         if (client != null)
         {
             // Create the remote connection address:
@@ -440,24 +437,24 @@ public class FileTransferServer : MonoBehaviour
         }
     }
     /// <summary>Disconnects UDP port on closing, scene switching and object destroy</summary>
-    void Disconnect()
-    {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer Disconnect; executing");
-        if (receiveThread != null)
-            receiveThread.Abort();
-        if (client != null)
-            client.Close();
-    }
-    void OnApplicationQuit()
-    {
-        GlobalDefinitions.WriteToLogFile("OnApplicationQuit: executing");
-        Disconnect();
-    }
-    void OnDestroy()
-    {
-        GlobalDefinitions.WriteToLogFile("OnDestroy: executing");
-        Disconnect();
-    }
+    //void Disconnect()
+    //{
+    //    GlobalDefinitions.WriteToLogFile("FileTransferServer Disconnect; executing");
+    //    if (receiveThread != null)
+    //        receiveThread.Abort();
+    //    if (client != null)
+    //        client.Close();
+    //}
+    //void OnApplicationQuit()
+    //{
+    //    GlobalDefinitions.WriteToLogFile("OnApplicationQuit: executing");
+    //    Disconnect();
+    //}
+    //void OnDestroy()
+    //{
+    //    GlobalDefinitions.WriteToLogFile("OnDestroy: executing");
+    //    Disconnect();
+    //}
 
     /********************
      * Client interfaces:
