@@ -100,7 +100,7 @@ public class FileTransferServer : MonoBehaviour
      *********************/
     /// <summary>Creates UDP Client and starts the listening thread</summary>
     //void Awake()
-    public void initiateFileTransferServer()
+    public void InitiateFileTransferServer()
     {
         GlobalDefinitions.WriteToLogFile("FileTransferServer initiateFileTransferServer: executing");
         // UDP client:

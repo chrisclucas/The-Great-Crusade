@@ -7,7 +7,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class TransportScript : MonoBehaviour
 {
-    public const string defaultRemoteComputerIPAddress = "45.30.112.248";
+    //public const string defaultRemoteComputerIPAddress = "45.30.112.248";
+    public const string defaultRemoteComputerIPAddress = "192.168.1.73";
 
     public static string remoteComputerIPAddress;
     public static string localComputerIPAddress;
@@ -94,11 +95,11 @@ public class TransportScript : MonoBehaviour
 
     }
 
-    public static int configureFileTransferConnection()
+    public static int ConfigureFileTransferConnection()
     {
         byte error;
 
-        GlobalDefinitions.WriteToLogFile("NetworkInit: localGamePort = " + localGamePort + " remoteGamePort = " + remoteGamePort);
+        GlobalDefinitions.WriteToLogFile("ConfigureFileTransferConnection: localGamePort = " + localGamePort + " remoteGamePort = " + remoteGamePort);
 
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
@@ -227,15 +228,15 @@ public class TransportScript : MonoBehaviour
                         // Call the routine to read a saved file note that this call will set the localControl variable
                         GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(savedFileName); // Note this will set the currentState based on the saved file
 
-                        GlobalDefinitions.GuiUpdateStatusMessage("TransportScript Update()3: Waiting on remote data load...");
+                        GlobalDefinitions.GuiUpdateStatusMessage("TransportScript Update(): Waiting on remote data load...");
 
                         // Tell the remote computer what file to load.  It will then turn around and request it
                         SendMessageToRemoteComputer(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
 
                         // Now initiate file transfer setup
-                        configureFileTransferConnection();
+                        ConfigureFileTransferConnection();
                         FileTransferConnect(remoteComputerIPAddress);
-                        GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
+                        GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
 
                         gameDataSent = true;
                     }
