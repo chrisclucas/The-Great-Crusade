@@ -99,7 +99,7 @@ public class TransportScript : MonoBehaviour
     {
         byte error;
 
-        GlobalDefinitions.WriteToLogFile("ConfigureFileTransferConnection: localGamePort = " + localGamePort + " remoteGamePort = " + remoteGamePort);
+        GlobalDefinitions.WriteToLogFile("ConfigureFileTransferConnection: localFileTransferPort = " + localFileTransferPort + " remoteFileTransferPort = " + remoteFileTransferPort);
 
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
@@ -275,6 +275,7 @@ public class TransportScript : MonoBehaviour
                         if (switchEntries[0] == GlobalDefinitions.GAMEDATALOADEDKEYWORD)
                         {
                             GlobalDefinitions.GuiUpdateStatusMessage("Remote data load complete");
+                            GlobalDefinitions.WriteToLogFile("Calling File Transfer disconnect");
                             NetworkTransport.Disconnect(remoteFileTransferComputerId, fileTransferConnectionId, out recievedError);
 
                             GlobalDefinitions.gameStarted = true;

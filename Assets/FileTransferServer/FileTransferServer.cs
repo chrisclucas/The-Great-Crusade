@@ -136,7 +136,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Listening thread</summary>
     void ReceiveData()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer ReceiveData: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer ReceiveData: executing");
         while (client != null)
         {
             try
@@ -160,7 +160,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Analyze incoming messages (this analysis is not running inside the listening thread)</summary>
     void MessageAnalysis(string message)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer MessageAnalysis: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer MessageAnalysis: executing");
         /* Possible messages:
          * 
          * F0;ClientIP;#                                        : Server polling request.
@@ -262,6 +262,7 @@ public class FileTransferServer : MonoBehaviour
 
                             byte error;
                             TransportScript.SendMessageToRemoteComputer(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
+                            GlobalDefinitions.WriteToLogFile("Calling File Transfer disconnect");
                             NetworkTransport.Disconnect(TransportScript.remoteFileTransferComputerId, TransportScript.fileTransferConnectionId, out error);
                             GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
                         }
@@ -305,7 +306,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send a string message through UDP</summary>
     void SendString(string ip, string msg)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer SendString: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer SendString: executing");
         byte[] data = new byte[msg.Length];
         for (int c = 0; c < msg.Length; c++)
             data[c] = (byte)msg[c];    // Safe convertion from string to byte[]
@@ -314,7 +315,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send byte[] message through UDP.</summary>
     void SendData(string ip, byte[] data)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer SendData: executing ip = " + ip + " port = " + TransportScript.remoteGamePort + " data length = " + data.Length);
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer SendData: executing ip = " + ip + " port = " + TransportScript.remoteGamePort + " data length = " + data.Length);
         if (client != null)
         {
             // Create the remote connection address:
@@ -345,7 +346,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>String IP parser. If not parsed correctly returns null without crashing.</summary>
     static IPAddress IpParse(string ipAddress)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer IpParse: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer IpParse: executing");
         IPAddress address = null;
         if (ipAddress != "")
         {
@@ -466,7 +467,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Check server status</summary>
     public void CheckServerStatus(string serverIP)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer CheckServerStatus: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer CheckServerStatus: executing");
         // Load the timeout timer:
         waitForRemoteStatus = true;
         remoteStatusTimer = statusTimeout;
@@ -476,18 +477,18 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Valid server list control</summary>
     public List<string> GetServerList()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer GetServerList: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer GetServerList: executing");
         return validServers;
     }
     public void ResetServerList()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer ResetServerList: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer ResetServerList: executing");
 
         validServers.Clear();
     }
     void AddValidServer(string ip)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer AddValidServer: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer AddValidServer: executing");
 
         foreach (string serverIP in validServers)
         {
@@ -512,13 +513,13 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Request a file by Server IP or Server index</summary>
     public void RequestFile(string serverIP, string file, string savePath = "", bool fullPath = false)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer RequestFile1: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer RequestFile1: executing");
 
         AddFileToDownload(serverIP, file, savePath, fullPath);
     }
     public void RequestFile(int serverIndex, string file, string savePath = "", bool fullPath = false)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer RequestFile2: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer RequestFile2: executing");
 
         if (validServers.Count > 0)
             RequestFile(validServers[serverIndex], file, savePath, fullPath);
@@ -526,7 +527,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Batch list control</summary>
     void AddFileToDownload(string serverIP, string file, string savePath = "", bool fullPath = false)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer AddFileToDownload: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer AddFileToDownload: executing");
 
         FileRequest item = new FileRequest();
         item.file = file;
@@ -543,7 +544,7 @@ public class FileTransferServer : MonoBehaviour
     }
     void RemoveFileFromDownload(string serverIP, string file)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer RemoveFileFromDownload: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer RemoveFileFromDownload: executing");
 
         FileRequest deleteItem = new FileRequest();
         foreach (FileRequest item in downloadList)
@@ -564,7 +565,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Request the "file update" batch list by IP or Server index</summary>
     public void RequestUpdateList(string serverIP, string file, string savePath = "", bool fullPath = false)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer RequestUpdateList1: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer RequestUpdateList1: executing");
 
         SendString(serverIP, "F6;" + TransportScript.localComputerIPAddress + ";" + file + ";#");
         waitForUpdateList = true;
@@ -574,7 +575,7 @@ public class FileTransferServer : MonoBehaviour
     }
     public void RequestUpdateList(int serverIndex, string file, string savePath = "", bool fullPath = false)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer RequestUpdateList2: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer RequestUpdateList2: executing");
 
         if (validServers.Count > 0)
             RequestUpdateList(validServers[serverIndex], file, savePath, fullPath);
@@ -582,7 +583,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Restores the original file from temporary parts (to disk)</summary>
     void RestorePartialFile(string name, string savePath, bool fullPath)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer RestorePartialFile: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer RestorePartialFile: executing");
 
         // Add the requested destination folder:
         name = FileManagement.Combine(savePath, name);
@@ -618,7 +619,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Aborts the file download in progress</summary>
     public void AbortDownloadInProgress()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer AbortDownloadInProgress: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer AbortDownloadInProgress: executing");
 
         if (downloadList.Count > 0)
         {
@@ -637,7 +638,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Aborts all downloads in the list</summary>
     public void AbortDownloadList()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer AbortDownloadList: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer AbortDownloadList: executing");
 
         AbortDownloadInProgress();
         downloadList.Clear();
@@ -649,7 +650,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Set server capabilities:
     public void SetLocalServerStatus(bool enabled)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer SetLocalServerStatus: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer SetLocalServerStatus: executing");
 
         // If disabled can download but not upload.
         enableServer = enabled;
@@ -657,7 +658,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Set chunk size (300 to 65336)</summary>
     public void SetMaxChunkSize(int chunk)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer SetMaxChunkSize: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer SetMaxChunkSize: executing");
 
         // Hardware limitation:
         maxChunkSize = client.Client.SendBufferSize - 300;  // Gets the assigned value (may be less than the forced one).
@@ -671,14 +672,14 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Get chunk size</summary>
     public int GetMaxChunkSize()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer GetMaxChunkSize: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer GetMaxChunkSize: executing");
 
         return maxChunkSize;
     }
     /// <summary>Returns the requested part of a file (1 to n) from disk</summary>
     byte[] ReadPartialFile(string name, int part = 1)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer ReadPartialFile: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer ReadPartialFile: executing");
 
         // It reads from StreamingAssets folder also:
         byte[] file = FileManagement.ReadRawFile(name);
@@ -696,7 +697,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Send a partial file</summary>
     void SendPartialFile(string ip, string name, string part = "1")
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer SendPartialFile: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer SendPartialFile: executing");
 
         // Verify if file exists (also StreamingAssets folder):
         if (!FileManagement.FileExists(name))
@@ -727,7 +728,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Sends the "file update" batch list</summary>
     void SendUpdateList(string ip, string file)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer SendUpdateList: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer SendUpdateList: executing");
 
         // The "file update" list file must be created manually (it can go into StreamingAssets):
         if (FileManagement.FileExists(file, true))
@@ -754,7 +755,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Calculates the partial files count</summary>
     int GetFileParts(string name)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer GetFileParts: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer GetFileParts: executing");
 
         int parts = Mathf.CeilToInt(FileManagement.ReadRawFile(name).Length / (float)maxChunkSize);
         return parts;
@@ -762,7 +763,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Sends a file to a known client (Server starts the transference request)</summary>
     public void SendFile(string ip, string name)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer SendFile: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer SendFile: executing");
 
         if (enableServer)
         {
@@ -780,7 +781,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Sends the updatelist to a known client (Server starts the transference request)</summary>
     public void SendUpdate(string ip, string list)
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer SendUpdate: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer SendUpdate: executing");
 
         if (enableServer)
         {
@@ -802,7 +803,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Returns the name of the download file in process ("" if nothing)</summary>
     public string GetCurrentFile()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer GetCurrentFile: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer GetCurrentFile: executing");
 
         if (downloadList.Count > 0)
             return downloadList[0].file;
@@ -812,7 +813,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Returns the actual file part download in process "part/total" ("" if nothing)</summary>
     public string GetCurrentPartialStatus()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer GetCurrentPartialStatus: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer GetCurrentPartialStatus: executing");
 
         if (partialFileList.Length > 0)
         {
@@ -830,7 +831,7 @@ public class FileTransferServer : MonoBehaviour
     /// <summary>Returns the actual file download progress (0f to 1f)</summary>
     public float GetCurrentPartialProgress()
     {
-        GlobalDefinitions.WriteToLogFile("FileTransferServer GetCurrentPartialProgress: executing");
+        //GlobalDefinitions.WriteToLogFile("FileTransferServer GetCurrentPartialProgress: executing");
 
         float val = 100f;   // If no file or file completed defaults 100%.
         if (partialFileList.Length > 0)
