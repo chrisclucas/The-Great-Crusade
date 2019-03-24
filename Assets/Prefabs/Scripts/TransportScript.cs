@@ -163,7 +163,7 @@ public class TransportScript : MonoBehaviour
                     // Need to trap the connection here since I need to distingush between the game connection and the file transfer connection
                     if (recNetworkEvent == NetworkEventType.ConnectEvent)
                     {
-                        gameConnectionId = recievedHostId;
+                        gameConnectionId = recievedConnectionId;
                         remoteGameComputerId = recievedHostId;
                     }
                 }
