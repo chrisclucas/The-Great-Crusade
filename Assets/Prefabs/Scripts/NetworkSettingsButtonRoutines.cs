@@ -18,23 +18,23 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         GlobalDefinitions.userIsIntiating = true;
         GlobalDefinitions.userIsNotInitiating = false;
 
-        // Since this computer is intiating, I need to find an open port for the game
-        TcpListener gameListener = new TcpListener(IPAddress.Loopback, 0);
-        gameListener.Start();
-        int port = ((IPEndPoint)gameListener.LocalEndpoint).Port;
-        gameListener.Stop();
-        GlobalDefinitions.WriteToLogFile("YesInitiate: open game port found = " + port);
-        TransportScript.localGamePort = port;
-        TransportScript.remoteGamePort = TransportScript.defaultGamePort;
+        //// Since this computer is intiating, I need to find an open port for the game
+        //TcpListener gameListener = new TcpListener(IPAddress.Loopback, 0);
+        //gameListener.Start();
+        //int port = ((IPEndPoint)gameListener.LocalEndpoint).Port;
+        //gameListener.Stop();
+        //GlobalDefinitions.WriteToLogFile("YesInitiate: open game port found = " + port);
+        //TransportScript.localGamePort = port;
+        //TransportScript.remoteGamePort = TransportScript.defaultGamePort;
 
-        // Now I need a port for file transfer
-        TcpListener fileTransferListener = new TcpListener(IPAddress.Loopback, 0);
-        fileTransferListener.Start();
-        port = ((IPEndPoint)fileTransferListener.LocalEndpoint).Port;
-        fileTransferListener.Stop();
-        GlobalDefinitions.WriteToLogFile("YesInitiate: open file transfer port found = " + port);
-        TransportScript.localFileTransferPort = port;
-        TransportScript.remoteFileTransferPort = TransportScript.defaultFileTransferPort;
+        //// Now I need a port for file transfer
+        //TcpListener fileTransferListener = new TcpListener(IPAddress.Loopback, 0);
+        //fileTransferListener.Start();
+        //port = ((IPEndPoint)fileTransferListener.LocalEndpoint).Port;
+        //fileTransferListener.Stop();
+        //GlobalDefinitions.WriteToLogFile("YesInitiate: open file transfer port found = " + port);
+        //TransportScript.localFileTransferPort = port;
+        //TransportScript.remoteFileTransferPort = TransportScript.defaultFileTransferPort;
     }
 
     /// <summary>
@@ -47,15 +47,15 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = false;
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = false;
-        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = false;
+        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
         GlobalDefinitions.userIsNotInitiating = true;
         GlobalDefinitions.userIsIntiating = false;
-        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text = "";
+        //MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text = "";
         GameObject.Find("initiatingGameNoButton").GetComponent<Button>().interactable = false;
         GameObject.Find("initiatingGameYesButton").GetComponent<Button>().interactable = false;
 
-        TransportScript.localGamePort = TransportScript.defaultGamePort;
-        TransportScript.localFileTransferPort = TransportScript.defaultFileTransferPort;
+        //TransportScript.localGamePort = TransportScript.defaultGamePort;
+        //TransportScript.localFileTransferPort = TransportScript.defaultFileTransferPort;
     }
 
     /// <summary>
@@ -172,6 +172,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         // If the user is not initiating, then just exit out since the next step is to wait for a connection request
         if (GlobalDefinitions.userIsNotInitiating)
         {
+            TransportScript.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
             TransportScript.NetworkInit();
             //TransportScript.configureFileTransferConnection();
             GlobalDefinitions.GuiUpdateStatusMessage("Waiting on connection request");

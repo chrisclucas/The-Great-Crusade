@@ -16,18 +16,23 @@ public class TransportScript : MonoBehaviour
     public const int defaultGamePort = 5016;
     public const int defaultFileTransferPort = 5017;
 
-    public static int remoteGamePort;
-    public static int localGamePort;
-    public static int remoteFileTransferPort;
-    public static int localFileTransferPort;
+    public static int gamePort = defaultGamePort;
+    public static int fileTransferPort = defaultFileTransferPort;
+
+    //public static int remoteGamePort;
+    //public static int localGamePort;
+    //public static int remoteFileTransferPort;
+    //public static int localFileTransferPort;
 
     public static int gameConnectionId = -1;
     public static int fileTransferConnectionId = -1;
 
-    public static int localGameComputerId = -1;
-    public static int remoteGameComputerId = -1;
-    public static int localFileTransferComputerId = -1;
-    public static int remoteFileTransferComputerId = -1;
+    public static int computerId = -1;
+
+    //public static int localGameComputerId = -1;
+    //public static int remoteGameComputerId = -1;
+    //public static int localFileTransferComputerId = -1;
+    //public static int remoteFileTransferComputerId = -1;
 
     public static bool channelRequested = false;
     public static bool connectionConfirmed = false;
@@ -43,20 +48,18 @@ public class TransportScript : MonoBehaviour
     static byte sendError;
     static byte[] sendBuffer = new byte[BUFFERSIZE];
 
-    private static int recievedHostId;
-    private static int recievedConnectionId;
-    private static int recievedChannelId;
-    private static byte[] recievedBuffer = new byte[BUFFERSIZE];
-    private static int recievedDataSize;
-    private static byte recievedError;
+    private static int receivedHostId;
+    private static int receivedConnectionId;
+    private static int receivedChannelId;
+    private static byte[] receivedBuffer = new byte[BUFFERSIZE];
+    private static int receivedDataSize;
+    private static byte receivedError;
 
     /// <summary>
     /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
     /// </summary>
     public static int NetworkInit()
     {
-        byte error;
-
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
         globalConfig.MaxPacketSize = 1500;
@@ -75,32 +78,30 @@ public class TransportScript : MonoBehaviour
         NetworkTransport.Init(globalConfig);
 
         // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
-        if (localGameComputerId != -1)
-        {
-            GlobalDefinitions.WriteToLogFile("NetworkInit: sending disconnect serverSocket = -1");
-            NetworkTransport.Disconnect(localGameComputerId, gameConnectionId, out error);
-            localGameComputerId = -1;
-        }
-        if (remoteGameComputerId != -1)
-        {
-            GlobalDefinitions.WriteToLogFile("NetworkInit: sending disconnect remoteComputerId = -1");
-            NetworkTransport.Disconnect(remoteGameComputerId, gameConnectionId, out error);
-            remoteGameComputerId = -1;
-        }
+        //if (localGameComputerId != -1)
+        //{
+        //    GlobalDefinitions.WriteToLogFile("NetworkInit: sending disconnect serverSocket = -1");
+        //    NetworkTransport.Disconnect(localGameComputerId, gameConnectionId, out error);
+        //    localGameComputerId = -1;
+        //}
+        //if (remoteGameComputerId != -1)
+        //{
+        //    GlobalDefinitions.WriteToLogFile("NetworkInit: sending disconnect remoteComputerId = -1");
+        //    NetworkTransport.Disconnect(remoteGameComputerId, gameConnectionId, out error);
+        //    remoteGameComputerId = -1;
+        //}
 
-        localGameComputerId = NetworkTransport.AddHost(topology, localGamePort);
-        remoteGameComputerId = NetworkTransport.AddHost(topology);
+        //localGameComputerId = NetworkTransport.AddHost(topology, localGamePort);
+        //remoteGameComputerId = NetworkTransport.AddHost(topology);
+        NetworkTransport.AddHost(topology, gamePort);
+        computerId = NetworkTransport.AddHost(topology);
 
-        return (remoteGameComputerId);
+        return (computerId);
 
     }
 
-    public static int ConfigureFileTransferConnection()
+    public static void ConfigureFileTransferConnection()
     {
-        byte error;
-
-        GlobalDefinitions.WriteToLogFile("ConfigureFileTransferConnection: localFileTransferPort = " + localFileTransferPort + " remoteFileTransferPort = " + remoteFileTransferPort);
-
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
         globalConfig.MaxPacketSize = 1500;
@@ -119,21 +120,22 @@ public class TransportScript : MonoBehaviour
         NetworkTransport.Init(globalConfig);
 
         // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
-        if (localFileTransferComputerId != -1)
-        {
-            NetworkTransport.Disconnect(localFileTransferComputerId, fileTransferConnectionId, out error);
-            localFileTransferComputerId = -1;
-        }
-        if (remoteFileTransferComputerId != -1)
-        {
-            NetworkTransport.Disconnect(remoteFileTransferComputerId, fileTransferConnectionId, out error);
-            remoteFileTransferComputerId = -1;
-        }
+        //if (localFileTransferComputerId != -1)
+        //{
+        //    NetworkTransport.Disconnect(localFileTransferComputerId, fileTransferConnectionId, out error);
+        //    localFileTransferComputerId = -1;
+        //}
+        //if (remoteFileTransferComputerId != -1)
+        //{
+        //    NetworkTransport.Disconnect(remoteFileTransferComputerId, fileTransferConnectionId, out error);
+        //    remoteFileTransferComputerId = -1;
+        //}
 
-        localFileTransferComputerId = NetworkTransport.AddHost(topology, localFileTransferPort);
-        remoteFileTransferComputerId = NetworkTransport.AddHost(topology);
+        //localFileTransferComputerId = NetworkTransport.AddHost(topology, localFileTransferPort);
+        //remoteFileTransferComputerId = NetworkTransport.AddHost(topology);
+        NetworkTransport.AddHost(topology, fileTransferPort);
 
-        return (remoteFileTransferComputerId);
+        return;
 
     }
 
@@ -158,14 +160,14 @@ public class TransportScript : MonoBehaviour
                 // init of the network doesn't take place until OK is selected
                 try
                 {
-                    recNetworkEvent = NetworkTransport.Receive(out recievedHostId, out recievedConnectionId, out recievedChannelId, recievedBuffer, BUFFERSIZE, out recievedDataSize, out recievedError);
+                    recNetworkEvent = NetworkTransport.Receive(out receivedHostId, out receivedConnectionId, out receivedChannelId, receivedBuffer, BUFFERSIZE, out receivedDataSize, out receivedError);
 
                     // Need to trap the connection here since I need to distingush between the game connection and the file transfer connection
-                    if (recNetworkEvent == NetworkEventType.ConnectEvent)
-                    {
-                        gameConnectionId = recievedConnectionId;
-                        remoteGameComputerId = recievedHostId;
-                    }
+                    //if (recNetworkEvent == NetworkEventType.ConnectEvent)
+                    //{
+                    //    gameConnectionId = receivedConnectionId;
+                    //    remoteGameComputerId = receivedHostId;
+                    //}
                 }
                 catch
                 {
@@ -260,30 +262,30 @@ public class TransportScript : MonoBehaviour
             else if (gameDataSent)
             {
                 // Check if there is a network event
-                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out recievedHostId, out recievedConnectionId, out recievedChannelId, recievedBuffer, BUFFERSIZE, out recievedDataSize, out recievedError);
+                NetworkEventType recNetworkEvent = NetworkTransport.Receive(out receivedHostId, out receivedConnectionId, out receivedChannelId, receivedBuffer, BUFFERSIZE, out receivedDataSize, out receivedError);
 
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.DisconnectEvent:
                         GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
                         GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));
-                        ResetConnection(recievedHostId);
+                        ResetConnection(receivedHostId);
                         break;
 
                     case NetworkEventType.ConnectEvent:
                         // This connection event traps the connection on the file transfer port.  Send a message back
-                        remoteFileTransferComputerId = recievedHostId;
-                        fileTransferConnectionId = recievedConnectionId;
+                        //fileTransferComputerId = receivedHostId;
+                        fileTransferConnectionId = receivedConnectionId;
                         SendFileTransferMessageToRemoteComputer("ConnectionEventReceived");
                         break;
 
                     case NetworkEventType.DataEvent:
                         char[] delimiterChars = { ' ' };
 
-                        Stream stream = new MemoryStream(recievedBuffer);
+                        Stream stream = new MemoryStream(receivedBuffer);
                         BinaryFormatter formatter = new BinaryFormatter();
                         string message = formatter.Deserialize(stream) as string;
-                        OnData(recievedHostId, recievedConnectionId, recievedChannelId, message, recievedDataSize, (NetworkError)recievedError);
+                        OnData(receivedHostId, receivedConnectionId, receivedChannelId, message, receivedDataSize, (NetworkError)receivedError);
                         string[] switchEntries = message.Split(delimiterChars);
 
                         if (switchEntries[0] == GlobalDefinitions.GAMEDATALOADEDKEYWORD)
@@ -327,7 +329,8 @@ public class TransportScript : MonoBehaviour
     public static bool Connect(string opponentIPaddr)
     {
         NetworkTransport.Init();
-        gameConnectionId = NetworkTransport.Connect(remoteGameComputerId, opponentIPaddr, remoteGamePort, 0, out recievedError);
+        //gameConnectionId = NetworkTransport.Connect(remoteGameComputerId, opponentIPaddr, remoteGamePort, 0, out receivedError);
+        gameConnectionId = NetworkTransport.Connect(computerId, opponentIPaddr, gamePort, 0, out receivedError);
         GlobalDefinitions.WriteToLogFile("Connect: gameConnectionId = " + gameConnectionId);
 
         if (gameConnectionId <= 0)
@@ -339,7 +342,8 @@ public class TransportScript : MonoBehaviour
     public static bool FileTransferConnect(string ipAddress)
     {
         //NetworkTransport.Init();
-        fileTransferConnectionId = NetworkTransport.Connect(remoteGameComputerId, ipAddress, remoteGamePort, 0, out recievedError);
+        //fileTransferConnectionId = NetworkTransport.Connect(remoteGameComputerId, ipAddress, remoteGamePort, 0, out receivedError);
+        fileTransferConnectionId = NetworkTransport.Connect(computerId, ipAddress, fileTransferPort, 0, out receivedError);
         GlobalDefinitions.WriteToLogFile("FileTransferConnect: fileTransferConnectionId = " + fileTransferConnectionId);
 
         if (fileTransferConnectionId <= 0)
@@ -353,8 +357,8 @@ public class TransportScript : MonoBehaviour
         Stream stream = new MemoryStream(sendBuffer);
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(stream, message);
-        NetworkTransport.Send(remoteFileTransferComputerId, fileTransferConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
-        GlobalDefinitions.WriteToLogFile("SendFileTransferMessageToRemoteComputer message - " + message + " hostId=" + recievedHostId + "  communicationChannel=" + recievedConnectionId + " Error: " + (NetworkError)sendError);
+        NetworkTransport.Send(computerId, fileTransferConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
+        GlobalDefinitions.WriteToLogFile("SendFileTransferMessageToRemoteComputer message - " + message + " hostId=" + receivedHostId + "  communicationChannel=" + receivedConnectionId + " Error: " + (NetworkError)sendError);
 
         if ((NetworkError)sendError != NetworkError.Ok)
         {
@@ -374,8 +378,9 @@ public class TransportScript : MonoBehaviour
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, message);
             //NetworkTransport.Send(recievedHostId, recievedConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
-            NetworkTransport.Send(remoteGameComputerId, gameConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
-            GlobalDefinitions.WriteToLogFile("Sending message - " + message + " hostId=" + remoteGameComputerId + "  communicationChannel=" + gameConnectionId + " Error: " + (NetworkError)sendError);
+            //NetworkTransport.Send(remoteGameComputerId, gameConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
+            NetworkTransport.Send(computerId, gameConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
+            GlobalDefinitions.WriteToLogFile("Sending message - " + message + " computerId=" + computerId + "  communicationChannel=" + gameConnectionId + " Error: " + (NetworkError)sendError);
 
             if ((NetworkError)sendError != NetworkError.Ok)
             {
@@ -454,7 +459,7 @@ public class TransportScript : MonoBehaviour
         GlobalDefinitions.WriteToLogFile("ResetConnection: sending disconnect");
         NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
 
-        if ((hostId != localGameComputerId) && (hostId != remoteGameComputerId))
+        if (hostId != computerId)
             GlobalDefinitions.WriteToLogFile("ERROR - resetConnection: Request recieved to disconnect unknown host id - " + hostId);
     }
 
@@ -468,17 +473,17 @@ public class TransportScript : MonoBehaviour
                                             // but it needs to be set
 
                 // In the case of the server, this is needed to know the address and ports of the client computer.
-                SendMessageToRemoteComputer("RemoteIPAddress " + localComputerIPAddress + " " + localGamePort + " " + localFileTransferPort);
+                //SendMessageToRemoteComputer("RemoteIPAddress " + localComputerIPAddress + " " + localGamePort + " " + localFileTransferPort);
                 SendMessageToRemoteComputer("ConfirmSync");
 
                 break;
 
             case NetworkEventType.DataEvent:
                 char[] delimiterChars = { ' ' };
-                Stream stream = new MemoryStream(recievedBuffer);
+                Stream stream = new MemoryStream(receivedBuffer);
                 BinaryFormatter formatter = new BinaryFormatter();
                 string message = formatter.Deserialize(stream) as string;
-                OnData(recievedHostId, recievedConnectionId, recievedChannelId, message, recievedDataSize, (NetworkError)recievedError);
+                OnData(receivedHostId, receivedConnectionId, receivedChannelId, message, receivedDataSize, (NetworkError)receivedError);
                 string[] switchEntries = message.Split(delimiterChars);
 
                 // Check for confirmation
@@ -500,11 +505,11 @@ public class TransportScript : MonoBehaviour
                         checkForHandshakeReceipt(message);
                         break;
 
-                    case "RemoteIPAddress":
-                        remoteComputerIPAddress = switchEntries[1];
-                        remoteGamePort = Convert.ToInt32(switchEntries[2]);
-                        remoteFileTransferPort = Convert.ToInt32(switchEntries[3]);
-                        break;
+                    //case "RemoteIPAddress":
+                    //    remoteComputerIPAddress = switchEntries[1];
+                    //    remoteGamePort = Convert.ToInt32(switchEntries[2]);
+                    //    remoteFileTransferPort = Convert.ToInt32(switchEntries[3]);
+                    //    break;
 
                     default:
                         GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update(): unknown data message recevied - " + message);
@@ -515,7 +520,7 @@ public class TransportScript : MonoBehaviour
             case NetworkEventType.DisconnectEvent:
                 GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
                 GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));
-                ResetConnection(recievedHostId);
+                ResetConnection(receivedHostId);
                 break;
             case NetworkEventType.Nothing:
                 break;
@@ -533,7 +538,7 @@ public class TransportScript : MonoBehaviour
     public static NetworkEventType checkForNetworkEvent(out string message)
     {
         message = null;
-        NetworkEventType receivedNetworkEvent = NetworkTransport.Receive(out recievedHostId, out recievedConnectionId, out recievedChannelId, recievedBuffer, BUFFERSIZE, out recievedDataSize, out recievedError);
+        NetworkEventType receivedNetworkEvent = NetworkTransport.Receive(out receivedHostId, out receivedConnectionId, out receivedChannelId, receivedBuffer, BUFFERSIZE, out receivedDataSize, out receivedError);
 
         switch (receivedNetworkEvent)
         {
@@ -541,7 +546,7 @@ public class TransportScript : MonoBehaviour
                 {
                     GlobalDefinitions.WriteToLogFile("checkForNetworkEvent: Disconnect event received");
                     GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                    ResetConnection(recievedHostId);
+                    ResetConnection(receivedHostId);
 
                     // Since the connetion has been broken, quit the game and go back to the main menu
                     GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
@@ -553,19 +558,20 @@ public class TransportScript : MonoBehaviour
 
             case NetworkEventType.ConnectEvent:
                 // This connection event traps the connection on the file transfer port.  Send a message back
-                remoteFileTransferComputerId = recievedHostId;
-                fileTransferConnectionId = recievedConnectionId;
-                SendFileTransferMessageToRemoteComputer("ConnectionEventReceived");
+                //remoteFileTransferComputerId = receivedHostId;
+                //fileTransferConnectionId = receivedConnectionId;
+                //SendFileTransferMessageToRemoteComputer("ConnectionEventReceived");
+                GlobalDefinitions.WriteToLogFile("Conenct event received");
                 break;
 
             case NetworkEventType.DataEvent:
                 {
-                    Stream stream = new MemoryStream(TransportScript.recievedBuffer);
+                    Stream stream = new MemoryStream(TransportScript.receivedBuffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     message = formatter.Deserialize(stream) as string;
-                    GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + recievedHostId + ", connectionId = "
-                            + recievedConnectionId + ", channelId = " + recievedChannelId + ", data = "
-                            + message + ", size = " + recievedDataSize + ", error = " + recievedError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                    GlobalDefinitions.WriteToLogFile("Date Event Received: (hostId = " + receivedHostId + ", connectionId = "
+                            + receivedConnectionId + ", channelId = " + receivedChannelId + ", data = "
+                            + message + ", size = " + receivedDataSize + ", error = " + receivedError.ToString() + ")" + "  " + DateTime.Now.ToString("h:mm:ss tt"));
 
                     break;
                 }

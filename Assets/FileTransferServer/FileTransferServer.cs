@@ -109,7 +109,8 @@ public class FileTransferServer : MonoBehaviour
             try
             {
                 //client = new UdpClient(port);
-                client = new UdpClient(TransportScript.localFileTransferPort);
+                //client = new UdpClient(TransportScript.localFileTransferPort);
+                client = new UdpClient(TransportScript.fileTransferPort);
                 client.EnableBroadcast = true;
                 client.Client.ReceiveBufferSize = 65536;	// Forces the highest value (64KB).
                 client.Client.SendBufferSize = 65536;		// Forces the highest value (64KB).
@@ -260,7 +261,6 @@ public class FileTransferServer : MonoBehaviour
                             // Remove from the "download list":
                             RemoveFileFromDownload(fields[1], fields[2]);
 
-                            byte error;
                             TransportScript.SendMessageToRemoteComputer(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
                             GlobalDefinitions.WriteToLogFile("Calling File Transfer disconnect");
                             //NetworkTransport.Disconnect(TransportScript.remoteFileTransferComputerId, TransportScript.fileTransferConnectionId, out error);
@@ -325,12 +325,14 @@ public class FileTransferServer : MonoBehaviour
                 IPHostEntry ipHostInfo = Dns.GetHostEntry(ip);          // Gets the IP from a URL
                 ipAddress = ipHostInfo.AddressList[0];
                 //remoteEndPoint = new IPEndPoint(ipAddress, port);       // Remote point generated from URL.
-                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteFileTransferPort);
+                //remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteFileTransferPort);
+                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.fileTransferPort);
             }
             else
             {
                 //remoteEndPoint = new IPEndPoint(ipAddress, port);       // Remote point generated from IP.
-                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteFileTransferPort);
+                //remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.remoteFileTransferPort);
+                remoteEndPoint = new IPEndPoint(ipAddress, TransportScript.fileTransferPort);
             }
             // If the message is too big will fail:
             if (data.Length > client.Client.SendBufferSize)
