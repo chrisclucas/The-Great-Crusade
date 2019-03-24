@@ -14,7 +14,7 @@ public class FileTransferRoutines : MonoBehaviour
         UdpClient udpClient = new UdpClient(11000);
         try
         {
-            udpClient.Connect("www.contoso.com", 11000);
+            udpClient.Connect(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
 
             // Sends a message to the host to which you have connected.
             Byte[] sendBytes = Encoding.ASCII.GetBytes("Sending file name " + savedFileName);
@@ -34,6 +34,8 @@ public class FileTransferRoutines : MonoBehaviour
         UdpClient udpClient = new UdpClient(11000);
         try
         {
+            udpClient.Connect(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
+
             //IPEndPoint object will allow us to read datagrams sent from any source.
             IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
