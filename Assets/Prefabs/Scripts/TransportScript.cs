@@ -7,8 +7,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class TransportScript : MonoBehaviour
 {
-    public const string defaultRemoteComputerIPAddress = "45.30.112.248";
-    //public const string defaultRemoteComputerIPAddress = "192.168.1.73";
+    //public const string defaultRemoteComputerIPAddress = "45.30.112.248";
+    public const string defaultRemoteComputerIPAddress = "192.168.1.73";
 
     public static string remoteComputerIPAddress;
     public static string localComputerIPAddress;

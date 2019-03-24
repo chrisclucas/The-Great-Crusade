@@ -16,16 +16,16 @@ public class FileTransferRoutines : MonoBehaviour
         try
         {
             udpClient.Connect(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
-            GlobalDefinitions.WriteToLogFile("SendFileTransfer: connection executed");
+            GlobalDefinitions.WriteToLogFile("SendFileTransfer: connection executed  " + IPAddress.Parse(TransportScript.remoteComputerIPAddress) + " " + TransportScript.fileTransferPort);
 
             // Sends a message to the host to which you have connected.
             Byte[] sendBytes = Encoding.ASCII.GetBytes("Sending file name " + savedFileName);
 
             udpClient.Send(sendBytes, sendBytes.Length);
-            GlobalDefinitions.WriteToLogFile("SendFileTransfer: sent message");
+            GlobalDefinitions.WriteToLogFile("SendFileTransfer: sent message - Sending file name " + savedFileName);
 
             //udpClient.Close();
-            GlobalDefinitions.WriteToLogFile("SendFileTransfer: closed udp connection");
+            //GlobalDefinitions.WriteToLogFile("SendFileTransfer: closed udp connection");
         }
         catch (Exception e)
         {
@@ -41,7 +41,7 @@ public class FileTransferRoutines : MonoBehaviour
         try
         {
             udpClient.Connect(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
-            GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: connection executed");
+            GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: connection executed  " + IPAddress.Parse(TransportScript.remoteComputerIPAddress) + " " + TransportScript.fileTransferPort);
 
             //IPEndPoint object will allow us to read datagrams sent from any source.
             IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
