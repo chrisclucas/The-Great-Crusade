@@ -263,7 +263,7 @@ public class FileTransferServer : MonoBehaviour
                             byte error;
                             TransportScript.SendMessageToRemoteComputer(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
                             GlobalDefinitions.WriteToLogFile("Calling File Transfer disconnect");
-                            NetworkTransport.Disconnect(TransportScript.remoteFileTransferComputerId, TransportScript.fileTransferConnectionId, out error);
+                            //NetworkTransport.Disconnect(TransportScript.remoteFileTransferComputerId, TransportScript.fileTransferConnectionId, out error);
                             GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
                         }
                     }

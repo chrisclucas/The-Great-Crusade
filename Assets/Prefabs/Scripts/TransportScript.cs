@@ -290,7 +290,7 @@ public class TransportScript : MonoBehaviour
                         {
                             GlobalDefinitions.GuiUpdateStatusMessage("Remote data load complete");
                             GlobalDefinitions.WriteToLogFile("Calling File Transfer disconnect");
-                            NetworkTransport.Disconnect(remoteFileTransferComputerId, fileTransferConnectionId, out recievedError);
+                            //NetworkTransport.Disconnect(remoteFileTransferComputerId, fileTransferConnectionId, out recievedError);
 
                             GlobalDefinitions.gameStarted = true;
                             if (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.sideControled)
