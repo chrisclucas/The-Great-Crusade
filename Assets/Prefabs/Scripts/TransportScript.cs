@@ -159,6 +159,13 @@ public class TransportScript : MonoBehaviour
                 try
                 {
                     recNetworkEvent = NetworkTransport.Receive(out recievedHostId, out recievedConnectionId, out recievedChannelId, recievedBuffer, BUFFERSIZE, out recievedDataSize, out recievedError);
+
+                    // Need to trap the connection here since I need to distingush between the game connection and the file transfer connection
+                    if (recNetworkEvent == NetworkEventType.ConnectEvent)
+                    {
+                        gameConnectionId = recievedHostId;
+                        remoteGameComputerId = recievedHostId;
+                    }
                 }
                 catch
                 {
@@ -265,6 +272,8 @@ public class TransportScript : MonoBehaviour
 
                     case NetworkEventType.ConnectEvent:
                         // This connection event traps the connection on the file transfer port.  Send a message back
+                        remoteFileTransferComputerId = recievedHostId;
+                        fileTransferConnectionId = recievedConnectionId;
                         SendFileTransferMessageToRemoteComputer("ConnectionEventReceived");
                         break;
 
