@@ -9,7 +9,7 @@ using System.Net.Sockets;
 public class FileTransferRoutines : MonoBehaviour
 {
     // This constructor arbitrarily assigns the local port number.
-    public static void SendFileTransfer(string savedFileName)
+    public void SendFileTransfer(string savedFileName)
     {
         UdpClient udpClient = new UdpClient(TransportScript.fileTransferPort);
         GlobalDefinitions.WriteToLogFile("SendFileTransfer: created udp client");
@@ -33,7 +33,7 @@ public class FileTransferRoutines : MonoBehaviour
         }
     }
 
-    public static void ReceiveFileTransfer()
+    public void ReceiveFileTransfer()
     {
         UdpClient udpClient = new UdpClient(TransportScript.fileTransferPort);
         GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: created udp client");

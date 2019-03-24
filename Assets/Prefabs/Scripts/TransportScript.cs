@@ -242,7 +242,7 @@ public class TransportScript : MonoBehaviour
                         // Tell the remote computer what file to load.  It will then turn around and request it
                         SendMessageToRemoteComputer(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
 
-                        FileTransferRoutines.SendFileTransfer(savedFileName);
+                        GameControl.fileTransferServerInstance.GetComponent<FileTransferRoutines>().SendFileTransfer(savedFileName);
 
                         // Now initiate file transfer setup
                         //ConfigureFileTransferConnection();

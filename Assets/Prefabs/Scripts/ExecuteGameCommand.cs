@@ -270,7 +270,7 @@ public class ExecuteGameCommand : MonoBehaviour {
                 for (int i = 2; i < switchEntries.Length; i++)
                     receivedFileName = receivedFileName + " " + switchEntries[i];
 
-                FileTransferRoutines.ReceiveFileTransfer();
+                GameControl.fileTransferServerInstance.GetComponent<FileTransferRoutines>().ReceiveFileTransfer();
 
                 //TransportScript.ConfigureFileTransferConnection();
                 //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
