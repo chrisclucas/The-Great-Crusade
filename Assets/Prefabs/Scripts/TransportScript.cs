@@ -551,6 +551,13 @@ public class TransportScript : MonoBehaviour
                     break;
                 }
 
+            case NetworkEventType.ConnectEvent:
+                // This connection event traps the connection on the file transfer port.  Send a message back
+                remoteFileTransferComputerId = recievedHostId;
+                fileTransferConnectionId = recievedConnectionId;
+                SendFileTransferMessageToRemoteComputer("ConnectionEventReceived");
+                break;
+
             case NetworkEventType.DataEvent:
                 {
                     Stream stream = new MemoryStream(TransportScript.recievedBuffer);
@@ -570,7 +577,7 @@ public class TransportScript : MonoBehaviour
 
             default:
                 {
-                    GlobalDefinitions.WriteToLogFile("GameControl Update(): Unknown network message type received: " + receivedNetworkEvent);
+                    GlobalDefinitions.WriteToLogFile("TransportScript Update(): Unknown network message type received: " + receivedNetworkEvent);
                     break;
                 }
         }
