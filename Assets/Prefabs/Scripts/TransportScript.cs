@@ -263,6 +263,11 @@ public class TransportScript : MonoBehaviour
                         ResetConnection(recievedHostId);
                         break;
 
+                    case NetworkEventType.ConnectEvent:
+                        // This connection event traps the connection on the file transfer port.  Send a message back
+                        SendFileTransferMessageToRemoteComputer("ConnectionEventReceived");
+                        break;
+
                     case NetworkEventType.DataEvent:
                         char[] delimiterChars = { ' ' };
 
@@ -298,7 +303,7 @@ public class TransportScript : MonoBehaviour
                         break;
 
                     default:
-                        GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update() 4: Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
+                        GlobalDefinitions.WriteToLogFile("ERROR - TransportScript update(): Unknown network event type received - " + recNetworkEvent + "  " + DateTime.Now.ToString("h:mm:ss tt"));
                         break;
                 }
             }
@@ -334,6 +339,20 @@ public class TransportScript : MonoBehaviour
             return (true);
     }
 
+    public static void SendFileTransferMessageToRemoteComputer(string message)
+    {
+        Stream stream = new MemoryStream(sendBuffer);
+        BinaryFormatter formatter = new BinaryFormatter();
+        formatter.Serialize(stream, message);
+        NetworkTransport.Send(remoteFileTransferComputerId, fileTransferConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
+        GlobalDefinitions.WriteToLogFile("SendFileTransferMessageToRemoteComputer message - " + message + " hostId=" + recievedHostId + "  communicationChannel=" + recievedConnectionId + " Error: " + (NetworkError)sendError);
+
+        if ((NetworkError)sendError != NetworkError.Ok)
+        {
+            GlobalDefinitions.GuiUpdateStatusMessage("ERROR IN TRANSMISSION - Network Error returned = " + (NetworkError)sendError);
+        }
+    }
+
     /// <summary>
     /// This is the routine that sends messages to the opposing computer
     /// </summary>
@@ -345,8 +364,9 @@ public class TransportScript : MonoBehaviour
             Stream stream = new MemoryStream(sendBuffer);
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, message);
-            NetworkTransport.Send(recievedHostId, recievedConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
-            GlobalDefinitions.WriteToLogFile("Sending message - " + message + " hostId=" + recievedHostId + "  communicationChannel=" + recievedConnectionId + " Error: " + (NetworkError)sendError);
+            //NetworkTransport.Send(recievedHostId, recievedConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
+            NetworkTransport.Send(remoteGameComputerId, gameConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
+            GlobalDefinitions.WriteToLogFile("Sending message - " + message + " hostId=" + remoteGameComputerId + "  communicationChannel=" + gameConnectionId + " Error: " + (NetworkError)sendError);
 
             if ((NetworkError)sendError != NetworkError.Ok)
             {
