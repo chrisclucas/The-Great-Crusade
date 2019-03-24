@@ -163,11 +163,11 @@ public class TransportScript : MonoBehaviour
                     recNetworkEvent = NetworkTransport.Receive(out receivedHostId, out receivedConnectionId, out receivedChannelId, receivedBuffer, BUFFERSIZE, out receivedDataSize, out receivedError);
 
                     // Need to trap the connection here since I need to distingush between the game connection and the file transfer connection
-                    //if (recNetworkEvent == NetworkEventType.ConnectEvent)
-                    //{
-                    //    gameConnectionId = receivedConnectionId;
-                    //    remoteGameComputerId = receivedHostId;
-                    //}
+                    if (recNetworkEvent == NetworkEventType.ConnectEvent)
+                    {
+                        gameConnectionId = receivedConnectionId;
+                        computerId = receivedHostId;
+                    }
                 }
                 catch
                 {
