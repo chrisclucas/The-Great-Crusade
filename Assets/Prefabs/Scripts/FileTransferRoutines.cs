@@ -24,7 +24,7 @@ public class FileTransferRoutines : MonoBehaviour
             udpClient.Send(sendBytes, sendBytes.Length);
             GlobalDefinitions.WriteToLogFile("SendFileTransfer: sent message");
 
-            udpClient.Close();
+            //udpClient.Close();
             GlobalDefinitions.WriteToLogFile("SendFileTransfer: closed udp connection");
         }
         catch (Exception e)
@@ -55,7 +55,7 @@ public class FileTransferRoutines : MonoBehaviour
             GlobalDefinitions.WriteToLogFile("SetupFileTransfer: message received = " + returnData.ToString());
             GlobalDefinitions.WriteToLogFile("This message was sent from " + RemoteIpEndPoint.Address.ToString() + " on their port number " + RemoteIpEndPoint.Port.ToString());
 
-            udpClient.Close();
+            //udpClient.Close();
         }
         catch (Exception e)
         {
