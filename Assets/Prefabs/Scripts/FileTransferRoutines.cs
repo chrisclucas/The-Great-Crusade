@@ -12,7 +12,6 @@ public class FileTransferRoutines : MonoBehaviour
 
     Thread receiveThread;
     UdpClient udpClient;
-    IPEndPoint anyIP;
     List<string> messageBuffer = new List<string>();
     string message;
 
@@ -52,7 +51,7 @@ public class FileTransferRoutines : MonoBehaviour
             GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: connection executed  " + IPAddress.Parse(TransportScript.remoteComputerIPAddress) + " " + TransportScript.fileTransferPort);
 
             //IPEndPoint object will allow us to read datagrams sent from any source.
-            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
             GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: setup RemoteIPEndPoint");
 
             // Blocks until a message returns on this socket from a remote host.
@@ -65,8 +64,8 @@ public class FileTransferRoutines : MonoBehaviour
             receiveThread.Start();
 
             // Uses the IPEndPoint object to determine which of these two hosts responded.
-            GlobalDefinitions.WriteToLogFile("SetupFileTransfer: message received = " + returnData.ToString());
-            GlobalDefinitions.WriteToLogFile("This message was sent from " + RemoteIpEndPoint.Address.ToString() + " on their port number " + RemoteIpEndPoint.Port.ToString());
+            //GlobalDefinitions.WriteToLogFile("SetupFileTransfer: message received = " + returnData.ToString());
+            //GlobalDefinitions.WriteToLogFile("This message was sent from " + RemoteIpEndPoint.Address.ToString() + " on their port number " + RemoteIpEndPoint.Port.ToString());
 
             //udpClient.Close();
         }
@@ -82,11 +81,9 @@ public class FileTransferRoutines : MonoBehaviour
         {
             try
             {
-                // Starts listening any IP:
-                if (anyIP == null)
-                    anyIP = new IPEndPoint(IPAddress.Any, 0);
+                IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
                 // Reads received data:
-                byte[] data = udpClient.Receive(ref anyIP);
+                byte[] data = udpClient.Receive(ref RemoteIpEndPoint);
                 char[] chars = new char[data.Length];
                 for (int c = 0; c < data.Length; c++)
                     chars[c] = (char)data[c];
@@ -102,6 +99,7 @@ public class FileTransferRoutines : MonoBehaviour
         {
             Debug.Log("Message received = " + message);
             message = null;
+            receiveThread.Abort();
         }
     }
 }
