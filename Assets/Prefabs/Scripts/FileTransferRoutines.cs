@@ -1,13 +1,21 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
 using System;
 using System.Text;
 // Communications:
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Collections.Generic;
 
 public class FileTransferRoutines : MonoBehaviour
 {
+
+    Thread receiveThread;
+    UdpClient udpClient;
+    IPEndPoint anyIP;
+    List<string> messageBuffer = new List<string>();
+    string message;
+
     // This constructor arbitrarily assigns the local port number.
     public void SendFileTransfer(string savedFileName)
     {
@@ -35,7 +43,7 @@ public class FileTransferRoutines : MonoBehaviour
 
     public void ReceiveFileTransfer()
     {
-        UdpClient udpClient = new UdpClient(TransportScript.fileTransferPort);
+        udpClient = new UdpClient(TransportScript.fileTransferPort);
         GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: created udp client");
 
         try
@@ -51,6 +59,11 @@ public class FileTransferRoutines : MonoBehaviour
             Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
             string returnData = Encoding.ASCII.GetString(receiveBytes);
 
+            // Thread listening incoming messages:
+            receiveThread = new Thread(new ThreadStart(ReceiveData));
+            receiveThread.IsBackground = true;
+            receiveThread.Start();
+
             // Uses the IPEndPoint object to determine which of these two hosts responded.
             GlobalDefinitions.WriteToLogFile("SetupFileTransfer: message received = " + returnData.ToString());
             GlobalDefinitions.WriteToLogFile("This message was sent from " + RemoteIpEndPoint.Address.ToString() + " on their port number " + RemoteIpEndPoint.Port.ToString());
@@ -60,6 +73,35 @@ public class FileTransferRoutines : MonoBehaviour
         catch (Exception e)
         {
             GlobalDefinitions.WriteToLogFile(e.ToString());
+        }
+    }
+
+    void ReceiveData()
+    {
+        while (udpClient != null)
+        {
+            try
+            {
+                // Starts listening any IP:
+                if (anyIP == null)
+                    anyIP = new IPEndPoint(IPAddress.Any, 0);
+                // Reads received data:
+                byte[] data = udpClient.Receive(ref anyIP);
+                char[] chars = new char[data.Length];
+                for (int c = 0; c < data.Length; c++)
+                    chars[c] = (char)data[c];
+                message = new string(chars);
+            }
+            catch { }
+        }
+    }
+
+    private void Update()
+    {
+        if (message != null)
+        {
+            Debug.Log("Message received = " + message);
+            message = null;
         }
     }
 }
