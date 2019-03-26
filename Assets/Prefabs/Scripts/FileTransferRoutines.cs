@@ -102,4 +102,17 @@ public class FileTransferRoutines : MonoBehaviour
             receiveThread.Abort();
         }
     }
+
+    void Disconnect()
+    {
+        GlobalDefinitions.WriteToLogFile("FileTransferServer Disconnect; executing");
+
+        receiveThread.Abort();
+        udpClient.Close();
+    }
+    void OnApplicationQuit()
+    {
+        GlobalDefinitions.WriteToLogFile("OnApplicationQuit: executing");
+        Disconnect();
+    }
 }
