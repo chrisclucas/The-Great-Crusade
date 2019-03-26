@@ -50,13 +50,12 @@ public class FileTransferRoutines : MonoBehaviour
             udpClient.Connect(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
             GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: connection executed  " + IPAddress.Parse(TransportScript.remoteComputerIPAddress) + " " + TransportScript.fileTransferPort);
 
-            //IPEndPoint object will allow us to read datagrams sent from any source.
             IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
             GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: setup RemoteIPEndPoint");
 
             // Blocks until a message returns on this socket from a remote host.
-            Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
-            string returnData = Encoding.ASCII.GetString(receiveBytes);
+            //Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
+            //string returnData = Encoding.ASCII.GetString(receiveBytes);
 
             // Thread listening incoming messages:
             receiveThread = new Thread(new ThreadStart(ReceiveData));
