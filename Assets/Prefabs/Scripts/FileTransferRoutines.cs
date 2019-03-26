@@ -54,13 +54,13 @@ public class FileTransferRoutines : MonoBehaviour
             GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: setup RemoteIPEndPoint");
 
             // Blocks until a message returns on this socket from a remote host.
-            //Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
-            //string returnData = Encoding.ASCII.GetString(receiveBytes);
+            Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
+            string returnData = Encoding.ASCII.GetString(receiveBytes);
 
             // Thread listening incoming messages:
-            receiveThread = new Thread(new ThreadStart(ReceiveData));
-            receiveThread.IsBackground = true;
-            receiveThread.Start();
+            //receiveThread = new Thread(new ThreadStart(ReceiveData));
+            //receiveThread.IsBackground = true;
+            //receiveThread.Start();
 
             // Uses the IPEndPoint object to determine which of these two hosts responded.
             //GlobalDefinitions.WriteToLogFile("SetupFileTransfer: message received = " + returnData.ToString());
