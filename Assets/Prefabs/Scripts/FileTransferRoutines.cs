@@ -18,21 +18,35 @@ public class FileTransferRoutines : MonoBehaviour
     // This constructor arbitrarily assigns the local port number.
     public void SendFileTransfer(string savedFileName)
     {
-        UdpClient udpClient = new UdpClient(TransportScript.fileTransferPort);
+        UdpClient udpClient = new UdpClient();
         GlobalDefinitions.WriteToLogFile("SendFileTransfer: created udp client");
         try
         {
-            udpClient.Connect(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
-            GlobalDefinitions.WriteToLogFile("SendFileTransfer: connection executed  " + IPAddress.Parse(TransportScript.remoteComputerIPAddress) + " " + TransportScript.fileTransferPort);
+            IPAddress ipAddress = IPAddress.Parse("192.168.1.73");
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, TransportScript.fileTransferPort);
 
-            // Sends a message to the host to which you have connected.
-            Byte[] sendBytes = Encoding.ASCII.GetBytes("Sending file name " + savedFileName);
+            Byte[] sendBytes = Encoding.ASCII.GetBytes("Is anybody there?");
+            try
+            {
+                udpClient.Send(sendBytes, sendBytes.Length, ipEndPoint);
+            }
+            catch (Exception e)
+            {
+                GlobalDefinitions.WriteToLogFile("UDP send error = " + e.ToString());
+            }
 
-            udpClient.Send(sendBytes, sendBytes.Length);
-            GlobalDefinitions.WriteToLogFile("SendFileTransfer: sent message - Sending file name " + savedFileName);
 
-            //udpClient.Close();
-            //GlobalDefinitions.WriteToLogFile("SendFileTransfer: closed udp connection");
+            //udpClient.Connect(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
+            //GlobalDefinitions.WriteToLogFile("SendFileTransfer: connection executed  " + IPAddress.Parse(TransportScript.remoteComputerIPAddress) + " " + TransportScript.fileTransferPort);
+
+            //// Sends a message to the host to which you have connected.
+            //Byte[] sendBytes = Encoding.ASCII.GetBytes("Sending file name " + savedFileName);
+
+            //udpClient.Send(sendBytes, sendBytes.Length);
+            //GlobalDefinitions.WriteToLogFile("SendFileTransfer: sent message - Sending file name " + savedFileName);
+
+            ////udpClient.Close();
+            ////GlobalDefinitions.WriteToLogFile("SendFileTransfer: closed udp connection");
         }
         catch (Exception e)
         {
@@ -47,15 +61,17 @@ public class FileTransferRoutines : MonoBehaviour
 
         try
         {
-            udpClient.Connect(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
+            //udpClient.Connect(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
             GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: connection executed  " + IPAddress.Parse(TransportScript.remoteComputerIPAddress) + " " + TransportScript.fileTransferPort);
 
-            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
+            //IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
             GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: setup RemoteIPEndPoint");
 
-            // Blocks until a message returns on this socket from a remote host.
+            // The Receive method blocks until a message returns on this socket from a remote host.
             Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
             string returnData = Encoding.ASCII.GetString(receiveBytes);
+            GlobalDefinitions.WriteToLogFile("Message received = " + returnData);
 
             // Thread listening incoming messages:
             //receiveThread = new Thread(new ThreadStart(ReceiveData));
