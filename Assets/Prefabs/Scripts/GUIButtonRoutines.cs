@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using System;
 using System.Collections.Generic;
 
@@ -78,7 +79,8 @@ public class GUIButtonRoutines : MonoBehaviour
         if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
         {
             GlobalDefinitions.WriteToLogFile("YesMain: Calling ResetConnection()");
-            //TransportScript.ResetConnection(TransportScript.remoteGameComputerId);
+            NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
+            Network.Disconnect();
             TransportScript.ResetConnection(TransportScript.computerId);
         }
 
