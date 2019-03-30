@@ -79,7 +79,8 @@ public class GUIButtonRoutines : MonoBehaviour
         if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
         {
             GlobalDefinitions.WriteToLogFile("YesMain: Calling ResetConnection()");
-            //NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
+            byte error;
+            NetworkTransport.Disconnect(TransportScript.receivedHostId, TransportScript.gameConnectionId, out error);
             Network.Disconnect();
             TransportScript.ResetConnection(TransportScript.computerId);
         }

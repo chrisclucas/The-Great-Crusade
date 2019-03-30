@@ -48,7 +48,7 @@ public class TransportScript : MonoBehaviour
     static byte sendError;
     static byte[] sendBuffer = new byte[BUFFERSIZE];
 
-    private static int receivedHostId;
+    public static int receivedHostId;
     private static int receivedConnectionId;
     private static int receivedChannelId;
     private static byte[] receivedBuffer = new byte[BUFFERSIZE];
@@ -438,8 +438,6 @@ public class TransportScript : MonoBehaviour
     /// <param name="hostId"></param>
     public static void ResetConnection(int hostId)
     {
-        byte error;
-
         GlobalDefinitions.SwitchLocalControl(false);
         TransportScript.remoteComputerIPAddress = "";
         GlobalDefinitions.userIsIntiating = false;
