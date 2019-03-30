@@ -62,6 +62,7 @@ public class FileTransferRoutines : MonoBehaviour
                 for (int c = 0; c < data.Length; c++)
                     chars[c] = (char)data[c];
                 message = new string(chars);
+                GlobalDefinitions.WriteToLogFile("ReceiveData: message recevied = " + message);
             }
             catch { }
         }
