@@ -453,12 +453,12 @@ public class TransportScript : MonoBehaviour
         opponentComputerConfirmsSync = false;
         gameDataSent = false;
 
-        GlobalDefinitions.WriteToLogFile("ResetConnection: sending disconnect");
-        NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
-        Network.Disconnect();
+        //GlobalDefinitions.WriteToLogFile("ResetConnection: sending disconnect");
+        //NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
+        //Network.Disconnect();
 
-        if (hostId != computerId)
-            GlobalDefinitions.WriteToLogFile("ERROR - resetConnection: Request recieved to disconnect unknown host id - " + hostId);
+        //if (hostId != computerId)
+        //    GlobalDefinitions.WriteToLogFile("ERROR - resetConnection: Request recieved to disconnect unknown host id - " + hostId);
     }
 
     private static void processNetworkEvent(NetworkEventType currentNetworkEvent)
