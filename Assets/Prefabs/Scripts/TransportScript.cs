@@ -91,17 +91,9 @@ public class TransportScript : MonoBehaviour
         //    remoteGameComputerId = -1;
         //}
 
-        // Put this in a try clause in case the network has already been initialized and the port is already assigned
-        //try
-        //{
-        //    NetworkTransport.AddHost(topology, gamePort);
-        //}
-        //catch
-        //{
-        //    GlobalDefinitions.WriteToLogFile("ERROR received when assigning game port - assume this is a reset and the port is already assigned");
-        //}
+        computerId = NetworkTransport.AddHost(topology, gamePort);
 
-        computerId = NetworkTransport.AddHost(topology);
+        //NetworkTransport.AddHost(topology);
 
         return (computerId);
 
