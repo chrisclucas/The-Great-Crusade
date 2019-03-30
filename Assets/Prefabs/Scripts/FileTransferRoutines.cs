@@ -15,40 +15,27 @@ public class FileTransferRoutines : MonoBehaviour
     List<string> messageBuffer = new List<string>();
     string message;
 
-    // This constructor arbitrarily assigns the local port number.
     public void SendFileTransfer(string savedFileName)
     {
         int PORT = 5017;
-        UdpClient udpClient = new UdpClient();
-        udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, PORT));
-
-        var from = new IPEndPoint(0, 0);
-        StartCoroutine("RunListening");
+        UdpClient udpClient = new UdpClient(PORT);
+        udpClient.Client.Bind(new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), PORT));
 
         var data = Encoding.UTF8.GetBytes("ABCD");
-        udpClient.Send(data, data.Length, "255.255.255.255", PORT);
-
-
-        GlobalDefinitions.WriteToLogFile("SendFileTransfer: executing");
-        UdpClient udpServer = new UdpClient(11000);
-
-        while (true)
-        {
-            var remoteEP = new IPEndPoint(IPAddress.Any, TransportScript.fileTransferPort);
-            udpServer.Send(new byte[] { 1 }, 1, remoteEP);
-        }
+        udpClient.Send(data, data.Length, TransportScript.remoteComputerIPAddress, PORT);
+        GlobalDefinitions.WriteToLogFile("SendFileTransfer: sent ABCD message  to ip address = " + TransportScript.remoteComputerIPAddress + " port = " + PORT);
     }
 
     private IEnumerator RunListening()
     {
-        GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: executing");
+        GlobalDefinitions.WriteToLogFile("RunListening: executing  listening from ip address = " + TransportScript.remoteComputerIPAddress + "  port = " + TransportScript.fileTransferPort);
         var client = new UdpClient();
-        IPEndPoint ep = new IPEndPoint(IPAddress.Parse("192.168.1.73"), TransportScript.fileTransferPort);
+        IPEndPoint ep = new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
         client.Connect(ep);
 
         // then receive data
         var receivedData = client.Receive(ref ep);
-        GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: received = " + receivedData);
+        GlobalDefinitions.WriteToLogFile("RunListening: received = " + receivedData);
 
         yield return new WaitForSeconds(1f);
     }
