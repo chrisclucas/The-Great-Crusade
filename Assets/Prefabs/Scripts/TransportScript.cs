@@ -91,8 +91,6 @@ public class TransportScript : MonoBehaviour
         //    remoteGameComputerId = -1;
         //}
 
-        //localGameComputerId = NetworkTransport.AddHost(topology, localGamePort);
-        //remoteGameComputerId = NetworkTransport.AddHost(topology);
         NetworkTransport.AddHost(topology, gamePort);
         computerId = NetworkTransport.AddHost(topology);
 
