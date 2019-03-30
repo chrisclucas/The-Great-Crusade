@@ -77,7 +77,7 @@ public class ClientServerRoutines : MonoBehaviour
         // Set the ip address of the server
         TransportScript.remoteComputerIPAddress = "192.168.1.67";
 
-        TransportScript.computerId = TransportScript.NetworkInit();
+        //TransportScript.computerId = TransportScript.NetworkInit();
 
         if (ConnectToServer())
         {
