@@ -467,6 +467,7 @@ public class TransportScript : MonoBehaviour
 
         GlobalDefinitions.WriteToLogFile("ResetConnection: sending disconnect");
         NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
+        Network.Disconnect();
 
         if (hostId != computerId)
             GlobalDefinitions.WriteToLogFile("ERROR - resetConnection: Request recieved to disconnect unknown host id - " + hostId);
