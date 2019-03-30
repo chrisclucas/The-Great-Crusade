@@ -19,7 +19,7 @@ public class FileTransferRoutines : MonoBehaviour
     {
         int PORT = 5017;
         UdpClient udpClient = new UdpClient(PORT);
-        udpClient.Client.Bind(new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), PORT));
+        //udpClient.Client.Bind(new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), PORT));
 
         var data = Encoding.UTF8.GetBytes("ABCD");
         udpClient.Send(data, data.Length, TransportScript.remoteComputerIPAddress, PORT);
