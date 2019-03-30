@@ -14,6 +14,7 @@ public class FileTransferRoutines : MonoBehaviour
     UdpClient udpClient;
     List<string> messageBuffer = new List<string>();
     string message;
+    IPEndPoint anyIP;
 
     public void SendFileTransfer(string savedFileName)
     {
@@ -42,7 +43,10 @@ public class FileTransferRoutines : MonoBehaviour
 
     public void ReceiveFileTransfer()
     {
-        StartCoroutine("RunListening");
+        GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: executing");
+        receiveThread = new Thread(new ThreadStart(ReceiveData));
+        receiveThread.IsBackground = true;
+        receiveThread.Start();
     }
 
     void ReceiveData()
@@ -51,9 +55,9 @@ public class FileTransferRoutines : MonoBehaviour
         {
             try
             {
-                IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Parse(TransportScript.remoteComputerIPAddress), TransportScript.fileTransferPort);
+                anyIP = new IPEndPoint(IPAddress.Any, 0);
                 // Reads received data:
-                byte[] data = udpClient.Receive(ref RemoteIpEndPoint);
+                byte[] data = udpClient.Receive(ref anyIP);
                 char[] chars = new char[data.Length];
                 for (int c = 0; c < data.Length; c++)
                     chars[c] = (char)data[c];
@@ -77,7 +81,7 @@ public class FileTransferRoutines : MonoBehaviour
     {
         GlobalDefinitions.WriteToLogFile("FileTransferServer Disconnect; executing");
 
-        receiveThread.Abort();
+        //receiveThread.Abort();
         udpClient.Close();
     }
     void OnApplicationQuit()
