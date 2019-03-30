@@ -51,21 +51,18 @@ public class FileTransferRoutines : MonoBehaviour
 
     void ReceiveData()
     {
-        while (udpClient != null)
+        try
         {
-            try
-            {
-                anyIP = new IPEndPoint(IPAddress.Any, 0);
-                // Reads received data:
-                byte[] data = udpClient.Receive(ref anyIP);
-                char[] chars = new char[data.Length];
-                for (int c = 0; c < data.Length; c++)
-                    chars[c] = (char)data[c];
-                message = new string(chars);
-                GlobalDefinitions.WriteToLogFile("ReceiveData: message recevied = " + message);
-            }
-            catch { }
+            anyIP = new IPEndPoint(IPAddress.Any, 0);
+            // Reads received data:
+            byte[] data = udpClient.Receive(ref anyIP);
+            char[] chars = new char[data.Length];
+            for (int c = 0; c < data.Length; c++)
+                chars[c] = (char)data[c];
+            message = new string(chars);
+            GlobalDefinitions.WriteToLogFile("ReceiveData: message recevied = " + message);
         }
+        catch { }
     }
 
     private void Update()
