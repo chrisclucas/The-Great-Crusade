@@ -449,7 +449,7 @@ public class GameControl : MonoBehaviour
     private void CreateSingletons()
     {
         fileTransferServerInstance = new GameObject("fileTransferInstance");
-        fileTransferServerInstance.AddComponent<FileTransferRoutines>();
+        fileTransferServerInstance.AddComponent<FileTransferServer>();
 
         transportScriptInstance = new GameObject("transportScriptInstance");
         transportScriptInstance.AddComponent<TransportScript>();

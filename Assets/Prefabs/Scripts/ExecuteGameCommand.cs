@@ -270,12 +270,12 @@ public class ExecuteGameCommand : MonoBehaviour {
                 for (int i = 2; i < switchEntries.Length; i++)
                     receivedFileName = receivedFileName + " " + switchEntries[i];
 
-                GameControl.fileTransferServerInstance.GetComponent<FileTransferRoutines>().ReceiveFileTransfer();
+                //GameControl.fileTransferServerInstance.GetComponent<FileTransferRoutines>().ReceiveFileTransfer();
 
-                //TransportScript.ConfigureFileTransferConnection();
-                //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
-                //GlobalDefinitions.WriteToLogFile("Received name of save file, calling FileTransferServer: fileName = " + receivedFileName + "  path to save = " + GameControl.path);
-                //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().RequestFile(TransportScript.remoteComputerIPAddress, receivedFileName, GameControl.path, true);
+                TransportScript.ConfigureFileTransferConnection();
+                GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
+                GlobalDefinitions.WriteToLogFile("Received name of save file, calling FileTransferServer: fileName = " + receivedFileName + "  path to save = " + GameControl.path);
+                GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().RequestFile(TransportScript.remoteComputerIPAddress, receivedFileName, GameControl.path, true);
                 break;
 
             case GlobalDefinitions.DISPLAYALLIEDSUPPLYRANGETOGGLEWORD:
