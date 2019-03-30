@@ -58,7 +58,8 @@ public class TransportScript : MonoBehaviour
     /// <summary>
     /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
     /// </summary>
-    public static int NetworkInit()
+    //public static int NetworkInit()
+    private void Start()
     {
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
@@ -95,7 +96,7 @@ public class TransportScript : MonoBehaviour
 
         //NetworkTransport.AddHost(topology);
 
-        return (computerId);
+        //return (computerId);
 
     }
 
@@ -135,11 +136,6 @@ public class TransportScript : MonoBehaviour
         NetworkTransport.AddHost(topology, fileTransferPort);
 
         return;
-
-    }
-
-    void Start()
-    {
 
     }
 
