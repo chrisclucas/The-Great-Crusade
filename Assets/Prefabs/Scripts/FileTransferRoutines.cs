@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
-using System;
 using System.Text;
 // Communications:
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Generic;
+using System.Collections;
 
 public class FileTransferRoutines : MonoBehaviour
 {
@@ -18,6 +18,17 @@ public class FileTransferRoutines : MonoBehaviour
     // This constructor arbitrarily assigns the local port number.
     public void SendFileTransfer(string savedFileName)
     {
+        int PORT = 5017;
+        UdpClient udpClient = new UdpClient();
+        udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, PORT));
+
+        var from = new IPEndPoint(0, 0);
+        StartCoroutine("RunListening");
+
+        var data = Encoding.UTF8.GetBytes("ABCD");
+        udpClient.Send(data, data.Length, "255.255.255.255", PORT);
+
+
         GlobalDefinitions.WriteToLogFile("SendFileTransfer: executing");
         UdpClient udpServer = new UdpClient(11000);
 
@@ -28,7 +39,7 @@ public class FileTransferRoutines : MonoBehaviour
         }
     }
 
-    public void ReceiveFileTransfer()
+    private IEnumerator RunListening()
     {
         GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: executing");
         var client = new UdpClient();
@@ -38,6 +49,13 @@ public class FileTransferRoutines : MonoBehaviour
         // then receive data
         var receivedData = client.Receive(ref ep);
         GlobalDefinitions.WriteToLogFile("ReceiveFileTransfer: received = " + receivedData);
+
+        yield return new WaitForSeconds(1f);
+    }
+
+    public void ReceiveFileTransfer()
+    {
+        StartCoroutine("RunListening");
     }
 
     void ReceiveData()
