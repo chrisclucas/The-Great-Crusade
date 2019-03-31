@@ -438,6 +438,7 @@ public class TransportScript : MonoBehaviour
     /// <param name="hostId"></param>
     public static void ResetConnection(int hostId)
     {
+        byte error;
         GlobalDefinitions.SwitchLocalControl(false);
         TransportScript.remoteComputerIPAddress = "";
         GlobalDefinitions.userIsIntiating = false;
@@ -451,12 +452,13 @@ public class TransportScript : MonoBehaviour
         opponentComputerConfirmsSync = false;
         gameDataSent = false;
 
-        //GlobalDefinitions.WriteToLogFile("ResetConnection: sending disconnect");
-        //NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
-        //Network.Disconnect();
+        GlobalDefinitions.WriteToLogFile("ResetConnection: sending disconnect");
+        NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
+        NetworkTransport.Shutdown();
+        Network.Disconnect();
 
-        //if (hostId != computerId)
-        //    GlobalDefinitions.WriteToLogFile("ERROR - resetConnection: Request recieved to disconnect unknown host id - " + hostId);
+        if (hostId != computerId)
+            GlobalDefinitions.WriteToLogFile("ERROR - resetConnection: Request recieved to disconnect unknown host id - " + hostId);
     }
 
     private static void processNetworkEvent(NetworkEventType currentNetworkEvent)
