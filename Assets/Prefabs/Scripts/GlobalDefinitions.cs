@@ -2566,16 +2566,16 @@ public class GlobalDefinitions : MonoBehaviour
         if (localControlValue)
         {
             nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-            undoButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-            MustAttackToggle.GetComponent<Toggle>().interactable = true;
-            AssignCombatButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-            DisplayAllCombatsButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-            AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
-            GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
-            AlliedSupplySourcesButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-            SettingsButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-            HideUnitsToggle.GetComponent<Toggle>().interactable = true;
-            HistoricalProgressToggle.GetComponent<Toggle>().interactable = true;
+            //undoButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            //MustAttackToggle.GetComponent<Toggle>().interactable = true;
+            //AssignCombatButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            //DisplayAllCombatsButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            //AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
+            //GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
+            //AlliedSupplySourcesButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            //SettingsButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            //HideUnitsToggle.GetComponent<Toggle>().interactable = true;
+            //HistoricalProgressToggle.GetComponent<Toggle>().interactable = true;
         }
         else
         {

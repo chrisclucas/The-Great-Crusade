@@ -130,7 +130,7 @@ public class SetUpState : GameState
                 writeFile.WriteLine("SavedTurnFile " + turnFileName);
             }
 
-            // If this is a network game send the file name to the remote computer so it can be reSquested through the file transfer routines.  It's silly that 
+            // If this is a network game send the file name to the remote computer so it can be requested through the file transfer routines.  It's silly that 
             // I have to tell it what to ask for but I bought the code and that is how it works
             if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && (GlobalDefinitions.localControl))
                 TransportScript.SendMessageToRemoteComputer(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
@@ -321,15 +321,6 @@ public class TurnInitializationState : GameState
     // There are no modes in this state, all actions get executed by the initialization including the state transition
     public override void Initialize()
     {
-        // If this is a network game the control needs to be swapped here
-        //if (GlobalDefinitions.localControl && GlobalDefinitions.gameStarted && (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German) && 
-        //        (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
-        //{
-        //    GlobalDefinitions.WriteToLogFile("TurnInitializationState: passing control to remote computer");
-        //    GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.PASSCONTROLKEYWORK);
-        //    GlobalDefinitions.SwitchLocalControl(false);
-        //}
-
         if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
         {
             if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
