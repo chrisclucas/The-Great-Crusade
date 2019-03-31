@@ -149,6 +149,7 @@ public class TransportScript : MonoBehaviour
                     // Need to trap the connection here since I need to distingush between the game connection and the file transfer connection
                     if (recNetworkEvent == NetworkEventType.ConnectEvent)
                     {
+                        GlobalDefinitions.WriteToLogFile("TransportScript Update(): gameConnectionId = " + gameConnectionId + " computerId = " + computerId + " receivedConnectionId = " + receivedChannelId + " receivedHostId = " + receivedHostId);
                         gameConnectionId = receivedConnectionId;
                         computerId = receivedHostId;
                     }
@@ -226,8 +227,6 @@ public class TransportScript : MonoBehaviour
                         // Tell the remote computer what file to load.  It will then turn around and request it
                         SendMessageToRemoteComputer(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + savedFileName);
 
-                        //GameControl.fileTransferServerInstance.GetComponent<FileTransferRoutines>().SendFileTransfer(savedFileName);
-
                         // Now initiate file transfer setup
                         GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
 
@@ -272,8 +271,6 @@ public class TransportScript : MonoBehaviour
                         if (switchEntries[0] == GlobalDefinitions.GAMEDATALOADEDKEYWORD)
                         {
                             GlobalDefinitions.GuiUpdateStatusMessage("Remote data load complete");
-                            GlobalDefinitions.WriteToLogFile("Calling File Transfer disconnect");
-                            //NetworkTransport.Disconnect(remoteFileTransferComputerId, fileTransferConnectionId, out recievedError);
 
                             GlobalDefinitions.gameStarted = true;
                             if (GlobalDefinitions.nationalityUserIsPlaying == GlobalDefinitions.sideControled)
@@ -310,7 +307,7 @@ public class TransportScript : MonoBehaviour
     public static bool Connect(string opponentIPaddr)
     {
         NetworkTransport.Init();
-        //gameConnectionId = NetworkTransport.Connect(remoteGameComputerId, opponentIPaddr, remoteGamePort, 0, out receivedError);
+        GlobalDefinitions.WriteToLogFile("Connect: calling NetworkTransport.Connect computerId = " + computerId);
         gameConnectionId = NetworkTransport.Connect(computerId, opponentIPaddr, gamePort, 0, out receivedError);
         GlobalDefinitions.WriteToLogFile("Connect: gameConnectionId = " + gameConnectionId);
 
@@ -424,8 +421,6 @@ public class TransportScript : MonoBehaviour
                 channelRequested = true;    // Since this is can be executed by the computer that isn't requesting a channel it isn't symantically correct 
                                             // but it needs to be set
 
-                // In the case of the server, this is needed to know the address and ports of the client computer.
-                //SendMessageToRemoteComputer("RemoteIPAddress " + localComputerIPAddress + " " + localGamePort + " " + localFileTransferPort);
                 SendMessageToRemoteComputer("ConfirmSync");
 
                 break;

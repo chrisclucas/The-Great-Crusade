@@ -262,8 +262,7 @@ public class FileTransferServer : MonoBehaviour
                             RemoveFileFromDownload(fields[1], fields[2]);
 
                             TransportScript.SendMessageToRemoteComputer(GlobalDefinitions.GAMEDATALOADEDKEYWORD);
-                            GlobalDefinitions.WriteToLogFile("Calling File Transfer disconnect");
-                            //NetworkTransport.Disconnect(TransportScript.remoteFileTransferComputerId, TransportScript.fileTransferConnectionId, out error);
+                            GlobalDefinitions.GuiUpdateStatusMessage("Data load complete");
                             GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().ReadTurnFile(fileName);
                         }
                     }
