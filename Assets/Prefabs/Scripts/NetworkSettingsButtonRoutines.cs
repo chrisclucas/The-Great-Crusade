@@ -15,26 +15,11 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.germanToggle.GetComponent<Toggle>().interactable = true;
         MainMenuRoutines.newGameToggle.GetComponent<Toggle>().interactable = true;
         MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().interactable = true;
+        MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
         GlobalDefinitions.userIsIntiating = true;
         GlobalDefinitions.userIsNotInitiating = false;
-
-        //// Since this computer is intiating, I need to find an open port for the game
-        //TcpListener gameListener = new TcpListener(IPAddress.Loopback, 0);
-        //gameListener.Start();
-        //int port = ((IPEndPoint)gameListener.LocalEndpoint).Port;
-        //gameListener.Stop();
-        //GlobalDefinitions.WriteToLogFile("YesInitiate: open game port found = " + port);
-        //TransportScript.localGamePort = port;
-        //TransportScript.remoteGamePort = TransportScript.defaultGamePort;
-
-        //// Now I need a port for file transfer
-        //TcpListener fileTransferListener = new TcpListener(IPAddress.Loopback, 0);
-        //fileTransferListener.Start();
-        //port = ((IPEndPoint)fileTransferListener.LocalEndpoint).Port;
-        //fileTransferListener.Stop();
-        //GlobalDefinitions.WriteToLogFile("YesInitiate: open file transfer port found = " + port);
-        //TransportScript.localFileTransferPort = port;
-        //TransportScript.remoteFileTransferPort = TransportScript.defaultFileTransferPort;
+        GameObject.Find("initiatingGameNoButton").GetComponent<Button>().interactable = false;
+        GameObject.Find("initiatingGameYesButton").GetComponent<Button>().interactable = false;
     }
 
     /// <summary>
@@ -50,12 +35,8 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().interactable = true;
         GlobalDefinitions.userIsNotInitiating = true;
         GlobalDefinitions.userIsIntiating = false;
-        //MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text = "";
         GameObject.Find("initiatingGameNoButton").GetComponent<Button>().interactable = false;
         GameObject.Find("initiatingGameYesButton").GetComponent<Button>().interactable = false;
-
-        //TransportScript.localGamePort = TransportScript.defaultGamePort;
-        //TransportScript.localFileTransferPort = TransportScript.defaultFileTransferPort;
     }
 
     /// <summary>
@@ -67,12 +48,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         {
             MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn = false;
             GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.German;
-
-            if (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
-                MainMenuRoutines.opponentIPaddr.interactable = true;
         }
-        else
-            MainMenuRoutines.opponentIPaddr.interactable = false;
     }
 
     /// <summary>
@@ -84,12 +60,7 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         {
             MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn = false;
             GlobalDefinitions.sideControled = GlobalDefinitions.Nationality.Allied;
-
-            if (MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn)
-                MainMenuRoutines.opponentIPaddr.interactable = true;
         }
-        else
-            MainMenuRoutines.opponentIPaddr.interactable = false;
     }
 
     /// <summary>
@@ -102,9 +73,6 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             MainMenuRoutines.savedGameToggle.GetComponent<Toggle>().isOn = false;
             MainMenuRoutines.playNewGame = true;
             MainMenuRoutines.playSavedGame = false;
-
-            if (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn)
-                MainMenuRoutines.opponentIPaddr.interactable = true;
         }
         else
         {
@@ -123,9 +91,6 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             MainMenuRoutines.newGameToggle.GetComponent<Toggle>().isOn = false;
             MainMenuRoutines.playSavedGame = true;
             MainMenuRoutines.playNewGame = false;
-
-            if (MainMenuRoutines.germanToggle.GetComponent<Toggle>().isOn || MainMenuRoutines.alliedToggle.GetComponent<Toggle>().isOn)
-                MainMenuRoutines.opponentIPaddr.interactable = true;
         }
         else
         {
@@ -168,13 +133,17 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         if (foundAnError)
             return;
 
+        // For testing only
+
+
+        TransportScript.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
+
+        
 
         // If the user is not initiating, then just exit out since the next step is to wait for a connection request
         if (GlobalDefinitions.userIsNotInitiating)
         {
             TransportScript.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
-            //TransportScript.NetworkInit();
-            //TransportScript.configureFileTransferConnection();
             GlobalDefinitions.GuiUpdateStatusMessage("Waiting on connection request");
             GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         }
@@ -184,8 +153,6 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
             TransportScript.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
             if (MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text.Length > 0)
             {
-                //TransportScript.NetworkInit();
-                //TransportScript.configureFileTransferConnection();
                 if (TransportScript.Connect(MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text))
                 {
                     TransportScript.channelRequested = true;

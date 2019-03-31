@@ -19,20 +19,9 @@ public class TransportScript : MonoBehaviour
     public static int gamePort = defaultGamePort;
     public static int fileTransferPort = defaultFileTransferPort;
 
-    //public static int remoteGamePort;
-    //public static int localGamePort;
-    //public static int remoteFileTransferPort;
-    //public static int localFileTransferPort;
-
     public static int gameConnectionId = -1;
-    public static int fileTransferConnectionId = -1;
 
     public static int computerId = -1;
-
-    //public static int localGameComputerId = -1;
-    //public static int remoteGameComputerId = -1;
-    //public static int localFileTransferComputerId = -1;
-    //public static int remoteFileTransferComputerId = -1;
 
     public static bool channelRequested = false;
     public static bool connectionConfirmed = false;
@@ -240,8 +229,6 @@ public class TransportScript : MonoBehaviour
                         //GameControl.fileTransferServerInstance.GetComponent<FileTransferRoutines>().SendFileTransfer(savedFileName);
 
                         // Now initiate file transfer setup
-                        ConfigureFileTransferConnection();
-                        FileTransferConnect(remoteComputerIPAddress);
                         GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
 
                         gameDataSent = true;
@@ -270,10 +257,7 @@ public class TransportScript : MonoBehaviour
                         break;
 
                     case NetworkEventType.ConnectEvent:
-                        // This connection event traps the connection on the file transfer port.  Send a message back
-                        //fileTransferComputerId = receivedHostId;
-                        fileTransferConnectionId = receivedConnectionId;
-                        SendFileTransferMessageToRemoteComputer("ConnectionEventReceived");
+
                         break;
 
                     case NetworkEventType.DataEvent:
@@ -334,33 +318,6 @@ public class TransportScript : MonoBehaviour
             return (false);
         else
             return (true);
-    }
-
-    public static bool FileTransferConnect(string ipAddress)
-    {
-        //NetworkTransport.Init();
-        //fileTransferConnectionId = NetworkTransport.Connect(remoteGameComputerId, ipAddress, remoteGamePort, 0, out receivedError);
-        fileTransferConnectionId = NetworkTransport.Connect(computerId, ipAddress, fileTransferPort, 0, out receivedError);
-        GlobalDefinitions.WriteToLogFile("FileTransferConnect: fileTransferConnectionId = " + fileTransferConnectionId);
-
-        if (fileTransferConnectionId <= 0)
-            return (false);
-        else
-            return (true);
-    }
-
-    public static void SendFileTransferMessageToRemoteComputer(string message)
-    {
-        Stream stream = new MemoryStream(sendBuffer);
-        BinaryFormatter formatter = new BinaryFormatter();
-        formatter.Serialize(stream, message);
-        NetworkTransport.Send(computerId, fileTransferConnectionId, reliableChannelId, sendBuffer, BUFFERSIZE, out sendError);
-        GlobalDefinitions.WriteToLogFile("SendFileTransferMessageToRemoteComputer message - " + message + " hostId=" + receivedHostId + "  communicationChannel=" + receivedConnectionId + " Error: " + (NetworkError)sendError);
-
-        if ((NetworkError)sendError != NetworkError.Ok)
-        {
-            GlobalDefinitions.GuiUpdateStatusMessage("ERROR IN TRANSMISSION - Network Error returned = " + (NetworkError)sendError);
-        }
     }
 
     /// <summary>
@@ -438,7 +395,6 @@ public class TransportScript : MonoBehaviour
     /// <param name="hostId"></param>
     public static void ResetConnection(int hostId)
     {
-        byte error;
         GlobalDefinitions.SwitchLocalControl(false);
         TransportScript.remoteComputerIPAddress = "";
         GlobalDefinitions.userIsIntiating = false;
@@ -453,9 +409,7 @@ public class TransportScript : MonoBehaviour
         gameDataSent = false;
 
         GlobalDefinitions.WriteToLogFile("ResetConnection: sending disconnect");
-        //NetworkTransport.Disconnect(hostId, gameConnectionId, out error);
         NetworkTransport.Shutdown();
-        //Network.Disconnect();
 
         if (hostId != computerId)
             GlobalDefinitions.WriteToLogFile("ERROR - resetConnection: Request recieved to disconnect unknown host id - " + hostId);

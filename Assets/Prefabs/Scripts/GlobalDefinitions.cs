@@ -1433,7 +1433,15 @@ public class GlobalDefinitions : MonoBehaviour
         //tempInputField.image.rectTransform.sizeDelta = new Vector2(180, 30);
         tempInputField.image.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
         tempInputField.name = name + "InputField";
-        tempInputField.text = TransportScript.defaultRemoteComputerIPAddress;
+
+        // For testing only
+        if (TransportScript.localComputerIPAddress == "192.168.1.73")
+            tempInputField.text = "192.168.1.67";
+        else
+            tempInputField.text = "192.168.1.73";
+
+
+        //tempInputField.text = TransportScript.defaultRemoteComputerIPAddress;
         return (tempInputField);
     }
 
