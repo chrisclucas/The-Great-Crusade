@@ -133,12 +133,9 @@ public class NetworkSettingsButtonRoutines : MonoBehaviour
         if (foundAnError)
             return;
 
-        // For testing only
+        //TransportScript.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
 
-
-        TransportScript.remoteComputerIPAddress = MainMenuRoutines.opponentIPaddr.GetComponent<InputField>().text;
-
-        
+        TransportScript.NetworkInit();
 
         // If the user is not initiating, then just exit out since the next step is to wait for a connection request
         if (GlobalDefinitions.userIsNotInitiating)
