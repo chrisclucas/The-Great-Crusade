@@ -73,6 +73,7 @@ public class TransportScript : MonoBehaviour
         NetworkTransport.Init(globalConfig);
 
         computerId = NetworkTransport.AddHost(topology, gamePort);
+        GlobalDefinitions.WriteToLogFile("NetworkInit: computerId set to " + computerId);
     }
 
     void Update()
@@ -254,7 +255,6 @@ public class TransportScript : MonoBehaviour
     public static bool Connect(string opponentIPaddr)
     {
         NetworkTransport.Init();
-        NetworkInit();
         GlobalDefinitions.WriteToLogFile("Connect: calling NetworkTransport.Connect computerId = " + computerId);
         gameConnectionId = NetworkTransport.Connect(computerId, opponentIPaddr, gamePort, 0, out receivedError);
         GlobalDefinitions.WriteToLogFile("Connect: gameConnectionId = " + gameConnectionId);
