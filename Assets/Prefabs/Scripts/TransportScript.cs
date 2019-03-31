@@ -44,52 +44,16 @@ public class TransportScript : MonoBehaviour
     private static int receivedDataSize;
     private static byte receivedError;
 
-    /// <summary>
-    /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
-    /// </summary>
-    //public static int NetworkInit()
     private void Start()
     {
-        GlobalConfig globalConfig = new GlobalConfig();
-        globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
-        globalConfig.MaxPacketSize = 1500;
-
-        ConnectionConfig config = new ConnectionConfig();
-        config.PacketSize = 1400;
-        config.MaxConnectionAttempt = Byte.MaxValue;
-
-        reliableChannelId = config.AddChannel(QosType.AllCostDelivery);
-
-        int maxConnections = 2;
-        HostTopology topology = new HostTopology(config, maxConnections);
-        topology.ReceivedMessagePoolSize = 128;
-        topology.SentMessagePoolSize = 1024; // Default 128
-
-        NetworkTransport.Init(globalConfig);
-
-        // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
-        //if (localGameComputerId != -1)
-        //{
-        //    GlobalDefinitions.WriteToLogFile("NetworkInit: sending disconnect serverSocket = -1");
-        //    NetworkTransport.Disconnect(localGameComputerId, gameConnectionId, out error);
-        //    localGameComputerId = -1;
-        //}
-        //if (remoteGameComputerId != -1)
-        //{
-        //    GlobalDefinitions.WriteToLogFile("NetworkInit: sending disconnect remoteComputerId = -1");
-        //    NetworkTransport.Disconnect(remoteGameComputerId, gameConnectionId, out error);
-        //    remoteGameComputerId = -1;
-        //}
-
-        computerId = NetworkTransport.AddHost(topology, gamePort);
-
-        //NetworkTransport.AddHost(topology);
-
-        //return (computerId);
 
     }
 
-    public static void ConfigureFileTransferConnection()
+
+    /// <summary>
+    /// This routine sets up the parameters for network communication.  Called when initially setting up a connection or resetting an existing connection
+    /// </summary>
+    public static void NetworkInit()
     {
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.ReactorModel = ReactorModel.SelectReactor; // Process messages as soon as they come in (not good for mobile)
@@ -108,24 +72,7 @@ public class TransportScript : MonoBehaviour
 
         NetworkTransport.Init(globalConfig);
 
-        // If either of the socket variables are set they need to be disconnected and reset (-1 indicates that they aren't assigned)
-        //if (localFileTransferComputerId != -1)
-        //{
-        //    NetworkTransport.Disconnect(localFileTransferComputerId, fileTransferConnectionId, out error);
-        //    localFileTransferComputerId = -1;
-        //}
-        //if (remoteFileTransferComputerId != -1)
-        //{
-        //    NetworkTransport.Disconnect(remoteFileTransferComputerId, fileTransferConnectionId, out error);
-        //    remoteFileTransferComputerId = -1;
-        //}
-
-        //localFileTransferComputerId = NetworkTransport.AddHost(topology, localFileTransferPort);
-        //remoteFileTransferComputerId = NetworkTransport.AddHost(topology);
-        NetworkTransport.AddHost(topology, fileTransferPort);
-
-        return;
-
+        computerId = NetworkTransport.AddHost(topology, gamePort);
     }
 
     void Update()
@@ -307,6 +254,7 @@ public class TransportScript : MonoBehaviour
     public static bool Connect(string opponentIPaddr)
     {
         NetworkTransport.Init();
+        NetworkInit();
         GlobalDefinitions.WriteToLogFile("Connect: calling NetworkTransport.Connect computerId = " + computerId);
         gameConnectionId = NetworkTransport.Connect(computerId, opponentIPaddr, gamePort, 0, out receivedError);
         GlobalDefinitions.WriteToLogFile("Connect: gameConnectionId = " + gameConnectionId);
