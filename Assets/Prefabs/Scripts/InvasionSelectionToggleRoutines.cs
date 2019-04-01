@@ -23,6 +23,9 @@ public class InvasionSelectionToggleRoutines : MonoBehaviour
             GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
             GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
 
+            if (!GlobalDefinitions.localControl)
+                GlobalDefinitions.SetGUIForNonLocalControl();
+
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
                     GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedInvasionState>().ExecuteSelectUnit;
 
