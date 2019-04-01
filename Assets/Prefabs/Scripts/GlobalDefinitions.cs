@@ -2578,19 +2578,22 @@ public class GlobalDefinitions : MonoBehaviour
             //HistoricalProgressToggle.GetComponent<Toggle>().interactable = true;
         }
         else
-        {
-            nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-            undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-            MustAttackToggle.GetComponent<Toggle>().interactable = false;
-            AssignCombatButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-            DisplayAllCombatsButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-            AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
-            GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
-            AlliedSupplySourcesButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-            SettingsButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
-            HideUnitsToggle.GetComponent<Toggle>().interactable = false;
-            HistoricalProgressToggle.GetComponent<Toggle>().interactable = false;
-        }
+            SetGUIForNonLocalControl();
+    }
+
+    public static void SetGUIForNonLocalControl()
+    {
+        nextPhaseButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        undoButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        MustAttackToggle.GetComponent<Toggle>().interactable = false;
+        AssignCombatButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        DisplayAllCombatsButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
+        GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
+        AlliedSupplySourcesButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        SettingsButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        HideUnitsToggle.GetComponent<Toggle>().interactable = false;
+        HistoricalProgressToggle.GetComponent<Toggle>().interactable = false;
     }
 
     /// <summary>

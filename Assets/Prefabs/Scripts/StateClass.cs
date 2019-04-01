@@ -194,7 +194,8 @@ public class SetUpState : GameState
             executeMethod = ExecuteSelectUnit;
             GlobalDefinitions.GuiUpdatePhase(currentNationality + " Setup Mode");
             GlobalDefinitions.GuiUpdateStatusMessage("German Setup Mode: Place units in preparation for an invasion.\n        Note that static units must go on coastal hexes, ports, or inland ports\n        German reserves must start on starred hexes in Germany");
-            GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
+            if (GlobalDefinitions.localControl)
+                GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
         }
     }
 
@@ -649,6 +650,9 @@ public class AlliedAirborneState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
 
+        if (!GlobalDefinitions.localControl)
+            GlobalDefinitions.SetGUIForNonLocalControl();
+
         // Initilize mode state
         executeMethod = ExecuteSelectUnit;
 
@@ -933,6 +937,9 @@ public class CombatState : GameState
             GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
         }
 
+        if (!GlobalDefinitions.localControl)
+            GlobalDefinitions.SetGUIForNonLocalControl();
+
         CombatRoutines.CheckIfRequiredUnitsAreUncommitted(currentNationality, true);
 
         // I'm deviating from the rules.  This was the original implementation of carpet bombing.  Per the rules it gets assigned at the beginning of the combat phase.
@@ -1053,6 +1060,9 @@ public class AlliedTacticalAirState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
+        if (!GlobalDefinitions.localControl)
+            GlobalDefinitions.SetGUIForNonLocalControl();
+
         GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.Allied;
 
         executeMethod = NonToggleSelection;
@@ -1117,6 +1127,9 @@ public class GermanIsolationState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
 
+        if (!GlobalDefinitions.localControl)
+            GlobalDefinitions.SetGUIForNonLocalControl();
+
         GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
 
         //GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().writeSaveTurnFile("EndOfAllied");
@@ -1144,6 +1157,9 @@ public class GermanReplacementState : GameState
         GlobalDefinitions.AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = false;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = false;
+
+        if (!GlobalDefinitions.localControl)
+            GlobalDefinitions.SetGUIForNonLocalControl();
 
         GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality = GlobalDefinitions.Nationality.German;
 
