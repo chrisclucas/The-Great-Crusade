@@ -778,8 +778,11 @@ public class MovementState : GameState
         GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
         GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
 
-        // Initialize mode
-        executeMethod = ExecuteSelectUnit;
+        if (!GlobalDefinitions.localControl)
+            GlobalDefinitions.SetGUIForNonLocalControl();
+
+       // Initialize mode
+       executeMethod = ExecuteSelectUnit;
     }
 
     public void ExecuteSelectUnit(InputMessage inputMessage)
