@@ -2573,9 +2573,9 @@ public class GlobalDefinitions : MonoBehaviour
             //AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
             //GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
             //AlliedSupplySourcesButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-            //SettingsButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
-            //HideUnitsToggle.GetComponent<Toggle>().interactable = true;
-            //HistoricalProgressToggle.GetComponent<Toggle>().interactable = true;
+            SettingsButton.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            HideUnitsToggle.GetComponent<Toggle>().interactable = true;
+            HistoricalProgressToggle.GetComponent<Toggle>().interactable = true;
         }
         else
             SetGUIForNonLocalControl();
