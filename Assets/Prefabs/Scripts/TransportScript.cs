@@ -198,9 +198,7 @@ public class TransportScript : MonoBehaviour
                 switch (recNetworkEvent)
                 {
                     case NetworkEventType.DisconnectEvent:
-                        GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                        GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));
-                        ResetConnection(receivedHostId);
+                        RespondToDisconnect(receivedHostId);
                         break;
 
                     case NetworkEventType.ConnectEvent:
@@ -353,7 +351,7 @@ public class TransportScript : MonoBehaviour
         opponentComputerConfirmsSync = false;
         gameDataSent = false;
 
-        GlobalDefinitions.WriteToLogFile("ResetConnection: sending disconnect");
+        GlobalDefinitions.WriteToLogFile("ResetConnection: executing network shutdown");
         NetworkTransport.Shutdown();
 
         if (hostId != computerId)
@@ -413,9 +411,7 @@ public class TransportScript : MonoBehaviour
                 break;
 
             case NetworkEventType.DisconnectEvent:
-                GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                GlobalDefinitions.RemoveGUI(GameObject.Find("NetworkSettingsCanvas"));
-                ResetConnection(receivedHostId);
+                RespondToDisconnect(receivedHostId);
                 break;
             case NetworkEventType.Nothing:
                 break;
@@ -439,15 +435,7 @@ public class TransportScript : MonoBehaviour
         {
             case NetworkEventType.DisconnectEvent:
                 {
-                    GlobalDefinitions.WriteToLogFile("checkForNetworkEvent: Disconnect event received");
-                    GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
-                    ResetConnection(receivedHostId);
-
-                    // Since the connetion has been broken, quit the game and go back to the main menu
-                    GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
-                    guiButtonInstance.AddComponent<GUIButtonRoutines>();
-                    guiButtonInstance.GetComponent<GUIButtonRoutines>().YesMain();
-
+                    RespondToDisconnect(receivedHostId);
                     break;
                 }
 
@@ -485,6 +473,24 @@ public class TransportScript : MonoBehaviour
 
         return (receivedNetworkEvent);
 
+    }
+
+    /// <summary>
+    /// Called when a disconnect from the remote computre received
+    /// </summary>
+    private static void RespondToDisconnect(int disconnectedHostId)
+    {
+        GlobalDefinitions.GuiUpdateStatusMessage("Disconnect event received from remote computer - resetting connection");
+        ResetConnection(disconnectedHostId);
+
+        // The disconnect can happen at any time so make sure all units and hexes are unhighlighted
+        GlobalDefinitions.UnhighlightAllUnits();
+        GlobalDefinitions.UnhighlightAllHexes();
+
+        // Since the connetion has been broken, quit the game and go back to the main menu
+        GameObject guiButtonInstance = new GameObject("GUIButtonInstance");
+        guiButtonInstance.AddComponent<GUIButtonRoutines>();
+        guiButtonInstance.GetComponent<GUIButtonRoutines>().YesMain();
     }
 
     /// <summary>

@@ -1561,6 +1561,19 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
     /// <summary>
+    /// Resets all hexes on the board
+    /// </summary>
+    public static void UnhighlightAllHexes()
+    {
+        foreach (GameObject cleanHex in allHexesOnBoard)
+        {
+            cleanHex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
+            cleanHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
+            UnhighlightHex(cleanHex.gameObject);
+        }
+    }
+
+    /// <summary>
     /// Takes away all the highlights that should be removed of a hex
     /// </summary>
     /// <param name="hex"></param>
@@ -1773,6 +1786,17 @@ public class GlobalDefinitions : MonoBehaviour
             unit.GetComponent<SpriteRenderer>().material.color = Color.white;
         else
             unit.GetComponent<SpriteRenderer>().material.color = Color.gray;
+    }
+
+    /// <summary>
+    /// Removes highlighting on all units
+    /// </summary>
+    public static void UnhighlightAllUnits()
+    {
+        foreach (GameObject unit in alliedUnitsOnBoard)
+            UnhighlightUnit(unit);
+        foreach (GameObject unit in germanUnitsOnBoard)
+            UnhighlightUnit(unit);
     }
 
     /// <summary>

@@ -1196,13 +1196,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             GlobalDefinitions.retreatingUnits.RemoveAt(0);
 
             // Clean up the hexes that were highlighted and reset remainingMovement
-            foreach (GameObject cleanHex in GlobalDefinitions.allHexesOnBoard)
-            {
-                cleanHex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
-                cleanHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
-                GlobalDefinitions.UnhighlightHex(cleanHex.gameObject);
-            }
-            //storedHexes.Clear();
+            GlobalDefinitions.UnhighlightAllHexes();
 
             // Go back and check if additional units need to be retreated
             SelectUnitsForRetreat();

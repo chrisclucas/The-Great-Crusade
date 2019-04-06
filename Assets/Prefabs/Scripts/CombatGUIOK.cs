@@ -18,6 +18,8 @@ public class CombatGUIOK : MonoBehaviour
         GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.COMBATGUIOKKEYWORD + " " + name);
 
         removeUnit.Clear();
+
+        // Get a list of the defending units that were not added to the combat
         foreach (GameObject unit in singleCombat.GetComponent<Combat>().defendingUnits)
             if (!unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
                 removeUnit.Add(unit);
@@ -27,6 +29,8 @@ public class CombatGUIOK : MonoBehaviour
             singleCombat.GetComponent<Combat>().defendingUnits.Remove(unit);
 
         removeUnit.Clear();
+
+        // Get a list of the attacking units that were not added to the combat
         foreach (GameObject unit in singleCombat.GetComponent<Combat>().attackingUnits)
             if (!unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
                 removeUnit.Add(unit);
@@ -53,12 +57,14 @@ public class CombatGUIOK : MonoBehaviour
             foreach (Transform childTransform in transform.parent.transform)
                 if ((childTransform.GetComponent<CombatToggleRoutines>() != null) &&
                         (childTransform.GetComponent<CombatToggleRoutines>().unit != null))
-                    if (childTransform.GetComponent<Toggle>().isOn && GlobalDefinitions.localControl)
+                    //if (childTransform.GetComponent<Toggle>().isOn && GlobalDefinitions.localControl)  I removed the local control check here because units on the remote computer and not being reset.  The local control check was added for a reason, though, and I don't know why which is why I'm leaving this here as a comment
+                    if (childTransform.GetComponent<Toggle>().isOn)
                     {
                         GlobalDefinitions.UnhighlightUnit(childTransform.GetComponent<CombatToggleRoutines>().unit);
                         childTransform.GetComponent<CombatToggleRoutines>().unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = true;
                     }
 
+            // Check whether air support is to be used in this attack
             if (GlobalDefinitions.combatAirSupportToggle != null)
             {
                 if (GlobalDefinitions.combatAirSupportToggle.GetComponent<Toggle>().isOn)
@@ -67,6 +73,7 @@ public class CombatGUIOK : MonoBehaviour
                     singleCombat.GetComponent<Combat>().attackAirSupport = false;
             }
 
+            // Check if carpet bombing is to be used in this attack
             if (GlobalDefinitions.combatCarpetBombingToggle != null)
             {
                 if (GlobalDefinitions.combatCarpetBombingToggle.GetComponent<Toggle>().isOn)
@@ -83,6 +90,7 @@ public class CombatGUIOK : MonoBehaviour
             GlobalDefinitions.allCombats.Add(singleCombat);
             GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatGUIInstance);
 
+            // Check if the Must Attack toggle is on and if it is highlight uncommitted units that must participate in an attack
             if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
                     (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance") ||
                     GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().isOn)

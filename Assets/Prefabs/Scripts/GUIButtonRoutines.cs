@@ -42,7 +42,7 @@ public class GUIButtonRoutines : MonoBehaviour
         }
 
         // Turn off the button so that the same gui can't be pulled up
-        GameObject.Find("MainMenuButton").GetComponent<Button>().interactable = false;
+        GlobalDefinitions.mainMenuButton.GetComponent<Button>().interactable = false;
 
         // Turn off any guis that are on
         if (GlobalDefinitions.guiList.Count > 0)
@@ -58,7 +58,7 @@ public class GUIButtonRoutines : MonoBehaviour
     public void QuitApplication()
     {
         // Turn off the button
-        GameObject.Find("QuitButton").GetComponent<Button>().interactable = false;
+        GlobalDefinitions.quitButton.GetComponent<Button>().interactable = false;
 
         // Turn off any guis that are on
         if (GlobalDefinitions.guiList.Count > 0)
@@ -156,7 +156,7 @@ public class GUIButtonRoutines : MonoBehaviour
         GlobalDefinitions.ResetAllGlobalDefinitions();
 
         // Turn the button back on
-        GameObject.Find("MainMenuButton").GetComponent<Button>().interactable = true;
+        GlobalDefinitions.mainMenuButton.GetComponent<Button>().interactable = true;
 
         MainMenuRoutines.GetGameModeUI();
     }
@@ -167,7 +167,7 @@ public class GUIButtonRoutines : MonoBehaviour
     private void YesQuit()
     {
         // Turn the button back on - only applies to the editor since otherwise the applciation quits
-        GameObject.Find("QuitButton").GetComponent<Button>().interactable = true;
+        GlobalDefinitions.quitButton.GetComponent<Button>().interactable = true;
 
         Application.Quit();
     }
@@ -178,7 +178,7 @@ public class GUIButtonRoutines : MonoBehaviour
     private void NoQuit()
     {
         // Turn the button back on
-        GameObject.Find("QuitButton").GetComponent<Button>().interactable = true;
+        GlobalDefinitions.quitButton.GetComponent<Button>().interactable = true;
 
         // Turn back on any guis that are active
         foreach (GameObject gui in GlobalDefinitions.guiList)
@@ -191,7 +191,7 @@ public class GUIButtonRoutines : MonoBehaviour
     private void NoMain()
     {
         // Turn the button back on
-        GameObject.Find("MainMenuButton").GetComponent<Button>().interactable = true;
+        GlobalDefinitions.mainMenuButton.GetComponent<Button>().interactable = true;
 
         // Turn back on any guis that are active
         foreach (GameObject gui in GlobalDefinitions.guiList)

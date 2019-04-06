@@ -18,10 +18,7 @@ public class CombatRoutines : MonoBehaviour
         List<GameObject> attackingUnits;
 
         // I'm going to turn off all unit highlighting here.  It will be added back on when the gui is dismissed if needed
-        foreach (GameObject unit in GlobalDefinitions.alliedUnitsOnBoard)
-            GlobalDefinitions.UnhighlightUnit(unit);
-        foreach (GameObject unit in GlobalDefinitions.germanUnitsOnBoard)
-            GlobalDefinitions.UnhighlightUnit(unit);
+        GlobalDefinitions.UnhighlightAllUnits();
 
         if (attackingNationality == GlobalDefinitions.Nationality.German)
             attackingUnits = GlobalDefinitions.germanUnitsOnBoard;
