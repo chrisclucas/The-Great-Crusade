@@ -79,16 +79,16 @@ public class CombatResolutionRoutines : MonoBehaviour
     public static void CombatResolutionDisplay()
     {
 #if OUTPUTDEBUG
-        GlobalDefinitions.writeToLogFile("combatResolutionDisplay: executing - number of combats = " + GlobalDefinitions.allCombats.Count);
+        GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: executing - number of combats = " + GlobalDefinitions.allCombats.Count);
         foreach (GameObject singleCombat in GlobalDefinitions.allCombats)
         {
-            GlobalDefinitions.writeToLogFile("combatResolutionDisplay:  Defenders");
+            GlobalDefinitions.WriteToLogFile("combatResolutionDisplay:  Defenders");
             foreach (GameObject defender in singleCombat.GetComponent<Combat>().defendingUnits)
-                GlobalDefinitions.writeToLogFile("combatResolutionDisplay:      " + defender.name);
-            GlobalDefinitions.writeToLogFile("combatResolutionDisplay:  Attackers");
+                GlobalDefinitions.WriteToLogFile("combatResolutionDisplay:      " + defender.name);
+            GlobalDefinitions.WriteToLogFile("combatResolutionDisplay:  Attackers");
             foreach (GameObject attacker in singleCombat.GetComponent<Combat>().attackingUnits)
-                GlobalDefinitions.writeToLogFile("combatResolutionDisplay:      " + attacker.name);
-            GlobalDefinitions.writeToLogFile("combatResolutionDisplay:");
+                GlobalDefinitions.WriteToLogFile("combatResolutionDisplay:      " + attacker.name);
+            GlobalDefinitions.WriteToLogFile("combatResolutionDisplay:");
         }
 #endif
 
@@ -227,8 +227,8 @@ public class CombatResolutionRoutines : MonoBehaviour
             {
 #if OUTPUTDEBUG
 
-                GlobalDefinitions.writeToLogFile("combatResolutionDisplay: unit " + defendingUnit.name + "  x = " + (GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE));
-                GlobalDefinitions.writeToLogFile("combatResolutionDisplay: unit index = " + combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit));
+                GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: unit " + combat.GetComponent<Combat>().defendingUnits[a].name + "  x = " + (GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(combat.GetComponent<Combat>().defendingUnits[a]) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE));
+                GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: unit index = " + combat.GetComponent<Combat>().defendingUnits.IndexOf(combat.GetComponent<Combat>().defendingUnits[a]));
 #endif
                 GlobalDefinitions.CreateUnitImage(combat.GetComponent<Combat>().defendingUnits[a],
                             "UnitImage",
@@ -238,7 +238,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                             combatCanvas).transform.SetParent(combatContentPanel.transform, false);
             }
 #if OUTPUTDEBUG
-            GlobalDefinitions.writeToLogFile("combatResolutionDisplay: combat number = " + GlobalDefinitions.allCombats.IndexOf(combat) + " defender count = " + combat.GetComponent<Combat>().defendingUnits.Count + " attacker count = " + combat.GetComponent<Combat>().attackingUnits.Count);
+            GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: combat number = " + GlobalDefinitions.allCombats.IndexOf(combat) + " defender count = " + combat.GetComponent<Combat>().defendingUnits.Count + " attacker count = " + combat.GetComponent<Combat>().attackingUnits.Count);
 #endif
             // In column four the defense factor will be listed
             GlobalDefinitions.CreateText(GlobalDefinitions.CalculateDefenseFactor(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits).ToString(),
@@ -404,7 +404,7 @@ public class CombatResolutionRoutines : MonoBehaviour
         combatOdds = GlobalDefinitions.ConvertOddsToString(GlobalDefinitions.ReturnCombatOdds(currentCombat.GetComponent<Combat>().defendingUnits,
                 currentCombat.GetComponent<Combat>().attackingUnits, currentCombat.GetComponent<Combat>().attackAirSupport));
 #if OUTPUTDEBUG
-        GlobalDefinitions.writeToLogFile("Combat Results: Odds " + combatOdds);
+        GlobalDefinitions.WriteToLogFile("Combat Results: Odds " + combatOdds);
 #endif
         if ((GlobalDefinitions.gameMode != GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && !GlobalDefinitions.commandFileBeingRead)
         {
@@ -419,8 +419,8 @@ public class CombatResolutionRoutines : MonoBehaviour
         GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DIEROLLRESULT2KEYWORD + " " + GlobalDefinitions.dieRollResult2);
 
 #if OUTPUTDEBUG
-        GlobalDefinitions.guiUpdateStatusMessage("Combat Results: die roll result 1 = " + GlobalDefinitions.dieRollResult1);
-        GlobalDefinitions.guiUpdateStatusMessage("Combat Results: die roll result 2 = " + GlobalDefinitions.dieRollResult2);
+        GlobalDefinitions.GuiUpdateStatusMessage("Combat Results: die roll result 1 = " + GlobalDefinitions.dieRollResult1);
+        GlobalDefinitions.GuiUpdateStatusMessage("Combat Results: die roll result 2 = " + GlobalDefinitions.dieRollResult2);
 #endif
 
         GlobalDefinitions.GuiUpdateStatusMessage("Combat Results: Odds " + combatOdds + "  Die Roll " + (GlobalDefinitions.dieRollResult1 + 1) + "   which translates to " + GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]);
@@ -1831,7 +1831,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             if (!GlobalDefinitions.AIExecuting)
             {
 #if OUTPUTDEBUG
-                GlobalDefinitions.writeToLogFile("CheckForDieRollInfluence: AI defending");
+                GlobalDefinitions.WriteToLogFile("CheckForDieRollInfluence: AI defending");
 #endif
                 // The AI is defending
                 switch (GlobalDefinitions.difficultySetting)
@@ -1840,75 +1840,75 @@ public class CombatResolutionRoutines : MonoBehaviour
                         if (dieRoll > 0)
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll);
 #endif
                         return (adjustedDieRoll);
                     case 1:
                         if ((dieRoll > 0) && (influenceRoll < 5))
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 2:
                         if ((dieRoll > 0) && (influenceRoll < 4))
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 3:
                         if ((dieRoll > 0) && (influenceRoll < 3))
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 4:
                         if ((dieRoll > 0) && (influenceRoll < 2))
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 5:
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 6:
                         if ((dieRoll > 5) && (influenceRoll < 2))
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 7:
                         if ((dieRoll < 5) && (influenceRoll < 3))
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 8:
                         if ((dieRoll < 5) && (influenceRoll < 4))
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 9:
                         if ((dieRoll < 5) && (influenceRoll < 5))
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 10:
                         if (dieRoll < 5)
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll);
 #endif
                         return (adjustedDieRoll);
 
@@ -1917,7 +1917,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             else
             {
 #if OUTPUTDEBUG
-                GlobalDefinitions.writeToLogFile("CheckForDieRollInfluence: AI attacking");
+                GlobalDefinitions.WriteToLogFile("CheckForDieRollInfluence: AI attacking");
 #endif
                 // The AI is attacking
                 switch (GlobalDefinitions.difficultySetting)
@@ -1926,75 +1926,75 @@ public class CombatResolutionRoutines : MonoBehaviour
                         if (dieRoll < 5)
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll);
 #endif
                         return (adjustedDieRoll);
                     case 1:
                         if ((dieRoll < 5) && (influenceRoll < 5))
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 2:
                         if ((dieRoll < 5) && (influenceRoll < 4))
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 3:
                         if ((dieRoll < 5) && (influenceRoll < 3))
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 4:
                         if ((dieRoll < 5) && (influenceRoll < 2))
                             adjustedDieRoll++;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 5:
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 6:
                         if ((dieRoll > 0) && (influenceRoll < 2))
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 7:
                         if ((dieRoll > 0) && (influenceRoll < 3))
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 8:
                         if ((dieRoll > 0) && (influenceRoll < 4))
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 9:
                         if ((dieRoll > 0) && (influenceRoll < 5))
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll + " influence roll = " + influenceRoll);
 #endif
                         return (adjustedDieRoll);
                     case 10:
                         if (dieRoll > 0)
                             adjustedDieRoll--;
 #if OUTPUTDEBUG
-                        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = ");
+                        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = ");
 #endif
                         return (adjustedDieRoll);
 
@@ -2002,7 +2002,7 @@ public class CombatResolutionRoutines : MonoBehaviour
             }
         }
 #if OUTPUTDEBUG
-        GlobalDefinitions.writeToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll);
+        GlobalDefinitions.WriteToLogFile("checkForDieRollInfluence: die roll = " + dieRoll + " difficulty setting = " + GlobalDefinitions.difficultySetting + " adjusted die roll = " + adjustedDieRoll);
 #endif
         return (adjustedDieRoll);
     }
@@ -2013,40 +2013,40 @@ public class CombatResolutionRoutines : MonoBehaviour
         {
             case 1:
 #if OUTPUTDEBUG
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting maximumAIOdds = 5");
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting minimumAIOdds = 3");
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting maximumAIOdds = 5");
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting minimumAIOdds = 3");
 #endif
                 GlobalDefinitions.maximumAIOdds = 5;
                 GlobalDefinitions.minimumAIOdds = 3;
                 break;
             case 2:
 #if OUTPUTDEBUG
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting maximumAIOdds = 4");
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting minimumAIOdds = 2"); 
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting maximumAIOdds = 4");
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting minimumAIOdds = 2"); 
 #endif
                 GlobalDefinitions.maximumAIOdds = 4;
                 GlobalDefinitions.minimumAIOdds = 2;
                 break;
             case 3:
 #if OUTPUTDEBUG
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting maximumAIOdds = 3");
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting minimumAIOdds = 1");
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting maximumAIOdds = 3");
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting minimumAIOdds = 1");
 #endif
                 GlobalDefinitions.maximumAIOdds = 3;
                 GlobalDefinitions.minimumAIOdds = 1;
                 break;
             case 4:
 #if OUTPUTDEBUG
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting maximumAIOdds = 2");
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting minimumAIOdds = 1");
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting maximumAIOdds = 2");
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting minimumAIOdds = 1");
 #endif
                 GlobalDefinitions.maximumAIOdds = 2;
                 GlobalDefinitions.minimumAIOdds = 1;
                 break;
             case 5:
 #if OUTPUTDEBUG
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting maximumAIOdds = 1");
-                GlobalDefinitions.writeToLogFile("adjustAggressiveness: setting minimumAIOdds = -2");
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting maximumAIOdds = 1");
+                GlobalDefinitions.WriteToLogFile("adjustAggressiveness: setting minimumAIOdds = -2");
 #endif
                 GlobalDefinitions.maximumAIOdds = 3;
                 GlobalDefinitions.minimumAIOdds = -2;
