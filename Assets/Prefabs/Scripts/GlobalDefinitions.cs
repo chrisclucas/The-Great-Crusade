@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 public class GlobalDefinitions : MonoBehaviour
 {
-    public const string releaseVersion = "1.01";
+    public const string releaseVersion = "1.02";
 
     // File names
     public static string logfile = "TGCOutputFiles\\TGCLogFile.txt";

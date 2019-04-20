@@ -48,7 +48,6 @@ public class FileTransferServer : MonoBehaviour
 
     // UDP communication elements:
     [SerializeField]
-    int port = 2600;                           // File transfering port (set your own if you wish).
     Thread receiveThread;                                       // Thread listening incoming file requests.
     UdpClient client;                                           // Communications object.
     IPEndPoint remoteEndPoint;                                  // Target IP or URL, to where a package is sent.

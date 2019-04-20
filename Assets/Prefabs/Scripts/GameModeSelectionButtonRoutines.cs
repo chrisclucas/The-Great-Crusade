@@ -16,12 +16,6 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
                 MainMenuRoutines.AIToggle.GetComponent<Toggle>().isOn = false;
             if (GetComponent<Toggle>() != MainMenuRoutines.peerToPeerNetworkToggle.GetComponent<Toggle>())
                 MainMenuRoutines.peerToPeerNetworkToggle.GetComponent<Toggle>().isOn = false;
-            if (GetComponent<Toggle>() != MainMenuRoutines.clientServerNetworkToggle.GetComponent<Toggle>())
-                MainMenuRoutines.clientServerNetworkToggle.GetComponent<Toggle>().isOn = false;
-            if (GetComponent<Toggle>() != MainMenuRoutines.serverNetworkToggle.GetComponent<Toggle>())
-                MainMenuRoutines.serverNetworkToggle.GetComponent<Toggle>().isOn = false;
-            //if (GetComponent<Toggle>() != MainMenuRoutines.emailToggle.GetComponent<Toggle>())
-            //    MainMenuRoutines.emailToggle.GetComponent<Toggle>().isOn = false;
         }
     }
 
@@ -61,30 +55,6 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GameControl.CreateStatesForHotSeatOrNetwork();
             //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
             MainMenuRoutines.NetworkSettingsUI();
-
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
-        }
-        else if (MainMenuRoutines.clientServerNetworkToggle.GetComponent<Toggle>().isOn)
-        {
-            GlobalDefinitions.WriteToLogFile("okGameMode: Setting up Client Server Network mode");
-            GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.ClientServerNetwork;
-            GlobalDefinitions.commandFileHeader = "ClientServerNetwork";
-            GameControl.CreateStatesForHotSeatOrNetwork();
-            //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
-
-            //GameControl.clientServerRoutinesInstance.GetComponent<ClientServerRoutines>().InitiateServerConnection();
-
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
-        }
-        else if (MainMenuRoutines.serverNetworkToggle.GetComponent<Toggle>().isOn)
-        {
-            GlobalDefinitions.WriteToLogFile("okGameMode: Setting up Server Network mode");
-            GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.Server;
-            GlobalDefinitions.commandFileHeader = "Server";
-            GameControl.CreateStatesForHotSeatOrNetwork();
-            //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
-
-            //GameControl.serverRoutinesInstance.GetComponent<ServerRoutines>().StartListening();
 
             GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         }
