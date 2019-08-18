@@ -68,6 +68,7 @@ MonoBehaviour:
   bridge: 0
   sea: 0
   AlliedVictoryHex: 0
+  historyWeekCaptured: 0
   FreeFrenchAvailableHex: 0
   Neighbors:
   - {fileID: 0}
@@ -170,7 +171,7 @@ SpriteRenderer:
   m_SortingLayerID: -1509766889
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6971d1b602ec94841bef6a1cba618dff, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 033a9f2007c4207429f211a83d2f2816, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

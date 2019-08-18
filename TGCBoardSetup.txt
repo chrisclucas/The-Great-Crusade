@@ -1,14 +1,283 @@
-Turn 0
 Hexes {
+(-4 -1) LeftEdgeSeaFiller
+(-4 0) LeftEdgeSeaFiller
+(-4 1) LeftEdgeSeaFiller
+(-4 2) LeftEdgeSeaFiller
+(-4 3) LeftEdgeSeaFiller
+(-4 4) LeftEdgeSeaFiller
+(-4 5) LeftEdgeSeaFiller
+(-4 6) LeftEdgeSeaFiller
+(-4 7) LeftEdgeSeaFiller
+(-4 8) LeftEdgeSeaFiller
+(-4 9) LeftEdgeSeaFiller
+(-4 10) LeftEdgeSeaFiller
+(-4 11) LeftEdgeSeaFiller
+(-4 12) LeftEdgeSeaFiller
+(-4 13) LeftEdgeSeaFiller
+(-4 14) LeftEdgeSeaFiller
+(-4 15) LeftEdgeSeaFiller
+(-4 16) LeftEdgeSeaFiller
+(-4 17) LeftEdgeSeaFiller
+(-4 18) LeftEdgeSeaFiller
+(-4 19) LeftEdgeSeaFiller
+(-4 20) LeftEdgeSeaFiller
+(-4 21) LeftEdgeSeaFiller
+(-4 22) LeftEdgeSeaFiller
+(-4 23) LeftEdgeSeaFiller
+(-4 24) LeftEdgeSeaFiller
+(-4 25) LeftEdgeSeaFiller
+(-4 26) LeftEdgeSeaFiller
+(-4 27) LeftEdgeSeaFiller
+(-4 28) LeftEdgeSeaFiller
+(-4 29) LeftEdgeSeaFiller
+(-4 30) LeftEdgeSeaFiller
+(-4 31) LeftEdgeSeaFiller
+(-4 32) LeftEdgeSeaFiller
+(-4 33) LeftEdgeSeaFiller
+(-4 34) UpperLeftCornerFiller
+(-3 -2) BottomEdgeSeaFiller
+(-3 -1) SeaFiller
+(-3 0) SeaFiller
+(-3 1) SeaFiller
+(-3 2) SeaFiller
+(-3 3) SeaFiller
+(-3 4) SeaFiller
+(-3 5) SeaFiller
+(-3 6) SeaFiller
+(-3 7) SeaFiller
+(-3 8) SeaFiller
+(-3 9) SeaFiller
+(-3 10) SeaFiller
+(-3 11) SeaFiller
+(-3 12) SeaFiller
+(-3 13) SeaFiller
+(-3 14) SeaFiller
+(-3 15) SeaFiller
+(-3 16) SeaFiller
+(-3 17) SeaFiller
+(-3 18) SeaFiller
+(-3 19) SeaFiller
+(-3 20) SeaFiller
+(-3 21) SeaFiller
+(-3 22) SeaFiller
+(-3 23) SeaFiller
+(-3 24) SeaFiller
+(-3 25) SeaFiller
+(-3 26) SeaFiller
+(-3 27) SeaFiller
+(-3 28) SeaFiller
+(-3 29) SeaFiller
+(-3 30) SeaFiller
+(-3 31) SeaFiller
+(-3 32) SeaFiller
+(-3 33) SeaFiller
+(-2 -1) SeaFiller
+(-2 0) SeaFiller
+(-2 1) SeaFiller
+(-2 2) SeaFiller
+(-2 3) SeaFiller
+(-2 4) SeaFiller
+(-2 5) SeaFiller
+(-2 6) SeaFiller
+(-2 7) SeaFiller
+(-2 8) SeaFiller
+(-2 9) SeaFiller
+(-2 10) SeaFiller
+(-2 11) SeaFiller
+(-2 12) SeaFiller
+(-2 13) SeaFiller
+(-2 14) SeaFiller
+(-2 15) SeaFiller
+(-2 16) SeaFiller
+(-2 17) SeaFiller
+(-2 18) SeaFiller
+(-2 19) SeaFiller
+(-2 20) SeaFiller
+(-2 21) SeaFiller
+(-2 22) SeaFiller
+(-2 23) SeaFiller
+(-2 24) SeaFiller
+(-2 25) SeaFiller
+(-2 26) SeaFiller
+(-2 27) SeaFiller
+(-2 28) SeaFiller
+(-2 29) SeaFiller
+(-2 30) SeaFiller
+(-2 31) SeaFiller
+(-2 32) SeaFiller
+(-2 33) SeaFiller
+(-2 34) UpperEdgeSeaFiller
+(-1 -2) BottomEdgeSeaFiller
+(-1 -1) SeaFiller
+(-1 0) SeaFiller
+(-1 1) SeaFiller
+(-1 2) SeaFiller
+(-1 3) SeaFiller
+(-1 4) SeaFiller
+(-1 5) SeaFiller
+(-1 6) SeaFiller
+(-1 7) SeaFiller
+(-1 8) SeaFiller
+(-1 9) SeaFiller
+(-1 10) SeaFiller
+(-1 11) SeaFiller
+(-1 12) SeaFiller
+(-1 13) SeaFiller
+(-1 14) SeaFiller
+(-1 15) SeaFiller
+(-1 16) SeaFiller
+(-1 17) SeaFiller
+(-1 18) SeaFiller
+(-1 19) SeaFiller
+(-1 20) SeaFiller
+(-1 21) SeaFiller
+(-1 22) SeaFiller
+(-1 23) SeaFiller
+(-1 24) SeaFiller
+(-1 25) SeaFiller
+(-1 26) SeaFiller
+(-1 27) SeaFiller
+(-1 28) SeaFiller
+(-1 29) SeaFiller
+(-1 30) SeaFiller
+(-1 31) SeaFiller
+(-1 32) SeaFiller
+(-1 33) SeaFiller
+(0 -1) SeaFiller
+(0 0) SeaFiller
+(0 1) SeaFiller
+(0 2) SeaFiller
+(0 3) SeaFiller
+(0 4) SeaFiller
+(0 5) SeaFiller
+(0 6) SeaFiller
+(0 7) SeaFiller
+(0 8) SeaFiller
+(0 9) SeaFiller
+(0 10) SeaFiller
+(0 11) SeaFiller
+(0 12) SeaFiller
+(0 13) SeaFiller
+(0 14) SeaFiller
+(0 15) SeaFiller
+(0 16) SeaFiller
+(0 17) SeaFiller
+(0 18) SeaFiller
+(0 19) SeaFiller
+(0 20) SeaFiller
+(0 21) SeaFiller
+(0 22) SeaFiller
+(0 23) SeaFiller
+(0 24) SeaFiller
+(0 25) SeaFiller
+(0 26) SeaFiller
+(0 27) SeaFiller
+(0 28) SeaFiller
+(0 29) SeaFiller
+(0 30) SeaFiller
+(0 31) SeaFiller
+(0 32) SeaFiller
+(0 33) SeaFiller
+(0 34) UpperEdgeSeaFiller
+(1 -2) BottomEdgeSeaFiller
+(1 -1) SeaFiller
+(1 0) SeaFiller
+(1 1) SeaFiller
+(1 2) SeaFiller
+(1 3) SeaFiller
+(1 4) SeaFiller
+(1 5) SeaFiller
+(1 6) SeaFiller
+(1 7) SeaFiller
+(1 8) SeaFiller
+(1 9) SeaFiller
+(1 10) SeaFiller
+(1 11) SeaFiller
+(1 12) SeaFiller
+(1 13) SeaFiller
+(1 14) SeaFiller
+(1 15) SeaFiller
+(1 16) SeaFiller
+(1 17) SeaFiller
+(1 18) SeaFiller
+(1 19) SeaFiller
+(1 20) SeaFiller
+(1 21) SeaFiller
+(1 22) SeaFiller
+(1 23) SeaFiller
+(1 24) SeaFiller
+(1 25) SeaFiller
+(1 26) SeaFiller
+(1 27) SeaFiller
+(1 28) SeaFiller
 (1 29) Land
 (1 30) Coast 2 -1
+(1 31) SeaFiller
 (1 32) Land
 (1 33) Land
+(2 -1) SeaFiller
+(2 0) SeaFiller
+(2 1) SeaFiller
+(2 2) SeaFiller
+(2 3) SeaFiller
+(2 4) SeaFiller
+(2 5) SeaFiller
+(2 6) SeaFiller
+(2 7) SeaFiller
+(2 8) SeaFiller
+(2 9) SeaFiller
+(2 10) SeaFiller
+(2 11) SeaFiller
+(2 12) SeaFiller
+(2 13) SeaFiller
+(2 14) SeaFiller
+(2 15) SeaFiller
+(2 16) SeaFiller
+(2 17) SeaFiller
+(2 18) SeaFiller
+(2 19) SeaFiller
+(2 20) SeaFiller
+(2 21) SeaFiller
+(2 22) SeaFiller
+(2 23) SeaFiller
+(2 24) SeaFiller
+(2 25) SeaFiller
+(2 26) SeaFiller
+(2 27) SeaFiller
+(2 28) SeaFiller
 (2 29) InlandPort 5 -1 Emden
 (2 30) Land
 (2 31) Land
 (2 32) Land
 (2 33) Land
+(2 34) UpperEdgeLandFiller
+(3 -2) BottomEdgeSeaFiller
+(3 -1) SeaFiller
+(3 0) SeaFiller
+(3 1) SeaFiller
+(3 2) SeaFiller
+(3 3) SeaFiller
+(3 4) SeaFiller
+(3 5) SeaFiller
+(3 6) SeaFiller
+(3 7) SeaFiller
+(3 8) SeaFiller
+(3 9) SeaFiller
+(3 10) SeaFiller
+(3 11) SeaFiller
+(3 12) SeaFiller
+(3 13) SeaFiller
+(3 14) SeaFiller
+(3 15) SeaFiller
+(3 16) SeaFiller
+(3 17) SeaFiller
+(3 18) SeaFiller
+(3 19) SeaFiller
+(3 20) SeaFiller
+(3 21) SeaFiller
+(3 22) SeaFiller
+(3 23) SeaFiller
+(3 24) SeaFiller
 (3 25) Coast 2 -1
 (3 26) Coast 2 -1
 (3 27) Land
@@ -18,6 +287,32 @@ Hexes {
 (3 31) Land
 (3 32) InlandPort 25 -1 Bremen
 (3 33) Land
+(4 -1) SeaFiller
+(4 0) SeaFiller
+(4 1) SeaFiller
+(4 2) SeaFiller
+(4 3) SeaFiller
+(4 4) SeaFiller
+(4 5) SeaFiller
+(4 6) SeaFiller
+(4 7) SeaFiller
+(4 8) SeaFiller
+(4 9) SeaFiller
+(4 10) SeaFiller
+(4 11) SeaFiller
+(4 12) SeaFiller
+(4 13) SeaFiller
+(4 14) SeaFiller
+(4 15) SeaFiller
+(4 16) SeaFiller
+(4 17) SeaFiller
+(4 18) SeaFiller
+(4 19) SeaFiller
+(4 20) SeaFiller
+(4 21) SeaFiller
+(4 22) SeaFiller
+(4 23) SeaFiller
+(4 24) SeaFiller
 (4 25) Coast 2 -1
 (4 26) Land
 (4 27) Land
@@ -27,9 +322,35 @@ Hexes {
 (4 31) Replacement
 (4 32) Land
 (4 33) Land
+(4 34) UpperEdgeLandFiller
+(5 -2) BottomEdgeSeaFiller
+(5 -1) SeaFiller
+(5 0) SeaFiller
+(5 1) SeaFiller
+(5 2) SeaFiller
+(5 3) SeaFiller
+(5 4) SeaFiller
+(5 5) SeaFiller
+(5 6) SeaFiller
+(5 7) SeaFiller
+(5 8) SeaFiller
+(5 9) SeaFiller
+(5 10) SeaFiller
+(5 11) SeaFiller
+(5 12) SeaFiller
+(5 13) SeaFiller
+(5 14) SeaFiller
+(5 15) SeaFiller
+(5 16) SeaFiller
+(5 17) SeaFiller
+(5 18) SeaFiller
+(5 19) SeaFiller
+(5 20) SeaFiller
+(5 21) SeaFiller
 (5 22) Sea 6 (6 23)
 (5 23) Coast 2 -1
 (5 24) Bridge
+(5 25) SeaFiller
 (5 26) Land
 (5 27) Land
 (5 28) Land
@@ -38,9 +359,33 @@ Hexes {
 (5 31) Land
 (5 32) Land
 (5 33) Land
+(6 -1) SeaFiller
+(6 0) SeaFiller
+(6 1) SeaFiller
+(6 2) SeaFiller
+(6 3) SeaFiller
+(6 4) SeaFiller
+(6 5) SeaFiller
+(6 6) SeaFiller
+(6 7) SeaFiller
+(6 8) SeaFiller
+(6 9) SeaFiller
+(6 10) SeaFiller
+(6 11) SeaFiller
+(6 12) SeaFiller
+(6 13) SeaFiller
+(6 14) SeaFiller
+(6 15) SeaFiller
+(6 16) SeaFiller
+(6 17) SeaFiller
+(6 18) SeaFiller
+(6 19) SeaFiller
+(6 20) SeaFiller
+(6 21) SeaFiller
 (6 22) Sea 6 (7 22)
 (6 23) Coast 2 6
 (6 24) Sea 6 (7 23)
+(6 25) SeaFiller
 (6 26) Land
 (6 27) Land
 (6 28) Land
@@ -49,6 +394,30 @@ Hexes {
 (6 31) Land
 (6 32) Land
 (6 33) Land
+(6 34) UpperEdgeLandFiller
+(7 -2) BottomEdgeSeaFiller
+(7 -1) SeaFiller
+(7 0) SeaFiller
+(7 1) SeaFiller
+(7 2) SeaFiller
+(7 3) SeaFiller
+(7 4) SeaFiller
+(7 5) SeaFiller
+(7 6) SeaFiller
+(7 7) SeaFiller
+(7 8) SeaFiller
+(7 9) SeaFiller
+(7 10) SeaFiller
+(7 11) SeaFiller
+(7 12) SeaFiller
+(7 13) SeaFiller
+(7 14) SeaFiller
+(7 15) SeaFiller
+(7 16) SeaFiller
+(7 17) SeaFiller
+(7 18) SeaFiller
+(7 19) SeaFiller
+(7 20) SeaFiller
 (7 21) Sea 6 (8 22)
 (7 22) Coast 2 6
 (7 23) InlandPort 10 6 Amsterdam
@@ -62,6 +431,28 @@ Hexes {
 (7 31) Land
 (7 32) Land
 (7 33) Land
+(8 -1) SeaFiller
+(8 0) SeaFiller
+(8 1) SeaFiller
+(8 2) SeaFiller
+(8 3) SeaFiller
+(8 4) SeaFiller
+(8 5) SeaFiller
+(8 6) SeaFiller
+(8 7) SeaFiller
+(8 8) SeaFiller
+(8 9) SeaFiller
+(8 10) SeaFiller
+(8 11) SeaFiller
+(8 12) SeaFiller
+(8 13) SeaFiller
+(8 14) SeaFiller
+(8 15) SeaFiller
+(8 16) SeaFiller
+(8 17) SeaFiller
+(8 18) SeaFiller
+(8 19) SeaFiller
+(8 20) SeaFiller
 (8 21) Sea 6 (9 21)
 (8 22) Coast 2 6
 (8 23) InlandFortifiedPort 10 6 Rotterdam
@@ -75,6 +466,29 @@ Hexes {
 (8 31) Land
 (8 32) Land
 (8 33) Land
+(8 34) UpperEdgeLandFiller
+(9 -2) BottomEdgeSeaFiller
+(9 -1) SeaFiller
+(9 0) SeaFiller
+(9 1) SeaFiller
+(9 2) SeaFiller
+(9 3) SeaFiller
+(9 4) SeaFiller
+(9 5) SeaFiller
+(9 6) SeaFiller
+(9 7) SeaFiller
+(9 8) SeaFiller
+(9 9) SeaFiller
+(9 10) SeaFiller
+(9 11) SeaFiller
+(9 12) SeaFiller
+(9 13) SeaFiller
+(9 14) SeaFiller
+(9 15) SeaFiller
+(9 16) SeaFiller
+(9 17) SeaFiller
+(9 18) SeaFiller
+(9 19) SeaFiller
 (9 20) Sea 6 (10 21)
 (9 21) Coast 2 6
 (9 22) Land (8 23)
@@ -89,6 +503,26 @@ Hexes {
 (9 31) Land
 (9 32) Land
 (9 33) Land
+(10 -1) SeaFiller
+(10 0) SeaFiller
+(10 1) SeaFiller
+(10 2) SeaFiller
+(10 3) SeaFiller
+(10 4) SeaFiller
+(10 5) SeaFiller
+(10 6) SeaFiller
+(10 7) SeaFiller
+(10 8) SeaFiller
+(10 9) SeaFiller
+(10 10) SeaFiller
+(10 11) SeaFiller
+(10 12) SeaFiller
+(10 13) SeaFiller
+(10 14) SeaFiller
+(10 15) SeaFiller
+(10 16) SeaFiller
+(10 17) SeaFiller
+(10 18) SeaFiller
 (10 19) Sea 6 (11 19)
 (10 20) Sea 6 (12 22)
 (10 21) Coast 2 6
@@ -104,6 +538,26 @@ Hexes {
 (10 31) Land
 (10 32) Land
 (10 33) Land
+(10 34) UpperEdgeLandFiller
+(11 -2) BottomEdgeSeaFiller
+(11 -1) SeaFiller
+(11 0) SeaFiller
+(11 1) SeaFiller
+(11 2) SeaFiller
+(11 3) SeaFiller
+(11 4) SeaFiller
+(11 5) SeaFiller
+(11 6) SeaFiller
+(11 7) SeaFiller
+(11 8) SeaFiller
+(11 9) SeaFiller
+(11 10) SeaFiller
+(11 11) SeaFiller
+(11 12) SeaFiller
+(11 13) SeaFiller
+(11 14) SeaFiller
+(11 15) SeaFiller
+(11 16) SeaFiller
 (11 17) Sea 5 (12 18)
 (11 18) Sea 5 (12 19)
 (11 19) Coast 7 6
@@ -121,6 +575,23 @@ Hexes {
 (11 31) Mountain
 (11 32) Mountain
 (11 33) Land
+(12 -1) SeaFiller
+(12 0) SeaFiller
+(12 1) SeaFiller
+(12 2) SeaFiller
+(12 3) SeaFiller
+(12 4) SeaFiller
+(12 5) SeaFiller
+(12 6) SeaFiller
+(12 7) SeaFiller
+(12 8) SeaFiller
+(12 9) SeaFiller
+(12 10) SeaFiller
+(12 11) SeaFiller
+(12 12) SeaFiller
+(12 13) SeaFiller
+(12 14) SeaFiller
+(12 15) SeaFiller
 (12 16) Sea 5 (13 16)
 (12 17) Sea 5 (13 17)
 (12 18) Coast 7 5
@@ -139,6 +610,24 @@ Hexes {
 (12 31) Mountain
 (12 32) Mountain
 (12 33) Land
+(12 34) UpperEdgeLandFiller
+(13 -2) BottomEdgeSeaFiller
+(13 -1) SeaFiller
+(13 0) SeaFiller
+(13 1) SeaFiller
+(13 2) SeaFiller
+(13 3) SeaFiller
+(13 4) SeaFiller
+(13 5) SeaFiller
+(13 6) SeaFiller
+(13 7) SeaFiller
+(13 8) SeaFiller
+(13 9) SeaFiller
+(13 10) SeaFiller
+(13 11) SeaFiller
+(13 12) SeaFiller
+(13 13) SeaFiller
+(13 14) SeaFiller
 (13 15) Sea 5 (14 16)
 (13 16) FortifiedPort 7 5 Calais
 (13 17) FortifiedPort 7 5 Dunkirk
@@ -158,6 +647,22 @@ Hexes {
 (13 31) Replacement
 (13 32) Replacement
 (13 33) Land
+(14 -1) SeaFiller
+(14 0) SeaFiller
+(14 1) SeaFiller
+(14 2) SeaFiller
+(14 3) SeaFiller
+(14 4) SeaFiller
+(14 5) SeaFiller
+(14 6) SeaFiller
+(14 7) SeaFiller
+(14 8) SeaFiller
+(14 9) SeaFiller
+(14 10) SeaFiller
+(14 11) SeaFiller
+(14 12) SeaFiller
+(14 13) SeaFiller
+(14 14) SeaFiller
 (14 15) Sea 5 (15 15)
 (14 16) FortifiedPort 7 5 Boulogne
 (14 17) Land
@@ -177,6 +682,23 @@ Hexes {
 (14 31) Replacement
 (14 32) Replacement
 (14 33) Land
+(14 34) UpperEdgeLandFiller
+(15 -2) BottomEdgeSeaFiller
+(15 -1) SeaFiller
+(15 0) SeaFiller
+(15 1) SeaFiller
+(15 2) SeaFiller
+(15 3) SeaFiller
+(15 4) SeaFiller
+(15 5) SeaFiller
+(15 6) SeaFiller
+(15 7) SeaFiller
+(15 8) SeaFiller
+(15 9) SeaFiller
+(15 10) SeaFiller
+(15 11) SeaFiller
+(15 12) SeaFiller
+(15 13) SeaFiller
 (15 14) Sea 5 (16 15)
 (15 15) Coast 5 5
 (15 16) Land
@@ -197,8 +719,20 @@ Hexes {
 (15 31) Mountain
 (15 32) Mountain
 (15 33) Land
+(16 -1) SeaFiller
+(16 0) SeaFiller
+(16 1) SeaFiller
+(16 2) SeaFiller
+(16 3) SeaFiller
+(16 4) SeaFiller
+(16 5) SeaFiller
+(16 6) SeaFiller
+(16 7) SeaFiller
 (16 8) Sea 3 (17 7)
 (16 9) Sea 3 (17 8)
+(16 10) SeaFiller
+(16 11) SeaFiller
+(16 12) SeaFiller
 (16 13) Sea 4 (17 13)
 (16 14) Sea 5 (17 14)
 (16 15) Coast 5 5
@@ -220,6 +754,7 @@ Hexes {
 (16 31) Mountain
 (16 32) City Fannkfurt
 (16 33) Land
+(16 34) UpperEdgeLandFiller
 (17 33) Land
 (17 32) Land
 (17 31) City Mainz
@@ -243,9 +778,20 @@ Hexes {
 (17 13) Coast 5 4
 (17 12) Sea 4 (18 13)
 (17 11) Sea 4 (18 12)
+(17 10) SeaFiller
+(17 9) SeaFiller
 (17 8) Coast 5 3
 (17 7) FortifiedPort 10 3 Cherbourg
 (17 6) Land
+(17 5) SeaFiller
+(17 4) SeaFiller
+(17 3) SeaFiller
+(17 2) SeaFiller
+(17 1) SeaFiller
+(17 0) SeaFiller
+(17 -1) SeaFiller
+(17 -2) BottomEdgeSeaFiller
+(18 34) UpperEdgeMountainFiller
 (18 33) Mountain
 (18 32) Land
 (18 31) City Worms
@@ -273,6 +819,14 @@ Hexes {
 (18 9) Sea 3 (18 8)
 (18 8) Coast 5 3
 (18 7) Land
+(18 6) SeaFiller
+(18 5) SeaFiller
+(18 4) SeaFiller
+(18 3) SeaFiller
+(18 2) SeaFiller
+(18 1) SeaFiller
+(18 0) SeaFiller
+(18 -1) SeaFiller
 (19 33) Mountain
 (19 32) Land
 (19 31) City Mannhein
@@ -301,6 +855,15 @@ Hexes {
 (19 8) City Carentan
 (19 7) Coast 5 3
 (19 6) Sea 3 (19 7)
+(19 5) SeaFiller
+(19 4) SeaFiller
+(19 3) SeaFiller
+(19 2) SeaFiller
+(19 1) SeaFiller
+(19 0) SeaFiller
+(19 -1) SeaFiller
+(19 -2) BottomEdgeSeaFiller
+(20 34) UpperEdgeMountainFiller
 (20 33) Mountain
 (20 32) Land
 (20 31) Mountain
@@ -327,9 +890,16 @@ Hexes {
 (20 10) Land
 (20 9) City St Lo
 (20 8) Land
+(20 7) SeaFiller
+(20 6) SeaFiller
+(20 6) SeaFiller
+(20 5) SeaFiller
 (20 4) Sea 2 (21 3)
 (20 3) Sea 2 (21 2)
 (20 2) Sea 2 (21 1)
+(20 1) SeaFiller
+(20 0) SeaFiller
+(20 -1) SeaFiller
 (21 33) Mountain
 (21 32) Replacement
 (21 31) Fortified
@@ -364,6 +934,9 @@ Hexes {
 (21 2) Coast 3 2
 (21 1) Coast 3 2
 (21 0) Land
+(21 -1) SeaFiller
+(21 -2) BottomEdgeSeaFiller
+(22 34) UpperEdgeMountainFiller
 (22 33) Mountain
 (22 32) FortifiedReplacement
 (22 31) Land
@@ -398,6 +971,7 @@ Hexes {
 (22 2) Land
 (22 1) FortifiedPort 15 2 Brest
 (22 0) Sea 2 (22 1)
+(22 -1) SeaFiller
 (23 33) Land
 (23 32) Mountain
 (23 31) FortifiedReplacement
@@ -432,6 +1006,9 @@ Hexes {
 (23 2) Land
 (23 1) Land
 (23 0) Land
+(23 -1) SeaFiller
+(23 -2) BottomEdgeSeaFiller
+(24 34) UpperEdgeMountainFiller
 (24 33) Impassible
 (24 32) Mountain
 (24 31) FortifiedReplacement
@@ -465,6 +1042,8 @@ Hexes {
 (24 3) FortifiedPort 10 2 Lorient
 (24 2) Land
 (24 1) Land
+(24 0) SeaFiller
+(24 -1) SeaFiller
 (25 33) Mountain
 (25 32) Impassible
 (25 31) Mountain
@@ -497,6 +1076,11 @@ Hexes {
 (25 4) Land
 (25 3) Land
 (25 2) Sea 2 (24 3)
+(25 1) SeaFiller
+(25 0) SeaFiller
+(25 -1) SeaFiller
+(25 -2) BottomEdgeSeaFiller
+(26 34) UpperEdgeMountainFiller
 (26 33) Impassible
 (26 32) Mountain
 (26 31) Fortified
@@ -526,6 +1110,14 @@ Hexes {
 (26 7) Land
 (26 6) Land
 (26 5) Land
+(26 4) SeaFiller
+(26 3) SeaFiller
+(26 2) SeaFiller
+(26 1) SeaFiller
+(26 0) SeaFiller
+(26 -1) SeaFiller
+(27 33) Neutral
+(27 32) Neutral
 (27 31) Fortified
 (27 30) Fortified
 (27 29) Land
@@ -554,6 +1146,18 @@ Hexes {
 (27 6) Land
 (27 5) FortifiedPort 8 1 St. Nazaire
 (27 4) Sea 1 (27 5)
+(27 3) SeaFiller
+(27 2) SeaFiller
+(27 1) SeaFiller
+(27 0) SeaFiller
+(27 -1) SeaFiller
+(27 -2) BottomEdgeSeaFiller
+(28 34) UpperEdgeNeutralFiller
+(28 33) Neutral
+(28 32) Neutral
+(28 31) Neutral
+(28 30) Neutral
+(28 29) Neutral
 (28 28) Land
 (28 27) Land
 (28 26) Land
@@ -578,6 +1182,18 @@ Hexes {
 (28 7) InlandPort 3 1 Nantes
 (28 6) Land
 (28 5) Sea 1 (28 7)
+(28 4) SeaFiller
+(28 3) SeaFiller
+(28 2) SeaFiller
+(28 1) SeaFiller
+(28 0) SeaFiller
+(28 -1) SeaFiller
+(29 33) Neutral
+(29 32) Neutral
+(29 31) Neutral
+(29 30) Neutral
+(29 29) Neutral
+(29 28) Neutral
 (29 27) Land
 (29 26) City Besancon
 (29 25) Land
@@ -601,6 +1217,20 @@ Hexes {
 (29 7) Land
 (29 6) Coast 2 1
 (29 5) Sea 1 (29 6)
+(29 4) SeaFiller
+(29 3) SeaFiller
+(29 2) SeaFiller
+(29 1) SeaFiller
+(29 0) SeaFiller
+(29 -1) SeaFiller
+(29 -2) BottomEdgeSeaFiller
+(30 34) UpperEdgeNeutralFiller
+(30 33) Neutral
+(30 32) Neutral
+(30 31) Neutral
+(30 30) Neutral
+(30 29) Neutral
+(30 28) Neutral
 (30 27) Land
 (30 26) Land
 (30 25) Land
@@ -623,6 +1253,20 @@ Hexes {
 (30 8) Land
 (30 7) Land
 (30 6) Coast 2 1
+(30 5) SeaFiller
+(30 4) SeaFiller
+(30 3) SeaFiller
+(30 2) SeaFiller
+(30 1) SeaFiller
+(30 0) SeaFiller
+(30 -1) SeaFiller
+(31 33) Neutral
+(31 32) Neutral
+(31 31) Neutral
+(31 30) Neutral
+(31 29) Neutral
+(31 28) Neutral
+(31 27) Neutral
 (31 26) Land
 (31 25) Land
 (31 24) Land
@@ -645,6 +1289,21 @@ Hexes {
 (31 7) Land
 (31 6) Coast 2 1
 (31 5) Sea 1 (30 6)
+(31 4) SeaFiller
+(31 3) SeaFiller
+(31 2) SeaFiller
+(31 1) SeaFiller
+(31 0) SeaFiller
+(31 -1) SeaFiller
+(31 -2) BottomEdgeSeaFiller
+(32 34) UpperEdgeNeutralFiller
+(32 33) Neutral
+(32 32) Neutral
+(32 31) Neutral
+(32 30) Neutral
+(32 29) Neutral
+(32 28) Neutral
+(32 27) Neutral
 (32 26) Land
 (32 25) Land
 (32 24) Land
@@ -666,7 +1325,21 @@ Hexes {
 (32 8) Port 8 1 La Rochelle
 (32 7) Sea 1 (32 8)
 (32 6) Sea 1 (31 6)
+(32 5) SeaFiller
+(32 4) SeaFiller
+(32 3) SeaFiller
+(32 2) SeaFiller
+(32 1) SeaFiller
+(32 0) SeaFiller
+(32 -1) SeaFiller
+(33 33) Neutral
+(33 32) Neutral
+(33 31) Neutral
+(33 30) Neutral
+(33 29) Neutral
+(33 28) Neutral
 (33 27) Mountain
+(33 26) Neutral
 (33 25) Mountain
 (33 24) Land
 (33 23) Land
@@ -686,6 +1359,21 @@ Hexes {
 (33 9) Land
 (33 8) Land
 (33 7) Land
+(33 6) SeaFiller
+(33 5) SeaFiller
+(33 4) SeaFiller
+(33 3) SeaFiller
+(33 2) SeaFiller
+(33 1) SeaFiller
+(33 0) SeaFiller
+(33 -1) SeaFiller
+(33 -2) BottomEdgeSeaFiller
+(34 34) UpperEdgeNeutralFiller
+(34 33) Neutral
+(34 32) Neutral
+(34 31) Neutral
+(34 30) Neutral
+(34 29) Neutral
 (34 28) Mountain
 (34 27) Mountain
 (34 26) Mountain
@@ -708,6 +1396,20 @@ Hexes {
 (34 9) Land
 (34 8) Coast 2 1
 (34 7) Sea 1 (34 8)
+(34 6) SeaFiller
+(34 5) SeaFiller
+(34 4) SeaFiller
+(34 3) SeaFiller
+(34 2) SeaFiller
+(34 1) SeaFiller
+(34 0) SeaFiller
+(34 -1) SeaFiller
+(35 33) Neutral
+(35 32) Neutral
+(35 31) Neutral
+(35 30) Neutral
+(35 29) Neutral
+(35 28) Neutral
 (35 27) Mountain
 (35 26) Land
 (35 25) Land
@@ -729,6 +1431,20 @@ Hexes {
 (35 9) Land
 (35 8) Coast 2 1
 (35 7) Sea 1 (35 8)
+(35 6) SeaFiller
+(35 5) SeaFiller
+(35 4) SeaFiller
+(35 3) SeaFiller
+(35 2) SeaFiller
+(35 1) SeaFiller
+(35 0) SeaFiller
+(35 -1) SeaFiller
+(35 -2) BottomEdgeSeaFiller
+(36 34) UpperEdgeMountainFiller
+(36 33) MountainFiller
+(36 32) MountainFiller
+(36 31) MountainFiller
+(36 30) MountainFiller
 (36 29) Impassible
 (36 28) Mountain
 (36 27) Mountain
@@ -750,6 +1466,21 @@ Hexes {
 (36 11) Land
 (36 10) Land
 (36 9) Land
+(36 8) SeaFiller
+(36 7) SeaFiller
+(36 6) SeaFiller
+(36 5) SeaFiller
+(36 4) SeaFiller
+(36 3) SeaFiller
+(36 2) SeaFiller
+(36 1) SeaFiller
+(36 0) SeaFiller
+(36 -1) SeaFiller
+(37 33) MountainFiller
+(37 32) MountainFiller
+(37 31) MountainFiller
+(37 30) MountainFiller
+(37 29) MountainFiller
 (37 28) Impassible
 (37 27) Mountain
 (37 26) Land
@@ -772,6 +1503,20 @@ Hexes {
 (37 9) Land
 (37 8) Sea 1 (38 8)
 (37 7) Land
+(37 6) SeaFiller
+(37 5) SeaFiller
+(37 4) SeaFiller
+(37 3) SeaFiller
+(37 2) SeaFiller
+(37 1) SeaFiller
+(37 0) SeaFiller
+(37 -1) SeaFiller
+(37 -2) BottomEdgeSeaFiller
+(38 34) UpperEdgeMountainFiller
+(38 33) MountainFiller
+(38 32) MountainFiller
+(38 31) MountainFiller
+(38 30) MountainFiller
 (38 29) Impassible
 (38 28) Mountain
 (38 27) Mountain
@@ -795,6 +1540,18 @@ Hexes {
 (38 9) Land
 (38 8) InlandPort 10 1 Bordeaux
 (38 7) Land
+(38 6) SeaFiller
+(38 5) SeaFiller
+(38 4) SeaFiller
+(38 3) SeaFiller
+(38 2) SeaFiller
+(38 1) SeaFiller
+(38 0) SeaFiller
+(38 -1) SeaFiller
+(39 33) MountainFiller
+(39 32) MountainFiller
+(39 31) MountainFiller
+(39 30) MountainFiller
 (39 29) Impassible
 (39 28) Mountain
 (39 27) City Biancon
@@ -818,6 +1575,20 @@ Hexes {
 (39 9) Land
 (39 8) Land
 (39 7) Land
+(39 6) SeaFiller
+(39 5) SeaFiller
+(39 4) SeaFiller
+(39 3) SeaFiller
+(39 2) SeaFiller
+(39 1) SeaFiller
+(39 0) SeaFiller
+(39 -1) SeaFiller
+(39 -2) BottomEdgeSeaFiller
+(40 34) UpperEdgeMountainFiller
+(40 33) MountainFiller
+(40 32) MountainFiller
+(40 31) MountainFiller
+(40 30) MountainFiller
 (40 29) Impassible
 (40 28) Mountain
 (40 27) Mountain
@@ -841,6 +1612,18 @@ Hexes {
 (40 9) Land
 (40 8) Land
 (40 7) Land
+(40 6) SeaFiller
+(40 5) SeaFiller
+(40 4) SeaFiller
+(40 3) SeaFiller
+(40 2) SeaFiller
+(40 1) SeaFiller
+(40 0) SeaFiller
+(40 -1) SeaFiller
+(41 33) MountainFiller
+(41 32) MountainFiller
+(41 31) MountainFiller
+(41 30) MountainFiller
 (41 29) Impassible
 (41 28) Mountain
 (41 27) Mountain
@@ -864,6 +1647,18 @@ Hexes {
 (41 9) Land
 (41 8) Land
 (41 7) Land
+(41 6) SeaFiller
+(41 5) SeaFiller
+(41 4) SeaFiller
+(41 3) SeaFiller
+(41 2) SeaFiller
+(41 1) SeaFiller
+(41 0) SeaFiller
+(41 -1) SeaFiller
+(41 -2) BottomEdgeSeaFiller
+(42 34) UpperEdgeMountainFiller
+(42 33) MountainFiller
+(42 32) MountainFiller
 (42 31) Impassible
 (42 30) Impassible
 (42 29) Mountain
@@ -889,6 +1684,16 @@ Hexes {
 (42 9) Land
 (42 8) Land
 (42 7) Land
+(42 6) SeaFiller
+(42 5) SeaFiller
+(42 4) SeaFiller
+(42 3) SeaFiller
+(42 2) SeaFiller
+(42 1) SeaFiller
+(42 0) SeaFiller
+(42 -1) SeaFiller
+(43 33) MountainFiller
+(43 32) MountainFiller
 (43 31) Impassible
 (43 30) Coast 2 0
 (43 29) Mountain
@@ -915,6 +1720,17 @@ Hexes {
 (43 8) Land
 (43 7) Land
 (43 6) Land
+(43 5) SeaFiller
+(43 4) SeaFiller
+(43 3) SeaFiller
+(43 2) SeaFiller
+(43 1) SeaFiller
+(43 0) SeaFiller
+(43 -1) SeaFiller
+(43 -2) BottomEdgeSeaFiller
+(44 34) UpperEdgeSeaFiller
+(44 33) SeaFiller
+(44 32) SeaFiller
 (44 31) Sea 0 (43 30)
 (44 30) Port 3 0 Nice
 (44 29) Coast 2 0
@@ -941,6 +1757,16 @@ Hexes {
 (44 8) Land
 (44 7) Land
 (44 6) Land
+(44 5) SeaFiller
+(44 4) SeaFiller
+(44 3) SeaFiller
+(44 2) SeaFiller
+(44 1) SeaFiller
+(44 0) SeaFiller
+(44 -1) SeaFiller
+(45 33) SeaFiller
+(45 32) SeaFiller
+(45 31) SeaFiller
 (45 30) Sea 0 (44 30)
 (45 29) Sea 0 (44 29)
 (45 28) Port 2 0 Cannes
@@ -966,6 +1792,19 @@ Hexes {
 (45 8) Land
 (45 7) Land
 (45 6) Land
+(45 5) Neutral
+(45 4) Neutral
+(45 3) Neutral
+(45 2) Neutral
+(45 1) Neutral
+(45 0) Neutral
+(45 -1) Neutral
+(45 -2) BottomEdgeNeutralFiller
+(46 34) UpperEdgeSeaFiller
+(46 33) SeaFiller
+(46 32) SeaFiller
+(46 31) SeaFiller
+(46 30) SeaFiller
 (46 29) Sea 0 (45 28)
 (46 28) Coast 2 0
 (46 27) Port 5 0 Toulon
@@ -973,7 +1812,10 @@ Hexes {
 (46 25) Port 25 0 Marseilles
 (46 24) Sea 0 (45 24)
 (46 23) Sea 0 (45 23)
+(46 22) SeaFiller
+(46 21) SeaFiller
 (46 20) Sea 0 (45 19)
+(46 19) SeaFiller
 (46 18) Land
 (46 17) Impassible
 (46 16) Mountain
@@ -986,10 +1828,30 @@ Hexes {
 (46 9) Land
 (46 8) Land
 (46 7) Land
+(46 6) Neutral
+(46 5) Neutral
+(46 4) Neutral
+(46 3) Neutral
+(46 2) Neutral
+(46 1) Neutral
+(46 0) Neutral
+(46 -1) Neutral
+(47 33) SeaFiller
+(47 32) SeaFiller
+(47 31) SeaFiller
+(47 30) SeaFiller
+(47 29) SeaFiller
 (47 28) Sea 0 (46 28)
 (47 27) Sea 0 (46 27)
+(47 26) SeaFiller
 (47 25) Sea 0 (46 26)
 (47 24) Sea 0 (46 25)
+(47 23) SeaFiller
+(47 22) SeaFiller
+(47 21) SeaFiller
+(47 20) SeaFiller
+(47 19) SeaFiller
+(47 18) SeaFiller
 (47 17) Land
 (47 16) Land
 (47 15) Land
@@ -1001,6 +1863,51 @@ Hexes {
 (47 9) Land
 (47 8) Land
 (47 7) Land
+(47 6) Neutral
+(47 5) Neutral
+(47 4) Neutral
+(47 3) Neutral
+(47 2) Neutral
+(47 1) Neutral
+(47 0) Neutral
+(47 -1) Neutral
+(47 -2) BottomEdgeNeutralFiller
+(48 34) UpperRightCornerFiller
+(48 33) RightEdgeSeaFiller
+(48 32) RightEdgeSeaFiller
+(48 31) RightEdgeSeaFiller
+(48 30) RightEdgeSeaFiller
+(48 29) RightEdgeSeaFiller
+(48 28) RightEdgeSeaFiller
+(48 27) RightEdgeSeaFiller
+(48 26) RightEdgeSeaFiller
+(48 25) RightEdgeSeaFiller
+(48 24) RightEdgeSeaFiller
+(48 23) RightEdgeSeaFiller
+(48 22) RightEdgeSeaFiller
+(48 21) RightEdgeSeaFiller
+(48 20) RightEdgeSeaFiller
+(48 19) RightEdgeSeaFiller
+(48 18) RightEdgeSeaFiller
+(48 17) RightEdgeLandFiller
+(48 16) RightEdgeLandFiller
+(48 15) RightEdgeLandFiller
+(48 14) RightEdgeLandFiller
+(48 13) RightEdgeLandFiller
+(48 12) RightEdgeLandFiller
+(48 11) RightEdgeLandFiller
+(48 10) RightEdgeLandFiller
+(48 9) RightEdgeLandFiller
+(48 8) RightEdgeLandFiller
+(48 7) RightEdgeNeutralFiller
+(48 6) RightEdgeNeutralFiller
+(48 5) RightEdgeNeutralFiller
+(48 4) RightEdgeNeutralFiller
+(48 3) RightEdgeNeutralFiller
+(48 2) RightEdgeNeutralFiller
+(48 1) RightEdgeNeutralFiller
+(48 0) RightEdgeNeutralFiller
+(48 -1) RightEdgeNeutralFiller
 }
 River Vire {
 (19 8) (19 9)

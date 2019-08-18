@@ -552,13 +552,14 @@ public class AlliedInvasionState : GameState
             GlobalDefinitions.selectedUnit = GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().GetInvadingUnit(inputMessage.unit);
             if (GlobalDefinitions.selectedUnit == null)
                 executeMethod = ExecuteSelectUnit; // Stay with this mode if unit not selected
-            else
+            else  
                 executeMethod = ExecuteSelectUnitDestination;
         }
     }
 
     public void ExecuteSelectUnitDestination(InputMessage inputMessage)
     {
+        GlobalDefinitions.WriteToLogFile("ExecuteSelectUnitDestination: executing - selected unit = " + GlobalDefinitions.selectedUnit.name + " selected hex = " + inputMessage.hex.name);
         GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().GetUnitInvasionHex(GlobalDefinitions.selectedUnit, inputMessage.hex);
         executeMethod = ExecuteSelectUnit;
     }

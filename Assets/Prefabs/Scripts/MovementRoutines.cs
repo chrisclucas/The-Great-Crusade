@@ -733,6 +733,7 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="unit"></param>
     public void MoveUnit(GameObject destinationHex, GameObject beginningHex, GameObject unit)
     {
+        //GlobalDefinitions.WriteToLogFile("MoveUnit: moving unit " + unit.name + " from hex " + beginningHex + " to hex " + destinationHex.name);
         // Need to check if the AI is overstacking units
         if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.HexUnderStackingLimit(destinationHex, unit.GetComponent<UnitDatabaseFields>().nationality) &&
                 (beginningHex != destinationHex))

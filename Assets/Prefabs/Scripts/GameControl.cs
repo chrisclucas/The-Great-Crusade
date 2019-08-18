@@ -165,16 +165,26 @@ public class GameControl : MonoBehaviour
         AIRoutines.SetIntrinsicHexValues();
 
         // AI TESTING
-        //hexValueGuiInstance = new GameObject();
-        //Canvas hexValueCanvas = hexValueGuiInstance.AddComponent<Canvas>();
-        //hexValueGuiInstance.AddComponent<CanvasScaler>();
-        //hexValueCanvas.renderMode = RenderMode.WorldSpace;
-        //hexValueGuiInstance.name = "hexValueGuiInstance";
-        //hexValueCanvas.sortingLayerName = "Highlight";
+        hexValueGuiInstance = new GameObject();
+        Canvas hexValueCanvas = hexValueGuiInstance.AddComponent<Canvas>();
+        hexValueGuiInstance.AddComponent<CanvasScaler>();
+        hexValueCanvas.renderMode = RenderMode.WorldSpace;
+        hexValueCanvas.sortingLayerName = "Hex";
+        hexValueGuiInstance.name = "hexValueGuiInstance";
 
         // AI TESTING
         //foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
-        //    GlobalDefinitions.createHexValueText(Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexValue), hex.name + "HexValueText", 20, 20, hex.position.x, hex.position.y, hexValueCanvas);
+        //    GlobalDefinitions.createHexText(Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexValue), hex.name + "HexValueText", 20, 20, hex.position.x, hex.position.y, 14, hexValueCanvas);
+
+        // Add city names to hexes
+        foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            if (hex.GetComponent<HexDatabaseFields>().city || hex.GetComponent<HexDatabaseFields>().coastalPort || hex.GetComponent<HexDatabaseFields>().inlandPort || hex.GetComponent<HexDatabaseFields>().fortress)
+                GlobalDefinitions.CreateHexText(hex, Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexName), "CityName", 100f, 100f, hex.transform.position.x, hex.transform.position.y, 10, Color.black, hexValueCanvas);
+
+        // Add supply capacity on invasion hexes
+        foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            if (hex.GetComponent<HexDatabaseFields>().invasionTarget != null)
+                GlobalDefinitions.CreateHexText(hex, Convert.ToString(hex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity), "SupplyText", 100f, 100f, hex.transform.position.x, hex.transform.position.y, 10, Color.red, hexValueCanvas);
 
         GlobalDefinitions.WriteToLogFile("GameControl start(): Putting Allied units in Britain - reading from file: " + path + "TGCBritainUnitLocation.txt");
         // When restarting a game the units won't have their Britain location loaded so this needs to be done before a restart file is read
@@ -247,8 +257,13 @@ public class GameControl : MonoBehaviour
                         // If not double click then process a normal click
                         else
                         {
+                            GlobalDefinitions.WriteToLogFile("Update - processing mouse click for ");
                             inputMessage.GetComponent<InputMessage>().hex = GlobalDefinitions.GetHexFromUserInput(Input.mousePosition);
+                            if (inputMessage.GetComponent<InputMessage>().hex != null)
+                                GlobalDefinitions.WriteToLogFile("Update -      hex - " + inputMessage.GetComponent<InputMessage>().hex.name);
                             inputMessage.GetComponent<InputMessage>().unit = GlobalDefinitions.GetUnitWithoutHex(Input.mousePosition);
+                            if (inputMessage.GetComponent<InputMessage>().unit != null)
+                                GlobalDefinitions.WriteToLogFile("Update -      unit - " + inputMessage.GetComponent<InputMessage>().unit.name);
 
                             RecordMouseClick(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
 

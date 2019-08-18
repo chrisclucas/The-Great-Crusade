@@ -39,8 +39,6 @@ public class CreateBoard : MonoBehaviour
         int hexPositionY;
         int lineNumber = 0;
 
-        GameObject unit;
-
         // The following variables are used to determine what words are needed when reading the file
         int hexXPositionWord = 1;
         int hexYPositionWord = 2;
@@ -61,10 +59,6 @@ public class CreateBoard : MonoBehaviour
         int riverX2Word = 5;
         int riverY2Word = 6;
 
-        int unitNameWord = 0;
-        int unitXWord = 2;
-        int unitYWord = 3;
-
         if (!File.Exists(fileName))
         {
             // There is no recovering from this error but let the user know
@@ -79,17 +73,12 @@ public class CreateBoard : MonoBehaviour
             do
             {
                 line = theReader.ReadLine();
-                //GlobalDefinitions.writeToLogFile("readMapSetup: reading line - " + line);
                 lineNumber++;
                 if (line != null)
                 {
                     string[] switchEntries = line.Split(delimiterChars);
-                    //GlobalDefinitions.writeToLogFile("readMapSetup: Keyword found - " + switchEntries[0]);
                     switch (switchEntries[0])
                     {
-                        case "Turn":
-                            GlobalDefinitions.turnNumber = Int32.Parse(switchEntries[1]);
-                            break;
                         case "Hexes":
                             line = theReader.ReadLine();
                             lineNumber++;
@@ -116,11 +105,7 @@ public class CreateBoard : MonoBehaviour
                                     v3Pos.y += Mathf.Sqrt(3) * edgeLength * hexPositionY;
                                     v3Pos.z = 0;
 
-                                    // When I first started writing this I had a different resource for each type of hex.
-                                    // Now that I am overlaying a picture of the actual board there really is no reason 
-                                    // to load special hexes so I'm just loading a plan hex for highlighting purposes.
-                                    //hexagonPrefab = (GameObject)Resources.Load(entries[hexTypeWord]);
-                                    hexagonPrefab = (GameObject)Resources.Load("Land");
+                                    hexagonPrefab = (GameObject)Resources.Load(entries[hexTypeWord]);
 
                                     if (hexagonPrefab == null)
                                     {
@@ -143,7 +128,22 @@ public class CreateBoard : MonoBehaviour
                                         hexInstance.GetComponent<HexDatabaseFields>().yMapCoor = hexPositionY;
 
                                         // Add the hex to the global list so I don't have to use GameObject.Find all the time
-                                        GlobalDefinitions.allHexesOnBoard.Add(hexInstance);
+                                        if ((entries[hexTypeWord] != "SeaFiller") && 
+                                                (entries[hexTypeWord] != "LeftEdgeSeaFiller") && 
+                                                (entries[hexTypeWord] != "Neutral") &&
+                                                (entries[hexTypeWord] != "BottomEdgeNeutralFiller") &&
+                                                (entries[hexTypeWord] != "RightEdgeNeutralFiller") &&
+                                                (entries[hexTypeWord] != "RightEdgeLandFiller") &&
+                                                (entries[hexTypeWord] != "RightEdgeSeaFiller") &&
+                                                (entries[hexTypeWord] != "UpperRightCornerFiller") &&
+                                                (entries[hexTypeWord] != "UpperEdgeSeaFiller") &&
+                                                (entries[hexTypeWord] != "UpperEdgeMountainFiller") &&
+                                                (entries[hexTypeWord] != "UpperLeftCornerFiller") &&
+                                                (entries[hexTypeWord] != "UpperEdgeNeutralFiller") &&
+                                                (entries[hexTypeWord] != "UpperEdgeLandFiller") &&
+                                                (entries[hexTypeWord] != "MountainFiller"))
+                                            GlobalDefinitions.allHexesOnBoard.Add(hexInstance);
+
                                         if (entries[hexTypeWord] == "City")
                                         {
                                             // Need to account for city names with blanks in them
@@ -317,36 +317,6 @@ public class CreateBoard : MonoBehaviour
                                     // There were not 5 entries on the Hex line which means something is wrong
                                     GlobalDefinitions.WriteToLogFile("Error in file on River line " + lineNumber + " - entries should be " + (riverY2Word + 2) + " but there are " + entries.Length);
                                     GlobalDefinitions.WriteToLogFile("    line text - " + line);
-                                }
-                                line = theReader.ReadLine();
-                                lineNumber++;
-                            }
-                            break;
-                        case "Units":
-                            line = theReader.ReadLine();
-                            lineNumber++;
-                            while (line != "}")
-                            {
-                                string[] entries = line.Split(delimiterChars);
-                                if (entries.Length == (unitYWord + 2))
-                                {
-                                    unit = GameObject.Find(entries[unitNameWord]);
-                                    if (unit == null)
-                                        GlobalDefinitions.WriteToLogFile("Unable to find unit - " + entries[0]);
-                                    else
-                                    {
-                                        unit.GetComponent<UnitDatabaseFields>().occupiedHex = GlobalDefinitions.GetHexAtXY(
-                                                Convert.ToInt32(entries[unitXWord]), Convert.ToInt32(entries[unitYWord]));
-                                    }
-                                    GameControl.setupRoutinesInstance.GetComponent<SetupRoutines>().GetUnitSetupDestination(unit, Convert.ToInt32(entries[unitXWord]), Convert.ToInt32(entries[unitYWord]));
-                                    // Assign the unit to be on the board
-                                    unit.transform.parent = GlobalDefinitions.allUnitsOnBoard.transform;
-                                    unit.GetComponent<UnitDatabaseFields>().inBritain = false;
-                                }
-                                else
-                                {
-                                    // There need to be 15 entries on the line (the () count as one each
-                                    GlobalDefinitions.WriteToLogFile("Error for unit " + entries[unitNameWord] + " in file on line " + lineNumber + " should be 5 entries but there are " + entries.Length);
                                 }
                                 line = theReader.ReadLine();
                                 lineNumber++;
@@ -576,7 +546,7 @@ public class CreateBoard : MonoBehaviour
                     hex2.GetComponent<HexDatabaseFields>().xMapCoor + ", " + hex2.GetComponent<HexDatabaseFields>().yMapCoor + ") ");
         }
 
-        //GlobalDefinitions.DrawBlueLineBetweenTwoPoints(point1, point2);
+        GlobalDefinitions.DrawBlueLineBetweenTwoPoints(point1, point2);
     }
 
     /// <summary>
@@ -665,10 +635,11 @@ public class CreateBoard : MonoBehaviour
     /// <returns></returns>
     private HexLocation CalculateNeighborCoordinates(HexLocation hexCoordinates, GlobalDefinitions.HexSides sideToCheck)
     {
-        HexLocation returnValue = new HexLocation();
-
-        returnValue.x = hexCoordinates.x;
-        returnValue.y = hexCoordinates.y;
+        HexLocation returnValue = new HexLocation
+        {
+            x = hexCoordinates.x,
+            y = hexCoordinates.y
+        };
         if (sideToCheck == GlobalDefinitions.HexSides.SouthWest)
         {
             returnValue.x = hexCoordinates.x - 1;

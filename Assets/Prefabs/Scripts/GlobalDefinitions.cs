@@ -564,10 +564,6 @@ public class GlobalDefinitions : MonoBehaviour
     /// <returns></returns>
     public static bool HexUnderStackingLimit(GameObject hex, Nationality nationality)
     {
-        // The AI is using this routine so this routine now needs to check if the unit is already on the hex.  Otherwise it causes units on max stacked hexes to move.
-        //if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Contains(unit))
-        //    return (false);
-
         if (nationality == Nationality.German)
         {
             if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count >= GermanStackingLimit)
@@ -1377,7 +1373,7 @@ public class GlobalDefinitions : MonoBehaviour
     }
 
     /// <summary>
-    /// Used for debugging AI, creates a text value on top of the hexes
+    /// Creates a text value on top of the hexes
     /// </summary>
     /// <param name="textMessage"></param>
     /// <param name="name"></param>
@@ -1386,19 +1382,25 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="textX"></param>
     /// <param name="textY"></param>
     /// <param name="canvasInstance"></param>
-    public static void CreateHexValueText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, Canvas canvasInstance)
+    public static void CreateHexText(GameObject hex, string textMessage, string name, float textWidth, float textHeight, float textX, float textY, int fontSize, Color textColor,  Canvas canvasInstance)
     {
         GameObject textGameObject = new GameObject(name);
         textGameObject.transform.SetParent(canvasInstance.transform, false);
         Text tempText = textGameObject.AddComponent<Text>();
         tempText.text = textMessage;
         tempText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-        tempText.fontSize = 14;
+        if (textMessage.Length < 6)
+            tempText.fontSize = 16;
+        else if (textMessage.Length < 10)
+            tempText.fontSize = 12;
+        else
+            tempText.fontSize = 8;
         tempText.rectTransform.anchoredPosition = new Vector2(textX, textY);
         tempText.rectTransform.sizeDelta = new Vector2(textWidth, textHeight);
-        tempText.rectTransform.localScale = new Vector2(0.25f, 0.25f);
+        tempText.rectTransform.localScale = new Vector2(0.1f, 0.1f);
         tempText.alignment = TextAnchor.MiddleCenter;
-        tempText.color = Color.black;
+        tempText.color = textColor;
+        tempText.raycastTarget = false;
     }
 
     /// <summary>
