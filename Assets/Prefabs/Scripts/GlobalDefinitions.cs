@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Windows.Forms;
+using TMPro;
 
 public class GlobalDefinitions : MonoBehaviour
 {
@@ -1385,22 +1386,24 @@ public class GlobalDefinitions : MonoBehaviour
     public static void CreateHexText(GameObject hex, string textMessage, string name, float textWidth, float textHeight, float textX, float textY, int fontSize, Color textColor,  Canvas canvasInstance)
     {
         GameObject textGameObject = new GameObject(name);
+        textGameObject.layer = 12; // Set the layer so it renders above the hex but beneath the counters
         textGameObject.transform.SetParent(canvasInstance.transform, false);
-        Text tempText = textGameObject.AddComponent<Text>();
+        var tempText = textGameObject.AddComponent<TextMeshPro>();
         tempText.text = textMessage;
-        tempText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
         if (textMessage.Length < 6)
-            tempText.fontSize = 16;
+            tempText.fontSize = 120;
         else if (textMessage.Length < 10)
-            tempText.fontSize = 12;
+            tempText.fontSize = 106;
         else
-            tempText.fontSize = 8;
+            tempText.fontSize = 92;
+        tempText.renderer.sortingLayerID = SortingLayer.NameToID("Text");
         tempText.rectTransform.anchoredPosition = new Vector2(textX, textY);
         tempText.rectTransform.sizeDelta = new Vector2(textWidth, textHeight);
         tempText.rectTransform.localScale = new Vector2(0.1f, 0.1f);
-        tempText.alignment = TextAnchor.MiddleCenter;
+        tempText.alignment = TMPro.TextAlignmentOptions.Center;
         tempText.color = textColor;
         tempText.raycastTarget = false;
+
     }
 
     /// <summary>
@@ -1523,7 +1526,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static void HighlightHexForMovement(GameObject hex)
     {
         Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
-        hex.transform.localScale = new Vector2(0.75f, 0.75f);
+        //hex.transform.localScale = new Vector2(0.75f, 0.75f);
         targetRenderer.sortingLayerName = "Highlight";
         targetRenderer.material.color = HexAvailableForMovmentColor;
         targetRenderer.sortingOrder = 2;
@@ -1536,7 +1539,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static void HighlightOverstackedHex(GameObject hex)
     {
         Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
-        hex.transform.localScale = new Vector2(0.75f, 0.75f);
+        //hex.transform.localScale = new Vector2(0.75f, 0.75f);
         targetRenderer.sortingLayerName = "Highlight";
         targetRenderer.material.color = HexOverstackedColor;
         targetRenderer.sortingOrder = 2;
@@ -1555,7 +1558,7 @@ public class GlobalDefinitions : MonoBehaviour
             (Convert.ToString(hex.GetComponent<SpriteRenderer>().material.color) != "RGBA(1.000, 0.922, 0.016, 0.500)"))
         {
             Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
-            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            //hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Highlight";
             targetRenderer.material.color = HexInSupplyHighlightColor;
             targetRenderer.sortingOrder = 2;
@@ -1595,21 +1598,21 @@ public class GlobalDefinitions : MonoBehaviour
 
         else if (hex.GetComponent<HexDatabaseFields>().successfullyInvaded)
         {
-            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            //hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";
             targetRenderer.material.color = SuccessfulInvasionSiteColor;
             targetRenderer.sortingOrder = 2;
         }
         else if (hex.GetComponent<HexDatabaseFields>().closeDefenseSupport)
         {
-            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            //hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";
             targetRenderer.material.color = TacticalAirCloseDefenseHighlightColor;
             targetRenderer.sortingOrder = 2;
         }
         else if (hex.GetComponent<HexDatabaseFields>().riverInterdiction)
         {
-            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            //hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";
             targetRenderer.material.color = TacticalAirRiverInterdictionHighlightColor;
             targetRenderer.sortingOrder = 2;
@@ -1619,7 +1622,7 @@ public class GlobalDefinitions : MonoBehaviour
                 ((hex == GetHexAtXY(14, 16)) && !alliedCapturedBoulogne) ||
                 ((hex == GetHexAtXY(8, 23)) && !alliedCapturedRotterdam))
         {
-            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            //hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";
             targetRenderer.material.color = StrategicInstallationHexColor;
             targetRenderer.sortingOrder = 2;
@@ -1651,21 +1654,21 @@ public class GlobalDefinitions : MonoBehaviour
 
             else if (hex.GetComponent<HexDatabaseFields>().successfullyInvaded)
             {
-                hex.transform.localScale = new Vector2(0.75f, 0.75f);
+                //hex.transform.localScale = new Vector2(0.75f, 0.75f);
                 targetRenderer.sortingLayerName = "Hex";
                 targetRenderer.material.color = SuccessfulInvasionSiteColor;
                 targetRenderer.sortingOrder = 2;
             }
             else if (hex.GetComponent<HexDatabaseFields>().closeDefenseSupport)
             {
-                hex.transform.localScale = new Vector2(0.75f, 0.75f);
+                //hex.transform.localScale = new Vector2(0.75f, 0.75f);
                 targetRenderer.sortingLayerName = "Hex";
                 targetRenderer.material.color = TacticalAirCloseDefenseHighlightColor;
                 targetRenderer.sortingOrder = 2;
             }
             else if (hex.GetComponent<HexDatabaseFields>().riverInterdiction)
             {
-                hex.transform.localScale = new Vector2(0.75f, 0.75f);
+                //hex.transform.localScale = new Vector2(0.75f, 0.75f);
                 targetRenderer.sortingLayerName = "Hex";
                 targetRenderer.material.color = TacticalAirRiverInterdictionHighlightColor;
                 targetRenderer.sortingOrder = 2;
@@ -1675,7 +1678,7 @@ public class GlobalDefinitions : MonoBehaviour
                 ((hex == GetHexAtXY(14, 16)) && !alliedCapturedBoulogne) ||
                 ((hex == GetHexAtXY(8, 23)) && !alliedCapturedRotterdam))
             {
-                hex.transform.localScale = new Vector2(0.75f, 0.75f);
+                //hex.transform.localScale = new Vector2(0.75f, 0.75f);
                 targetRenderer.sortingLayerName = "Hex";
                 targetRenderer.material.color = StrategicInstallationHexColor;
                 targetRenderer.sortingOrder = 2;

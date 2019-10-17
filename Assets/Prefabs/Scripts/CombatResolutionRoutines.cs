@@ -1631,7 +1631,7 @@ public class CombatResolutionRoutines : MonoBehaviour
                 if (!riverHex && (riverInterdictionHex.GetComponent<BoolArrayData>().riverSides[index] == true))
                 {
                     riverHex = true;
-                    riverInterdictionHex.transform.localScale = new Vector2(0.75f, 0.75f);
+                    //riverInterdictionHex.transform.localScale = new Vector2(0.75f, 0.75f);
                     riverInterdictionHex.GetComponent<SpriteRenderer>().material.color = GlobalDefinitions.TacticalAirRiverInterdictionHighlightColor;
                     riverInterdictionHex.GetComponent<SpriteRenderer>().sortingOrder = 2;
                     riverInterdictionHex.GetComponent<HexDatabaseFields>().riverInterdiction = true;

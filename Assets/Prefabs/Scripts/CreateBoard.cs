@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System;
 using Convert = System.Convert;
-using Exception = System.Exception;
-
-using System.IO;
 using UnityEngine;
+using UnityEditor;
+using System.IO;
 
 //[ExecuteInEditMode]
 
@@ -15,12 +12,13 @@ using UnityEngine;
 /// </summary>
 public class CreateBoard : MonoBehaviour
 {
-
     public Vector3 v3Center = Vector3.zero;
     public float edgeLength = 3.95f;  // Length of the hex edge
     //public float edgeLength = 2.133f;  // Length of the hex edge scaled with 0.54
     public GameObject hexagonPrefab;
+    public GameObject arrowPrefab;
     private GameObject hexInstance;
+    private GameObject arrowInstance;
     private Vector3 v3Pos;
 
     /// <summary>
@@ -33,13 +31,13 @@ public class CreateBoard : MonoBehaviour
         List<string> storedCoordinates = new List<string>();
         string line;
         string riverName;
-        string cityName;
 
         int hexPositionX;
         int hexPositionY;
         int lineNumber = 0;
 
         // The following variables are used to determine what words are needed when reading the file
+
         int hexXPositionWord = 1;
         int hexYPositionWord = 2;
         int hexTypeWord = 4;
@@ -128,8 +126,8 @@ public class CreateBoard : MonoBehaviour
                                         hexInstance.GetComponent<HexDatabaseFields>().yMapCoor = hexPositionY;
 
                                         // Add the hex to the global list so I don't have to use GameObject.Find all the time
-                                        if ((entries[hexTypeWord] != "SeaFiller") && 
-                                                (entries[hexTypeWord] != "LeftEdgeSeaFiller") && 
+                                        if ((entries[hexTypeWord] != "SeaFiller") &&
+                                                (entries[hexTypeWord] != "LeftEdgeSeaFiller") &&
                                                 (entries[hexTypeWord] != "Neutral") &&
                                                 (entries[hexTypeWord] != "BottomEdgeNeutralFiller") &&
                                                 (entries[hexTypeWord] != "RightEdgeNeutralFiller") &&
@@ -146,42 +144,20 @@ public class CreateBoard : MonoBehaviour
 
                                         if (entries[hexTypeWord] == "City")
                                         {
-                                            // Need to account for city names with blanks in them
-                                            if (entries.Length > hexCityNameWord)
-                                            {
-                                                cityName = entries[hexCityNameWord];
-                                                for (int i = (hexCityNameWord + 1); i < entries.Length; i++)
-                                                    cityName += "_" + entries[i];
-                                                hexInstance.GetComponent<HexDatabaseFields>().hexName = cityName;
-                                            }
+                                            hexInstance.GetComponent<HexDatabaseFields>().hexName = ReturnCityName(hexCityNameWord, entries);
                                             hexInstance.GetComponent<HexDatabaseFields>().city = true;
                                         }
                                         if (entries[hexTypeWord] == "Fortress")
                                         {
-                                            // Need to account for city names with blanks in them
-                                            if (entries.Length > hexCityNameWord)
-                                            {
-                                                cityName = entries[hexCityNameWord];
-                                                for (int i = (hexCityNameWord + 1); i < entries.Length; i++)
-                                                    cityName += "_" + entries[i];
-                                                hexInstance.GetComponent<HexDatabaseFields>().hexName = cityName;
-                                            }
+                                            hexInstance.GetComponent<HexDatabaseFields>().hexName = ReturnCityName(hexCityNameWord, entries);
                                             hexInstance.GetComponent<HexDatabaseFields>().fortress = true;
                                         }
                                         if (entries[hexTypeWord] == "Port")
                                         {
-                                            // In addition to the name ports also have supply capacity
+                                            // In addition to the name ports, also have supply capacity
                                             hexInstance.GetComponent<HexDatabaseFields>().supplyCapacity = Int32.Parse(entries[hexSupplyCapacity]);
                                             hexInstance.GetComponent<HexDatabaseFields>().invasionAreaIndex = Int32.Parse(entries[hexInvasionIndex]);
-
-                                            // Need to account for city names with blanks in them
-                                            if (entries.Length > hexPortNameWord)
-                                            {
-                                                cityName = entries[hexPortNameWord];
-                                                for (int i = (hexPortNameWord + 1); i < entries.Length; i++)
-                                                    cityName += "_" + entries[i];
-                                                hexInstance.GetComponent<HexDatabaseFields>().hexName = cityName;
-                                            }
+                                            hexInstance.GetComponent<HexDatabaseFields>().hexName = ReturnCityName(hexPortNameWord, entries);
                                             hexInstance.GetComponent<HexDatabaseFields>().city = true;
                                             hexInstance.GetComponent<HexDatabaseFields>().coastalPort = true;
                                         }
@@ -190,15 +166,7 @@ public class CreateBoard : MonoBehaviour
                                             // In addition to the name ports also have supply capacity
                                             hexInstance.GetComponent<HexDatabaseFields>().supplyCapacity = Int32.Parse(entries[hexSupplyCapacity]);
                                             hexInstance.GetComponent<HexDatabaseFields>().invasionAreaIndex = Int32.Parse(entries[hexInvasionIndex]);
-
-                                            // Need to account for city names with blanks in them
-                                            if (entries.Length > hexPortNameWord)
-                                            {
-                                                cityName = entries[hexPortNameWord];
-                                                for (int i = (hexPortNameWord + 1); i < entries.Length; i++)
-                                                    cityName += "_" + entries[i];
-                                                hexInstance.GetComponent<HexDatabaseFields>().hexName = cityName;
-                                            }
+                                            hexInstance.GetComponent<HexDatabaseFields>().hexName = ReturnCityName(hexPortNameWord, entries);
                                             hexInstance.GetComponent<HexDatabaseFields>().city = true;
                                             hexInstance.GetComponent<HexDatabaseFields>().inlandPort = true;
                                         }
@@ -207,15 +175,7 @@ public class CreateBoard : MonoBehaviour
                                             // In addition to the name ports also have supply capacity
                                             hexInstance.GetComponent<HexDatabaseFields>().supplyCapacity = Int32.Parse(entries[hexSupplyCapacity]);
                                             hexInstance.GetComponent<HexDatabaseFields>().invasionAreaIndex = Int32.Parse(entries[hexInvasionIndex]);
-
-                                            // Need to account for city names with blanks in them
-                                            if (entries.Length > hexPortNameWord)
-                                            {
-                                                cityName = entries[hexPortNameWord];
-                                                for (int i = (hexPortNameWord + 1); i < entries.Length; i++)
-                                                    cityName += "_" + entries[i];
-                                                hexInstance.GetComponent<HexDatabaseFields>().hexName = cityName;
-                                            }
+                                            hexInstance.GetComponent<HexDatabaseFields>().hexName = ReturnCityName(hexPortNameWord, entries);
                                             hexInstance.GetComponent<HexDatabaseFields>().fortress = true;
                                             hexInstance.GetComponent<HexDatabaseFields>().coastalPort = true;
                                         }
@@ -224,15 +184,7 @@ public class CreateBoard : MonoBehaviour
                                             // In addition to the name ports also have supply capacity
                                             hexInstance.GetComponent<HexDatabaseFields>().supplyCapacity = Int32.Parse(entries[hexSupplyCapacity]);
                                             hexInstance.GetComponent<HexDatabaseFields>().invasionAreaIndex = Int32.Parse(entries[hexInvasionIndex]);
-
-                                            // Need to account for city names with blanks in them
-                                            if (entries.Length > hexPortNameWord)
-                                            {
-                                                cityName = entries[hexPortNameWord];
-                                                for (int i = (hexPortNameWord + 1); i < entries.Length; i++)
-                                                    cityName += "_" + entries[i];
-                                                hexInstance.GetComponent<HexDatabaseFields>().hexName = cityName;
-                                            }
+                                            hexInstance.GetComponent<HexDatabaseFields>().hexName = ReturnCityName(hexPortNameWord, entries);
                                             hexInstance.GetComponent<HexDatabaseFields>().fortress = true;
                                             hexInstance.GetComponent<HexDatabaseFields>().inlandPort = true;
                                         }
@@ -323,6 +275,7 @@ public class CreateBoard : MonoBehaviour
                             }
                             break;
                         case "InlandPort":
+                            // This is used to indicate what hexes have to be clear to use an inland port
                             hexInstance = GlobalDefinitions.GetHexAtXY(Convert.ToInt32(switchEntries[inlandPortX]), Convert.ToInt32(switchEntries[inlandPortY]));
                             line = theReader.ReadLine();
                             lineNumber++;
@@ -335,6 +288,7 @@ public class CreateBoard : MonoBehaviour
                             }
                             break;
                         case "FreeFrench":
+                            // This is used to determine what hexes have to be in Allied control before Free French units will appear
                             line = theReader.ReadLine();
                             lineNumber++;
                             while (line != "}")
@@ -346,6 +300,7 @@ public class CreateBoard : MonoBehaviour
                             }
                             break;
                         case "AlliedVictory":
+                            // Used to designate the hexes that count for Allied victory
                             line = theReader.ReadLine();
                             lineNumber++;
                             while (line != "}")
@@ -357,6 +312,7 @@ public class CreateBoard : MonoBehaviour
                             }
                             break;
                         case "HistoricalProgress":
+                            //  Used to show what hexes were historically captured on what turn by the Allies
                             line = theReader.ReadLine();
                             lineNumber++;
                             while (line != "}")
@@ -383,7 +339,7 @@ public class CreateBoard : MonoBehaviour
         hex = GlobalDefinitions.GetHexAtXY(8, 23);
         {
             targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
-            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            //hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";
             targetRenderer.material.color = GlobalDefinitions.StrategicInstallationHexColor;
             targetRenderer.sortingOrder = 2;
@@ -391,7 +347,7 @@ public class CreateBoard : MonoBehaviour
         hex = GlobalDefinitions.GetHexAtXY(14, 16);
         {
             targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
-            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            //hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";
             targetRenderer.material.color = GlobalDefinitions.StrategicInstallationHexColor;
             targetRenderer.sortingOrder = 2;
@@ -399,7 +355,7 @@ public class CreateBoard : MonoBehaviour
         hex = GlobalDefinitions.GetHexAtXY(22, 1);
         {
             targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
-            hex.transform.localScale = new Vector2(0.75f, 0.75f);
+            //hex.transform.localScale = new Vector2(0.75f, 0.75f);
             targetRenderer.sortingLayerName = "Hex";
             targetRenderer.material.color = GlobalDefinitions.StrategicInstallationHexColor;
             targetRenderer.sortingOrder = 2;
@@ -602,6 +558,19 @@ public class CreateBoard : MonoBehaviour
                             hex.GetComponent<BoolArrayData>().exertsZOC[(int)hexSides] = true;
                             hex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<BoolArrayData>().exertsZOC[GlobalDefinitions.ReturnHexSideOpposide((int)hexSides)] = true;
                         }
+
+                        // Draw a red arrow on the sea hex pointing to the invasion target
+
+                        arrowPrefab = (GameObject)Resources.Load("Arrow");
+                        arrowInstance = Instantiate(arrowPrefab);
+                        if (arrowInstance == null)
+                            GlobalDefinitions.WriteToLogFile("Landing arrow did not instantiate for hex " + hex.name);
+
+                        //hexInstance.transform.SetParent(GameObject.Find("Board").transform);
+                        arrowInstance.transform.SetParent(GameObject.Find("Board").transform);
+                        arrowInstance.name = "Arrow_" + hex.name;
+                        arrowInstance.GetComponent<SpriteRenderer>().sortingLayerName = "Highlight";
+                        arrowInstance.transform.position = hex.transform.position;
                     }
                 }
             }
@@ -697,6 +666,18 @@ public class CreateBoard : MonoBehaviour
             // Now add the script with the Hex database fields on it
             hex.gameObject.AddComponent<HexDatabaseFields>();
         }
+    }
+
+    private string ReturnCityName(int positionOfCityName, string[] entries)
+    {
+        string cityName;
+
+        cityName = "";
+        cityName = entries[positionOfCityName];
+        for (int i = (positionOfCityName + 1); i < entries.Length; i++)
+            cityName += " " + entries[i];
+
+        return (cityName);
     }
 
     public void ReadBritainPlacement(string fileName)

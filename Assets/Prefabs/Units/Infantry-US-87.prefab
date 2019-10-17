@@ -20,6 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4187732704448150}
   - component: {fileID: 212289708014653716}
+  - component: {fileID: 114882212051862340}
+  - component: {fileID: 65002432211248684}
   m_Layer: 0
   m_Name: Infantry-US-87
   m_TagString: Untagged
@@ -40,6 +42,58 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &65002432211248684
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1161823756025502}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114882212051862340
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1161823756025502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 921a959200ee61f409ad37316d1f1252, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackFactor: 4
+  defenseFactor: 4
+  movementFactor: 4
+  airborne: 0
+  armor: 0
+  infantry: 1
+  germanStatic: 0
+  HQ: 0
+  nationality: 1
+  unitDesignation: 87th Infantry
+  turnAvailable: 0
+  OOBLocation: {x: 0, y: 0}
+  locationInBritain: {x: 0, y: 0}
+  occupiedHex: {fileID: 0}
+  beginningTurnHex: {fileID: 0}
+  inBritain: 1
+  isCommittedToAnAttack: 0
+  unitInterdiction: 0
+  invasionAreaIndex: -1
+  unitEliminated: 0
+  groupNumber: 0
+  remainingMovement: 4
+  availableForStrategicMovement: 1
+  hasMoved: 0
+  inSupply: 1
+  supplySource: {fileID: 0}
+  supplyIncrementsOutOfSupply: 0
+  unitsThatCanBeAttackedThisTurn: []
+  availableMovementHexes: []
 --- !u!212 &212289708014653716
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -74,7 +128,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a69b0529d598080489b4092dea0d173e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d68512966e476554c89e1e74ee2e8a02, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

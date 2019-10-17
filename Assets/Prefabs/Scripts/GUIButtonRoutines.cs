@@ -369,7 +369,7 @@ public class GUIButtonRoutines : MonoBehaviour
                         !hex.GetComponent<HexDatabaseFields>().sea && !hex.GetComponent<HexDatabaseFields>().bridge)
                 {
                     Renderer targetRenderer = hex.GetComponent(typeof(SpriteRenderer)) as Renderer;
-                    hex.transform.localScale = new Vector2(0.75f, 0.75f);
+                    //hex.transform.localScale = new Vector2(0.75f, 0.75f);
                     targetRenderer.sortingLayerName = "Highlight";
                     targetRenderer.material.color = Color.blue;
                     targetRenderer.sortingOrder = 2;
