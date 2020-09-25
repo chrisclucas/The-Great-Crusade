@@ -52,6 +52,7 @@ public class GameControl : MonoBehaviour
     public static GameObject fileTransferServerInstance;
 
     public GameObject hexValueGuiInstance;
+    public GameObject mapGraphicsInstance;
 
     // Use this for initialization
     void Start()
@@ -85,26 +86,19 @@ public class GameControl : MonoBehaviour
         // board and the units built into the game rather than reading them.  But I haven't done this based on a somewhat vauge idea that this will
         // make future games easier to build.
         // The three files are:
-        //      TGCBoardSetup.txt
+        //      TGCBoardSetup.txt - this has been split into four files, each checked at time of execution 7/25/20
         //      TGCBritainUnitLocation.txt
         //      TGCGermanSetup.txt
         // Check here that the files exist.  If they don't then exit out now
 
-        if (!File.Exists(path + GlobalDefinitions.boardsetupfile))
-        {
-            MessageBox.Show("ERROR: " + GlobalDefinitions.boardsetupfile + " file not found - cannot continue");
-            UnityEngine.Application.Quit();
-        }
-        else
-            GlobalDefinitions.boardsetupfile = path + GlobalDefinitions.boardsetupfile;
 
-        if (!File.Exists(path + GlobalDefinitions.britainunitlocationfile))
+        if (!File.Exists(path + GlobalDefinitions.britainUnitLocationFile))
         {
-            MessageBox.Show("ERROR: " + GlobalDefinitions.britainunitlocationfile + "  file not found - cannot continue");
+            MessageBox.Show("ERROR: " + GlobalDefinitions.britainUnitLocationFile + "  file not found - cannot continue");
             UnityEngine.Application.Quit();
         }
         else
-            GlobalDefinitions.britainunitlocationfile = path + GlobalDefinitions.britainunitlocationfile;
+            GlobalDefinitions.britainUnitLocationFile = path + GlobalDefinitions.britainUnitLocationFile;
 
         //if (!File.Exists(path + "TGCGermanSetup.txt"))
         if (!File.Exists(path + "GermanSetup//TGCGermanSetup1.txt"))
@@ -127,6 +121,15 @@ public class GameControl : MonoBehaviour
         GlobalDefinitions.chatPanel = GameObject.Find("ChatPanel");
         GlobalDefinitions.chatPanel.SetActive(false);
 
+        // Add a canvas to add UI elements (i.e. text) to the board
+        GlobalDefinitions.mapText = new GameObject();
+        GlobalDefinitions.mapText.name = "Map Text";
+        GlobalDefinitions.mapText.transform.SetParent(GameObject.Find("Map Graphics").transform);
+        GlobalDefinitions.mapGraphicCanvas = GlobalDefinitions.mapText.AddComponent<Canvas>();
+        GlobalDefinitions.mapText.AddComponent<CanvasScaler>();
+        GlobalDefinitions.mapGraphicCanvas.renderMode = RenderMode.WorldSpace;
+        GlobalDefinitions.mapGraphicCanvas.sortingLayerName = "Text";
+
         // The first thing that needs to be done is store the locations of the units.  They 
         // are sitting on the order of battle sheet and this will be their "dead" location
         GlobalDefinitions.WriteToLogFile("Setting unit OOB locations");
@@ -137,9 +140,9 @@ public class GameControl : MonoBehaviour
         // Create singletons of each of the routine classes
         CreateSingletons();
 
-        GlobalDefinitions.WriteToLogFile("GameControl start(): Setting up the map - " + path + "TGCBoardSetup.txt");
+        GlobalDefinitions.WriteToLogFile("GameControl start(): Setting up the map");
         // Set up the map from the read location
-        createBoardInstance.GetComponent<CreateBoard>().ReadMapSetup(path + "TGCBoardSetup.txt");
+        createBoardInstance.GetComponent<CreateBoard>().ReadMapSetup();
 
         // Load the global for storing all hexes on the board
         //foreach (Transform hex in GameObject.Find("Board").transform)
@@ -176,19 +179,9 @@ public class GameControl : MonoBehaviour
         //foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
         //    GlobalDefinitions.createHexText(Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexValue), hex.name + "HexValueText", 20, 20, hex.position.x, hex.position.y, 14, hexValueCanvas);
 
-        // Add city names to hexes
-        foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
-            if (hex.GetComponent<HexDatabaseFields>().city || hex.GetComponent<HexDatabaseFields>().coastalPort || hex.GetComponent<HexDatabaseFields>().inlandPort || hex.GetComponent<HexDatabaseFields>().fortress)
-                GlobalDefinitions.CreateHexText(hex, Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexName), "CityName", 100f, 100f, hex.transform.position.x, hex.transform.position.y, 10, Color.black, hexValueCanvas);
-
-        // Add supply capacity on invasion hexes
-        foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
-            if (hex.GetComponent<HexDatabaseFields>().invasionTarget != null)
-                GlobalDefinitions.CreateHexText(hex, Convert.ToString(hex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity), "SupplyText", 100f, 100f, hex.transform.position.x, hex.transform.position.y, 10, Color.red, hexValueCanvas);
-
-        GlobalDefinitions.WriteToLogFile("GameControl start(): Putting Allied units in Britain - reading from file: " + path + "TGCBritainUnitLocation.txt");
+        GlobalDefinitions.WriteToLogFile("GameControl start(): Putting Allied units in Britain - reading from file: " + GlobalDefinitions.britainUnitLocationFile);
         // When restarting a game the units won't have their Britain location loaded so this needs to be done before a restart file is read
-        createBoardInstance.GetComponent<CreateBoard>().ReadBritainPlacement(path + "TGCBritainUnitLocation.txt");
+        createBoardInstance.GetComponent<CreateBoard>().ReadBritainPlacement(GlobalDefinitions.britainUnitLocationFile);
 
         GlobalDefinitions.WriteToLogFile("GameControl start(): Setting up invasion areas");
         createBoardInstance.GetComponent<CreateBoard>().SetupInvasionAreas();
@@ -257,18 +250,12 @@ public class GameControl : MonoBehaviour
                         // If not double click then process a normal click
                         else
                         {
-                            GlobalDefinitions.WriteToLogFile("Update - processing mouse click for ");
                             inputMessage.GetComponent<InputMessage>().hex = GlobalDefinitions.GetHexFromUserInput(Input.mousePosition);
-                            if (inputMessage.GetComponent<InputMessage>().hex != null)
-                                GlobalDefinitions.WriteToLogFile("Update -      hex - " + inputMessage.GetComponent<InputMessage>().hex.name);
                             inputMessage.GetComponent<InputMessage>().unit = GlobalDefinitions.GetUnitWithoutHex(Input.mousePosition);
-                            if (inputMessage.GetComponent<InputMessage>().unit != null)
-                                GlobalDefinitions.WriteToLogFile("Update -      unit - " + inputMessage.GetComponent<InputMessage>().unit.name);
 
                             RecordMouseClick(inputMessage.GetComponent<InputMessage>().unit, inputMessage.GetComponent<InputMessage>().hex);
 
                             gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod(inputMessage.GetComponent<InputMessage>());
-
                         }
 
                         initialTouch = Time.time;
@@ -288,34 +275,34 @@ public class GameControl : MonoBehaviour
                 //}
 
                 // Even though this is for when the player is in control, still need to check for chat messages
-                if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
-                {
-                    string message;
+                //if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
+                //{
+                //    string message;
 
-                    NetworkEventType receivedNetworkEvent = TransportScript.checkForNetworkEvent(out message);
+                //    NetworkEventType receivedNetworkEvent = TransportScript.checkForNetworkEvent(out message);
 
-                    if (receivedNetworkEvent == NetworkEventType.DataEvent)
-                    {
-                        // The only message that is valid when in control is a chat message
+                //    if (receivedNetworkEvent == NetworkEventType.DataEvent)
+                //    {
+                //        // The only message that is valid when in control is a chat message
 
-                        char[] delimiterChars = { ' ' };
-                        string[] switchEntries = message.Split(delimiterChars);
+                //        char[] delimiterChars = { ' ' };
+                //        string[] switchEntries = message.Split(delimiterChars);
 
-                        switch (switchEntries[0])
-                        {
-                            case GlobalDefinitions.CHATMESSAGEKEYWORD:
-                                string chatMessage = "";
-                                for (int index = 0; index < (switchEntries.Length - 1); index++)
-                                    chatMessage += switchEntries[index + 1] + " ";
-                                GlobalDefinitions.WriteToLogFile("Chat message received: " + chatMessage);
-                                GlobalDefinitions.AddChatMessage(chatMessage);
-                                break;
-                            default:
-                                GlobalDefinitions.WriteToLogFile("ERROR: unexpected data message received when in control (only chat message valid - message = " + message);
-                                break;
-                        }
-                    }
-                }
+                //        switch (switchEntries[0])
+                //        {
+                //            case GlobalDefinitions.CHATMESSAGEKEYWORD:
+                //                string chatMessage = "";
+                //                for (int index = 0; index < (switchEntries.Length - 1); index++)
+                //                    chatMessage += switchEntries[index + 1] + " ";
+                //                GlobalDefinitions.WriteToLogFile("Chat message received: " + chatMessage);
+                //                GlobalDefinitions.AddChatMessage(chatMessage);
+                //                break;
+                //            default:
+                //                GlobalDefinitions.WriteToLogFile("ERROR: unexpected data message received when in control (only chat message valid - message = " + message);
+                //                break;
+                //        }
+                //    }
+                //}
 
                 // Since I have enabled chat I have to do something to get hotkeys since chat will execute the hotkeys
                 //else if (Input.GetKeyDown(KeyCode.R))
@@ -334,14 +321,14 @@ public class GameControl : MonoBehaviour
                 //}
             }
 
-            else if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
-            {
-                string message;
-                NetworkEventType receivedNetworkEvent = TransportScript.checkForNetworkEvent(out message);
+            //else if (!GlobalDefinitions.localControl && (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork))
+            //{
+            //    string message;
+            //    NetworkEventType receivedNetworkEvent = TransportScript.checkForNetworkEvent(out message);
 
-                if (receivedNetworkEvent == NetworkEventType.DataEvent)
-                    ExecuteGameCommand.ProcessCommand(message);
-            }
+            //    if (receivedNetworkEvent == NetworkEventType.DataEvent)
+            //        ExecuteGameCommand.ProcessCommand(message);
+            //}
 
             else if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI)
             {
@@ -463,11 +450,11 @@ public class GameControl : MonoBehaviour
     /// </summary>
     private void CreateSingletons()
     {
-        fileTransferServerInstance = new GameObject("fileTransferInstance");
-        fileTransferServerInstance.AddComponent<FileTransferServer>();
+        //fileTransferServerInstance = new GameObject("fileTransferInstance");
+        //fileTransferServerInstance.AddComponent<FileTransferServer>();
 
-        transportScriptInstance = new GameObject("transportScriptInstance");
-        transportScriptInstance.AddComponent<TransportScript>();
+        //transportScriptInstance = new GameObject("transportScriptInstance");
+        //transportScriptInstance.AddComponent<TransportScript>();
 
         setupRoutinesInstance = new GameObject("setupRoutinesInstance");
         setupRoutinesInstance.AddComponent<SetupRoutines>();

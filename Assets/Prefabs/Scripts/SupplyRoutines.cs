@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -484,6 +485,7 @@ public class SupplyRoutines : MonoBehaviour
     /// <summary>
     /// This routine will create a GUI that displays all the current supply sources
     /// </summary>
+    /// <param name="displayOnly"></param>
     public void CreateSupplySourceGUI(bool displayOnly)
     {
         GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DISPLAYALLIEDSUPPLYKEYWORD + " " + displayOnly);
@@ -499,11 +501,12 @@ public class SupplyRoutines : MonoBehaviour
 
         if (GlobalDefinitions.supplySources.Count == 0)
         {
-            // When starting off with a saved game the supply status isn't set do regenerate in case we're in this situation.
+            // When starting off with a saved game the supply status isn't set so regenerate in case we're in this situation.
             GameControl.movementRoutinesInstance.GetComponent<MovementRoutines>().DetermineAvailableReinforcementPorts();
             GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetAlliedSupplyStatus(true);
 
-            if (GlobalDefinitions.supplySources.Count == 0) {
+            if (GlobalDefinitions.supplySources.Count == 0)
+            {
                 GlobalDefinitions.GuiUpdateStatusMessage("No Allied supply sources have been assigned");
 
                 // Turn the button back on
@@ -524,7 +527,12 @@ public class SupplyRoutines : MonoBehaviour
         if (GlobalDefinitions.supplySources.Count == 0)
             panelHeight = (GlobalDefinitions.supplySources.Count * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) + 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
         else
-            panelHeight = (GlobalDefinitions.supplySources.Count * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) + 2 * GlobalDefinitions.GUIUNITIMAGESIZE;
+        {
+            if (!displayOnly)
+                panelHeight = (GlobalDefinitions.supplySources.Count * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) + 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
+            else
+                panelHeight = (GlobalDefinitions.supplySources.Count * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) + 2 * GlobalDefinitions.GUIUNITIMAGESIZE;
+        }
 
         Canvas supplyCanvas = new Canvas();
 
@@ -572,13 +580,13 @@ public class SupplyRoutines : MonoBehaviour
             yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
             // This creates a text box with the name of the source
-            (GlobalDefinitions.CreateText(GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().hexName,
+            (GlobalDefinitions.CreateUIText(GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().hexName,
                     "SourceNameText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+                    Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
             if (!displayOnly)
             {
@@ -598,31 +606,31 @@ public class SupplyRoutines : MonoBehaviour
             }
 
             // In column four the range of the source will be displayed
-            (GlobalDefinitions.CreateText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyRange).ToString(),
+            (GlobalDefinitions.CreateUIText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyRange).ToString(),
                     "supplySourceRangeText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+                    Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
             // In column six the total supply capacity will be listed
-            (GlobalDefinitions.CreateText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyCapacity).ToString(),
+            (GlobalDefinitions.CreateUIText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyCapacity).ToString(),
                     "SupplySourceCapacityText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+                    Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
             // In column eight the unassigned capacity will be listed
-            unassignedTextGameObject = GlobalDefinitions.CreateText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().unassignedSupply).ToString(),
+            unassignedTextGameObject = GlobalDefinitions.CreateUIText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().unassignedSupply).ToString(),
                     "SupplySourceUnassignedText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 6.5f * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    supplyCanvas);
+                    Color.white, supplyCanvas);
             unassignedTextGameObject.transform.SetParent(supplyContentPanel.transform, false);
             GlobalDefinitions.unassignedTextObejcts.Add(unassignedTextGameObject);
             GlobalDefinitions.WriteToLogFile("createSupplySourceGUI: adding unassignedTextGameObject count = " + GlobalDefinitions.unassignedTextObejcts.Count);
@@ -643,48 +651,56 @@ public class SupplyRoutines : MonoBehaviour
         // Put a series of text boxes along the top row to serve as the header
         yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
         // The first column contains the names of the supply sources
-        (GlobalDefinitions.CreateText("Supply Source", "SupplySourceNameHeaderText",
+        (GlobalDefinitions.CreateUIText("Supply Source", "SupplySourceNameHeaderText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
                 yPosition,
-                supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+                Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
         if (!displayOnly)
         {
             // In column three a toggle for selection will be listed
-            (GlobalDefinitions.CreateText("Select", "SupplySelectionText",
+            (GlobalDefinitions.CreateUIText("Select", "SupplySelectionText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 3 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+                    Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
         }
 
             // In column four the range of the source will be listed
-            (GlobalDefinitions.CreateText("Range", "SupplyRangeText",
+            (GlobalDefinitions.CreateUIText("Range", "SupplyRangeText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+                    Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
         // In column five the Total Supply Capacity will be listed
-        (GlobalDefinitions.CreateText("Total  Capacity", "SuppplyCapacityText",
+        (GlobalDefinitions.CreateUIText("Total  Capacity", "SuppplyCapacityText",
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
                 yPosition,
-                supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+                Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
         // In column six the Unassigned Capacity will be listed
-        (GlobalDefinitions.CreateText("Unassigned Supply", "UnassignedSupplyText",
+        (GlobalDefinitions.CreateUIText("Unassigned Supply", "UnassignedSupplyText",
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 6.5f * 1.25f - 0.5f * panelWidth,
                 yPosition,
-                supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
+                Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
+        yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
+        if (!displayOnly)
+            (GlobalDefinitions.CreateUIText("You currently have more units that supply - you can use this form to decide which units will be unsupplied", "SupplyHeaderText",
+                    panelWidth,
+                    GlobalDefinitions.GUIUNITIMAGESIZE,
+                    0,
+                    yPosition,
+                    Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
     }
 
     /// <summary>
@@ -812,7 +828,7 @@ public class SupplyRoutines : MonoBehaviour
             if (supplySource == GlobalDefinitions.supplySources[index])
             {
                 GlobalDefinitions.WriteToLogFile("updateUnassignedText: debug for out of range index  index = " + index + "  supplySources.Count = " + GlobalDefinitions.supplySources.Count);
-                GlobalDefinitions.unassignedTextObejcts[index].GetComponent<Text>().text = supplySource.GetComponent<HexDatabaseFields>().unassignedSupply.ToString();
+                GlobalDefinitions.unassignedTextObejcts[index].GetComponent<TextMeshPro>().text = supplySource.GetComponent<HexDatabaseFields>().unassignedSupply.ToString();
             }
     }
 
@@ -831,13 +847,13 @@ public class SupplyRoutines : MonoBehaviour
                 panelWidth,
                 panelHeight,
                 ref supplyCanvas);
-        GlobalDefinitions.CreateText("Select a unit", "multiUnitSupplyText",
+        GlobalDefinitions.CreateUIText("Select a unit", "multiUnitSupplyText",
                 (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 //0.5f * (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 0.5f * (numberUnitsToDisplay + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                supplyCanvas);
+                Color.white, supplyCanvas);
 
         //float xSeperation = (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE / hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count;
         float xSeperation = (numberUnitsToDisplay + 1) * GlobalDefinitions.GUIUNITIMAGESIZE / numberUnitsToDisplay;
@@ -867,21 +883,21 @@ public class SupplyRoutines : MonoBehaviour
                 tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<SupplyButtonRoutines>().SelectFromMultiUnits());
 
                 if (!unit.GetComponent<UnitDatabaseFields>().inSupply)
-                    GlobalDefinitions.CreateText("Out of Supply",
+                    GlobalDefinitions.CreateUIText("Out of Supply",
                             "OutOfSupplyText",
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             index * xSeperation + xOffset - 0.5f * panelWidth,
                             0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                            supplyCanvas);
+                            Color.white, supplyCanvas);
                 else
-                    GlobalDefinitions.CreateText("In Supply",
+                    GlobalDefinitions.CreateUIText("In Supply",
                             "InSupplyText",
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             index * xSeperation + xOffset - 0.5f * panelWidth,
                             0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                            supplyCanvas);
+                            Color.white, supplyCanvas);
                 index++;
             }
     }

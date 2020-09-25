@@ -1,0 +1,4161 @@
+Hexes {
+(-4 -1) LeftEdgeSeaFiller
+(-4 0) LeftEdgeSeaFiller
+(-4 1) LeftEdgeSeaFiller
+(-4 2) LeftEdgeSeaFiller
+(-4 3) LeftEdgeSeaFiller
+(-4 4) LeftEdgeSeaFiller
+(-4 5) LeftEdgeSeaFiller
+(-4 6) LeftEdgeSeaFiller
+(-4 7) LeftEdgeSeaFiller
+(-4 8) LeftEdgeSeaFiller
+(-4 9) LeftEdgeSeaFiller
+(-4 10) LeftEdgeSeaFiller
+(-4 11) LeftEdgeSeaFiller
+(-4 12) LeftEdgeSeaFiller
+(-4 13) LeftEdgeSeaFiller
+(-4 14) LeftEdgeSeaFiller
+(-4 15) LeftEdgeSeaFiller
+(-4 16) LeftEdgeSeaFiller
+(-4 17) LeftEdgeSeaFiller
+(-4 18) LeftEdgeSeaFiller
+(-4 19) LeftEdgeSeaFiller
+(-4 20) LeftEdgeSeaFiller
+(-4 21) LeftEdgeSeaFiller
+(-4 22) LeftEdgeSeaFiller
+(-4 23) LeftEdgeSeaFiller
+(-4 24) LeftEdgeSeaFiller
+(-4 25) LeftEdgeSeaFiller
+(-4 26) LeftEdgeSeaFiller
+(-4 27) LeftEdgeSeaFiller
+(-4 28) LeftEdgeSeaFiller
+(-4 29) LeftEdgeSeaFiller
+(-4 30) LeftEdgeSeaFiller
+(-4 31) LeftEdgeSeaFiller
+(-4 32) LeftEdgeSeaFiller
+(-4 33) LeftEdgeSeaFiller
+(-4 34) UpperLeftCornerFiller
+(-3 -2) BottomEdgeSeaFiller
+(-3 -1) SeaFiller
+(-3 0) SeaFiller
+(-3 1) SeaFiller
+(-3 2) SeaFiller
+(-3 3) SeaFiller
+(-3 4) SeaFiller
+(-3 5) SeaFiller
+(-3 6) SeaFiller
+(-3 7) SeaFiller
+(-3 8) SeaFiller
+(-3 9) SeaFiller
+(-3 10) SeaFiller
+(-3 11) SeaFiller
+(-3 12) SeaFiller
+(-3 13) SeaFiller
+(-3 14) SeaFiller
+(-3 15) SeaFiller
+(-3 16) SeaFiller
+(-3 17) SeaFiller
+(-3 18) SeaFiller
+(-3 19) SeaFiller
+(-3 20) SeaFiller
+(-3 21) SeaFiller
+(-3 22) SeaFiller
+(-3 23) SeaFiller
+(-3 24) SeaFiller
+(-3 25) SeaFiller
+(-3 26) SeaFiller
+(-3 27) SeaFiller
+(-3 28) SeaFiller
+(-3 29) SeaFiller
+(-3 30) SeaFiller
+(-3 31) SeaFiller
+(-3 32) SeaFiller
+(-3 33) SeaFiller
+(-2 -1) SeaFiller
+(-2 0) SeaFiller
+(-2 1) SeaFiller
+(-2 2) SeaFiller
+(-2 3) SeaFiller
+(-2 4) SeaFiller
+(-2 5) SeaFiller
+(-2 6) SeaFiller
+(-2 7) SeaFiller
+(-2 8) SeaFiller
+(-2 9) SeaFiller
+(-2 10) SeaFiller
+(-2 11) SeaFiller
+(-2 12) SeaFiller
+(-2 13) SeaFiller
+(-2 14) SeaFiller
+(-2 15) SeaFiller
+(-2 16) SeaFiller
+(-2 17) SeaFiller
+(-2 18) SeaFiller
+(-2 19) SeaFiller
+(-2 20) SeaFiller
+(-2 21) SeaFiller
+(-2 22) SeaFiller
+(-2 23) SeaFiller
+(-2 24) SeaFiller
+(-2 25) SeaFiller
+(-2 26) SeaFiller
+(-2 27) SeaFiller
+(-2 28) SeaFiller
+(-2 29) SeaFiller
+(-2 30) SeaFiller
+(-2 31) SeaFiller
+(-2 32) SeaFiller
+(-2 33) SeaFiller
+(-2 34) UpperEdgeSeaFiller
+(-1 -2) BottomEdgeSeaFiller
+(-1 -1) SeaFiller
+(-1 0) SeaFiller
+(-1 1) SeaFiller
+(-1 2) SeaFiller
+(-1 3) SeaFiller
+(-1 4) SeaFiller
+(-1 5) SeaFiller
+(-1 6) SeaFiller
+(-1 7) SeaFiller
+(-1 8) SeaFiller
+(-1 9) SeaFiller
+(-1 10) SeaFiller
+(-1 11) SeaFiller
+(-1 12) SeaFiller
+(-1 13) SeaFiller
+(-1 14) SeaFiller
+(-1 15) SeaFiller
+(-1 16) SeaFiller
+(-1 17) SeaFiller
+(-1 18) SeaFiller
+(-1 19) SeaFiller
+(-1 20) SeaFiller
+(-1 21) SeaFiller
+(-1 22) SeaFiller
+(-1 23) SeaFiller
+(-1 24) SeaFiller
+(-1 25) SeaFiller
+(-1 26) SeaFiller
+(-1 27) SeaFiller
+(-1 28) SeaFiller
+(-1 29) SeaFiller
+(-1 30) SeaFiller
+(-1 31) SeaFiller
+(-1 32) SeaFiller
+(-1 33) SeaFiller
+(0 -1) SeaFiller
+(0 0) SeaFiller
+(0 1) SeaFiller
+(0 2) SeaFiller
+(0 3) SeaFiller
+(0 4) SeaFiller
+(0 5) SeaFiller
+(0 6) SeaFiller
+(0 7) SeaFiller
+(0 8) SeaFiller
+(0 9) SeaFiller
+(0 10) SeaFiller
+(0 11) SeaFiller
+(0 12) SeaFiller
+(0 13) SeaFiller
+(0 14) SeaFiller
+(0 15) SeaFiller
+(0 16) SeaFiller
+(0 17) SeaFiller
+(0 18) SeaFiller
+(0 19) SeaFiller
+(0 20) SeaFiller
+(0 21) SeaFiller
+(0 22) SeaFiller
+(0 23) SeaFiller
+(0 24) SeaFiller
+(0 25) SeaFiller
+(0 26) SeaFiller
+(0 27) SeaFiller
+(0 28) SeaFiller
+(0 29) SeaFiller
+(0 30) Sea -1 (1 30)
+(0 31) SeaFiller
+(0 32) SeaFiller
+(0 33) SeaFiller
+(0 34) UpperEdgeSeaFiller
+(1 -2) BottomEdgeSeaFiller
+(1 -1) SeaFiller
+(1 0) SeaFiller
+(1 1) SeaFiller
+(1 2) SeaFiller
+(1 3) SeaFiller
+(1 4) SeaFiller
+(1 5) SeaFiller
+(1 6) SeaFiller
+(1 7) SeaFiller
+(1 8) SeaFiller
+(1 9) SeaFiller
+(1 10) SeaFiller
+(1 11) SeaFiller
+(1 12) SeaFiller
+(1 13) SeaFiller
+(1 14) SeaFiller
+(1 15) SeaFiller
+(1 16) SeaFiller
+(1 17) SeaFiller
+(1 18) SeaFiller
+(1 19) SeaFiller
+(1 20) SeaFiller
+(1 21) SeaFiller
+(1 22) SeaFiller
+(1 23) SeaFiller
+(1 24) SeaFiller
+(1 25) SeaFiller
+(1 26) SeaFiller
+(1 27) SeaFiller
+(1 28) Sea -1 (2 29)
+(1 29) Land
+(1 30) Coast 2 -1
+(1 31) Sea -1 (3 32)
+(1 32) Land
+(1 33) Land
+(2 -1) SeaFiller
+(2 0) SeaFiller
+(2 1) SeaFiller
+(2 2) SeaFiller
+(2 3) SeaFiller
+(2 4) SeaFiller
+(2 5) SeaFiller
+(2 6) SeaFiller
+(2 7) SeaFiller
+(2 8) SeaFiller
+(2 9) SeaFiller
+(2 10) SeaFiller
+(2 11) SeaFiller
+(2 12) SeaFiller
+(2 13) SeaFiller
+(2 14) SeaFiller
+(2 15) SeaFiller
+(2 16) SeaFiller
+(2 17) SeaFiller
+(2 18) SeaFiller
+(2 19) SeaFiller
+(2 20) SeaFiller
+(2 21) SeaFiller
+(2 22) SeaFiller
+(2 23) SeaFiller
+(2 24) SeaFiller
+(2 25) SeaFiller
+(2 26) Sea -1 (3 25)
+(2 27) Sea -1 (3 26)
+(2 28) SeaFiller
+(2 29) InlandPort 5 -1 Emden
+(2 30) Land
+(2 31) Land
+(2 32) Land
+(2 33) Land
+(2 34) UpperEdgeLandFiller
+(3 -2) BottomEdgeSeaFiller
+(3 -1) SeaFiller
+(3 0) SeaFiller
+(3 1) SeaFiller
+(3 2) SeaFiller
+(3 3) SeaFiller
+(3 4) SeaFiller
+(3 5) SeaFiller
+(3 6) SeaFiller
+(3 7) SeaFiller
+(3 8) SeaFiller
+(3 9) SeaFiller
+(3 10) SeaFiller
+(3 11) SeaFiller
+(3 12) SeaFiller
+(3 13) SeaFiller
+(3 14) SeaFiller
+(3 15) SeaFiller
+(3 16) SeaFiller
+(3 17) SeaFiller
+(3 18) SeaFiller
+(3 19) SeaFiller
+(3 20) SeaFiller
+(3 21) SeaFiller
+(3 22) SeaFiller
+(3 23) SeaFiller
+(3 24) Sea -1 (4 25)
+(3 25) Coast 2 -1
+(3 26) Coast 2 -1
+(3 27) Land
+(3 28) Land
+(3 29) Replacement
+(3 30) Replacement
+(3 31) Land
+(3 32) InlandPort 25 -1 Bremen
+(3 33) Land
+(4 -1) SeaFiller
+(4 0) SeaFiller
+(4 1) SeaFiller
+(4 2) SeaFiller
+(4 3) SeaFiller
+(4 4) SeaFiller
+(4 5) SeaFiller
+(4 6) SeaFiller
+(4 7) SeaFiller
+(4 8) SeaFiller
+(4 9) SeaFiller
+(4 10) SeaFiller
+(4 11) SeaFiller
+(4 12) SeaFiller
+(4 13) SeaFiller
+(4 14) SeaFiller
+(4 15) SeaFiller
+(4 16) SeaFiller
+(4 17) SeaFiller
+(4 18) SeaFiller
+(4 19) SeaFiller
+(4 20) SeaFiller
+(4 21) SeaFiller
+(4 22) SeaFiller
+(4 23) Sea -1 (5 23)
+(4 24) SeaFiller
+(4 25) Coast 2 -1
+(4 26) Land
+(4 27) Land
+(4 28) Land
+(4 29) Land
+(4 30) Replacement
+(4 31) Replacement
+(4 32) Land
+(4 33) Land
+(4 34) UpperEdgeLandFiller
+(5 -2) BottomEdgeSeaFiller
+(5 -1) SeaFiller
+(5 0) SeaFiller
+(5 1) SeaFiller
+(5 2) SeaFiller
+(5 3) SeaFiller
+(5 4) SeaFiller
+(5 5) SeaFiller
+(5 6) SeaFiller
+(5 7) SeaFiller
+(5 8) SeaFiller
+(5 9) SeaFiller
+(5 10) SeaFiller
+(5 11) SeaFiller
+(5 12) SeaFiller
+(5 13) SeaFiller
+(5 14) SeaFiller
+(5 15) SeaFiller
+(5 16) SeaFiller
+(5 17) SeaFiller
+(5 18) SeaFiller
+(5 19) SeaFiller
+(5 20) SeaFiller
+(5 21) SeaFiller
+(5 22) Sea 6 (6 23)
+(5 23) Coast 2 -1
+(5 24) Bridge
+(5 25) SeaFiller
+(5 26) Land
+(5 27) Land
+(5 28) Land
+(5 29) Land
+(5 30) Land
+(5 31) Land
+(5 32) Land
+(5 33) Land
+(6 -1) SeaFiller
+(6 0) SeaFiller
+(6 1) SeaFiller
+(6 2) SeaFiller
+(6 3) SeaFiller
+(6 4) SeaFiller
+(6 5) SeaFiller
+(6 6) SeaFiller
+(6 7) SeaFiller
+(6 8) SeaFiller
+(6 9) SeaFiller
+(6 10) SeaFiller
+(6 11) SeaFiller
+(6 12) SeaFiller
+(6 13) SeaFiller
+(6 14) SeaFiller
+(6 15) SeaFiller
+(6 16) SeaFiller
+(6 17) SeaFiller
+(6 18) SeaFiller
+(6 19) SeaFiller
+(6 20) SeaFiller
+(6 21) SeaFiller
+(6 22) Sea 6 (7 22)
+(6 23) Coast 2 6
+(6 24) Sea 6 (7 23)
+(6 25) Sea 6 (8 23)
+(6 26) Land
+(6 27) Land
+(6 28) Land
+(6 29) Land
+(6 30) Land
+(6 31) Land
+(6 32) Land
+(6 33) Land
+(6 34) UpperEdgeLandFiller
+(7 -2) BottomEdgeSeaFiller
+(7 -1) SeaFiller
+(7 0) SeaFiller
+(7 1) SeaFiller
+(7 2) SeaFiller
+(7 3) SeaFiller
+(7 4) SeaFiller
+(7 5) SeaFiller
+(7 6) SeaFiller
+(7 7) SeaFiller
+(7 8) SeaFiller
+(7 9) SeaFiller
+(7 10) SeaFiller
+(7 11) SeaFiller
+(7 12) SeaFiller
+(7 13) SeaFiller
+(7 14) SeaFiller
+(7 15) SeaFiller
+(7 16) SeaFiller
+(7 17) SeaFiller
+(7 18) SeaFiller
+(7 19) SeaFiller
+(7 20) SeaFiller
+(7 21) Sea 6 (8 22)
+(7 22) Coast 2 6
+(7 23) InlandPort 10 6 Amsterdam
+(7 24) Land
+(7 25) Land
+(7 26) Land
+(7 27) Land
+(7 28) Land
+(7 29) Land
+(7 30) Land
+(7 31) Land
+(7 32) Land
+(7 33) Land
+(8 -1) SeaFiller
+(8 0) SeaFiller
+(8 1) SeaFiller
+(8 2) SeaFiller
+(8 3) SeaFiller
+(8 4) SeaFiller
+(8 5) SeaFiller
+(8 6) SeaFiller
+(8 7) SeaFiller
+(8 8) SeaFiller
+(8 9) SeaFiller
+(8 10) SeaFiller
+(8 11) SeaFiller
+(8 12) SeaFiller
+(8 13) SeaFiller
+(8 14) SeaFiller
+(8 15) SeaFiller
+(8 16) SeaFiller
+(8 17) SeaFiller
+(8 18) SeaFiller
+(8 19) SeaFiller
+(8 20) SeaFiller
+(8 21) Sea 6 (9 21)
+(8 22) Coast 2 6
+(8 23) InlandFortifiedPort 10 6 Rotterdam
+(8 24) Land
+(8 25) Land
+(8 26) Land
+(8 27) Land
+(8 28) Land
+(8 29) Land
+(8 30) Land
+(8 31) Land
+(8 32) Land
+(8 33) Land
+(8 34) UpperEdgeLandFiller
+(9 -2) BottomEdgeSeaFiller
+(9 -1) SeaFiller
+(9 0) SeaFiller
+(9 1) SeaFiller
+(9 2) SeaFiller
+(9 3) SeaFiller
+(9 4) SeaFiller
+(9 5) SeaFiller
+(9 6) SeaFiller
+(9 7) SeaFiller
+(9 8) SeaFiller
+(9 9) SeaFiller
+(9 10) SeaFiller
+(9 11) SeaFiller
+(9 12) SeaFiller
+(9 13) SeaFiller
+(9 14) SeaFiller
+(9 15) SeaFiller
+(9 16) SeaFiller
+(9 17) SeaFiller
+(9 18) SeaFiller
+(9 19) SeaFiller
+(9 20) Sea 6 (10 21)
+(9 21) Coast 2 6
+(9 22) Land
+(9 23) Land
+(9 24) Land
+(9 25) Land
+(9 26) Fortified
+(9 27) Land
+(9 28) Land
+(9 29) Land
+(9 30) Land
+(9 31) Land
+(9 32) Land
+(9 33) Land
+(10 -1) SeaFiller
+(10 0) SeaFiller
+(10 1) SeaFiller
+(10 2) SeaFiller
+(10 3) SeaFiller
+(10 4) SeaFiller
+(10 5) SeaFiller
+(10 6) SeaFiller
+(10 7) SeaFiller
+(10 8) SeaFiller
+(10 9) SeaFiller
+(10 10) SeaFiller
+(10 11) SeaFiller
+(10 12) SeaFiller
+(10 13) SeaFiller
+(10 14) SeaFiller
+(10 15) SeaFiller
+(10 16) SeaFiller
+(10 17) SeaFiller
+(10 18) SeaFiller
+(10 19) Sea 6 (11 19)
+(10 20) Sea 6 (12 22)
+(10 21) Coast 2 6
+(10 22) Land
+(10 23) Land
+(10 24) Land
+(10 25) Land
+(10 26) Land
+(10 27) Fortified
+(10 28) City Essen
+(10 29) Land
+(10 30) Land
+(10 31) Land
+(10 32) Land
+(10 33) Land
+(10 34) UpperEdgeLandFiller
+(11 -2) BottomEdgeSeaFiller
+(11 -1) SeaFiller
+(11 0) SeaFiller
+(11 1) SeaFiller
+(11 2) SeaFiller
+(11 3) SeaFiller
+(11 4) SeaFiller
+(11 5) SeaFiller
+(11 6) SeaFiller
+(11 7) SeaFiller
+(11 8) SeaFiller
+(11 9) SeaFiller
+(11 10) SeaFiller
+(11 11) SeaFiller
+(11 12) SeaFiller
+(11 13) SeaFiller
+(11 14) SeaFiller
+(11 15) SeaFiller
+(11 16) SeaFiller
+(11 17) Sea 5 (12 18)
+(11 18) Sea 5 (12 19)
+(11 19) Coast 7 6
+(11 20) Land
+(11 21) Land
+(11 22) Land
+(11 23) Land
+(11 24) Land
+(11 25) City Maastricht
+(11 26) Land
+(11 27) Fortified
+(11 28) Land
+(11 29) Land
+(11 30) Land
+(11 31) Mountain
+(11 32) Mountain
+(11 33) Land
+(12 -1) SeaFiller
+(12 0) SeaFiller
+(12 1) SeaFiller
+(12 2) SeaFiller
+(12 3) SeaFiller
+(12 4) SeaFiller
+(12 5) SeaFiller
+(12 6) SeaFiller
+(12 7) SeaFiller
+(12 8) SeaFiller
+(12 9) SeaFiller
+(12 10) SeaFiller
+(12 11) SeaFiller
+(12 12) SeaFiller
+(12 13) SeaFiller
+(12 14) SeaFiller
+(12 15) SeaFiller
+(12 16) Sea 5 (13 16)
+(12 17) Sea 5 (13 17)
+(12 18) Coast 7 5
+(12 19) Port 7 5 Ostend
+(12 20) Land
+(12 21) Land
+(12 22) InlandPort 23 6 Antwerp
+(12 23) Land
+(12 24) Land
+(12 25) Land
+(12 26) Land
+(12 27) Fortified
+(12 28) Land
+(12 29) City Dusselforf
+(12 30) Land
+(12 31) Mountain
+(12 32) Mountain
+(12 33) Land
+(12 34) UpperEdgeLandFiller
+(13 -2) BottomEdgeSeaFiller
+(13 -1) SeaFiller
+(13 0) SeaFiller
+(13 1) SeaFiller
+(13 2) SeaFiller
+(13 3) SeaFiller
+(13 4) SeaFiller
+(13 5) SeaFiller
+(13 6) SeaFiller
+(13 7) SeaFiller
+(13 8) SeaFiller
+(13 9) SeaFiller
+(13 10) SeaFiller
+(13 11) SeaFiller
+(13 12) SeaFiller
+(13 13) SeaFiller
+(13 14) SeaFiller
+(13 15) Sea 5 (14 16)
+(13 16) FortifiedPort 7 5 Calais
+(13 17) FortifiedPort 7 5 Dunkirk
+(13 18) Land
+(13 19) Land
+(13 20) Land
+(13 21) Land
+(13 22) Land
+(13 23) Land
+(13 24) City Liege
+(13 25) Land
+(13 26) Fortress Aachen
+(13 27) Land
+(13 28) City Cologne
+(13 29) Land
+(13 30) Mountain
+(13 31) Replacement
+(13 32) Replacement
+(13 33) Land
+(14 -1) SeaFiller
+(14 0) SeaFiller
+(14 1) SeaFiller
+(14 2) SeaFiller
+(14 3) SeaFiller
+(14 4) SeaFiller
+(14 5) SeaFiller
+(14 6) SeaFiller
+(14 7) SeaFiller
+(14 8) SeaFiller
+(14 9) SeaFiller
+(14 10) SeaFiller
+(14 11) SeaFiller
+(14 12) SeaFiller
+(14 13) SeaFiller
+(14 14) SeaFiller
+(14 15) Sea 5 (15 15)
+(14 16) FortifiedPort 7 5 Boulogne
+(14 17) Land
+(14 18) Land
+(14 19) City Lille
+(14 20) City Tournai
+(14 21) Land
+(14 22) City Brussels
+(14 23) City Namur
+(14 24) Land
+(14 25) Land
+(14 26) Land
+(14 27) Fortified
+(14 28) City Bonn
+(14 29) Land
+(14 30) Mountain
+(14 31) Replacement
+(14 32) Replacement
+(14 33) Land
+(14 34) UpperEdgeLandFiller
+(15 -2) BottomEdgeSeaFiller
+(15 -1) SeaFiller
+(15 0) SeaFiller
+(15 1) SeaFiller
+(15 2) SeaFiller
+(15 3) SeaFiller
+(15 4) SeaFiller
+(15 5) SeaFiller
+(15 6) SeaFiller
+(15 7) SeaFiller
+(15 8) SeaFiller
+(15 9) SeaFiller
+(15 10) SeaFiller
+(15 11) SeaFiller
+(15 12) SeaFiller
+(15 13) SeaFiller
+(15 14) Sea 5 (16 15)
+(15 15) Coast 5 5
+(15 16) Land
+(15 17) Land
+(15 18) Land
+(15 19) Land
+(15 20) Land
+(15 21) Land
+(15 22) Land
+(15 23) Land
+(15 24) Land
+(15 25) Land
+(15 26) Fortified
+(15 27) Mountain
+(15 28) Mountain
+(15 29) Land
+(15 30) Land
+(15 31) Mountain
+(15 32) Mountain
+(15 33) Land
+(16 -1) SeaFiller
+(16 0) SeaFiller
+(16 1) SeaFiller
+(16 2) SeaFiller
+(16 3) SeaFiller
+(16 4) SeaFiller
+(16 5) SeaFiller
+(16 6) SeaFiller
+(16 7) SeaFiller
+(16 8) Sea 3 (17 7)
+(16 9) Sea 3 (17 8)
+(16 10) SeaFiller
+(16 11) SeaFiller
+(16 12) SeaFiller
+(16 13) Sea 4 (17 13)
+(16 14) Sea 5 (17 14)
+(16 15) Coast 5 5
+(16 16) Land
+(16 17) Land
+(16 18) Land
+(16 19) Land
+(16 20) Land
+(16 21) Land
+(16 22) Land
+(16 23) Land
+(16 24) Land
+(16 25) Land
+(16 26) Mountain
+(16 27) Fortified
+(16 28) Land
+(16 29) Land
+(16 30) City Coblenz
+(16 31) Mountain
+(16 32) City Fannkfurt
+(16 33) Land
+(16 34) UpperEdgeLandFiller
+(17 33) Land
+(17 32) Land
+(17 31) City Mainz
+(17 30) Mountain
+(17 29) Mountain
+(17 28) Mountain
+(17 27) Fortified
+(17 26) Land
+(17 25) Mountain
+(17 24) Land
+(17 23) City Sedan
+(17 22) Land
+(17 21) Land
+(17 20) Land
+(17 19) Land
+(17 18) Land
+(17 17) Land
+(17 16) City Amiens
+(17 15) Land
+(17 14) Port 5 5 Dieppe
+(17 13) Coast 5 4
+(17 12) Sea 4 (18 13)
+(17 11) Sea 4 (18 12)
+(17 10) SeaFiller
+(17 9) SeaFiller
+(17 8) Coast 5 3
+(17 7) FortifiedPort 10 3 Cherbourg
+(17 6) Land
+(17 5) SeaFiller
+(17 4) SeaFiller
+(17 3) SeaFiller
+(17 2) SeaFiller
+(17 1) SeaFiller
+(17 0) SeaFiller
+(17 -1) SeaFiller
+(17 -2) BottomEdgeSeaFiller
+(18 34) UpperEdgeMountainFiller
+(18 33) Mountain
+(18 32) Land
+(18 31) City Worms
+(18 30) Land
+(18 29) Land
+(18 28) Fortress Trier
+(18 27) Land
+(18 26) City Luxembourg
+(18 25) Mountain
+(18 24) Land
+(18 23) Land
+(18 22) Land
+(18 21) Land
+(18 20) Land
+(18 19) Land
+(18 18) Land
+(18 17) Land
+(18 16) Land
+(18 15) Land
+(18 14) Land
+(18 13) Coast 5 4
+(18 12) FortifiedPort 7 4 Le Havre
+(18 11) Sea 3 (19 10)
+(18 10) Sea 3 (19 9)
+(18 9) Sea 3 (18 8)
+(18 8) Coast 5 3
+(18 7) Land
+(18 6) SeaFiller
+(18 5) SeaFiller
+(18 4) SeaFiller
+(18 3) SeaFiller
+(18 2) SeaFiller
+(18 1) SeaFiller
+(18 0) SeaFiller
+(18 -1) SeaFiller
+(19 33) Mountain
+(19 32) Land
+(19 31) City Mannhein
+(19 30) Mountain
+(19 29) Land
+(19 28) Fortified
+(19 27) Mountain
+(19 26) Land
+(19 25) Land
+(19 24) Mountain
+(19 23) Land
+(19 22) Land
+(19 21) Land
+(19 20) Land
+(19 19) City Soissons
+(19 18) City Compiegne
+(19 17) Land
+(19 16) Land
+(19 15) Land
+(19 14) InlandPort 7 4 Rouen
+(19 13) Land
+(19 12) Land
+(19 11) Sea 4 (19 14)
+(19 10) Port 5 3 Caen
+(19 9) Port 5 3 Bayeux
+(19 8) City Carentan
+(19 7) Coast 5 3
+(19 6) Sea 3 (19 7)
+(19 5) SeaFiller
+(19 4) SeaFiller
+(19 3) SeaFiller
+(19 2) SeaFiller
+(19 1) SeaFiller
+(19 0) SeaFiller
+(19 -1) SeaFiller
+(19 -2) BottomEdgeSeaFiller
+(20 34) UpperEdgeMountainFiller
+(20 33) Mountain
+(20 32) Land
+(20 31) Mountain
+(20 30) Land
+(20 29) Fortress Saarbrucken
+(20 28) Mountain
+(20 27) Fortress Metz
+(20 26) Land
+(20 25) Mountain
+(20 24) City Verdun
+(20 23) Land
+(20 22) Land
+(20 21) City Reims
+(20 20) Land
+(20 19) Land
+(20 18) Land
+(20 17) Land
+(20 16) Land
+(20 15) Land
+(20 14) Land
+(20 13) Land
+(20 12) Land
+(20 11) Land
+(20 10) Land
+(20 9) City St Lo
+(20 8) Land
+(20 7) SeaFiller
+(20 6) SeaFiller
+(20 5) SeaFiller
+(20 4) Sea 2 (21 3)
+(20 3) Sea 2 (21 2)
+(20 2) Sea 2 (21 1)
+(20 1) SeaFiller
+(20 0) SeaFiller
+(20 -1) SeaFiller
+(21 33) Mountain
+(21 32) Replacement
+(21 31) Fortified
+(21 30) Fortified
+(21 29) Fortified
+(21 28) Land
+(21 27) Mountain
+(21 26) Land
+(21 25) Mountain
+(21 24) Land
+(21 23) Land
+(21 22) City Chalons
+(21 21) Land
+(21 20) City Chateau Thiery
+(21 19) Land
+(21 18) Land
+(21 17) City Paris
+(21 16) Land
+(21 15) City Mantes
+(21 14) Land
+(21 13) Land
+(21 12) Land
+(21 11) City Argentan
+(21 10) Land
+(21 9) Land
+(21 8) Land
+(21 7) Sea 2 (22 8)
+(21 6) Sea 2 (22 6)
+(21 5) Sea 2 (22 5)
+(21 4) Sea 2 (22 4)
+(21 3) Coast 3 2
+(21 2) Coast 3 2
+(21 1) Coast 3 2
+(21 0) Land
+(21 -1) SeaFiller
+(21 -2) BottomEdgeSeaFiller
+(22 34) UpperEdgeMountainFiller
+(22 33) Mountain
+(22 32) FortifiedReplacement
+(22 31) Land
+(22 30) Mountain
+(22 29) Land
+(22 28) Land
+(22 27) City Nancy
+(22 26) Mountain
+(22 25) Land
+(22 24) Land
+(22 23) Land
+(22 22) Land
+(22 21) Land
+(22 20) Land
+(22 19) Land
+(22 18) City Paris
+(22 17) City Paris
+(22 16) Land
+(22 15) Land
+(22 14) Land
+(22 13) Land
+(22 12) Land
+(22 11) Land
+(22 10) Land
+(22 9) Land
+(22 8) Port 5 2 Avranches
+(22 7) Land
+(22 6) FortifiedPort 8 2 St. Malo
+(22 5) Coast 3 2
+(22 4) Coast 3 2
+(22 3) Land
+(22 2) Land
+(22 1) FortifiedPort 15 2 Brest
+(22 0) Sea 2 (22 1)
+(22 -1) SeaFiller
+(23 33) Land
+(23 32) Mountain
+(23 31) FortifiedReplacement
+(23 30) City Strasbourg
+(23 29) Mountain
+(23 28) Land
+(23 27) Land
+(23 26) Land
+(23 25) Mountain
+(23 24) Land
+(23 23) City St. Dizier
+(23 22) Land
+(23 21) Land
+(23 20) Land
+(23 19) Land
+(23 18) Land
+(23 17) Land
+(23 16) Land
+(23 15) Land
+(23 14) City Chartres
+(23 13) Land
+(23 12) Land
+(23 11) Land
+(23 10) Land
+(23 9) Land
+(23 8) Land
+(23 7) Land
+(23 6) Land
+(23 5) Land
+(23 4) Land
+(23 3) Land
+(23 2) Land
+(23 1) Land
+(23 0) Land
+(23 -1) SeaFiller
+(23 -2) BottomEdgeSeaFiller
+(24 34) UpperEdgeMountainFiller
+(24 33) Impassible
+(24 32) Mountain
+(24 31) FortifiedReplacement
+(24 30) Land
+(24 29) Mountain
+(24 28) Land
+(24 27) Land
+(24 26) Mountain
+(24 25) Land
+(24 24) Land
+(24 23) Land
+(24 22) Land
+(24 21) City Troyes
+(24 20) Land
+(24 19) Land
+(24 18) Land
+(24 17) Land
+(24 16) Land
+(24 15) Land
+(24 14) Land
+(24 13) Land
+(24 12) Land
+(24 11) Land
+(24 10) Land
+(24 9) Land
+(24 8) Land
+(24 7) City Rennes
+(24 6) Land
+(24 5) Land
+(24 4) Land
+(24 3) FortifiedPort 10 2 Lorient
+(24 2) Land
+(24 1) Land
+(24 0) SeaFiller
+(24 -1) SeaFiller
+(25 33) Mountain
+(25 32) Impassible
+(25 31) Mountain
+(25 30) Fortified
+(25 29) City Colmar
+(25 28) Mountain
+(25 27) City Epinal
+(25 26) Land
+(25 25) Mountain
+(25 24) Land
+(25 23) City Chaumont
+(25 22) Land
+(25 21) Land
+(25 20) Land
+(25 19) Land
+(25 18) Land
+(25 17) Land
+(25 16) City Orleans
+(25 15) Land
+(25 14) Land
+(25 13) Land
+(25 12) Land
+(25 11) City Le Mans
+(25 10) Land
+(25 9) Land
+(25 8) Land
+(25 7) Land
+(25 6) Land
+(25 5) Land
+(25 4) Land
+(25 3) Land
+(25 2) Sea 2 (24 3)
+(25 1) SeaFiller
+(25 0) SeaFiller
+(25 -1) SeaFiller
+(25 -2) BottomEdgeSeaFiller
+(26 34) UpperEdgeMountainFiller
+(26 33) Impassible
+(26 32) Mountain
+(26 31) Fortified
+(26 30) Land
+(26 29) City Mulhouse
+(26 28) Mountain
+(26 27) Land
+(26 26) Land
+(26 25) Land
+(26 24) Land
+(26 23) Land
+(26 22) Land
+(26 21) Land
+(26 20) Land
+(26 19) Land
+(26 18) Land
+(26 17) Land
+(26 16) Land
+(26 15) Land
+(26 14) Land
+(26 13) Land
+(26 12) Land
+(26 11) Land
+(26 10) Land
+(26 9) Land
+(26 8) Land
+(26 7) Land
+(26 6) Land
+(26 5) Land
+(26 4) SeaFiller
+(26 3) SeaFiller
+(26 2) SeaFiller
+(26 1) SeaFiller
+(26 0) SeaFiller
+(26 -1) SeaFiller
+(27 33) Neutral
+(27 32) Neutral
+(27 31) Fortified
+(27 30) Fortified
+(27 29) Land
+(27 28) City Belfort
+(27 27) Land
+(27 26) City Vesoul
+(27 25) Land
+(27 24) Land
+(27 23) Land
+(27 22) Land
+(27 21) Land
+(27 20) Land
+(27 19) Land
+(27 18) Land
+(27 17) Land
+(27 16) Land
+(27 15) Land
+(27 14) Land
+(27 13) Land
+(27 12) Land
+(27 11) Land
+(27 10) Land
+(27 9) Land
+(27 8) Land
+(27 7) Land
+(27 6) Land
+(27 5) FortifiedPort 8 1 St. Nazaire
+(27 4) Sea 1 (27 5)
+(27 3) SeaFiller
+(27 2) SeaFiller
+(27 1) SeaFiller
+(27 0) SeaFiller
+(27 -1) SeaFiller
+(27 -2) BottomEdgeSeaFiller
+(28 34) UpperEdgeNeutralFiller
+(28 33) Neutral
+(28 32) Neutral
+(28 31) Neutral
+(28 30) Neutral
+(28 29) Neutral
+(28 28) Land
+(28 27) Land
+(28 26) Land
+(28 25) Land
+(28 24) City Dijon
+(28 23) Land
+(28 22) Land
+(28 21) Land
+(28 20) Land
+(28 19) Land
+(28 18) Land
+(28 17) Land
+(28 16) Land
+(28 15) Land
+(28 14) Land
+(28 13) City Tours
+(28 12) Land
+(28 11) Land
+(28 10) Land
+(28 9) Land
+(28 8) Land
+(28 7) InlandPort 3 1 Nantes
+(28 6) Land
+(28 5) Sea 1 (28 7)
+(28 4) SeaFiller
+(28 3) SeaFiller
+(28 2) SeaFiller
+(28 1) SeaFiller
+(28 0) SeaFiller
+(28 -1) SeaFiller
+(29 33) Neutral
+(29 32) Neutral
+(29 31) Neutral
+(29 30) Neutral
+(29 29) Neutral
+(29 28) Neutral
+(29 27) Land
+(29 26) City Besancon
+(29 25) Land
+(29 24) Land
+(29 23) Land
+(29 22) Land
+(29 21) Land
+(29 20) Land
+(29 19) City Nevers
+(29 18) Land
+(29 17) Land
+(29 16) Land
+(29 15) Land
+(29 14) Land
+(29 13) Land
+(29 12) Land
+(29 11) Land
+(29 10) Land
+(29 9) Land
+(29 8) Land
+(29 7) Land
+(29 6) Coast 2 1
+(29 5) Sea 1 (29 6)
+(29 4) SeaFiller
+(29 3) SeaFiller
+(29 2) SeaFiller
+(29 1) SeaFiller
+(29 0) SeaFiller
+(29 -1) SeaFiller
+(29 -2) BottomEdgeSeaFiller
+(30 34) UpperEdgeNeutralFiller
+(30 33) Neutral
+(30 32) Neutral
+(30 31) Neutral
+(30 30) Neutral
+(30 29) Neutral
+(30 28) Neutral
+(30 27) Land
+(30 26) Land
+(30 25) Land
+(30 24) Land
+(30 23) Land
+(30 22) Land
+(30 21) Land
+(30 20) Land
+(30 19) Land
+(30 18) Land
+(30 17) Land
+(30 16) Land
+(30 15) Land
+(30 14) Land
+(30 13) Land
+(30 12) Land
+(30 11) Land
+(30 10) Land
+(30 9) Land
+(30 8) Land
+(30 7) Land
+(30 6) Coast 2 1
+(30 5) SeaFiller
+(30 4) SeaFiller
+(30 3) SeaFiller
+(30 2) SeaFiller
+(30 1) SeaFiller
+(30 0) SeaFiller
+(30 -1) SeaFiller
+(31 33) Neutral
+(31 32) Neutral
+(31 31) Neutral
+(31 30) Neutral
+(31 29) Neutral
+(31 28) Neutral
+(31 27) Neutral
+(31 26) Land
+(31 25) Land
+(31 24) Land
+(31 23) Land
+(31 22) Land
+(31 21) Land
+(31 20) Land
+(31 19) Land
+(31 18) Land
+(31 17) Land
+(31 16) Land
+(31 15) Land
+(31 14) Land
+(31 13) Land
+(31 12) Land
+(31 11) Land
+(31 10) Land
+(31 9) Land
+(31 8) Land
+(31 7) Land
+(31 6) Coast 2 1
+(31 5) Sea 1 (30 6)
+(31 4) SeaFiller
+(31 3) SeaFiller
+(31 2) SeaFiller
+(31 1) SeaFiller
+(31 0) SeaFiller
+(31 -1) SeaFiller
+(31 -2) BottomEdgeSeaFiller
+(32 34) UpperEdgeNeutralFiller
+(32 33) Neutral
+(32 32) Neutral
+(32 31) Neutral
+(32 30) Neutral
+(32 29) Neutral
+(32 28) Neutral
+(32 27) Neutral
+(32 26) Land
+(32 25) Land
+(32 24) Land
+(32 23) Land
+(32 22) Land
+(32 21) Land
+(32 20) Land
+(32 19) Land
+(32 18) Land
+(32 17) Land
+(32 16) Land
+(32 15) Land
+(32 14) Land
+(32 13) Land
+(32 12) Land
+(32 11) Land
+(32 10) Land
+(32 9) Land
+(32 8) Port 8 1 La Rochelle
+(32 7) Sea 1 (32 8)
+(32 6) Sea 1 (31 6)
+(32 5) SeaFiller
+(32 4) SeaFiller
+(32 3) SeaFiller
+(32 2) SeaFiller
+(32 1) SeaFiller
+(32 0) SeaFiller
+(32 -1) SeaFiller
+(33 33) Neutral
+(33 32) Neutral
+(33 31) Neutral
+(33 30) Neutral
+(33 29) Neutral
+(33 28) Neutral
+(33 27) Mountain
+(33 26) Neutral
+(33 25) Mountain
+(33 24) Land
+(33 23) Land
+(33 22) Land
+(33 21) Land
+(33 20) Land
+(33 19) Land
+(33 18) Land
+(33 17) Land
+(33 16) Land
+(33 15) Land
+(33 14) Land
+(33 13) Land
+(33 12) Land
+(33 11) Land
+(33 10) Land
+(33 9) Land
+(33 8) Land
+(33 7) Land
+(33 6) SeaFiller
+(33 5) SeaFiller
+(33 4) SeaFiller
+(33 3) SeaFiller
+(33 2) SeaFiller
+(33 1) SeaFiller
+(33 0) SeaFiller
+(33 -1) SeaFiller
+(33 -2) BottomEdgeSeaFiller
+(34 34) UpperEdgeNeutralFiller
+(34 33) Neutral
+(34 32) Neutral
+(34 31) Neutral
+(34 30) Neutral
+(34 29) Neutral
+(34 28) Mountain
+(34 27) Mountain
+(34 26) Mountain
+(34 25) Land
+(34 24) Land
+(34 23) Land
+(34 22) Land
+(34 21) Land
+(34 20) City Vichy
+(34 19) Land
+(34 18) Land
+(34 17) Land
+(34 16) Land
+(34 15) Land
+(34 14) Land
+(34 13) Land
+(34 12) Land
+(34 11) Land
+(34 10) Land
+(34 9) Land
+(34 8) Coast 2 1
+(34 7) Sea 1 (34 8)
+(34 6) SeaFiller
+(34 5) SeaFiller
+(34 4) SeaFiller
+(34 3) SeaFiller
+(34 2) SeaFiller
+(34 1) SeaFiller
+(34 0) SeaFiller
+(34 -1) SeaFiller
+(35 33) Neutral
+(35 32) Neutral
+(35 31) Neutral
+(35 30) Neutral
+(35 29) Neutral
+(35 28) Neutral
+(35 27) Mountain
+(35 26) Land
+(35 25) Land
+(35 24) Land
+(35 23) Land
+(35 22) City Lyon
+(35 21) Land
+(35 20) Mountain
+(35 19) Impassible
+(35 18) Land
+(35 17) Land
+(35 16) Land
+(35 15) Land
+(35 14) Land
+(35 13) Land
+(35 12) Land
+(35 11) Land
+(35 10) Land
+(35 9) Land
+(35 8) Coast 2 1
+(35 7) Sea 1 (35 8)
+(35 6) SeaFiller
+(35 5) SeaFiller
+(35 4) SeaFiller
+(35 3) SeaFiller
+(35 2) SeaFiller
+(35 1) SeaFiller
+(35 0) SeaFiller
+(35 -1) SeaFiller
+(35 -2) BottomEdgeSeaFiller
+(36 34) UpperEdgeMountainFiller
+(36 33) MountainFiller
+(36 32) MountainFiller
+(36 31) MountainFiller
+(36 30) MountainFiller
+(36 29) Impassible
+(36 28) Mountain
+(36 27) Mountain
+(36 26) Land
+(36 25) Land
+(36 24) Land
+(36 23) Land
+(36 22) Land
+(36 21) Mountain
+(36 20) Impassible
+(36 19) Land
+(36 18) Land
+(36 17) Land
+(36 16) Land
+(36 15) Land
+(36 14) Land
+(36 13) Land
+(36 12) Land
+(36 11) Land
+(36 10) Land
+(36 9) Land
+(36 8) SeaFiller
+(36 7) SeaFiller
+(36 6) SeaFiller
+(36 5) SeaFiller
+(36 4) SeaFiller
+(36 3) SeaFiller
+(36 2) SeaFiller
+(36 1) SeaFiller
+(36 0) SeaFiller
+(36 -1) SeaFiller
+(37 33) MountainFiller
+(37 32) MountainFiller
+(37 31) MountainFiller
+(37 30) MountainFiller
+(37 29) MountainFiller
+(37 28) Impassible
+(37 27) Mountain
+(37 26) Land
+(37 25) Land
+(37 24) Land
+(37 23) Land
+(37 22) Land
+(37 21) Mountain
+(37 20) Impassible
+(37 19) Land
+(37 18) Land
+(37 17) Land
+(37 16) Land
+(37 15) Land
+(37 14) Land
+(37 13) Land
+(37 12) Land
+(37 11) Land
+(37 10) Land
+(37 9) Land
+(37 8) Sea 1 (38 8)
+(37 7) Land
+(37 6) SeaFiller
+(37 5) SeaFiller
+(37 4) SeaFiller
+(37 3) SeaFiller
+(37 2) SeaFiller
+(37 1) SeaFiller
+(37 0) SeaFiller
+(37 -1) SeaFiller
+(37 -2) BottomEdgeSeaFiller
+(38 34) UpperEdgeMountainFiller
+(38 33) MountainFiller
+(38 32) MountainFiller
+(38 31) MountainFiller
+(38 30) MountainFiller
+(38 29) Impassible
+(38 28) Mountain
+(38 27) Mountain
+(38 26) Land
+(38 25) City Grenoble
+(38 24) Land
+(38 23) Land
+(38 22) Land
+(38 21) Impassible
+(38 20) Mountain
+(38 19) Land
+(38 18) Land
+(38 17) Land
+(38 16) Land
+(38 15) Land
+(38 14) Land
+(38 13) Land
+(38 12) Land
+(38 11) Land
+(38 10) Land
+(38 9) Land
+(38 8) InlandPort 10 1 Bordeaux
+(38 7) Land
+(38 6) SeaFiller
+(38 5) SeaFiller
+(38 4) SeaFiller
+(38 3) SeaFiller
+(38 2) SeaFiller
+(38 1) SeaFiller
+(38 0) SeaFiller
+(38 -1) SeaFiller
+(39 33) MountainFiller
+(39 32) MountainFiller
+(39 31) MountainFiller
+(39 30) MountainFiller
+(39 29) Impassible
+(39 28) Mountain
+(39 27) City Biancon
+(39 26) Mountain
+(39 25) Mountain
+(39 24) Land
+(39 23) City Valence
+(39 22) Land
+(39 21) Mountain
+(39 20) Impassible
+(39 19) Mountain
+(39 18) Land
+(39 17) Land
+(39 16) Land
+(39 15) Land
+(39 14) Land
+(39 13) Land
+(39 12) Land
+(39 11) Land
+(39 10) Land
+(39 9) Land
+(39 8) Land
+(39 7) Land
+(39 6) SeaFiller
+(39 5) SeaFiller
+(39 4) SeaFiller
+(39 3) SeaFiller
+(39 2) SeaFiller
+(39 1) SeaFiller
+(39 0) SeaFiller
+(39 -1) SeaFiller
+(39 -2) BottomEdgeSeaFiller
+(40 34) UpperEdgeMountainFiller
+(40 33) MountainFiller
+(40 32) MountainFiller
+(40 31) MountainFiller
+(40 30) MountainFiller
+(40 29) Impassible
+(40 28) Mountain
+(40 27) Mountain
+(40 26) Mountain
+(40 25) Land
+(40 24) City Livron
+(40 23) Land
+(40 22) Land
+(40 21) Mountain
+(40 20) Impassible
+(40 19) Mountain
+(40 18) Land
+(40 17) Land
+(40 16) Land
+(40 15) Land
+(40 14) Land
+(40 13) Land
+(40 12) Land
+(40 11) Land
+(40 10) Land
+(40 9) Land
+(40 8) Land
+(40 7) Land
+(40 6) SeaFiller
+(40 5) SeaFiller
+(40 4) SeaFiller
+(40 3) SeaFiller
+(40 2) SeaFiller
+(40 1) SeaFiller
+(40 0) SeaFiller
+(40 -1) SeaFiller
+(41 33) MountainFiller
+(41 32) MountainFiller
+(41 31) MountainFiller
+(41 30) MountainFiller
+(41 29) Impassible
+(41 28) Mountain
+(41 27) Mountain
+(41 26) Mountain
+(41 25) Mountain
+(41 24) Mountain
+(41 23) City Montelima
+(41 22) Land
+(41 21) Mountain
+(41 20) Mountain
+(41 19) Impassible
+(41 18) Mountain
+(41 17) Land
+(41 16) Land
+(41 15) Land
+(41 14) Land
+(41 13) Land
+(41 12) Land
+(41 11) Land
+(41 10) Land
+(41 9) Land
+(41 8) Land
+(41 7) Land
+(41 6) SeaFiller
+(41 5) SeaFiller
+(41 4) SeaFiller
+(41 3) SeaFiller
+(41 2) SeaFiller
+(41 1) SeaFiller
+(41 0) SeaFiller
+(41 -1) SeaFiller
+(41 -2) BottomEdgeSeaFiller
+(42 34) UpperEdgeMountainFiller
+(42 33) MountainFiller
+(42 32) MountainFiller
+(42 31) Impassible
+(42 30) Impassible
+(42 29) Mountain
+(42 28) Mountain
+(42 27) Mountain
+(42 26) Mountain
+(42 25) Mountain
+(42 24) Land
+(42 23) Land
+(42 22) Land
+(42 21) Mountain
+(42 20) Mountain
+(42 19) Impassible
+(42 18) Mountain
+(42 17) Land
+(42 16) Land
+(42 15) Land
+(42 14) Land
+(42 13) Land
+(42 12) Land
+(42 11) Land
+(42 10) Land
+(42 9) Land
+(42 8) Land
+(42 7) Land
+(42 6) SeaFiller
+(42 5) SeaFiller
+(42 4) SeaFiller
+(42 3) SeaFiller
+(42 2) SeaFiller
+(42 1) SeaFiller
+(42 0) SeaFiller
+(42 -1) SeaFiller
+(43 33) MountainFiller
+(43 32) MountainFiller
+(43 31) Impassible
+(43 30) Coast 2 0
+(43 29) Mountain
+(43 28) Mountain
+(43 27) Mountain
+(43 26) Mountain
+(43 25) Land
+(43 24) Land
+(43 23) Land
+(43 22) Land
+(43 21) Mountain
+(43 20) Mountain
+(43 19) Mountain
+(43 18) Impassible
+(43 17) Mountain
+(43 16) Land
+(43 15) Land
+(43 14) Land
+(43 13) Land
+(43 12) Land
+(43 11) Land
+(43 10) Land
+(43 9) Land
+(43 8) Land
+(43 7) Land
+(43 6) Land
+(43 5) SeaFiller
+(43 4) SeaFiller
+(43 3) SeaFiller
+(43 2) SeaFiller
+(43 1) SeaFiller
+(43 0) SeaFiller
+(43 -1) SeaFiller
+(43 -2) BottomEdgeSeaFiller
+(44 34) UpperEdgeSeaFiller
+(44 33) SeaFiller
+(44 32) SeaFiller
+(44 31) Sea 0 (43 30)
+(44 30) Port 3 0 Nice
+(44 29) Coast 2 0
+(44 28) Land
+(44 27) Mountain
+(44 26) Land
+(44 25) Land
+(44 24) Land
+(44 23) Land
+(44 22) Land
+(44 21) Mountain
+(44 20) Land
+(44 19) Land
+(44 18) Impassible
+(44 17) Mountain
+(44 16) Land
+(44 15) Land
+(44 14) City Toulouse
+(44 13) Land
+(44 12) Land
+(44 11) Land
+(44 10) Land
+(44 9) Land
+(44 8) Land
+(44 7) Land
+(44 6) Land
+(44 5) SeaFiller
+(44 4) SeaFiller
+(44 3) SeaFiller
+(44 2) SeaFiller
+(44 1) SeaFiller
+(44 0) SeaFiller
+(44 -1) SeaFiller
+(45 33) SeaFiller
+(45 32) SeaFiller
+(45 31) SeaFiller
+(45 30) Sea 0 (44 30)
+(45 29) Sea 0 (44 29)
+(45 28) Port 2 0 Cannes
+(45 27) Land
+(45 26) Land
+(45 25) Land
+(45 24) Coast 2 0
+(45 23) Coast 2 0
+(45 22) Land
+(45 21) Mountain
+(45 20) Mountain
+(45 19) Port 2 0 Sete
+(45 18) Land
+(45 17) Impassible
+(45 16) Mountain
+(45 15) Land
+(45 14) Land
+(45 13) Land
+(45 12) Land
+(45 11) Land
+(45 10) Land
+(45 9) Land
+(45 8) Land
+(45 7) Land
+(45 6) Land
+(45 5) Neutral
+(45 4) Neutral
+(45 3) Neutral
+(45 2) Neutral
+(45 1) Neutral
+(45 0) Neutral
+(45 -1) Neutral
+(45 -2) BottomEdgeNeutralFiller
+(46 34) UpperEdgeSeaFiller
+(46 33) SeaFiller
+(46 32) SeaFiller
+(46 31) SeaFiller
+(46 30) SeaFiller
+(46 29) Sea 0 (45 28)
+(46 28) Coast 2 0
+(46 27) Port 5 0 Toulon
+(46 26) Coast 2 0
+(46 25) Port 25 0 Marseilles
+(46 24) Sea 0 (45 24)
+(46 23) Sea 0 (45 23)
+(46 22) SeaFiller
+(46 21) SeaFiller
+(46 20) Sea 0 (45 19)
+(46 19) SeaFiller
+(46 18) Land
+(46 17) Impassible
+(46 16) Mountain
+(46 15) Land
+(46 14) Land
+(46 13) Land
+(46 12) Land
+(46 11) Land
+(46 10) Land
+(46 9) Land
+(46 8) Land
+(46 7) Land
+(46 6) Neutral
+(46 5) Neutral
+(46 4) Neutral
+(46 3) Neutral
+(46 2) Neutral
+(46 1) Neutral
+(46 0) Neutral
+(46 -1) Neutral
+(47 33) SeaFiller
+(47 32) SeaFiller
+(47 31) SeaFiller
+(47 30) SeaFiller
+(47 29) SeaFiller
+(47 28) Sea 0 (46 28)
+(47 27) Sea 0 (46 27)
+(47 26) SeaFiller
+(47 25) Sea 0 (46 26)
+(47 24) Sea 0 (46 25)
+(47 23) SeaFiller
+(47 22) SeaFiller
+(47 21) SeaFiller
+(47 20) SeaFiller
+(47 19) SeaFiller
+(47 18) SeaFiller
+(47 17) Land
+(47 16) Land
+(47 15) Land
+(47 14) Land
+(47 13) Land
+(47 12) Land
+(47 11) Land
+(47 10) Land
+(47 9) Land
+(47 8) Land
+(47 7) Land
+(47 6) Neutral
+(47 5) Neutral
+(47 4) Neutral
+(47 3) Neutral
+(47 2) Neutral
+(47 1) Neutral
+(47 0) Neutral
+(47 -1) Neutral
+(47 -2) BottomEdgeNeutralFiller
+(48 34) UpperRightCornerFiller
+(48 33) RightEdgeSeaFiller
+(48 32) RightEdgeSeaFiller
+(48 31) RightEdgeSeaFiller
+(48 30) RightEdgeSeaFiller
+(48 29) RightEdgeSeaFiller
+(48 28) RightEdgeSeaFiller
+(48 27) RightEdgeSeaFiller
+(48 26) RightEdgeSeaFiller
+(48 25) RightEdgeSeaFiller
+(48 24) RightEdgeSeaFiller
+(48 23) RightEdgeSeaFiller
+(48 22) RightEdgeSeaFiller
+(48 21) RightEdgeSeaFiller
+(48 20) RightEdgeSeaFiller
+(48 19) RightEdgeSeaFiller
+(48 18) RightEdgeSeaFiller
+(48 17) RightEdgeLandFiller
+(48 16) RightEdgeLandFiller
+(48 15) RightEdgeLandFiller
+(48 14) RightEdgeLandFiller
+(48 13) RightEdgeLandFiller
+(48 12) RightEdgeLandFiller
+(48 11) RightEdgeLandFiller
+(48 10) RightEdgeLandFiller
+(48 9) RightEdgeLandFiller
+(48 8) RightEdgeLandFiller
+(48 7) RightEdgeNeutralFiller
+(48 6) RightEdgeNeutralFiller
+(48 5) RightEdgeNeutralFiller
+(48 4) RightEdgeNeutralFiller
+(48 3) RightEdgeNeutralFiller
+(48 2) RightEdgeNeutralFiller
+(48 1) RightEdgeNeutralFiller
+(48 0) RightEdgeNeutralFiller
+(48 -1) RightEdgeNeutralFiller
+}
+River Vire {
+(19 8) (19 9)
+(19 8) (20 9)
+(20 9) (20 8)
+(20 9) (21 8)
+}
+River Orne {
+(19 10) (20 11)
+(20 11) (20 10)
+(20 10) (21 10)
+(21 10) (21 9)
+(21 10) (22 10)
+(21 10) (22 11)
+(22 11) (21 11)
+}
+River Eure {
+(19 13) (20 14)
+(20 14) (20 13)
+(20 14) (21 13)
+(21 13) (21 14)
+(21 14) (22 14)
+(22 14) (22 15)
+(22 15) (23 14)
+(23 14) (23 15)
+(23 14) (24 15)
+(23 14) (24 14)
+}
+River Seine {
+(18 12) (19 12)
+(19 12) (18 13)
+(18 13) (19 13)
+(19 13) (18 14)
+(19 13) (19 14)
+(19 14) (20 14)
+(20 14) (20 15)
+(20 15) (21 14)
+(20 15) (21 15)
+(21 15) (20 16)
+(21 15) (21 16)
+(21 16) (22 16)
+(21 16) (22 17)
+(22 17) (21 17)
+(22 17) (22 18)
+(22 18) (23 17)
+(23 17) (23 18)
+(23 18) (24 18)
+(23 18) (24 19)
+(24 19) (23 19)
+(23 19) (24 20)
+(24 20) (23 20)
+(24 20) (24 21)
+(24 21) (25 20)
+(24 21) (25 21)
+(25 21) (24 22)
+(25 21) (25 22)
+(25 22) (26 22)
+(26 22) (26 23)
+(26 23) (27 22)
+}
+River Oise {
+(21 17) (21 16)
+(21 17) (20 17)
+(20 17) (20 18)
+(20 18) (19 17)
+(19 17) (19 18)
+(19 18) (18 18)
+(19 18) (18 19)
+(18 19) (19 19)
+(18 19) (18 20)
+(18 20) (17 19)
+(18 20) (17 20)
+(17 20) (18 21)
+(18 21) (17 21)
+}
+River Aisne {
+(19 18) (20 18)
+(19 18) (20 19)
+(20 19) (19 19)
+(19 19) (20 20)
+(20 20) (19 20)
+(19 20) (20 21)
+(19 20) (19 21)
+(19 21) (18 21)
+(19 21) (18 22)
+(18 22) (19 22)
+(19 22) (18 23)
+(19 22) (19 23)
+(19 23) (20 23)
+(20 23) (20 24)
+(20 23) (21 23)
+(21 23) (21 22)
+(21 23) (22 23)
+}
+River Marne {
+(21 17) (22 18)
+(22 18) (21 18)
+(21 18) (22 19)
+(22 19) (21 19)
+(21 19) (22 20)
+(21 19) (21 20)
+(21 20) (20 20)
+(21 20) (20 21)
+(20 21) (21 21)
+(21 21) (20 22)
+(21 21) (21 22)
+(21 22) (22 22)
+(22 22) (22 23)
+(22 23) (23 22)
+(23 22) (23 23)
+(23 23) (22 23)
+(23 23) (22 24)
+(23 23) (23 24)
+(23 23) (24 23)
+(24 23) (24 24)
+}
+River Somme {
+(15 15) (16 15)
+(16 15) (16 16)
+(16 16) (17 15)
+(16 16) (17 16)
+(17 16) (16 17)
+(17 16) (17 17)
+(17 17) (18 17)
+(17 17) (18 18)
+(18 18) (17 18)
+(17 18) (18 19)
+}
+River Scheldt {
+(11 20) (11 19)
+(11 20) (12 20)
+(11 20) (12 21)
+(11 20) (11 21)
+(11 20) (10 21)
+(10 21) (11 21)
+(10 21) (10 22)
+(10 21) (9 21)
+(9 21) (9 22)
+(9 21) (8 22)
+(9 22) (10 22)
+(10 22) (11 21)
+(11 21) (12 21)
+(11 21) (12 22)
+(11 21) (11 22)
+(10 22) (11 22)
+(10 22) (10 23)
+(9 21) (10 22)
+(12 22) (11 22)
+(12 22) (12 23)
+(12 22) (13 22)
+(12 22) (13 21)
+(13 22) (12 23)
+(12 23) (13 23)
+(13 23) (12 24)
+(12 24) (13 24)
+(13 21) (13 22)
+(13 21) (14 22)
+(14 22) (14 21)
+(14 21) (15 21)
+(15 21) (15 20)
+(13 21) (12 21)
+(12 21) (13 20)
+(13 20) (12 20)
+(13 20) (13 19)
+(13 19) (14 20)
+(13 19) (14 19)
+(14 19) (13 18)
+(13 18) (14 18)
+(14 18) (14 17)
+(14 17) (15 17)
+(14 18) (13 17)
+(9 22) (8 22)
+(9 22) (8 23)
+(8 23) (9 23)
+(9 23) (8 24)
+(8 24) (9 24)
+(9 24) (8 25)
+(8 25) (9 25)
+(9 25) (8 26)
+(8 26) (9 26)
+}
+River Maas {
+(9 22) (10 23)
+(10 23) (9 23)
+(9 23) (10 24)
+(10 24) (9 24)
+(9 24) (10 25)
+(10 25) (9 25)
+(9 25) (10 26)
+(10 26) (9 26)
+(10 26) (10 27)
+(10 26) (11 26)
+(11 26) (11 25)
+(11 26) (12 26)
+(12 26) (12 27)
+(12 27) (13 26)
+(13 26) (13 27)
+(13 27) (14 27)
+(14 27) (14 28)
+(14 27) (15 27)
+}
+River Meuse {
+(11 25) (12 26)
+(12 26) (12 25)
+(12 25) (13 25)
+(13 25) (13 24)
+(13 24) (14 25)
+(14 25) (14 24)
+(14 24) (15 24)
+(14 24) (15 23)
+(15 23) (14 23)
+(15 23) (15 22)
+(15 23) (16 23)
+(16 23) (16 24)
+(16 23) (17 23)
+(17 23) (17 22)
+(17 23) (18 23)
+(18 23) (18 24)
+(18 24) (19 23)
+(19 23) (19 24)
+(19 24) (20 24)
+(20 24) (20 25)
+(20 25) (21 24)
+(21 24) (21 25)
+(21 25) (22 25)
+(22 25) (22 26)
+(22 25) (23 25)
+(23 25) (23 24)
+(23 25) (24 25)
+(24 25) (24 26)
+(24 25) (25 25)
+(25 25) (25 24)
+(25 25) (26 25)
+}
+River Moselle {
+(18 27) (19 27)
+(19 27) (19 26)
+(19 26) (20 27)
+(20 27) (20 26)
+(20 26) (21 26)
+(21 26) (21 25)
+(21 26) (22 26)
+(22 26) (22 27)
+(22 26) (23 26)
+(23 26) (23 25)
+(23 26) (24 26)
+(24 26) (24 27)
+(24 27) (25 26)
+}
+River Weser {
+(2 32) (2 31)
+(2 32) (3 31)
+(3 31) (3 32)
+(3 32) (4 32)
+(4 32) (4 33)
+(4 33) (5 32)
+(5 32) (5 33)
+(5 32) (6 33)
+(6 33) (6 32)
+(6 33) (7 32)
+}
+River Ruhr {
+(10 28) (11 28)
+(11 28) (10 29)
+(10 29) (11 29)
+(11 29) (10 30)
+(10 30) (11 30)
+(11 30) (10 31)
+(10 31) (11 31)
+(11 31) (10 32)
+(10 32) (11 32)
+(11 32) (10 33)
+(11 32) (11 33)
+(11 32) (12 33)
+}
+River Ree {
+(16 32) (17 32)
+(17 32) (16 33)
+(16 33) (17 33)
+}
+River Saar {
+(15 29) (16 30)
+(16 30) (16 29)
+(16 29) (17 29)
+(16 29) (17 28)
+(17 28) (16 28)
+(17 28) (17 27)
+(17 27) (18 28)
+(18 28) (18 27)
+(18 28) (19 27)
+(19 27) (19 28)
+(19 28) (20 28)
+(20 28) (20 29)
+(20 28) (21 28)
+(21 28) (21 27)
+}
+River Rhine {
+(5 26) (6 26)
+(6 26) (6 27)
+(6 26) (7 26)
+(7 26) (7 25)
+(7 26) (8 26)
+(8 26) (8 27)
+(8 27) (9 26)
+(9 26) (9 27)
+(9 27) (10 27)
+(10 27) (10 28)
+(10 28) (11 27)
+(11 27) (11 28)
+(11 28) (12 28)
+(12 28) (12 29)
+(12 29) (13 28)
+(13 28) (13 29)
+(13 28) (14 29)
+(14 29) (14 28)
+(14 29) (15 28)
+(14 29) (15 29)
+(15 29) (14 30)
+(15 29) (15 30)
+(15 30) (16 30)
+(16 30) (16 31)
+(16 31) (17 30)
+(16 31) (17 31)
+(17 31) (16 32)
+(17 31) (17 32)
+(17 31) (18 32)
+(18 32) (18 31)
+(18 32) (19 31)
+(19 31) (19 32)
+(19 32) (20 32)
+(20 32) (20 33)
+(20 32) (21 32)
+(21 32) (21 31)
+(21 31) (22 32)
+(22 32) (22 31)
+(22 31) (23 31)
+(23 31) (23 30)
+(23 30) (24 31)
+(24 30) (24 31)
+(24 30) (25 30)
+(25 30) (25 29)
+(25 30) (26 30)
+(26 30) (26 31)
+(26 30) (27 30)
+(27 30) (27 29)
+}
+River Loire {
+(27 5) (28 6)
+(28 6) (27 6)
+(27 6) (28 7)
+(28 7) (27 7)
+(27 7) (28 8)
+(28 8) (27 8)
+(27 8) (28 9)
+(28 9) (27 9)
+(27 9) (28 10)
+(28 10) (27 10)
+(28 10) (28 11)
+(28 11) (29 10)
+(28 11) (29 11)
+(28 11) (28 12)
+(28 12) (27 11)
+(28 12) (27 12)
+(27 12) (28 13)
+(28 13) (27 13)
+(27 13) (28 14)
+(27 13) (27 14)
+(27 14) (26 14)
+(27 14) (26 15)
+(26 15) (27 15)
+(26 15) (26 16)
+(26 16) (25 15)
+(26 16) (25 16)
+(26 16) (26 17)
+(26 17) (27 16)
+(26 17) (27 17)
+(27 17) (26 18)
+(27 17) (27 18)
+(27 18) (28 18)
+(28 18) (28 19)
+(28 19) (29 18)
+(29 18) (29 19)
+(29 19) (30 19)
+(30 19) (29 18)
+(30 19) (30 18)
+(30 19) (30 20)
+(30 20) (31 19)
+(31 19) (31 20)
+(31 20) (32 20)
+(32 20) (32 21)
+(32 21) (33 20)
+(33 20) (33 21)
+(33 21) (34 21)
+(34 21) (34 22)
+(34 21) (35 21)
+(35 21) (35 20)
+(30 19) (31 18)
+(31 18) (31 19)
+(31 19) (32 19)
+(32 19) (32 20)
+(32 19) (33 19)
+(34 19) (33 18)
+(33 18) (34 18)
+(33 18) (33 19)
+(34 18) (33 17)
+(34 18) (34 17)
+(34 17) (35 17)
+(33 19) (34 19)
+(34 19) (34 20)
+(34 19) (35 19)
+(35 19) (35 18)
+(35 18) (36 19)
+(36 19) (36 18)
+(36 19) (37 18)
+(37 18) (37 19)
+(37 19) (38 19)
+(38 19) (38 20)
+(38 20) (39 19)
+(39 19) (39 20)
+}
+River Gironde {
+(38 9) (37 9)
+(38 9) (38 10)
+(38 10) (39 9)
+(38 10) (39 10)
+(39 10) (38 11)
+(38 11) (39 11)
+(39 11) (38 12)
+(38 12) (39 12)
+(39 12) (38 13)
+(38 13) (39 13)
+(39 13) (38 14)
+(38 14) (39 14)
+(39 14) (38 15)
+(38 15) (39 15)
+(39 15) (38 16)
+(38 16) (39 16)
+(39 16) (38 17)
+}
+River Garonne {
+(38 8) (38 9)
+(38 9) (39 8)
+(39 8) (39 9)
+(39 9) (40 9)
+(39 9) (40 10)
+(40 10) (39 10)
+(40 10) (40 11)
+(40 11) (41 10)
+(41 10) (41 11)
+(41 11) (42 11)
+(41 11) (42 12)
+(42 12) (41 12)
+(42 12) (42 13)
+(42 13) (41 12)
+(42 13) (41 13)
+(42 13) (42 14)
+(42 14) (43 13)
+(43 13) (43 14)
+(43 14) (44 14)
+(43 14) (44 15)
+(44 15) (43 15)
+(44 15) (44 16)
+(44 16) (45 15)
+(44 16) (45 16)
+(42 13) (43 12)
+(43 12) (43 13)
+(43 13) (44 13)
+(44 13) (44 14)
+(44 13) (45 13)
+(45 13) (45 12)
+(45 12) (46 13)
+(46 13) (46 12)
+(46 12) (47 12)
+(46 12) (47 11)
+}
+River Saone {
+(28 26) (28 27)
+(28 26) (29 26)
+(28 26) (29 25)
+(29 25) (28 25)
+(28 25) (29 24)
+(29 24) (28 24)
+(29 24) (29 23)
+(29 23) (30 24)
+(30 24) (30 23)
+(30 23) (31 23)
+(31 23) (31 22)
+(31 23) (32 23)
+(32 23) (32 24)
+(32 23) (33 23)
+(33 23) (33 22)
+(33 23) (34 23)
+(34 23) (34 24)
+(34 23) (35 23)
+(35 23) (35 22)
+(35 23) (34 24)
+(34 24) (35 24)
+(35 24) (34 25)
+(35 24) (35 25)
+(35 25) (36 25)
+(35 25) (36 26)
+(35 25) (35 26)
+(35 25) (34 26)
+(34 26) (34 25)
+(35 23) (36 23)
+(36 23) (36 24)
+(36 23) (37 23)
+(37 23) (37 22)
+(37 23) (38 23)
+(38 23) (38 24)
+(38 23) (39 23)
+(39 23) (39 22)
+(39 23) (40 23)
+(40 23) (40 24)
+(40 23) (41 23)
+(41 23) (41 22)
+(41 22) (42 23)
+(42 23) (42 22)
+(42 23) (43 22)
+(43 22) (43 23)
+(43 22) (44 23)
+(44 23) (44 22)
+(44 23) (45 22)
+(45 22) (45 23)
+(45 22) (45 21)
+(44 22) (45 22)
+}
+River Durance {
+(44 23) (43 23)
+(43 23) (44 24)
+(44 24) (43 24)
+(44 24) (44 25)
+(44 25) (45 24)
+(44 25) (45 25)
+(44 25) (44 26)
+(44 26) (43 25)
+(43 25) (43 26)
+(43 26) (42 26)
+(42 26) (42 27)
+(42 26) (41 26)
+(41 26) (41 25)
+(41 26) (40 26)
+(41 26) (40 27)
+(40 27) (41 27)
+(40 27) (40 28)
+(40 28) (39 27)
+}
+River Var {
+(44 30) (44 29)
+(44 29) (43 29)
+(43 29) (43 28)
+(43 28) (42 29)
+(43 28) (42 28)
+(42 28) (43 27)
+(42 28) (42 27)
+}
+InlandPort (3 32) Bremen {
+(1 30)
+(1 32)
+(2 31)
+(2 32)
+(2 33)
+(3 31)
+(3 33)
+(4 32)
+(4 33)
+}
+InlandPort (7 23) Amsterdam {
+(4 25)
+(5 23)
+(6 23)
+(7 22)
+(7 24)
+(8 23)
+(8 24)
+}
+InlandPort (8 23) Rotterdam {
+(7 22)
+(7 23)
+(7 24)
+(8 22)
+(8 23)
+(9 21)
+(9 22)
+(9 23)
+(10 22)
+(10 23)
+}
+InlandPort (12 22) Antwerp {
+(10 21)
+(10 22)
+(11 20)
+(11 21)
+(11 22)
+(12 21)
+(12 23)
+}
+InlandPort (19 14) Rouen {
+(18 13)
+(18 14)
+(18 15)
+(19 12)
+(19 13)
+(19 15)
+(20 14)
+(20 15)
+}
+InlandPort (28 7) Nantes {
+(27 5)
+(27 6)
+(27 7)
+(28 6)
+(28 8)
+(29 6)
+(29 7)
+}
+InlandPort (38 8) Bordeaux {
+(35 8)
+(36 9)
+(37 7)
+(37 9)
+(38 7)
+(38 9)
+(39 7)
+(39 8)
+}
+AlliedVictory {
+(1 29)
+(1 30)
+(1 32)
+(1 33)
+(2 29)
+(2 30)
+(2 31)
+(2 32)
+(2 33)
+(3 25)
+(3 26)
+(3 27)
+(3 28)
+(3 29)
+(3 30)
+(3 31)
+(3 32)
+(3 33)
+(4 25)
+(4 26)
+(4 27)
+(4 28)
+(4 29)
+(4 30)
+(4 31)
+(4 32)
+(4 33)
+(5 26)
+(5 27)
+(5 28)
+(5 29)
+(5 30)
+(5 31)
+(5 32)
+(5 33)
+(6 27)
+(6 28)
+(6 29)
+(6 30)
+(6 31)
+(6 32)
+(6 33)
+(7 26)
+(7 27)
+(7 28)
+(7 29)
+(7 30)
+(7 31)
+(7 32)
+(7 33)
+(8 27)
+(8 28)
+(8 29)
+(8 30)
+(8 31)
+(8 32)
+(8 33)
+(9 27)
+(9 28)
+(9 29)
+(9 30)
+(9 31)
+(9 32)
+(9 33)
+(10 28)
+(10 29)
+(10 30)
+(10 31)
+(10 32)
+(10 33)
+(11 28)
+(11 29)
+(11 30)
+(11 31)
+(11 32)
+(11 33)
+(12 29)
+(12 30)
+(12 31)
+(12 32)
+(12 33)
+(13 29)
+(13 30)
+(13 31)
+(13 32)
+(13 33)
+(14 29)
+(14 30)
+(14 31)
+(14 32)
+(14 33)
+(15 30)
+(15 31)
+(15 32)
+(15 33)
+(16 31)
+(16 32)
+(16 33)
+(17 32)
+(17 33)
+(18 32)
+(18 33)
+(19 32)
+(19 33)
+(20 33)
+(21 32)
+(21 33)
+(22 32)
+(22 33)
+(23 31)
+(23 32)
+(23 33)
+(24 31)
+(24 32)
+(24 33)
+(25 30)
+(25 31)
+(25 32)
+(25 33)
+(26 31)
+(26 32)
+(26 33)
+(27 30)
+(27 31)
+}
+FreeFrench {
+(17 6)
+(17 7)
+(17 8)
+(18 7)
+(18 8)
+(19 7)
+(19 8)
+(19 9)
+(19 10)
+(19 12)
+(19 13)
+(20 8)
+(20 9)
+(20 10)
+(20 11)
+(20 12)
+(20 13)
+(20 14)
+(21 0)
+(21 1)
+(21 2)
+(21 3)
+(21 8)
+(21 9)
+(21 10)
+(21 11)
+(21 12)
+(21 13)
+(21 14)
+(21 15)
+(22 1)
+(22 2)
+(22 3)
+(22 4)
+(22 5)
+(22 6)
+(22 7)
+(22 8)
+(22 9)
+(22 10)
+(22 11)
+(22 12)
+(22 13)
+(22 14)
+(22 15)
+(22 16)
+(22 17)
+(23 0)
+(23 1)
+(23 2)
+(23 3)
+(23 4)
+(23 5)
+(23 6)
+(23 7)
+(23 8)
+(23 9)
+(23 10)
+(23 11)
+(23 12)
+(23 13)
+(23 14)
+(23 15)
+(23 16)
+(23 17)
+(24 1)
+(24 2)
+(24 3)
+(24 4)
+(24 5)
+(24 6)
+(24 7)
+(24 8)
+(24 9)
+(24 10)
+(24 11)
+(24 12)
+(24 13)
+(24 14)
+(24 15)
+(24 16)
+(24 17)
+(24 18)
+(24 19)
+(24 20)
+(25 3)
+(25 4)
+(25 5)
+(25 6)
+(25 7)
+(25 8)
+(25 9)
+(25 10)
+(25 11)
+(25 12)
+(25 13)
+(25 14)
+(25 15)
+(25 16)
+(25 17)
+(25 18)
+(25 19)
+(25 20)
+(25 21)
+(26 5)
+(26 6)
+(26 7)
+(26 8)
+(26 9)
+(26 10)
+(26 11)
+(26 12)
+(26 13)
+(26 14)
+(26 15)
+(26 16)
+(26 17)
+(26 18)
+(26 19)
+(26 20)
+(26 21)
+(26 22)
+(27 5)
+(27 6)
+(27 7)
+(27 8)
+(27 9)
+(27 10)
+(27 11)
+(27 12)
+(27 13)
+(27 14)
+(27 15)
+(27 16)
+(27 17)
+(27 18)
+(27 19)
+(27 20)
+(27 21)
+(27 22)
+(28 6)
+(28 7)
+(28 8)
+(28 9)
+(28 10)
+(28 11)
+(28 12)
+(28 13)
+(28 14)
+(28 15)
+(28 16)
+(28 17)
+(28 18)
+(28 19)
+(28 20)
+(28 21)
+(28 22)
+(28 23)
+(29 6)
+(29 7)
+(29 8)
+(29 9)
+(29 10)
+(29 11)
+(29 12)
+(29 13)
+(29 14)
+(29 15)
+(29 16)
+(29 17)
+(29 18)
+(29 19)
+(29 20)
+(29 21)
+(29 22)
+(29 23)
+(29 24)
+(29 25)
+(30 6)
+(30 7)
+(30 8)
+(30 9)
+(30 10)
+(30 11)
+(30 12)
+(30 13)
+(30 14)
+(30 15)
+(30 16)
+(30 17)
+(30 18)
+(30 19)
+(30 20)
+(30 21)
+(30 22)
+(30 23)
+(30 24)
+(30 25)
+(30 26)
+(31 6)
+(31 7)
+(31 8)
+(31 9)
+(31 10)
+(31 11)
+(31 12)
+(31 13)
+(31 14)
+(31 15)
+(31 16)
+(31 17)
+(31 18)
+(31 19)
+(31 20)
+(31 21)
+(31 22)
+(31 23)
+(31 24)
+(31 25)
+(31 26)
+(32 8)
+(32 9)
+(32 10)
+(32 11)
+(32 12)
+(32 13)
+(32 14)
+(32 15)
+(32 16)
+(32 17)
+(32 18)
+(32 19)
+(32 20)
+(32 21)
+(32 22)
+(32 23)
+(32 24)
+(32 25)
+(32 26)
+(33 7)
+(33 8)
+(33 9)
+(33 10)
+(33 11)
+(33 12)
+(33 13)
+(33 14)
+(33 15)
+(33 16)
+(33 17)
+(33 18)
+(33 19)
+(33 20)
+(33 21)
+(33 22)
+(33 23)
+(33 24)
+(33 25)
+(33 27)
+(34 8)
+(34 9)
+(34 10)
+(34 11)
+(34 12)
+(34 13)
+(34 14)
+(34 15)
+(34 16)
+(34 17)
+(34 18)
+(34 19)
+(34 20)
+(34 21)
+(34 22)
+(34 23)
+(34 24)
+(34 25)
+(34 26)
+(34 27)
+(34 28)
+(35 8)
+(35 9)
+(35 10)
+(35 11)
+(35 12)
+(35 13)
+(35 14)
+(35 15)
+(35 16)
+(35 17)
+(35 18)
+(35 19)
+(35 20)
+(35 21)
+(35 22)
+(35 23)
+(35 24)
+(35 25)
+(35 26)
+(35 27)
+(36 9)
+(36 10)
+(36 11)
+(36 12)
+(36 13)
+(36 14)
+(36 15)
+(36 16)
+(36 17)
+(36 18)
+(36 19)
+(36 20)
+(36 21)
+(36 22)
+(36 23)
+(36 24)
+(36 25)
+(36 26)
+(36 27)
+(36 28)
+(37 7)
+(37 9)
+(37 10)
+(37 11)
+(37 12)
+(37 13)
+(37 14)
+(37 15)
+(37 16)
+(37 17)
+(37 18)
+(37 19)
+(37 20)
+(37 21)
+(37 22)
+(37 23)
+(37 24)
+(37 25)
+(37 26)
+(37 27)
+(38 7)
+(38 8)
+(38 9)
+(38 10)
+(38 11)
+(38 12)
+(38 13)
+(38 14)
+(38 15)
+(38 16)
+(38 17)
+(38 18)
+(38 19)
+(38 20)
+(38 21)
+(38 22)
+(38 23)
+(38 24)
+(38 25)
+(38 26)
+(38 27)
+(38 28)
+(39 7)
+(39 8)
+(39 9)
+(39 10)
+(39 11)
+(39 12)
+(39 13)
+(39 14)
+(39 15)
+(39 16)
+(39 17)
+(39 18)
+(39 19)
+(39 20)
+(39 21)
+(39 22)
+(39 23)
+(39 24)
+(39 25)
+(39 26)
+(39 27)
+(39 28)
+(40 7)
+(40 8)
+(40 9)
+(40 10)
+(40 11)
+(40 12)
+(40 13)
+(40 14)
+(40 15)
+(40 16)
+(40 17)
+(40 18)
+(40 19)
+(40 20)
+(40 21)
+(40 22)
+(40 23)
+(40 24)
+(40 25)
+(40 26)
+(40 27)
+(40 28)
+(41 7)
+(41 8)
+(41 9)
+(41 10)
+(41 11)
+(41 12)
+(41 13)
+(41 14)
+(41 15)
+(41 16)
+(41 17)
+(41 18)
+(41 19)
+(41 20)
+(41 21)
+(41 22)
+(41 23)
+(41 24)
+(41 25)
+(41 26)
+(41 27)
+(41 28)
+(42 7)
+(42 8)
+(42 9)
+(42 10)
+(42 11)
+(42 12)
+(42 13)
+(42 14)
+(42 15)
+(42 16)
+(42 17)
+(42 18)
+(42 19)
+(42 20)
+(42 21)
+(42 22)
+(42 23)
+(42 24)
+(42 25)
+(42 26)
+(42 27)
+(42 28)
+(42 29)
+(43 6)
+(43 7)
+(43 8)
+(43 9)
+(43 10)
+(43 11)
+(43 12)
+(43 13)
+(43 14)
+(43 15)
+(43 16)
+(43 17)
+(43 18)
+(43 19)
+(43 20)
+(43 21)
+(43 22)
+(43 23)
+(43 24)
+(43 25)
+(43 26)
+(43 27)
+(43 28)
+(43 29)
+(43 30)
+(44 6)
+(44 7)
+(44 8)
+(44 9)
+(44 10)
+(44 11)
+(44 12)
+(44 13)
+(44 14)
+(44 15)
+(44 16)
+(44 17)
+(44 18)
+(44 19)
+(44 20)
+(44 21)
+(44 22)
+(44 23)
+(44 24)
+(44 25)
+(44 26)
+(44 27)
+(44 28)
+(44 29)
+(44 30)
+(45 6)
+(45 7)
+(45 8)
+(45 9)
+(45 10)
+(45 11)
+(45 12)
+(45 13)
+(45 14)
+(45 15)
+(45 16)
+(45 17)
+(45 18)
+(45 19)
+(45 20)
+(45 21)
+(45 22)
+(45 23)
+(45 24)
+(45 25)
+(45 26)
+(45 27)
+(45 28)
+(46 7)
+(46 8)
+(46 9)
+(46 10)
+(46 11)
+(46 12)
+(46 13)
+(46 14)
+(46 15)
+(46 16)
+(46 17)
+(46 18)
+(46 25)
+(46 26)
+(46 27)
+(46 28)
+(47 7)
+(47 8)
+(47 9)
+(47 10)
+(47 11)
+(47 12)
+(47 13)
+(47 14)
+(47 15)
+(47 16)
+(47 17)
+}
+HistoricalProgress {
+(1 29) 50
+(1 30) 50
+(1 32) 50
+(1 33) 50
+(2 29) 50
+(2 30) 50
+(2 31) 50
+(2 32) 50
+(2 33) 50
+(3 25) 46
+(3 26) 46
+(3 27) 46
+(3 28) 50
+(3 29) 50
+(3 30) 50
+(3 31) 50
+(3 32) 50
+(3 33) 50
+(4 25) 46
+(4 26) 46
+(4 27) 46
+(4 28) 46
+(4 29) 50
+(4 30) 50
+(4 31) 50
+(4 32) 50
+(4 33) 50
+(5 23) 50
+(5 26) 45
+(5 27) 45
+(5 28) 45
+(5 29) 46
+(5 30) 46
+(5 31) 46
+(5 32) 46
+(5 33) 46
+(6 23) 50
+(6 26) 50
+(6 27) 45
+(6 28) 45
+(6 29) 45
+(6 30) 46
+(6 31) 46
+(6 32) 46
+(6 33) 46
+(7 22) 50
+(7 23) 50
+(7 24) 50
+(7 25) 46
+(7 26) 44
+(7 27) 44
+(7 28) 44
+(7 29) 44
+(7 30) 44
+(7 31) 44
+(7 32) 44
+(7 33) 44
+(8 22) 50
+(8 23) 50
+(8 24) 50
+(8 25) 44
+(8 26) 44
+(8 27) 44
+(8 28) 43
+(8 29) 44
+(8 30) 44
+(8 31) 44
+(8 32) 44
+(8 33) 44
+(9 21) 50
+(9 22) 50
+(9 23) 50
+(9 24) 28
+(9 25) 18
+(9 26) 39
+(9 27) 42
+(9 28) 43
+(9 29) 44
+(9 30) 44
+(9 31) 44
+(9 32) 44
+(9 33) 44
+(10 21) 23
+(10 22) 22
+(10 23) 28
+(10 24) 28
+(10 25) 18
+(10 26) 28
+(10 27) 39
+(10 28) 44
+(10 29) 45
+(10 30) 44
+(10 31) 44
+(10 32) 44
+(10 33) 44
+(11 19) 14
+(11 20) 24
+(11 21) 21
+(11 22) 22
+(11 23) 28
+(11 24) 18
+(11 25) 24
+(11 26) 39
+(11 27) 39
+(11 28) 45
+(11 29) 45
+(11 30) 44
+(11 31) 44
+(11 32) 44
+(11 33) 44
+(12 18) 13
+(12 19) 13
+(12 20) 14
+(12 21) 14
+(12 22) 13
+(12 23) 28
+(12 24) 18
+(12 25) 28
+(12 26) 39
+(12 27) 39
+(12 28) 39
+(12 29) 46
+(12 30) 44
+(12 31) 44
+(12 32) 44
+(12 33) 44
+(13 16) 17
+(13 17) 50
+(13 18) 13
+(13 19) 13
+(13 20) 13
+(13 21) 13
+(13 22) 15
+(13 23) 15
+(13 24) 15
+(13 25) 15
+(13 26) 28
+(13 27) 39
+(13 28) 39
+(13 29) 45
+(13 30) 43
+(13 31) 44
+(13 32) 44
+(13 33) 44
+(14 16) 16
+(14 17) 13
+(14 18) 13
+(14 19) 13
+(14 20) 13
+(14 21) 13
+(14 22) 13
+(14 23) 13
+(14 24) 14
+(14 25) 14
+(14 26) 15
+(14 27) 39
+(14 28) 41
+(14 29) 42
+(14 30) 42
+(14 31) 44
+(14 32) 44
+(14 33) 44
+(15 15) 13
+(15 16) 13
+(15 17) 13
+(15 18) 13
+(15 19) 13
+(15 20) 13
+(15 21) 13
+(15 22) 14
+(15 23) 14
+(15 24) 14
+(15 25) 15
+(15 26) 39
+(15 27) 40
+(15 28) 40
+(15 29) 40
+(15 30) 44
+(15 31) 44
+(15 32) 44
+(15 33) 44
+(16 15) 13
+(16 16) 13
+(16 17) 13
+(16 18) 13
+(16 19) 13
+(16 20) 13
+(16 21) 13
+(16 22) 13
+(16 23) 14
+(16 24) 14
+(16 25) 14
+(16 26) 15
+(16 27) 39
+(16 28) 40
+(16 29) 40
+(16 30) 41
+(16 31) 42
+(16 32) 43
+(16 33) 44
+(17 33) 44
+(17 32) 44
+(17 31) 41
+(17 30) 41
+(17 29) 40
+(17 28) 40
+(17 27) 39
+(17 26) 15
+(17 25) 15
+(17 24) 14
+(17 23) 14
+(17 22) 13
+(17 21) 13
+(17 20) 13
+(17 19) 13
+(17 18) 13
+(17 17) 13
+(17 16) 13
+(17 15) 13
+(17 14) 13
+(17 13) 13
+(17 8) 3
+(17 7) 4
+(17 6) 3
+(18 33) 44
+(18 32) 44
+(18 31) 41
+(18 30) 40
+(18 29) 40
+(18 28) 39
+(18 27) 39
+(18 26) 15
+(18 25) 15
+(18 24) 14
+(18 23) 13
+(18 22) 13
+(18 21) 13
+(18 20) 13
+(18 19) 13
+(18 18) 13
+(18 17) 13
+(18 16) 13
+(18 15) 13
+(18 14) 13
+(18 13) 13
+(18 12) 15
+(18 8) 1
+(18 7) 2
+(19 33) 44
+(19 32) 44
+(19 31) 41
+(19 30) 41
+(19 29) 40
+(19 28) 40
+(19 27) 39
+(19 26) 15
+(19 25) 15
+(19 24) 14
+(19 23) 13
+(19 22) 13
+(19 21) 13
+(19 20) 13
+(19 19) 13
+(19 18) 13
+(19 17) 13
+(19 16) 13
+(19 15) 13
+(19 14) 13
+(19 13) 12
+(19 12) 12
+(19 10) 5
+(19 9) 1
+(19 8) 1
+(19 7) 8
+(20 33) 44
+(20 32) 44
+(20 31) 41
+(20 30) 40
+(20 29) 40
+(20 28) 28
+(20 27) 24
+(20 26) 15
+(20 25) 14
+(20 24) 13
+(20 23) 13
+(20 22) 13
+(20 21) 13
+(20 20) 13
+(20 19) 13
+(20 18) 13
+(20 17) 13
+(20 16) 13
+(20 15) 13
+(20 14) 12
+(20 13) 12
+(20 12) 12
+(20 11) 11
+(20 10) 11
+(20 9) 8
+(20 8) 8
+(21 33) 44
+(21 32) 44
+(21 31) 43
+(21 30) 43
+(21 29) 43
+(21 28) 28
+(21 27) 25
+(21 26) 23
+(21 25) 15
+(21 24) 14
+(21 23) 13
+(21 22) 13
+(21 21) 13
+(21 20) 13
+(21 19) 13
+(21 18) 13
+(21 17) 13
+(21 16) 13
+(21 15) 12
+(21 14) 12
+(21 13) 12
+(21 12) 12
+(21 11) 11
+(21 10) 11
+(21 9) 8
+(21 8) 8
+(21 3) 9
+(21 2) 9
+(21 1) 9
+(21 0) 9
+(22 33) 44
+(22 32) 44
+(22 31) 28
+(22 30) 28
+(22 29) 28
+(22 28) 25
+(22 27) 23
+(22 26) 15
+(22 25) 14
+(22 24) 14
+(22 23) 13
+(22 22) 13
+(22 21) 13
+(22 20) 13
+(22 19) 13
+(22 18) 13
+(22 17) 12
+(22 16) 12
+(22 15) 11
+(22 14) 11
+(22 13) 11
+(22 12) 11
+(22 11) 11
+(22 10) 11
+(22 9) 10
+(22 8) 8
+(22 7) 9
+(22 6) 11
+(22 5) 9
+(22 4) 9
+(22 3) 9
+(22 2) 9
+(22 1) 16
+(23 33) 50
+(23 32) 50
+(23 31) 50
+(23 30) 25
+(23 29) 25
+(23 28) 25
+(23 27) 23
+(23 26) 23
+(23 25) 15
+(23 24) 14
+(23 23) 14
+(23 22) 13
+(23 21) 13
+(23 20) 13
+(23 19) 13
+(23 18) 13
+(23 17) 12
+(23 16) 12
+(23 15) 11
+(23 14) 11
+(23 13) 11
+(23 12) 11
+(23 11) 11
+(23 10) 10
+(23 9) 10
+(23 8) 10
+(23 7) 9
+(23 6) 9
+(23 5) 9
+(23 4) 9
+(23 3) 9
+(23 2) 9
+(23 1) 9
+(23 0) 9
+(24 33) 50
+(24 32) 50
+(24 31) 50
+(24 30) 25
+(24 29) 25
+(24 28) 23
+(24 27) 23
+(24 26) 15
+(24 25) 14
+(24 24) 14
+(24 23) 14
+(24 22) 14
+(24 21) 13
+(24 20) 12
+(24 19) 12
+(24 18) 12
+(24 17) 12
+(24 16) 11
+(24 15) 11
+(24 14) 11
+(24 13) 11
+(24 12) 11
+(24 11) 10
+(24 10) 10
+(24 9) 10
+(24 8) 10
+(24 7) 9
+(24 6) 10
+(24 5) 9
+(24 4) 9
+(24 3) 50
+(24 2) 9
+(24 1) 9
+(25 33) 50
+(25 32) 50
+(25 31) 50
+(25 30) 50
+(25 29) 35
+(25 28) 25
+(25 27) 15
+(25 26) 15
+(25 25) 15
+(25 24) 14
+(25 23) 14
+(25 22) 14
+(25 21) 14
+(25 20) 13
+(25 19) 13
+(25 18) 12
+(25 17) 12
+(25 16) 11
+(25 15) 11
+(25 14) 11
+(25 13) 11
+(25 12) 11
+(25 11) 10
+(25 10) 10
+(25 9) 10
+(25 8) 10
+(25 7) 10
+(25 6) 10
+(25 5) 10
+(25 4) 10
+(25 3) 9
+(26 33) 50
+(26 32) 50
+(26 31) 50
+(26 30) 36
+(26 29) 24
+(26 28) 24
+(26 27) 15
+(26 26) 15
+(26 25) 15
+(26 24) 15
+(26 23) 15
+(26 22) 15
+(26 21) 15
+(26 20) 15
+(26 19) 15
+(26 18) 15
+(26 17) 15
+(26 16) 15
+(26 15) 11
+(26 14) 11
+(26 13) 11
+(26 12) 11
+(26 11) 10
+(26 10) 10
+(26 9) 10
+(26 8) 10
+(26 7) 10
+(26 6) 10
+(26 5) 10
+(27 31) 50
+(27 30) 50
+(27 29) 28
+(27 28) 24
+(27 27) 15
+(27 26) 15
+(27 25) 15
+(27 24) 15
+(27 23) 15
+(27 22) 15
+(27 21) 15
+(27 20) 15
+(27 19) 15
+(27 18) 15
+(27 17) 15
+(27 16) 15
+(27 15) 15
+(27 14) 15
+(27 13) 11
+(27 12) 11
+(27 11) 10
+(27 10) 10
+(27 9) 10
+(27 8) 10
+(27 7) 10
+(27 6) 10
+(27 5) 50
+(28 28) 15
+(28 27) 15
+(28 26) 15
+(28 25) 15
+(28 24) 15
+(28 23) 15
+(28 22) 15
+(28 21) 15
+(28 20) 15
+(28 19) 15
+(28 18) 15
+(28 17) 15
+(28 16) 15
+(28 15) 15
+(28 14) 15
+(28 13) 15
+(28 12) 15
+(28 11) 15
+(28 10) 15
+(28 9) 15
+(28 8) 15
+(28 7) 15
+(28 6) 15
+(29 27) 15
+(29 26) 15
+(29 25) 15
+(29 24) 15
+(29 23) 15
+(29 22) 15
+(29 21) 15
+(29 20) 15
+(29 19) 15
+(29 18) 15
+(29 17) 15
+(29 16) 15
+(29 15) 15
+(29 14) 15
+(29 13) 15
+(29 12) 15
+(29 11) 15
+(29 10) 15
+(29 9) 15
+(29 8) 15
+(29 7) 15
+(29 6) 15
+(30 27) 15
+(30 26) 15
+(30 25) 15
+(30 24) 15
+(30 23) 15
+(30 22) 15
+(30 21) 15
+(30 20) 15
+(30 19) 15
+(30 18) 15
+(30 17) 15
+(30 16) 15
+(30 15) 15
+(30 14) 15
+(30 13) 15
+(30 12) 15
+(30 11) 15
+(30 10) 15
+(30 9) 15
+(30 8) 15
+(30 7) 15
+(30 6) 15
+(31 26) 15
+(31 25) 15
+(31 24) 15
+(31 23) 15
+(31 22) 15
+(31 21) 15
+(31 20) 15
+(31 19) 15
+(31 18) 15
+(31 17) 15
+(31 16) 15
+(31 15) 15
+(31 14) 15
+(31 13) 15
+(31 12) 15
+(31 11) 15
+(31 10) 15
+(31 9) 15
+(31 8) 15
+(31 7) 15
+(31 6) 15
+(32 26) 15
+(32 25) 15
+(32 24) 15
+(32 23) 15
+(32 22) 15
+(32 21) 15
+(32 20) 15
+(32 19) 15
+(32 18) 15
+(32 17) 15
+(32 16) 15
+(32 15) 15
+(32 14) 15
+(32 13) 15
+(32 12) 15
+(32 11) 15
+(32 10) 15
+(32 9) 15
+(32 8) 50
+(33 27) 15
+(33 25) 15
+(33 24) 15
+(33 23) 15
+(33 22) 15
+(33 21) 15
+(33 20) 15
+(33 19) 15
+(33 18) 15
+(33 17) 15
+(33 16) 15
+(33 15) 15
+(33 14) 15
+(33 13) 15
+(33 12) 15
+(33 11) 15
+(33 10) 15
+(33 9) 15
+(33 8) 50
+(33 7) 50
+(34 28) 15
+(34 27) 15
+(34 26) 15
+(34 25) 15
+(34 24) 13
+(34 23) 13
+(34 22) 15
+(34 21) 15
+(34 20) 15
+(34 19) 15
+(34 18) 15
+(34 17) 15
+(34 16) 15
+(34 15) 15
+(34 14) 15
+(34 13) 15
+(34 12) 15
+(34 11) 15
+(34 10) 15
+(34 9) 15
+(34 8) 50
+(35 27) 15
+(35 26) 15
+(35 25) 15
+(35 24) 13
+(35 23) 13
+(35 22) 13
+(35 21) 15
+(35 20) 15
+(35 19) 50
+(35 18) 15
+(35 17) 15
+(35 16) 15
+(35 15) 15
+(35 14) 15
+(35 13) 15
+(35 12) 15
+(35 11) 15
+(35 10) 15
+(35 9) 15
+(35 8) 50
+(36 29) 50
+(36 28) 15
+(36 27) 15
+(36 26) 15
+(36 25) 13
+(36 24) 13
+(36 23) 13
+(36 22) 13
+(36 21) 16
+(36 20) 50
+(36 19) 15
+(36 18) 15
+(36 17) 15
+(36 16) 15
+(36 15) 15
+(36 14) 15
+(36 13) 15
+(36 12) 15
+(36 11) 15
+(36 10) 15
+(36 9) 50
+(37 28) 50
+(37 27) 15
+(37 26) 15
+(37 25) 13
+(37 24) 13
+(37 23) 13
+(37 22) 13
+(37 21) 15
+(37 20) 50
+(37 19) 15
+(37 18) 15
+(37 17) 15
+(37 16) 15
+(37 15) 15
+(37 14) 15
+(37 13) 15
+(37 12) 15
+(37 11) 15
+(37 10) 15
+(37 9) 50
+(37 7) 50
+(38 29) 50
+(38 28) 15
+(38 27) 15
+(38 26) 13
+(38 25) 12
+(38 24) 12
+(38 23) 13
+(38 22) 13
+(38 21) 50
+(38 20) 15
+(38 19) 15
+(38 18) 15
+(38 17) 15
+(38 16) 15
+(38 15) 15
+(38 14) 15
+(38 13) 15
+(38 12) 15
+(38 11) 15
+(38 10) 15
+(38 9) 50
+(38 8) 50
+(38 7) 50
+(39 29) 50
+(39 28) 15
+(39 27) 13
+(39 26) 13
+(39 25) 12
+(39 24) 12
+(39 23) 12
+(39 22) 13
+(39 21) 15
+(39 20) 50
+(39 19) 15
+(39 18) 15
+(39 17) 15
+(39 16) 15
+(39 15) 15
+(39 14) 15
+(39 13) 15
+(39 12) 15
+(39 11) 15
+(39 10) 15
+(39 9) 15
+(39 8) 50
+(39 7) 50
+(40 29) 50
+(40 28) 12
+(40 27) 13
+(40 26) 12
+(40 25) 12
+(40 24) 12
+(40 23) 13
+(40 22) 13
+(40 21) 15
+(40 20) 50
+(40 19) 15
+(40 18) 15
+(40 17) 15
+(40 16) 15
+(40 15) 15
+(40 14) 15
+(40 13) 15
+(40 12) 15
+(40 11) 15
+(40 10) 15
+(40 9) 15
+(40 8) 15
+(40 7) 15
+(41 29) 50
+(41 28) 15
+(41 27) 12
+(41 26) 12
+(41 25) 12
+(41 24) 12
+(41 23) 12
+(41 22) 13
+(41 21) 15
+(41 20) 15
+(41 19) 50
+(41 18) 15
+(41 17) 15
+(41 16) 15
+(41 15) 15
+(41 14) 15
+(41 13) 15
+(41 12) 15
+(41 11) 15
+(41 10) 15
+(41 9) 15
+(41 8) 15
+(41 7) 15
+(42 31) 50
+(42 30) 50
+(42 29) 15
+(42 28) 15
+(42 27) 12
+(42 26) 12
+(42 25) 12
+(42 24) 12
+(42 23) 12
+(42 22) 13
+(42 21) 15
+(42 20) 15
+(42 19) 50
+(42 18) 15
+(42 17) 15
+(42 16) 15
+(42 15) 15
+(42 14) 15
+(42 13) 15
+(42 12) 15
+(42 11) 15
+(42 10) 15
+(42 9) 15
+(42 8) 15
+(42 7) 15
+(43 31) 50
+(43 30) 15
+(43 29) 15
+(43 28) 12
+(43 27) 12
+(43 26) 12
+(43 25) 12
+(43 24) 12
+(43 23) 12
+(43 22) 13
+(43 21) 15
+(43 20) 15
+(43 19) 15
+(43 18) 50
+(43 17) 15
+(43 16) 15
+(43 15) 15
+(43 14) 15
+(43 13) 15
+(43 12) 15
+(43 11) 15
+(43 10) 15
+(43 9) 15
+(43 8) 15
+(43 7) 15
+(43 6) 15
+(44 30) 15
+(44 29) 12
+(44 28) 12
+(44 27) 11
+(44 26) 12
+(44 25) 12
+(44 24) 12
+(44 23) 12
+(44 22) 13
+(44 21) 15
+(44 20) 15
+(44 19) 15
+(44 18) 50
+(44 17) 15
+(44 16) 15
+(44 15) 15
+(44 14) 15
+(44 13) 15
+(44 12) 15
+(44 11) 15
+(44 10) 15
+(44 9) 15
+(44 8) 15
+(44 7) 15
+(44 6) 15
+(45 28) 12
+(45 27) 11
+(45 26) 12
+(45 25) 12
+(45 24) 12
+(45 23) 12
+(45 22) 12
+(45 21) 15
+(45 20) 15
+(45 19) 15
+(45 18) 15
+(45 17) 50
+(45 16) 15
+(45 15) 15
+(45 14) 15
+(45 13) 15
+(45 12) 15
+(45 11) 15
+(45 10) 15
+(45 9) 15
+(45 8) 15
+(45 7) 15
+(45 6) 15
+(46 28) 11
+(46 27) 12
+(46 26) 12
+(46 25) 12
+(46 18) 15
+(46 17) 50
+(46 16) 15
+(46 15) 15
+(46 14) 15
+(46 13) 15
+(46 12) 15
+(46 11) 15
+(46 10) 15
+(46 9) 15
+(46 8) 15
+(46 7) 15
+(47 17) 15
+(47 16) 15
+(47 15) 15
+(47 14) 15
+(47 13) 15
+(47 12) 15
+(47 11) 15
+(47 10) 15
+(47 9) 15
+(47 8) 15
+(47 7) 15
+}

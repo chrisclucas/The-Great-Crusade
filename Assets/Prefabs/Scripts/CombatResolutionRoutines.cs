@@ -148,70 +148,70 @@ public class CombatResolutionRoutines : MonoBehaviour
         // Put a series of text boxes along the top row to serve as the header
 
         // The first three columns contain images of the defending units
-        GlobalDefinitions.CreateText("Units on Defense", "UnitsHeaderText",
+        GlobalDefinitions.CreateUIText("Units on Defense", "UnitsHeaderText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column four the defense factor will be listed
-        GlobalDefinitions.CreateText("Defense", "DefenseHeaderText",
+        GlobalDefinitions.CreateUIText("Defense", "DefenseHeaderText",
                 1.1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column five the attack factor will be listed
-        GlobalDefinitions.CreateText("Attack", "AttackHeaderText",
+        GlobalDefinitions.CreateUIText("Attack", "AttackHeaderText",
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column six the odds will be listed
-        GlobalDefinitions.CreateText("Odds", "OddsHeaderText",
+        GlobalDefinitions.CreateUIText("Odds", "OddsHeaderText",
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 6 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column seven the carpet bombing indicator will be placed if Allied mode
         // if it is the German mode will put the close defense indicator
         if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
-            GlobalDefinitions.CreateText("Carpet Bomb", "CarpetBombHeaderText",
+            GlobalDefinitions.CreateUIText("Carpet Bomb", "CarpetBombHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
                     (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                    Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
         else
-            GlobalDefinitions.CreateText("Air Def", "CloseDefenseHeaderText",
+            GlobalDefinitions.CreateUIText("Air Def", "CloseDefenseHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
                     (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                    Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         // In column eight the air support toggle will be placed only if it is Allied combat
         if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
-            GlobalDefinitions.CreateText("Air Support", "AirSupportHeaderText",
+            GlobalDefinitions.CreateUIText("Air Support", "AirSupportHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
                     (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                    Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         //  In column nine the combat results will be listed
-        GlobalDefinitions.CreateText("Combat Results", "CombatResultsHeaderText",
+        GlobalDefinitions.CreateUIText("Combat Results", "CombatResultsHeaderText",
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE * 9 * 1.25f - 0.5f * panelWidth,
                 (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
         foreach (GameObject combat in GlobalDefinitions.allCombats)
         {
@@ -241,32 +241,32 @@ public class CombatResolutionRoutines : MonoBehaviour
             GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: combat number = " + GlobalDefinitions.allCombats.IndexOf(combat) + " defender count = " + combat.GetComponent<Combat>().defendingUnits.Count + " attacker count = " + combat.GetComponent<Combat>().attackingUnits.Count);
 #endif
             // In column four the defense factor will be listed
-            GlobalDefinitions.CreateText(GlobalDefinitions.CalculateDefenseFactor(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits).ToString(),
+            GlobalDefinitions.CreateUIText(GlobalDefinitions.CalculateDefenseFactor(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits).ToString(),
                     "DefenseFactorText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                    Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
             // In column five the attack factor will be listed
-            attackFactorTextGameObject = GlobalDefinitions.CreateText(GlobalDefinitions.CalculateAttackFactor(combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport).ToString(),
+            attackFactorTextGameObject = GlobalDefinitions.CreateUIText(GlobalDefinitions.CalculateAttackFactor(combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport).ToString(),
                     "AttackFactorText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    combatCanvas);
+                    Color.white, combatCanvas);
             attackFactorTextGameObject.transform.SetParent(combatContentPanel.transform, false);
 
             // In column six the odds will be listed
-            oddsTextGameObject = GlobalDefinitions.CreateText(GlobalDefinitions.ConvertOddsToString(GlobalDefinitions.ReturnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport)),
+            oddsTextGameObject = GlobalDefinitions.CreateUIText(GlobalDefinitions.ConvertOddsToString(GlobalDefinitions.ReturnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport)),
                     "OddsText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 6 * 1.25f - 0.5f * panelWidth,
                     yPosition,
-                    combatCanvas);
+                    Color.white, combatCanvas);
             oddsTextGameObject.transform.SetParent(combatContentPanel.transform, false);
 
             // If allied turn, put "Yes" in column seven if carpet bombing is active
@@ -274,24 +274,24 @@ public class CombatResolutionRoutines : MonoBehaviour
             if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
             {
                 if (CheckIfCarpetBombingInEffect(combat.GetComponent<Combat>().defendingUnits))
-                    GlobalDefinitions.CreateText("Yes",
+                    GlobalDefinitions.CreateUIText("Yes",
                             "CarpetBombingActiveText",
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
                             yPosition,
-                            combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                            Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
             }
             else
             {
                 if (CheckIfCloseDefenseActive(combat.GetComponent<Combat>().defendingUnits))
-                    GlobalDefinitions.CreateText("Yes",
+                    GlobalDefinitions.CreateUIText("Yes",
                             "CloseDefenseActiveText",
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
                             yPosition,
-                            combatCanvas).transform.SetParent(combatContentPanel.transform, false);
+                            Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
             }
 
             // In column eight a toggle will be listed to add air support if this is the Allied combat mode
@@ -476,34 +476,34 @@ public class CombatResolutionRoutines : MonoBehaviour
                         panelHeight,
                         ref carpetBombingCanvasInstance);
 
-                GlobalDefinitions.CreateText("Select a Result", "CarpetBombingGUIHeaderText",
+                GlobalDefinitions.CreateUIText("Select a Result", "CarpetBombingGUIHeaderText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                        carpetBombingCanvasInstance);
+                        Color.white, carpetBombingCanvasInstance);
 
                 tempToggle1 = GlobalDefinitions.CreateToggle("CarpetBombingToggle1",
                         1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         carpetBombingCanvasInstance).GetComponent<Toggle>();
-                GlobalDefinitions.CreateText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]), "CarpetBombingResultText",
+                GlobalDefinitions.CreateUIText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]), "CarpetBombingResultText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                        carpetBombingCanvasInstance);
+                        Color.white, carpetBombingCanvasInstance);
 
                 tempToggle2 = GlobalDefinitions.CreateToggle("CarpetBombingToggle2",
                         4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         carpetBombingCanvasInstance).GetComponent<Toggle>();
-                GlobalDefinitions.CreateText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]), "CarpetBombingResultText",
+                GlobalDefinitions.CreateUIText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]), "CarpetBombingResultText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                        carpetBombingCanvasInstance);
+                        Color.white, carpetBombingCanvasInstance);
 
                 tempToggle1.gameObject.AddComponent<CarpetBombingSelectionToggleRoutines>();
                 tempToggle2.gameObject.AddComponent<CarpetBombingSelectionToggleRoutines>();
@@ -549,12 +549,12 @@ public class CombatResolutionRoutines : MonoBehaviour
             GlobalDefinitions.combatResultsFromLastTurn.Add(combatResults);
 
         // The added text below is to put the combat results in the Combat Results GUI in place of the deleted Resolve button
-        GlobalDefinitions.CreateText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), dieRollResult]), "CombatResolutionText",
+        GlobalDefinitions.CreateUIText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), dieRollResult]), "CombatResolutionText",
                 1.4f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 buttonLocation.x,
                 buttonLocation.y,
-                GlobalDefinitions.combatResolutionGUIInstance.GetComponent<Canvas>()).transform.SetParent(GlobalDefinitions.combatContentPanel.transform, false);
+                Color.white, GlobalDefinitions.combatResolutionGUIInstance.GetComponent<Canvas>()).transform.SetParent(GlobalDefinitions.combatContentPanel.transform, false);
 
         switch (combatResults)
         {
@@ -793,12 +793,12 @@ public class CombatResolutionRoutines : MonoBehaviour
 
         GlobalDefinitions.ExchangeGUIInstance = exchangeGuiInstance;
 
-        GlobalDefinitions.CreateText("Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected, "ExchangeText",
+        GlobalDefinitions.CreateUIText("Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected, "ExchangeText",
                 4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0.5f * (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 4.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas);
+                Color.white, combatCanvas);
 
         float xSeperation = (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE / unitList.Count;
         float xOffset = xSeperation / 2;
@@ -855,12 +855,12 @@ public class CombatResolutionRoutines : MonoBehaviour
                 ref combatCanvas);
         GlobalDefinitions.postCombatMovementGuiInstance = postCombatMovementGuiInstance;
 
-        GlobalDefinitions.CreateText("Select units to occupy the vacated hex", "PostCombatMovementText",
+        GlobalDefinitions.CreateUIText("Select units to occupy the vacated hex", "PostCombatMovementText",
                 widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
                 3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas);
+                Color.white, combatCanvas);
 
         float xSeperation = widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE / unitList.Count;
         float xOffset = xSeperation / 2;
@@ -953,12 +953,12 @@ public class CombatResolutionRoutines : MonoBehaviour
                     panelHeight,
                     ref combatCanvas);
 
-            GlobalDefinitions.CreateText("Select unit to retreat", "RetreatText",
+            GlobalDefinitions.CreateUIText("Select unit to retreat", "RetreatText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (GlobalDefinitions.retreatingUnits.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    combatCanvas);
+                    Color.white, combatCanvas);
 
             float xSeperation = (GlobalDefinitions.retreatingUnits.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE / GlobalDefinitions.retreatingUnits.Count;
             float xOffset = xSeperation / 2;
@@ -1396,19 +1396,19 @@ public class CombatResolutionRoutines : MonoBehaviour
                 Button riverInterdictionLocateButton;
                 Button riverInterdictionCancelButton;
 
-                GlobalDefinitions.CreateText("River Interdiction", "RiverInerdictionInstanceText",
+                GlobalDefinitions.CreateUIText("River Interdiction", "RiverInerdictionInstanceText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
-                        tacticalAirCanvasInstance);
+                        Color.white, tacticalAirCanvasInstance);
 
-                GlobalDefinitions.CreateText(hex.name, "RiverInerdictionHexText",
+                GlobalDefinitions.CreateUIText(hex.name, "RiverInerdictionHexText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
-                        tacticalAirCanvasInstance);
+                        Color.white, tacticalAirCanvasInstance);
 
                 riverInterdictionLocateButton = GlobalDefinitions.CreateButton("riverInterdictionLocateButton" + toggleIndex, "Locate",
                         5 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1436,12 +1436,12 @@ public class CombatResolutionRoutines : MonoBehaviour
                 Button unitInterdictionLocateButton;
                 Button unitInterdictionCancelButton;
 
-                GlobalDefinitions.CreateText("Unit Interdiction", "UnitInerdictionInstanceText",
+                GlobalDefinitions.CreateUIText("Unit Interdiction", "UnitInerdictionInstanceText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
-                        tacticalAirCanvasInstance);
+                        Color.white, tacticalAirCanvasInstance);
 
                 GlobalDefinitions.CreateUnitImage(unit, "tacticalAirUnitInterdictionImage",
                         3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1473,12 +1473,12 @@ public class CombatResolutionRoutines : MonoBehaviour
             {
                 Button closeDefenseLocateButton;
                 Button closeDefenseCancelButton;
-                GlobalDefinitions.CreateText("Close Defense", "CloseDefenseInstanceText",
+                GlobalDefinitions.CreateUIText("Close Defense", "CloseDefenseInstanceText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
-                        tacticalAirCanvasInstance);
+                        Color.white, tacticalAirCanvasInstance);
                 //for (int index = 0; ((index < hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count) && (index < 2)); index++)
                 for (int index = 0; (index < hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count); index++)
                 {
@@ -1537,45 +1537,45 @@ public class CombatResolutionRoutines : MonoBehaviour
 
                 yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-                GlobalDefinitions.CreateText("Assign Close Defense Support", "CloseDefenseText",
+                GlobalDefinitions.CreateUIText("Assign Close Defense Support", "CloseDefenseText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
-                        tacticalAirCanvasInstance);
+                        Color.white, tacticalAirCanvasInstance);
 
-                GlobalDefinitions.CreateText("Assign River Interdiction", "RiverInterdictionText",
+                GlobalDefinitions.CreateUIText("Assign River Interdiction", "RiverInterdictionText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
-                        tacticalAirCanvasInstance);
+                        Color.white, tacticalAirCanvasInstance);
 
-                GlobalDefinitions.CreateText("Assign Unit Interdiction", "UnitInterdictionText",
+                GlobalDefinitions.CreateUIText("Assign Unit Interdiction", "UnitInterdictionText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         yPosition,
-                        tacticalAirCanvasInstance);
+                        Color.white, tacticalAirCanvasInstance);
 
                 yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
             }
 
-            GlobalDefinitions.numberTacticalAirFactorsRemainingText = GlobalDefinitions.CreateText((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) + " number of air factors remaining", "RemainingFactorsText",
+            GlobalDefinitions.numberTacticalAirFactorsRemainingText = GlobalDefinitions.CreateUIText((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) + " number of air factors remaining", "RemainingFactorsText",
                     7 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     yPosition,
-                    tacticalAirCanvasInstance);
+                    Color.white, tacticalAirCanvasInstance);
 
             yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-            GlobalDefinitions.CreateText("Allied Tactical Air", "TacticalAirHeaderText",
+            GlobalDefinitions.CreateUIText("Allied Tactical Air", "TacticalAirHeaderText",
                     4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     yPosition,
-                    tacticalAirCanvasInstance);
+                    Color.white, tacticalAirCanvasInstance);
         }
     }
 
@@ -1703,12 +1703,12 @@ public class CombatResolutionRoutines : MonoBehaviour
                                 panelWidth,
                                 panelHeight,
                                 ref tacticalAirMultiUnitCanvasInstance);
-                        GlobalDefinitions.CreateText("Select unit for interdiction", "TacticalAirMultiUnitText",
+                        GlobalDefinitions.CreateUIText("Select unit for interdiction", "TacticalAirMultiUnitText",
                                 (numberOfUnits + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE,
                                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                                 0.5f * (numberOfUnits + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                                 2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                                tacticalAirMultiUnitCanvasInstance);
+                                Color.white, tacticalAirMultiUnitCanvasInstance);
                         for (int index = 0; index < interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit.Count; index++)
                             if (!interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().unitInterdiction &&
                                     interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().availableForStrategicMovement)

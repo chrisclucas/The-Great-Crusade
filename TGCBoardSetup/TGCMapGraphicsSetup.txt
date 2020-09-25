@@ -1,0 +1,127 @@
+// This places a graphic object that contains the invasion area unit limits at the location specified
+//     ResourceName X Y
+InvasionLimitsTables {
+NorthSeaInvasionLimitsTable 36 126
+PasdeCalaisInvasionLimitsTable 63 94
+LeHavreInvasionLimitsTable 80 74
+NormandyInvasionLimitsTable 77 44
+BrittanyInvasionLimitsTable 97 14
+BayofBiscayInvasionLimitsTable 197 17
+SouthFranceInvasionLimitsTable 270 215
+}
+// Invasion boundaries lists to hexes that a red line needs to be drawn between to distinguish invasion areas
+// Format is
+//    HexX1 HexY1 HexX2 HexY2
+InvasionBoundaries {
+5 22 4 23
+5 22 5 23
+5 23 6 23
+10 19 11 18
+11 18 11 19
+11 19 12 19
+16 14 16 13
+16 14 17 13
+17 13 17 14
+18 11 18 12
+18 11 17 11
+18 11 19 11
+20 8 21 8 
+20 8 21 7
+25 2 25 3
+25 3 24 3
+}
+// TextStrings are information that needs to be on the board
+// The format is
+//     x y scaling textWidth textHeight rotation color <text string>
+TextStrings {
+17 90 1 100 50 0 Red Allied Units Available In Britain
+-15 85 0.75 20 10 0 Red D-Day
+-12 37 0.75 20 10 0 Red 16th Week
+-12 19 0.75 20 10 0 Red 24th Week
+-12 1 0.75 20 10 0 Red 32nd Week
+86 -5 0.5 50 30 0 Red These Free French forces become available after the 28th week when German units have been cleared from France
+24 158 0.175 20 10 0 Black Units may move across the dyke but cannot attack from the dyke
+235 201 0.75 20 10 0 Black Italy
+180 192 0.75 20 10 0 Black Switzerland
+270 31 0.75 20 10 0 Black Spain 
+5.925 201.8272 0.3 2 2 0 Blue B
+11.85 205.248 0.3 2 2 0 Blue B
+17.775 208.6688 0.3 2 2 0 Blue B
+23.7 212.0896 0.3 2 2 0 Blue B
+11.85 212.0896 0.3 2 2 0 Blue B
+11.85 218.9312 0.3 2 2 0 Blue B
+5.925 215.5104 0.3 2 2 0 Blue B
+23.7 218.9312 0.3 2 2 0 Blue B
+17.775 222.352 0.3 2 2 0 Blue B
+23.7 164.19 0.3 2 2 0 Blue A
+29.625 153.936 0.3 2 2 0 Blue A
+35.55 150.5152 0.3 2 2 0 Blue A
+41.475 160.7776 0.3 2 2 0 Blue A
+71.1 150.5152 0.3 2 2 0 Blue A
+71.1 136.832 0.3 2 2 0 Blue A
+65.175 133.4112 0.3 2 2 0 Blue A
+65.175 140.2528 0.3 2 2 0 Blue A
+65.175 147.0944 0.3 2 2 0 Blue A
+59.25 136.832 0.3 2 2 0 Blue A
+59.25 150.5152 0.3 2 2 0 Blue R
+53.325 153.936 0.3 2 2 0 Blue R
+53.325 147.0944 0.3 2 2 0 Blue R
+53.325 140.2528 0.3 2 2 0 Blue R
+47.4 143.6736 0.3 2 2 0 Blue R
+41.475 147.0944 0.3 10 2 0 Blue A R
+47.4 157.3568 0.3 10 2 0 Blue A R
+59.25 143.6736 0.3 10 2 0 Blue A R
+106.65 82.09921 0.3 2 2 0 Blue R
+106.65 88.94081 0.3 2 2 0 Blue R
+106.65 95.78241 0.3 2 2 0 Blue R
+112.575 99.20321 0.3 2 2 0 Blue R
+112.575 85.52001 0.3 2 2 0 Blue R
+112.575 78.67841 0.3 2 2 0 Blue R
+118.5 88.94081 0.3 2 2 0 Blue R
+118.5 95.78241 0.3 2 2 0 Blue R
+165.9 34.208 0.3 2 2 0 Blue N
+165.9 47.8917 0.3 2 2 0 Blue N
+159.975 37.6288 0.3 2 2 0 Blue N
+159.975 44.4704 0.3 2 2 0 Blue N
+171.825 37.6288 0.3 2 2 0 Blue N
+171.825 44.4704 0.3 2 2 0 Blue N
+207.375 51.312 0.3 2 2 0 Blue B
+213.3 54.73281 0.3 2 2 0 Blue B
+219.225 58.15361 0.3 2 2 0 Blue B
+225.15 54.73281 0.3 2 2 0 Blue B
+231.075 51.312 0.3 2 2 0 Blue B
+231.075 44.4704 0.3 2 2 0 Blue B
+225.15 41.0496 0.3 2 2 0 Blue B
+219.225 44.4704 0.3 2 2 0 Blue B
+160 58 0.6 50 2 90 Blue Loire
+223 84 0.6 50 2 90 Blue Gironde
+242 75 0.6 50 2 90 Blue Garonne
+237 149 0.6 50 2 0 Blue Rhone
+255 174 0.6 50 2 -30 Blue Durance
+249 187 0.6 50 2 90 Blue Var
+175 151 0.6 50 2 -30 Blue Saone
+118 49 0.6 50 2 0 Blue Vire
+119 67 0.6 50 2 0 Blue Orne
+127 87.5 0.6 50 2 30 Blue Eure
+119 102.3 0.6 50 2 50 Blue Seine
+95.5 108.3 0.6 50 2 55 Blue Somme
+77 123 0.6 50 2 90 Blue Scheldt
+115 112 0.6 50 2 -45 Blue Oise
+124 123 0.6 50 2 90 Blue Marne
+113 140 0.6 50 2 -45 Blue Aisne
+101 148 0.6 50 2 0 Blue Meuse
+111 176 0.6 50 2 -30 Blue Moselle
+115 183 0.6 50 2 30 Blue Saar
+127 207 0.6 50 2 -30 Blue Rhine
+65 198 0.6 50 2 90 Blue Ruhr
+62 176 0.6 50 2 -30 Blue Maas
+50 180 0.6 50 2 30 Blue Ijssel Rhine
+33 213 0.6 50 2 0 Blue Weser
+}
+// Boxes draws a square on the board
+// The format is
+//  minx miny maxx maxy lineWidth color
+Boxes {
+53 -12 99 3 0.5 Red
+-20 -12 52 95 0.5 Red
+}

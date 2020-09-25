@@ -11,8 +11,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: Aspen Development LLC
-  productName: D-Day
+  companyName: Olld School War Games
+  productName: TGC
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -41,7 +41,8 @@ PlayerSettings:
   m_SplashScreenLogos:
   - logo: {fileID: 0}
     duration: 2
-  m_VirtualRealitySplashScreen: {fileID: 0}
+  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 11fd29024b9436848b5523b660507872,
+    type: 3}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
@@ -262,7 +263,7 @@ PlayerSettings:
     height: 180
     banner: {fileID: 0}
   androidGamepadSupportLevel: 0
-  resolutionDialogBanner: {fileID: 2800000, guid: 2e567fefca7730444bf67966bf949d7b,
+  resolutionDialogBanner: {fileID: 2800000, guid: 11fd29024b9436848b5523b660507872,
     type: 3}
   m_BuildTargetIcons: []
   m_BuildTargetBatching: []

@@ -7,7 +7,7 @@ public class ExecuteGameCommand : MonoBehaviour {
 
 
     /// <summary>
-    /// This routine is what processes the message received from the opponent computer
+    /// This routine is what processes the message received from the opponent computer or from the saved command file when restarting a game
     /// </summary>
     /// <param name="message"></param>
     public static void ProcessCommand(string message)
@@ -261,19 +261,19 @@ public class ExecuteGameCommand : MonoBehaviour {
                 GlobalDefinitions.WriteToLogFile("Chat message received: " + chatMessage);
                 GlobalDefinitions.AddChatMessage(chatMessage);
                 break;
-            case GlobalDefinitions.SENDTURNFILENAMEWORD:
-                // This command tells the remote computer what the name of the file is that will provide the saved turn file
+            //case GlobalDefinitions.SENDTURNFILENAMEWORD:
+            //    // This command tells the remote computer what the name of the file is that will provide the saved turn file
 
-                // The file name could have ' ' in it so need to reconstruct the full name
-                string receivedFileName;
-                receivedFileName = switchEntries[1];
-                for (int i = 2; i < switchEntries.Length; i++)
-                    receivedFileName = receivedFileName + " " + switchEntries[i];
+            //    // The file name could have ' ' in it so need to reconstruct the full name
+            //    string receivedFileName;
+            //    receivedFileName = switchEntries[1];
+            //    for (int i = 2; i < switchEntries.Length; i++)
+            //        receivedFileName = receivedFileName + " " + switchEntries[i];
 
-                GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
-                GlobalDefinitions.WriteToLogFile("Received name of save file, calling FileTransferServer: fileName = " + receivedFileName + "  path to save = " + GameControl.path);
-                GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().RequestFile(TransportScript.remoteComputerIPAddress, receivedFileName, GameControl.path, true);
-                break;
+            //    GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().InitiateFileTransferServer();
+            //    GlobalDefinitions.WriteToLogFile("Received name of save file, calling FileTransferServer: fileName = " + receivedFileName + "  path to save = " + GameControl.path);
+            //    GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().RequestFile(TransportScript.remoteComputerIPAddress, receivedFileName, GameControl.path, true);
+            //    break;
 
             case GlobalDefinitions.DISPLAYALLIEDSUPPLYRANGETOGGLEWORD:
                 if (GameObject.Find("AlliedSupplyToggle").GetComponent<Toggle>().isOn)

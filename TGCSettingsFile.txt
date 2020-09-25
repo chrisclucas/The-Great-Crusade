@@ -1,2 +1,2 @@
-Difficulty 0
-Aggressive 1
+Difficulty 8
+Aggressive 5

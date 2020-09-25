@@ -132,8 +132,8 @@ public class SetUpState : GameState
 
             // If this is a network game send the file name to the remote computer so it can be requested through the file transfer routines.  It's silly that 
             // I have to tell it what to ask for but I bought the code and that is how it works
-            if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && (GlobalDefinitions.localControl))
-                TransportScript.SendMessageToRemoteComputer(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
+            //if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && (GlobalDefinitions.localControl))
+            //    TransportScript.SendMessageToRemoteComputer(GlobalDefinitions.SENDTURNFILENAMEWORD + " " + turnFileName);
         }
     }
 
@@ -552,14 +552,15 @@ public class AlliedInvasionState : GameState
             GlobalDefinitions.selectedUnit = GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().GetInvadingUnit(inputMessage.unit);
             if (GlobalDefinitions.selectedUnit == null)
                 executeMethod = ExecuteSelectUnit; // Stay with this mode if unit not selected
-            else  
+            else
+            {
                 executeMethod = ExecuteSelectUnitDestination;
+            }
         }
     }
 
     public void ExecuteSelectUnitDestination(InputMessage inputMessage)
     {
-        GlobalDefinitions.WriteToLogFile("ExecuteSelectUnitDestination: executing - selected unit = " + GlobalDefinitions.selectedUnit.name + " selected hex = " + inputMessage.hex.name);
         GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().GetUnitInvasionHex(GlobalDefinitions.selectedUnit, inputMessage.hex);
         executeMethod = ExecuteSelectUnit;
     }

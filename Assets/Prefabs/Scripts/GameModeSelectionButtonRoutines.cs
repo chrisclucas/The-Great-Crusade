@@ -47,16 +47,16 @@ public class GameModeSelectionButtonRoutines : MonoBehaviour
             GlobalDefinitions.AskUserWhichSideToPlay();
             GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
         }
-        else if (MainMenuRoutines.peerToPeerNetworkToggle.GetComponent<Toggle>().isOn)
-        {
-            GlobalDefinitions.WriteToLogFile("okGameMode: Setting up Peer to Peer Network mode");
-            GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.Peer2PeerNetwork;
-            GlobalDefinitions.commandFileHeader = "Peer2PeerNetwork";
-            GameControl.CreateStatesForHotSeatOrNetwork();
-            //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
-            MainMenuRoutines.NetworkSettingsUI();
+        //else if (MainMenuRoutines.peerToPeerNetworkToggle.GetComponent<Toggle>().isOn)
+        //{
+        //    GlobalDefinitions.WriteToLogFile("okGameMode: Setting up Peer to Peer Network mode");
+        //    GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.Peer2PeerNetwork;
+        //    GlobalDefinitions.commandFileHeader = "Peer2PeerNetwork";
+        //    GameControl.CreateStatesForHotSeatOrNetwork();
+        //    //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
+        //    MainMenuRoutines.NetworkSettingsUI();
 
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
-        }
+        //    GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+        //}
     }
 }

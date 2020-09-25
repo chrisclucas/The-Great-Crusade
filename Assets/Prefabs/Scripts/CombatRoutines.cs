@@ -303,12 +303,12 @@ public class CombatRoutines : MonoBehaviour
                 panelHeight,
                 ref combatCanvas);
 
-        GlobalDefinitions.CreateText("Combat Odds", "OddsText",
+        GlobalDefinitions.CreateUIText("Combat Odds", "OddsText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 (0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE) - 0.5f * panelWidth,
                 6.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                combatCanvas);
+                Color.white, combatCanvas);
 
         float xSeperation = (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE / maxUnits;
         float xOffset = xSeperation / 2;
@@ -376,12 +376,12 @@ public class CombatRoutines : MonoBehaviour
             else
                 airToggle.GetComponent<Toggle>().interactable = false;
 
-            GlobalDefinitions.CreateText("Air Support", "CombatAirSupportText",
+            GlobalDefinitions.CreateUIText("Air Support", "CombatAirSupportText",
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth - 1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    combatCanvas);
+                    Color.white, combatCanvas);
 
             Toggle carpetToggle;
             carpetToggle = GlobalDefinitions.CreateToggle("CombatCarpetBombingToggle",
@@ -397,12 +397,12 @@ public class CombatRoutines : MonoBehaviour
             else
                 carpetToggle.GetComponent<Toggle>().interactable = false;
 
-            GlobalDefinitions.CreateText("Carpet Bombing", "CarpetBombingSupportText",
+            GlobalDefinitions.CreateUIText("Carpet Bombing", "CarpetBombingSupportText",
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    combatCanvas);
+                    Color.white, combatCanvas);
         }
 
         // OK button
@@ -501,12 +501,12 @@ public class CombatRoutines : MonoBehaviour
             Toggle tempToggle;
             Button tempLocateButton;
 
-            GlobalDefinitions.CreateText("Carpet bombing available - you may select a hex", "CarpetBombingAvailableText",
+            GlobalDefinitions.CreateUIText("Carpet bombing available - you may select a hex", "CarpetBombingAvailableText",
                     widthSeed * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     (widthSeed * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) / 2 - 0.5f * panelWidth,
                     heightSeed * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    bombingCanvas);
+                    Color.white, bombingCanvas);
 
             for (int index2 = 0; index2 < GlobalDefinitions.hexesAttackedLastTurn[index].GetComponent<HexDatabaseFields>().occupyingUnit.Count; index2++)
             {

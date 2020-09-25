@@ -733,9 +733,10 @@ public class MovementRoutines : MonoBehaviour
     /// <param name="unit"></param>
     public void MoveUnit(GameObject destinationHex, GameObject beginningHex, GameObject unit)
     {
-        //GlobalDefinitions.WriteToLogFile("MoveUnit: moving unit " + unit.name + " from hex " + beginningHex + " to hex " + destinationHex.name);
         // Need to check if the AI is overstacking units
-        if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && !GlobalDefinitions.HexUnderStackingLimit(destinationHex, unit.GetComponent<UnitDatabaseFields>().nationality) &&
+        if ((beginningHex!= null) && (destinationHex != null) && (unit != null) &&
+                (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.AI) && 
+                !GlobalDefinitions.HexUnderStackingLimit(destinationHex, unit.GetComponent<UnitDatabaseFields>().nationality) &&
                 (beginningHex != destinationHex))
         {
             GlobalDefinitions.WriteToLogFile("moveUnit: ERROR AI is trying to overstack a hex - moving unit " + unit.name + " being moved from " + beginningHex.name + " to " + destinationHex.name);
@@ -936,12 +937,12 @@ public class MovementRoutines : MonoBehaviour
                     panelWidth,
                     panelHeight,
                     ref movementCanvas);
-            GlobalDefinitions.CreateText("Select a unit", "multiUnitMovementText",
+            GlobalDefinitions.CreateUIText("Select a unit", "multiUnitMovementText",
                     (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    movementCanvas);
+                    Color.white, movementCanvas);
 
             float xSeperation = (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE / hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count;
             float xOffset = xSeperation / 2;
@@ -1628,8 +1629,6 @@ public class MovementRoutines : MonoBehaviour
     /// <returns></returns>
     public bool SelectGermanReplacementUnit(GameObject selectedUnit)
     {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.GERMANREPLACEMENTKEYWORD + " " + selectedUnit.name);
-
         //  Check for valid unit
         if (selectedUnit == null)
         {
@@ -1645,6 +1644,7 @@ public class MovementRoutines : MonoBehaviour
                 {
                     if (selectedUnit.GetComponent<UnitDatabaseFields>().attackFactor <= GlobalDefinitions.germanReplacementsRemaining)
                     {
+                        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.GERMANREPLACEMENTKEYWORD + " " + selectedUnit.name);
                         selectedUnit.GetComponent<UnitDatabaseFields>().unitEliminated = false;
                         GlobalDefinitions.selectedUnit = selectedUnit;
                         return true;

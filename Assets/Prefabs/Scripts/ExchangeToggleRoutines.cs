@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ExchangeToggleRoutines : MonoBehaviour
 {
@@ -45,6 +46,6 @@ public class ExchangeToggleRoutines : MonoBehaviour
                 GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.REMOVEEXCHANGEKEYWORD + " " + name);
             }
         }
-        GameObject.Find("ExchangeText").GetComponent<Text>().text = "Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected;
+        GameObject.Find("ExchangeText").GetComponent<TextMeshProUGUI>().text = "Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected;
     }
 }

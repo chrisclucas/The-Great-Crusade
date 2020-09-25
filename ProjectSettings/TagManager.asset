@@ -18,10 +18,10 @@ TagManager:
   - 
   - Hex
   - Counter
-  - River
+  - Lines
   - Highlight
-  - 
-  - 
+  - Text
+  - River
   - 
   - 
   - 
@@ -47,7 +47,10 @@ TagManager:
   - name: Hex
     uniqueID: 2785200407
     locked: 0
-  - name: River
+  - name: Text
+    uniqueID: 2374588695
+    locked: 0
+  - name: Lines
     uniqueID: 4284956493
     locked: 0
   - name: Counter
@@ -55,4 +58,7 @@ TagManager:
     locked: 0
   - name: Highlight
     uniqueID: 1517353447
+    locked: 0
+  - name: River
+    uniqueID: 3668613855
     locked: 0

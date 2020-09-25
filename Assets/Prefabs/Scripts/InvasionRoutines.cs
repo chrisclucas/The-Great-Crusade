@@ -43,27 +43,31 @@ public class InvasionRoutines : MonoBehaviour
         GlobalDefinitions.invasionAreaSelectionGUIInstance = GlobalDefinitions.CreateGUICanvas("InvasionAreaSelectionGUIInstance",
                 panelWidth,
                 panelHeight,
-                ref invasionAreaSelectionCanvasInstance);
-        GlobalDefinitions.CreateText("Select invasion area", "InvasionAreaSelectionText",
+                ref invasionAreaSelectionCanvasInstance, 0.16f, 0.16f);
+        GlobalDefinitions.invasionAreaSelectionGUIInstance.GetComponent<RectTransform>().anchorMin = new Vector2(0.16f, 0.5f);
+
+        GlobalDefinitions.CreateUIText("Select invasion area", "InvasionAreaSelectionText",
                 (3) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                 (8) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                invasionAreaSelectionCanvasInstance);
+                Color.white,
+                invasionAreaSelectionCanvasInstance, 0.16f, 0.16f, 0.5f, 0.5f);
         for (int index = 0; index < 7; index++)
         {
             Toggle tempToggle;
-            GlobalDefinitions.CreateText(GlobalDefinitions.invasionAreas[index].name,
+            GlobalDefinitions.CreateUIText(GlobalDefinitions.invasionAreas[index].name,
                     "InvasionAreaSelectionText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 1.25f - 0.5f * panelWidth,
                     (index + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                    invasionAreaSelectionCanvasInstance);
+                    Color.white,
+                    invasionAreaSelectionCanvasInstance, 0.16f, 0.16f, 0.5f, 0.5f);
             tempToggle = GlobalDefinitions.CreateToggle("InvasionAreaSelectionToggle" + index,
                         2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         (index + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
-                        invasionAreaSelectionCanvasInstance).GetComponent<Toggle>();
+                        invasionAreaSelectionCanvasInstance, 0.16f, 0.16f, 0.5f, 0.5f).GetComponent<Toggle>();
             tempToggle.gameObject.AddComponent<InvasionSelectionToggleRoutines>();
             tempToggle.GetComponent<InvasionSelectionToggleRoutines>().index = index;
             tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<InvasionSelectionToggleRoutines>().InvadedAreaSelected());
@@ -136,9 +140,6 @@ public class InvasionRoutines : MonoBehaviour
 
             if (GlobalDefinitions.turnNumber == 1)
             {
-                GlobalDefinitions.WriteToLogFile("getInvadingUnit: total units used this turn = " + GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].totalUnitsUsedThisTurn);
-                GlobalDefinitions.WriteToLogFile("getInvadingUnit: max total unit for invasion area this turn = " + ReturnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]));
-
                 if (GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex].totalUnitsUsedThisTurn <
                         ReturnMaxTotalUnitsForInvasionAreaThisTurn(GlobalDefinitions.invasionAreas[GlobalDefinitions.firstInvasionAreaIndex]))
                 {

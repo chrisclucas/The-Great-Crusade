@@ -12,11 +12,18 @@ public class GlobalDefinitions : MonoBehaviour
 
     // File names
     public static string logfile = "TGCOutputFiles\\TGCLogFile.txt";
-    public static string boardsetupfile = "TGCBoardSetup.txt";
-    public static string britainunitlocationfile = "TGCBritainUnitLocation.txt";
+    public static string hexSetupFile = "TGCBoardSetup\\TGCHexSetup.txt";
+    public static string riverSetupFile = "TGCBoardSetup\\TGCRiverSetup.txt";
+    public static string hexSettingsFile = "TGCBoardSetup\\TGCHexSettingsSetup.txt";
+    public static string mapGraphicsFile = "TGCBoardSetup\\TGCMapGraphicsSetup.txt";
+    public static string britainUnitLocationFile = "TGCBoardSetup\\TGCBritainUnitLocation.txt";
     public static string settingsFile = "TGCSettingsFile.txt";
     public static string commandFile = "TGCOutputFiles\\TGCCommandFile.txt";
     public static string fullCommandFile = "TGCOutputFiles\\TGCFullCommandFile.txt";
+
+    // I'm creating a canvas for putting text onto the map
+    public static Canvas mapGraphicCanvas;
+    public static GameObject mapText;
 
     // Configuration settings
     public static int difficultySetting;
@@ -395,16 +402,16 @@ public class GlobalDefinitions : MonoBehaviour
         germanSetupFileUsed = 100;
 
         // The following is for resetting the variables associated with a network game
-        TransportScript.remoteComputerIPAddress = "";
-        userIsIntiating = false;
-        isServer = false;
-        hasReceivedConfirmation = false;
-        gameStarted = false;
-        TransportScript.channelRequested = false;
-        TransportScript.connectionConfirmed = false;
-        TransportScript.handshakeConfirmed = false;
-        TransportScript.opponentComputerConfirmsSync = false;
-        TransportScript.gameDataSent = false;
+        //TransportScript.remoteComputerIPAddress = "";
+        //userIsIntiating = false;
+        //isServer = false;
+        //hasReceivedConfirmation = false;
+        //gameStarted = false;
+        //TransportScript.channelRequested = false;
+        //TransportScript.connectionConfirmed = false;
+        //TransportScript.handshakeConfirmed = false;
+        //TransportScript.opponentComputerConfirmsSync = false;
+        //TransportScript.gameDataSent = false;
 
         // When resetting I am going to regenerate the invasion areas.  If I don't the AI will come up with different results based on the arrays being seeded diferently
         GameControl.createBoardInstance.GetComponent<CreateBoard>().SetupInvasionAreas();
@@ -1180,7 +1187,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="panelHeight"></param>
     /// <param name="canvasObject"></param>
     /// <returns></returns>
-    public static GameObject CreateGUICanvas(string name, float panelWidth, float panelHeight, ref Canvas canvasObject)
+    public static GameObject CreateGUICanvas(string name, float panelWidth, float panelHeight, ref Canvas canvasObject, float xAnchorMin = 0.5f, float xAnchorMax = 0.5f, float yAnchorMin = 0.5f, float yAnchorMax = 0.5f)
     {
         GameObject guiInstance = new GameObject(name);
         guiList.Add(guiInstance);
@@ -1192,8 +1199,8 @@ public class GlobalDefinitions : MonoBehaviour
         GameObject guiPanel = new GameObject("createGUICanvas");
         Image panelImage = guiPanel.AddComponent<Image>();
         panelImage.color = new Color32(0, 44, 255, 220);
-        panelImage.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-        panelImage.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+        panelImage.rectTransform.anchorMax = new Vector2(xAnchorMax, yAnchorMax);
+        panelImage.rectTransform.anchorMin = new Vector2(xAnchorMin, yAnchorMin);
         panelImage.rectTransform.sizeDelta = new Vector2(panelWidth, panelHeight);
         panelImage.rectTransform.anchoredPosition = new Vector2(0, 0);
         guiPanel.transform.SetParent(guiInstance.transform, false);
@@ -1339,10 +1346,8 @@ public class GlobalDefinitions : MonoBehaviour
 
         tempPrefab = (GameObject)Resources.Load(sliderType);
         tempPrefab.transform.position = new Vector2(xPosition, yPosition);
-        tempSlider = Instantiate(tempPrefab, tempPrefab.transform).GetComponent<Slider>();
-        //tempSlider = Instantiate(tempPrefab).GetComponent<Slider>();
+        tempSlider = Instantiate(tempPrefab, canvasInstance.transform).GetComponent<Slider>();
         tempSlider.transform.SetParent(canvasInstance.transform, false);
-        //tempSlider.image.rectTransform.anchoredPosition = new Vector2(xPosition, yPosition);
         tempSlider.name = name;
         return (tempSlider);
     }
@@ -1358,18 +1363,19 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="textY"></param>
     /// <param name="canvasInstance"></param>
     /// <returns></returns>
-    public static GameObject CreateText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, Canvas canvasInstance)
+    public static GameObject CreateUIText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, Color textColor, Canvas canvasInstance, float xAnchorMin = 0.5f, float xAnchorMax = 0.5f, float yAnchorMin = 0.5f, float yAnchorMax = 0.5f)
     {
         GameObject textGameObject = new GameObject(name);
         textGameObject.transform.SetParent(canvasInstance.transform, false);
-        Text tempText = textGameObject.AddComponent<Text>();
+        var tempText = textGameObject.AddComponent<TextMeshProUGUI>();
         tempText.text = textMessage;
-        tempText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-        tempText.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-        tempText.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+        tempText.rectTransform.anchorMax = new Vector2(xAnchorMin, yAnchorMin);
+        tempText.rectTransform.anchorMin = new Vector2(xAnchorMax, yAnchorMax);
         tempText.rectTransform.anchoredPosition = new Vector2(textX, textY);
         tempText.rectTransform.sizeDelta = new Vector2(textWidth, textHeight);
-        tempText.alignment = TextAnchor.MiddleCenter;
+        tempText.alignment = TextAlignmentOptions.Center;
+        tempText.fontSize = 14;
+        tempText.color = textColor;
         return (textGameObject);
     }
 
@@ -1383,7 +1389,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="textX"></param>
     /// <param name="textY"></param>
     /// <param name="canvasInstance"></param>
-    public static void CreateHexText(GameObject hex, string textMessage, string name, float textWidth, float textHeight, float textX, float textY, int fontSize, Color textColor,  Canvas canvasInstance)
+    public static void CreateHexText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, int fontSize, Color textColor,  Canvas canvasInstance)
     {
         GameObject textGameObject = new GameObject(name);
         textGameObject.layer = 12; // Set the layer so it renders above the hex but beneath the counters
@@ -1403,7 +1409,36 @@ public class GlobalDefinitions : MonoBehaviour
         tempText.alignment = TMPro.TextAlignmentOptions.Center;
         tempText.color = textColor;
         tempText.raycastTarget = false;
+    }
 
+    /// <summary>
+    /// Creates text - these are the informational graphics on the board.  I had to create this since the CreateUIText and CreateHexText
+    /// </summary>
+    /// <param name="textMessage"></param>
+    /// <param name="name"></param>
+    /// <param name="textWidth"></param>
+    /// <param name="textHeight"></param>
+    /// <param name="textX"></param>
+    /// <param name="textY"></param>
+    /// <param name="fontSize"></param>
+    /// <param name="textColor"></param>
+    /// <param name="canvasInstance"></param>
+    public static void CreateBoardText(string textMessage, string name, float textWidth, float textHeight, float textX, float textY, float scaling, float rotation, Color textColor, Canvas canvasInstance)
+    {
+        GameObject textGameObject = new GameObject(name);
+        textGameObject.layer = 12; // Set the layer so it renders above the hex but beneath the counters
+        textGameObject.transform.SetParent(canvasInstance.transform, false);
+        var tempText = textGameObject.AddComponent<TextMeshPro>();
+        tempText.text = textMessage;
+        tempText.renderer.sortingLayerID = SortingLayer.NameToID("Text");
+        tempText.rectTransform.anchoredPosition = new Vector2(textX, textY);
+        tempText.rectTransform.sizeDelta = new Vector2(textWidth, textHeight);
+        tempText.rectTransform.localScale = new Vector2(scaling, scaling);
+        //tempText.transform.Rotate(0f, 0f, rotation);
+        tempText.rectTransform.Rotate(0f, 0f, rotation);
+        tempText.alignment = TMPro.TextAlignmentOptions.Center;
+        tempText.color = textColor;
+        tempText.raycastTarget = false;
     }
 
     /// <summary>
@@ -1413,8 +1448,40 @@ public class GlobalDefinitions : MonoBehaviour
     public static void UpdateHexValueText(GameObject hex)
     {
         GameObject textGameObject = GameObject.Find(hex.name + "HexValueText");
-        textGameObject.GetComponent<Text>().text = Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexValue);
+        textGameObject.GetComponent<TextMeshPro>().text = Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexValue);
 
+    }
+
+    /// <summary>
+    /// Takes the string and returns the Unity color type that matches 
+    /// </summary>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public static Color ConvertStringToColor(string color)
+    {
+        if (color == "Red")
+            return (Color.red);
+        else if (color == "Black")
+            return (Color.black);
+        else if (color == "Yellow")
+            return (Color.yellow);
+        else if (color == "Green")
+            return (Color.green);
+        else if (color == "Grey")
+            return (Color.grey);
+        else if (color == "Gray")
+            return (Color.gray);
+        else if (color == "Blue")
+            return (Color.blue);
+        else if (color == "Cyan")
+            return (Color.cyan);
+        else if (color == "Magenta")
+            return (Color.magenta);
+        else if (color == "White")
+            return (Color.white);
+        else
+            GlobalDefinitions.WriteToLogFile("ConvertStingToColor: unknown color passed - " + color);
+        return (Color.black);
     }
 
     /// <summary>
@@ -1440,10 +1507,10 @@ public class GlobalDefinitions : MonoBehaviour
         tempInputField.name = name + "InputField";
 
         // For testing only
-        if (TransportScript.localComputerIPAddress == "192.168.1.73")
-            tempInputField.text = "192.168.1.67";
-        else
-            tempInputField.text = "192.168.1.73";
+        //if (TransportScript.localComputerIPAddress == "192.168.1.73")
+        //    tempInputField.text = "192.168.1.67";
+        //else
+        //    tempInputField.text = "192.168.1.73";
 
 
         //tempInputField.text = TransportScript.defaultRemoteComputerIPAddress;
@@ -1502,17 +1569,19 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="yPosition"></param>
     /// <param name="canvasInstance"></param>
     /// <returns></returns>
-    public static GameObject CreateToggle(string name, float xPosition, float yPosition, Canvas canvasInstance)
+    public static GameObject CreateToggle(string name, float xPosition, float yPosition, Canvas canvasInstance, float xAnchorMin = 0.5f, float xAnchorMax = 0.5f, float yAnchorMin = 0.5f, float yAnchorMax = 0.5f)
     {
         GameObject tempPrefab;
         Toggle tempToggle;
 
-        tempPrefab = Instantiate(Resources.Load("GUI Toggle") as GameObject, new Vector3(xPosition, yPosition, 0), Quaternion.identity);
+        tempPrefab = Instantiate(Resources.Load("GUI Toggle") as GameObject, new Vector3(xPosition, yPosition, 0), Quaternion.identity); 
         tempToggle = tempPrefab.GetComponent<Toggle>();
+        
         tempToggle.transform.SetParent(canvasInstance.transform, false);
         tempToggle.transform.localScale = new Vector2(0.5f, 0.5f);
         tempToggle.name = name;
-
+        tempToggle.GetComponent<RectTransform>().anchorMax = new Vector2(xAnchorMax,yAnchorMax);
+        tempToggle.GetComponent<RectTransform>().anchorMin = new Vector2(xAnchorMin, yAnchorMin);
         if (!localControl)
             tempToggle.interactable = false;
 
@@ -1861,21 +1930,23 @@ public class GlobalDefinitions : MonoBehaviour
                 ref getNewSaveGameCanvas);
 
         // This gui has two columns, selection toggles and desription
-        tempText = CreateText("Select", "NewSaveGameSelectText",
+        tempText = CreateUIText("Select", "NewSaveGameSelectText",
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
                 4.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                Color.white,
                 getNewSaveGameCanvas);
-        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+        tempText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.MidlineLeft;
 
-        tempText = CreateText("Game Type", "NewSaveGameDescriptionText",
+        tempText = CreateUIText("Game Type", "NewSaveGameDescriptionText",
                 4 * GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
                 4.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                Color.white,
                 getNewSaveGameCanvas);
-        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+        tempText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.MidlineLeft;
 
         // Now list the four game modes
         newGameToggle = CreateToggle("NewGameToggle",
@@ -1883,13 +1954,14 @@ public class GlobalDefinitions : MonoBehaviour
                 3.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getNewSaveGameCanvas);
 
-        tempText = CreateText("New Game", "NewGameDescriptionText",
+        tempText = CreateUIText("New Game", "NewGameDescriptionText",
                 4 * GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
                 3.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                Color.white,
                 getNewSaveGameCanvas);
-        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+        tempText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.MidlineLeft;
         newGameToggle.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
         newGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => newGameToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().ToggleChange());
 
@@ -1898,13 +1970,14 @@ public class GlobalDefinitions : MonoBehaviour
                 2.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getNewSaveGameCanvas);
 
-        tempText = CreateText("Saved Game", "SavedGameDescriptionText",
+        tempText = CreateUIText("Saved Game", "SavedGameDescriptionText",
                 4 * GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
                 2.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                Color.white,
                 getNewSaveGameCanvas);
-        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+        tempText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.MidlineLeft;
         savedGameToggle.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
         savedGameToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => savedGameToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().ToggleChange());
 
@@ -1913,13 +1986,14 @@ public class GlobalDefinitions : MonoBehaviour
                 GUIUNITIMAGESIZE * 1 - (0.5f * panelWidth),
                 1.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
                 getNewSaveGameCanvas);
-        tempText = CreateText("Restart Last Game Played", "CommandFileDescriptionText",
+        tempText = CreateUIText("Restart Last Game Played", "CommandFileDescriptionText",
                 4 * GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE,
                 GUIUNITIMAGESIZE * 4 - (0.5f * panelWidth),
                 1.5f * GUIUNITIMAGESIZE - (0.5f * panelHeight),
+                Color.white,
                 getNewSaveGameCanvas);
-        tempText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+        tempText.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.MidlineLeft;
         commandFileToggle.gameObject.AddComponent<GameTypeSelectionButtonRoutines>();
         commandFileToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => commandFileToggle.gameObject.GetComponent<GameTypeSelectionButtonRoutines>().ToggleChange());
 
@@ -1947,11 +2021,12 @@ public class GlobalDefinitions : MonoBehaviour
         float panelWidth = 2 * GUIUNITIMAGESIZE;
         float panelHeight = 3 * GUIUNITIMAGESIZE;
         CreateGUICanvas("YesNoCanvas", panelWidth, panelHeight, ref questionCanvas);
-        CreateText(question, "YesNoQuestionText",
+        CreateUIText(question, "YesNoQuestionText",
             2 * GUIUNITIMAGESIZE,
             2 * GUIUNITIMAGESIZE,
             GUIUNITIMAGESIZE - 0.5f * panelWidth,
             2 * GUIUNITIMAGESIZE - 0.5f * panelHeight,
+            Color.white,
             questionCanvas);
 
         yesButton = CreateButton("YesButton", "Yes",
@@ -1980,11 +2055,12 @@ public class GlobalDefinitions : MonoBehaviour
         float panelWidth = 2 * GUIUNITIMAGESIZE;
         float panelHeight = 3 * GUIUNITIMAGESIZE;
         CreateGUICanvas("ChooseSideCanvas", panelWidth, panelHeight, ref questionCanvas);
-        CreateText("Which side are you playing?", "ChooseSideText",
+        CreateUIText("Which side are you playing?", "ChooseSideText",
             2 * GUIUNITIMAGESIZE,
             2 * GUIUNITIMAGESIZE,
             GUIUNITIMAGESIZE - 0.5f * panelWidth,
             2 * GUIUNITIMAGESIZE - 0.5f * panelHeight,
+            Color.white,
             questionCanvas);
 
         UnityEngine.UI.Button allyButton;
@@ -2020,8 +2096,6 @@ public class GlobalDefinitions : MonoBehaviour
             GuiDisplayUnit(hex, "guiHexDisplaySecondUnit", "UnitDisplayImage2", 1, 150);
         if (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 2)
             GuiDisplayUnit(hex, "guiHexDisplayThirdUnit", "UnitDisplayImage3", 2, 210);
-
-        //GameObject.Find("UnitDisplayPanel").GetComponent<RectTransform>().position = new Vector2(-50, -(panelHeight / 2));
     }
 
     /// <summary>
@@ -2029,7 +2103,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     public static void GuiDisplayAlliedVictoryStatus()
     {
-        GameObject.Find("AlliedVictoryText").GetComponent<Text>().text = turnsAlliedMetVictoryCondition + " Allied Victory Weeks";
+        GameObject.Find("AlliedVictoryText").GetComponent<TextMeshProUGUI>().text = turnsAlliedMetVictoryCondition + " Allied Victory Weeks";
     }
 
     /// <summary>
@@ -2037,7 +2111,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     public static void GuiDisplayAlliedVictoryUnits()
     {
-        GameObject.Find("AlliedUnitVictoryText").GetComponent<Text>().text = ReturnNumberAlliedVictoryUnits() + " Units on Victory Hexes";
+        GameObject.Find("AlliedUnitVictoryText").GetComponent<TextMeshProUGUI>().text = ReturnNumberAlliedVictoryUnits() + " Units on Victory Hexes";
     }
 
     /// <summary>
@@ -2046,9 +2120,9 @@ public class GlobalDefinitions : MonoBehaviour
     public static void GuiUpdateLossRatioText()
     {
         if ((alliedFactorsEliminated == 0) || (germanFactorsEliminated == 0))
-            GameObject.Find("LossRatioText").GetComponent<Text>().text = "0 Allied/German Loss";
+            GameObject.Find("LossRatioText").GetComponent<TextMeshProUGUI>().text = "0 Allied/German Loss";
         else
-            GameObject.Find("LossRatioText").GetComponent<Text>().text = ((float)(alliedFactorsEliminated) / ((float)germanFactorsEliminated)).ToString("0.00") + " Allied/German Loss";
+            GameObject.Find("LossRatioText").GetComponent<TextMeshProUGUI>().text = ((float)(alliedFactorsEliminated) / ((float)germanFactorsEliminated)).ToString("0.00") + " Allied/German Loss";
     }
 
     /// <summary>
@@ -2337,7 +2411,7 @@ public class GlobalDefinitions : MonoBehaviour
         RemoveAllGUIs();
         Canvas victoryCanvas = null;
         CreateGUICanvas("AlliedVictoryMessage", 1000, 200, ref victoryCanvas);
-        CreateText("..." + message + " ...", "VictoryMessageText", 1000, 200, 0, 0, victoryCanvas);
+        CreateUIText("..." + message + " ...", "VictoryMessageText", 1000, 200, 0, 0, Color.white, victoryCanvas);
         okButton = CreateButton("VictoryOKButton", "OK",
                 0,
                 -30,
@@ -2431,7 +2505,7 @@ public class GlobalDefinitions : MonoBehaviour
         if (!((gameMode == GameModeValues.AI) && !localControl) && !commandFileBeingRead)
         {
             WriteToLogFile("guiUpdateStatusMessage: " + message);
-            GameObject.Find("StatusMessageText").GetComponent<Text>().text = oldMessage5 + "\n\n" + oldMessage4 + "\n\n" + oldMessage3 + "\n\n" + oldMessage2 + "\n\n" + oldMessage1;
+            GameObject.Find("StatusMessageText").GetComponent<TextMeshProUGUI>().text = oldMessage5 + "\n\n" + oldMessage4 + "\n\n" + oldMessage3 + "\n\n" + oldMessage2 + "\n\n" + oldMessage1;
         }
     }
 
@@ -2443,8 +2517,8 @@ public class GlobalDefinitions : MonoBehaviour
         DateTime dday = new DateTime(1944, 6, 6);
         DateTime weekStart = dday.AddDays((turnNumber - 1) * 7);
         DateTime weekEnd = weekStart.AddDays(6);
-        GameObject.Find("GUITurnTextObject").GetComponent<Text>().text = " Turn Number " + turnNumber;
-        GameObject.Find("GUIDateTextObject").GetComponent<Text>().text = weekStart.ToString("MM/dd/yyyy") + " - " + weekEnd.ToString("MM/dd/yyyy");
+        GameObject.Find("GUITurnTextObject").GetComponent<TextMeshProUGUI>().text = " Turn Number " + turnNumber;
+        GameObject.Find("GUIDateTextObject").GetComponent<TextMeshProUGUI>().text = weekStart.ToString("MM/dd/yyyy") + " - " + weekEnd.ToString("MM/dd/yyyy");
     }
 
     /// <summary>
@@ -2453,7 +2527,7 @@ public class GlobalDefinitions : MonoBehaviour
     /// <param name="currentPhase"></param>
     public static void GuiUpdatePhase(string currentPhase)
     {
-        GameObject.Find("GUIPhaseTextObject").GetComponent<Text>().text = currentPhase;
+        GameObject.Find("GUIPhaseTextObject").GetComponent<TextMeshProUGUI>().text = currentPhase;
         WriteToLogFile("Changing to " + currentPhase + " Phase");
     }
 
@@ -2517,10 +2591,10 @@ public class GlobalDefinitions : MonoBehaviour
             using (StreamWriter writeFile = File.AppendText(GameControl.path + fullCommandFile))
                 writeFile.WriteLine(commandString);
 
-            if (localControl && (gameMode == GameModeValues.Peer2PeerNetwork))
-            {
-                TransportScript.SendMessageToRemoteComputer(commandString);
-            }
+            //if (localControl && (gameMode == GameModeValues.Peer2PeerNetwork))
+            //{
+            //    TransportScript.SendMessageToRemoteComputer(commandString);
+            //}
         }
     }
 
@@ -2569,10 +2643,10 @@ public class GlobalDefinitions : MonoBehaviour
     /// </summary>
     public static void ExecuteChatMessage()
     {
-        string messageText = GameObject.Find("ChatInputField").GetComponent<InputField>().text;
-        GameObject.Find("ChatText").GetComponent<Text>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<Text>().text;
-        TransportScript.SendMessageToRemoteComputer(CHATMESSAGEKEYWORD + " " + messageText);
-        GameObject.Find("ChatInputField").GetComponent<InputField>().text = "";
+        //string messageText = GameObject.Find("ChatInputField").GetComponent<InputField>().text;
+        //GameObject.Find("ChatText").GetComponent<Text>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<Text>().text;
+        //TransportScript.SendMessageToRemoteComputer(CHATMESSAGEKEYWORD + " " + messageText);
+        //GameObject.Find("ChatInputField").GetComponent<InputField>().text = "";
     }
 
     /// <summary>
@@ -2581,7 +2655,7 @@ public class GlobalDefinitions : MonoBehaviour
     public static void AddChatMessage(string messageText)
     {
         WriteToLogFile("addChatMessage: received message " + messageText);
-        GameObject.Find("ChatText").GetComponent<Text>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<Text>().text;
+        GameObject.Find("ChatText").GetComponent<TextMeshProUGUI>().text = messageText + Environment.NewLine + GameObject.Find("ChatText").GetComponent<TextMeshProUGUI>().text;
     }
 
     /// <summary>
@@ -2700,7 +2774,7 @@ public class GlobalDefinitions : MonoBehaviour
     {
         Canvas aiStatusCanvas = null;
         CreateGUICanvas("AIStatusMessage", 1000, 200, ref aiStatusCanvas);
-        CreateText("..." + message + " ...", "AIStatusMessageText", 1000, 200, 0, 0, aiStatusCanvas);
+        CreateUIText("..." + message + " ...", "AIStatusMessageText", 1000, 200, 0, 0, Color.white, aiStatusCanvas);
     }
 
 

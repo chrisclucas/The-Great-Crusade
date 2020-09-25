@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CombatToggleRoutines : MonoBehaviour
 {
@@ -424,7 +425,7 @@ public class CombatToggleRoutines : MonoBehaviour
     private void UpdateOddsText()
     {
         // Update the text displaying the combat odds
-        GameObject.Find("OddsText").GetComponent<Text>().text = "Combat Odds " +
+        GameObject.Find("OddsText").GetComponent<TextMeshProUGUI>().text = "Combat Odds " +
                 GlobalDefinitions.ConvertOddsToString(
                 GlobalDefinitions.ReturnCombatOdds(
                 currentCombat.GetComponent<Combat>().defendingUnits,

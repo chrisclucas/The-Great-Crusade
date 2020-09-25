@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CombatResolutionButtonRoutines : MonoBehaviour
 {
@@ -247,11 +248,11 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
                 curentCombat.GetComponent<Combat>().attackAirSupport = true;
                 GlobalDefinitions.WriteToLogFile("addAttackAirSupport: incrementing GlobalDefinitions.tacticalAirMissionsThisTurn");
                 GlobalDefinitions.tacticalAirMissionsThisTurn++;
-                attackFactorTextGameObject.GetComponent<Text>().text =
+                attackFactorTextGameObject.GetComponent<TextMeshProUGUI>().text =
                         GlobalDefinitions.CalculateAttackFactor(
                         curentCombat.GetComponent<Combat>().attackingUnits,
                         curentCombat.GetComponent<Combat>().attackAirSupport).ToString();
-                oddsTextGameObject.GetComponent<Text>().text =
+                oddsTextGameObject.GetComponent<TextMeshProUGUI>().text =
                         GlobalDefinitions.ConvertOddsToString(
                         GlobalDefinitions.ReturnCombatOdds(curentCombat.GetComponent<Combat>().defendingUnits,
                         curentCombat.GetComponent<Combat>().attackingUnits,
@@ -269,11 +270,11 @@ public class CombatResolutionButtonRoutines : MonoBehaviour
 
             curentCombat.GetComponent<Combat>().attackAirSupport = false;
             GlobalDefinitions.tacticalAirMissionsThisTurn--;
-            attackFactorTextGameObject.GetComponent<Text>().text =
+            attackFactorTextGameObject.GetComponent<TextMeshProUGUI>().text =
                     GlobalDefinitions.CalculateAttackFactor(
                     curentCombat.GetComponent<Combat>().attackingUnits,
                     curentCombat.GetComponent<Combat>().attackAirSupport).ToString();
-            oddsTextGameObject.GetComponent<Text>().text =
+            oddsTextGameObject.GetComponent<TextMeshProUGUI>().text =
                     GlobalDefinitions.ConvertOddsToString(
                     GlobalDefinitions.ReturnCombatOdds(
                     curentCombat.GetComponent<Combat>().defendingUnits,

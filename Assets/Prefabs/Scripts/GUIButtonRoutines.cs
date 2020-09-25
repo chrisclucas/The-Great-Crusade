@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System;
 using System.Collections.Generic;
+using TMPro;
 
 public class GUIButtonRoutines : MonoBehaviour
 {
@@ -76,14 +77,14 @@ public class GUIButtonRoutines : MonoBehaviour
         List<GameObject> removeUnitList = new List<GameObject>();
 
         // If this is a network game I've already checked that the player is in control
-        if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
-        {
-            GlobalDefinitions.WriteToLogFile("YesMain: Calling ResetConnection()");
-            //byte error;
-            //NetworkTransport.Disconnect(TransportScript.receivedHostId, TransportScript.gameConnectionId, out error);
-            //Network.Disconnect();
-            TransportScript.ResetConnection(TransportScript.computerId);
-        }
+        //if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
+        //{
+        //    GlobalDefinitions.WriteToLogFile("YesMain: Calling ResetConnection()");
+        //    //byte error;
+        //    //NetworkTransport.Disconnect(TransportScript.receivedHostId, TransportScript.gameConnectionId, out error);
+        //    //Network.Disconnect();
+        //    TransportScript.ResetConnection(TransportScript.computerId);
+        //}
 
         // Copy list so the guis can be removed
         List<GameObject> removeList = new List<GameObject>();
@@ -151,7 +152,7 @@ public class GUIButtonRoutines : MonoBehaviour
 
         GlobalDefinitions.WriteToLogFile("Putting Allied units in Britain");
         // When restarting a game the units won't have their Britain location loaded so this needs to be done before a restart file is read
-        GameControl.createBoardInstance.GetComponent<CreateBoard>().ReadBritainPlacement(GameControl.path + "TGCBritainUnitLocation.txt");
+        GameControl.createBoardInstance.GetComponent<CreateBoard>().ReadBritainPlacement(GlobalDefinitions.britainUnitLocationFile);
 
         GlobalDefinitions.ResetAllGlobalDefinitions();
 
@@ -443,12 +444,12 @@ public class GUIButtonRoutines : MonoBehaviour
                 panelHeight,
                 ref settingCanvas);
 
-        GlobalDefinitions.CreateText("Settings", "SettingsText",
+        GlobalDefinitions.CreateUIText("Settings", "SettingsText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 3f * GlobalDefinitions.GUIUNITIMAGESIZE,
-                settingCanvas);
+                Color.white, settingCanvas);
 
         agressivenessSlider = GlobalDefinitions.CreateSlider("AgressivenessSlider", "GUI Slider15",
                 0,
@@ -457,33 +458,33 @@ public class GUIButtonRoutines : MonoBehaviour
         agressivenessSlider.value = GlobalDefinitions.aggressiveSetting;
         agressivenessSlider.onValueChanged.AddListener(delegate { UpdateAggressivenessSettingText(agressivenessSlider.value); });
 
-        GlobalDefinitions.CreateText("Aggressive", "AggressiveText",
+        GlobalDefinitions.CreateUIText("Aggressive", "AggressiveText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2f * GlobalDefinitions.GUIUNITIMAGESIZE,
-                settingCanvas);
+                Color.white, settingCanvas);
 
-        GlobalDefinitions.CreateText("Defensive", "DefensiveText",
+        GlobalDefinitions.CreateUIText("Defensive", "DefensiveText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 2f * GlobalDefinitions.GUIUNITIMAGESIZE,
-                settingCanvas);
+                Color.white, settingCanvas);
 
-        GlobalDefinitions.aggressivenessSettingText = GlobalDefinitions.CreateText(Convert.ToString(agressivenessSlider.value), "AggressivenessSettingText",
+        GlobalDefinitions.aggressivenessSettingText = GlobalDefinitions.CreateUIText(Convert.ToString(agressivenessSlider.value), "AggressivenessSettingText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
-                settingCanvas);
+                Color.white, settingCanvas);
 
-        GlobalDefinitions.CreateText("Computer Aggressiveness", "ComputerAggressivenessText",
+        GlobalDefinitions.CreateUIText("Computer Aggressiveness", "ComputerAggressivenessText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 1f * GlobalDefinitions.GUIUNITIMAGESIZE,
-                settingCanvas);
+                Color.white, settingCanvas);
 
         diffiultySlider = GlobalDefinitions.CreateSlider("DifficultySlider", "GUI Slider010",
                 0,
@@ -492,33 +493,33 @@ public class GUIButtonRoutines : MonoBehaviour
         diffiultySlider.value = GlobalDefinitions.difficultySetting;
         diffiultySlider.onValueChanged.AddListener(delegate { UpdateDifficultySettingText(diffiultySlider.value); });
 
-        GlobalDefinitions.CreateText("Harder", "HarderText",
+        GlobalDefinitions.CreateUIText("Harder", "HarderText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
-                settingCanvas);
+                Color.white, settingCanvas);
 
-        GlobalDefinitions.CreateText("Easier", "EasierText",
+        GlobalDefinitions.CreateUIText("Easier", "EasierText",
                 3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
-                settingCanvas);
+                Color.white, settingCanvas);
 
-        GlobalDefinitions.difficultySettingText = GlobalDefinitions.CreateText(Convert.ToString(diffiultySlider.value), "DifficultySettingText",
+        GlobalDefinitions.difficultySettingText = GlobalDefinitions.CreateUIText(Convert.ToString(diffiultySlider.value), "DifficultySettingText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 -0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
-                settingCanvas);
+                Color.white, settingCanvas);
 
-        GlobalDefinitions.CreateText("Game Difficulty", "GameDifficultyText",
+        GlobalDefinitions.CreateUIText("Game Difficulty", "GameDifficultyText",
                 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                 GlobalDefinitions.GUIUNITIMAGESIZE,
                 0,
                 -1f * GlobalDefinitions.GUIUNITIMAGESIZE,
-        settingCanvas);
+                Color.white, settingCanvas);
 
         okButton = GlobalDefinitions.CreateButton("settingOKButton", "OK",
                 -1f * GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -537,12 +538,12 @@ public class GUIButtonRoutines : MonoBehaviour
 
     public void UpdateDifficultySettingText(float value)
     {
-        GlobalDefinitions.difficultySettingText.GetComponent<Text>().text = Convert.ToString(value);
+        GlobalDefinitions.difficultySettingText.GetComponent<TextMeshProUGUI>().text = Convert.ToString(value);
     }
 
     public void UpdateAggressivenessSettingText(float value)
     {
-        GlobalDefinitions.aggressivenessSettingText.GetComponent<Text>().text = Convert.ToString(value);
+        GlobalDefinitions.aggressivenessSettingText.GetComponent<TextMeshProUGUI>().text = Convert.ToString(value);
     }
 
     /// <summary>
