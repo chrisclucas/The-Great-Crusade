@@ -3,37 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingGUIButtons : MonoBehaviour
+namespace TheGreatCrusade
 {
-    /// <summary>
-    /// Called when the cancel button is selected
-    /// </summary>
-    public void CancelSelected()
+    public class SettingGUIButtons : MonoBehaviour
     {
-        // Get rid of the gui
-        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+        /// <summary>
+        /// Called when the cancel button is selected
+        /// </summary>
+        public void CancelSelected()
+        {
+            // Get rid of the gui
+            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
 
-        // Bring back any gui's that were active before this was called
-        foreach (GameObject gui in GlobalDefinitions.guiList)
-            gui.SetActive(true);
+            // Bring back any gui's that were active before this was called
+            foreach (GameObject gui in GlobalDefinitions.guiList)
+                gui.SetActive(true);
 
-        // Turn the button back on
-        GameObject.Find("SettingsButton").GetComponent<Button>().interactable = true;
-    }
+            // Turn the button back on
+            GameObject.Find("SettingsButton").GetComponent<Button>().interactable = true;
+        }
 
-    /// <summary>
-    /// Called when the ok button is selected
-    /// </summary>
-    public void OkSelected()
-    {
-        GlobalDefinitions.aggressiveSetting = (int)GameObject.Find("AgressivenessSlider").GetComponent<Slider>().value;
-        GlobalDefinitions.difficultySetting = (int)GameObject.Find("DifficultySlider").GetComponent<Slider>().value;
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + (int)GameObject.Find("AgressivenessSlider").GetComponent<Slider>().value);
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + (int)GameObject.Find("DifficultySlider").GetComponent<Slider>().value);
-        // Write out the values of the sliders to the settings file
-        GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().WriteSettingsFile(GlobalDefinitions.difficultySetting, GlobalDefinitions.aggressiveSetting);
-        CombatResolutionRoutines.AdjustAggressiveness();
+        /// <summary>
+        /// Called when the ok button is selected
+        /// </summary>
+        public void OkSelected()
+        {
+            GlobalDefinitions.aggressiveSetting = (int)GameObject.Find("AgressivenessSlider").GetComponent<Slider>().value;
+            GlobalDefinitions.difficultySetting = (int)GameObject.Find("DifficultySlider").GetComponent<Slider>().value;
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + (int)GameObject.Find("AgressivenessSlider").GetComponent<Slider>().value);
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + (int)GameObject.Find("DifficultySlider").GetComponent<Slider>().value);
+            // Write out the values of the sliders to the settings file
+            GameControl.readWriteRoutinesInstance.GetComponent<ReadWriteRoutines>().WriteSettingsFile(GlobalDefinitions.difficultySetting, GlobalDefinitions.aggressiveSetting);
+            CombatResolutionRoutines.AdjustAggressiveness();
 
-        CancelSelected();
+            CancelSelected();
+        }
     }
 }

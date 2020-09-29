@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 
-public class PostCombatMovementOkRoutines : MonoBehaviour
+namespace TheGreatCrusade
 {
-    public void ExecutePostCombatMovement()
+    public class PostCombatMovementOkRoutines : MonoBehaviour
     {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.POSTCOMBATOKKEYWORD + " " + name);
-        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
-        GlobalDefinitions.hexesAvailableForPostCombatMovement.Clear();
-        GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
+        public void ExecutePostCombatMovement()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.POSTCOMBATOKKEYWORD + " " + name);
+            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GlobalDefinitions.hexesAvailableForPostCombatMovement.Clear();
+            GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
+        }
     }
 }

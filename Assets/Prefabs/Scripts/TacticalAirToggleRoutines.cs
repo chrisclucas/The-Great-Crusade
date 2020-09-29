@@ -2,142 +2,145 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TacticalAirToggleRoutines : MonoBehaviour
+namespace TheGreatCrusade
 {
-    public float yPosition;
-    public GameObject hex;
-    public GameObject unit;
-
-    public void AddCloseDefenseHex()
+    public class TacticalAirToggleRoutines : MonoBehaviour
     {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDCLOSEDEFENSEKEYWORD);
+        public float yPosition;
+        public GameObject hex;
+        public GameObject unit;
 
-        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
-                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteCloseDefenseSelection;
-        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
-    }
+        public void AddCloseDefenseHex()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDCLOSEDEFENSEKEYWORD);
 
-    public void CancelCloseDefense()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CANCELCLOSEDEFENSEKEYWORD + " " + name);
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                    GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteCloseDefenseSelection;
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        }
 
-        for (int index = 0; index < GlobalDefinitions.closeDefenseHexes.Count; index++)
-            if (GlobalDefinitions.closeDefenseHexes[index] == hex)
-            {
-                GlobalDefinitions.closeDefenseHexes[index].GetComponent<HexDatabaseFields>().closeDefenseSupport = false;
-                GlobalDefinitions.UnhighlightHex(GlobalDefinitions.closeDefenseHexes[index]);
-                GlobalDefinitions.closeDefenseHexes.Remove(hex);
-            }
-        GlobalDefinitions.tacticalAirMissionsThisTurn--;
-        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
-        CombatResolutionRoutines.CreateTacticalAirGUI();
-    }
+        public void CancelCloseDefense()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CANCELCLOSEDEFENSEKEYWORD + " " + name);
 
-    public void LocateCloseDefense()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATECLOSEDEFENSEKEYWORD + " " + name);
+            for (int index = 0; index < GlobalDefinitions.closeDefenseHexes.Count; index++)
+                if (GlobalDefinitions.closeDefenseHexes[index] == hex)
+                {
+                    GlobalDefinitions.closeDefenseHexes[index].GetComponent<HexDatabaseFields>().closeDefenseSupport = false;
+                    GlobalDefinitions.UnhighlightHex(GlobalDefinitions.closeDefenseHexes[index]);
+                    GlobalDefinitions.closeDefenseHexes.Remove(hex);
+                }
+            GlobalDefinitions.tacticalAirMissionsThisTurn--;
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            CombatResolutionRoutines.CreateTacticalAirGUI();
+        }
 
-        Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        // This centers the camera on the hex
-        mainCamera.transform.position = new Vector3(hex.transform.position.x, hex.transform.position.y, mainCamera.transform.position.z);
-        // This then moves the camera over to the left so that the gui doesn't cover the unit
-        mainCamera.transform.position = new Vector3(
-                mainCamera.ViewportToWorldPoint(new Vector2(0.25f, 0.5f)).x,
-                hex.transform.position.y,
-                mainCamera.transform.position.z);
-    }
+        public void LocateCloseDefense()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATECLOSEDEFENSEKEYWORD + " " + name);
 
-    public void AddInterdictedUnit()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDUNITINTERDICTIONKEYWORD);
+            Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+            // This centers the camera on the hex
+            mainCamera.transform.position = new Vector3(hex.transform.position.x, hex.transform.position.y, mainCamera.transform.position.z);
+            // This then moves the camera over to the left so that the gui doesn't cover the unit
+            mainCamera.transform.position = new Vector3(
+                    mainCamera.ViewportToWorldPoint(new Vector2(0.25f, 0.5f)).x,
+                    hex.transform.position.y,
+                    mainCamera.transform.position.z);
+        }
 
-        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
-                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteUnitInterdictionSelection;
-        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
-    }
+        public void AddInterdictedUnit()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDUNITINTERDICTIONKEYWORD);
 
-    public void CancelInterdictedUnit()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CANCELUNITINTERDICTIONKEYWORD + " " + name);
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                    GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteUnitInterdictionSelection;
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        }
 
-        for (int index = 0; index < GlobalDefinitions.interdictedUnits.Count; index++)
-            if (GlobalDefinitions.interdictedUnits[index] == unit)
-            {
-                GlobalDefinitions.interdictedUnits[index].GetComponent<UnitDatabaseFields>().unitInterdiction = false;
-                GlobalDefinitions.interdictedUnits.Remove(unit);
-            }
-        GlobalDefinitions.tacticalAirMissionsThisTurn--;
-        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
-        CombatResolutionRoutines.CreateTacticalAirGUI();
-    }
+        public void CancelInterdictedUnit()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CANCELUNITINTERDICTIONKEYWORD + " " + name);
 
-    public void LocateInterdictedUnit()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATEUNITINTERDICTIONKEYWORD + " " + name);
+            for (int index = 0; index < GlobalDefinitions.interdictedUnits.Count; index++)
+                if (GlobalDefinitions.interdictedUnits[index] == unit)
+                {
+                    GlobalDefinitions.interdictedUnits[index].GetComponent<UnitDatabaseFields>().unitInterdiction = false;
+                    GlobalDefinitions.interdictedUnits.Remove(unit);
+                }
+            GlobalDefinitions.tacticalAirMissionsThisTurn--;
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            CombatResolutionRoutines.CreateTacticalAirGUI();
+        }
 
-        Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        // This centers the camera on the unit
-        mainCamera.transform.position = new Vector3(unit.transform.position.x, unit.transform.position.y, mainCamera.transform.position.z);
-        // This then moves the camera over to the left so that the gui doesn't cover the unit
-        mainCamera.transform.position = new Vector3(
-                mainCamera.ViewportToWorldPoint(new Vector2(0.25f, 0.5f)).x,
-                unit.transform.position.y,
-                mainCamera.transform.position.z);
-    }
+        public void LocateInterdictedUnit()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATEUNITINTERDICTIONKEYWORD + " " + name);
 
-    public void AddRiverInterdiction()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDRIVERINTERDICTIONKEYWORD);
+            Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+            // This centers the camera on the unit
+            mainCamera.transform.position = new Vector3(unit.transform.position.x, unit.transform.position.y, mainCamera.transform.position.z);
+            // This then moves the camera over to the left so that the gui doesn't cover the unit
+            mainCamera.transform.position = new Vector3(
+                    mainCamera.ViewportToWorldPoint(new Vector2(0.25f, 0.5f)).x,
+                    unit.transform.position.y,
+                    mainCamera.transform.position.z);
+        }
 
-        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
-                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteRiverInterdictionSelection;
-        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
-    }
+        public void AddRiverInterdiction()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.ADDRIVERINTERDICTIONKEYWORD);
 
-    public void CancelRiverInterdiction()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CANCELRIVERINTERDICTIONKEYWORD + " " + name);
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                    GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteRiverInterdictionSelection;
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        }
 
-        for (int index = 0; index < GlobalDefinitions.riverInderdictedHexes.Count; index++)
-            if (GlobalDefinitions.riverInderdictedHexes[index] == hex)
-            {
-                GlobalDefinitions.riverInderdictedHexes[index].GetComponent<HexDatabaseFields>().riverInterdiction = false;
-                GlobalDefinitions.UnhighlightHex(GlobalDefinitions.riverInderdictedHexes[index]);
-                GlobalDefinitions.riverInderdictedHexes.Remove(hex);
-            }
-        GlobalDefinitions.tacticalAirMissionsThisTurn--;
-        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
-        CombatResolutionRoutines.CreateTacticalAirGUI();
-    }
+        public void CancelRiverInterdiction()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CANCELRIVERINTERDICTIONKEYWORD + " " + name);
 
-    public void LocateRiverInterdiction()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATERIVERINTERDICTIONKEYWORD + " " + name);
+            for (int index = 0; index < GlobalDefinitions.riverInderdictedHexes.Count; index++)
+                if (GlobalDefinitions.riverInderdictedHexes[index] == hex)
+                {
+                    GlobalDefinitions.riverInderdictedHexes[index].GetComponent<HexDatabaseFields>().riverInterdiction = false;
+                    GlobalDefinitions.UnhighlightHex(GlobalDefinitions.riverInderdictedHexes[index]);
+                    GlobalDefinitions.riverInderdictedHexes.Remove(hex);
+                }
+            GlobalDefinitions.tacticalAirMissionsThisTurn--;
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            CombatResolutionRoutines.CreateTacticalAirGUI();
+        }
 
-        Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        // This centers the camera on the hex
-        mainCamera.transform.position = new Vector3(hex.transform.position.x, hex.transform.position.y, mainCamera.transform.position.z);
-        // This then moves the camera over to the left so that the gui doesn't cover the unit
-        mainCamera.transform.position = new Vector3(
-                mainCamera.ViewportToWorldPoint(new Vector2(0.25f, 0.5f)).x,
-                hex.transform.position.y,
-                mainCamera.transform.position.z);
-    }
+        public void LocateRiverInterdiction()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOCATERIVERINTERDICTIONKEYWORD + " " + name);
 
-    public void MultiUnitSelection()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD + " " + name);
+            Camera mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+            // This centers the camera on the hex
+            mainCamera.transform.position = new Vector3(hex.transform.position.x, hex.transform.position.y, mainCamera.transform.position.z);
+            // This then moves the camera over to the left so that the gui doesn't cover the unit
+            mainCamera.transform.position = new Vector3(
+                    mainCamera.ViewportToWorldPoint(new Vector2(0.25f, 0.5f)).x,
+                    hex.transform.position.y,
+                    mainCamera.transform.position.z);
+        }
 
-        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
-        CombatResolutionRoutines.AddInterdictedUnitToList(unit);
-    }
+        public void MultiUnitSelection()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD + " " + name);
 
-    public static void TacticalAirOK()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD);
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            CombatResolutionRoutines.AddInterdictedUnitToList(unit);
+        }
 
-        GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+        public static void TacticalAirOK()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD);
 
-        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
+            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+
+            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
+        }
     }
 }

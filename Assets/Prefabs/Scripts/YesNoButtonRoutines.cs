@@ -1,27 +1,30 @@
 ﻿using UnityEngine;
 
-public class YesNoButtonRoutines : MonoBehaviour
+namespace TheGreatCrusade
 {
-    public UnityEngine.Events.UnityAction yesAction;
-    public UnityEngine.Events.UnityAction noAction;
-    /// <summary>
-    /// Sets variables for a yes response
-    /// </summary>
-    public void YesButtonSelected()
+    public class YesNoButtonRoutines : MonoBehaviour
     {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.YESBUTTONSELECTEDKEYWORD);
-        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
-        yesAction();
-    }
+        public UnityEngine.Events.UnityAction yesAction;
+        public UnityEngine.Events.UnityAction noAction;
+        /// <summary>
+        /// Sets variables for a yes response
+        /// </summary>
+        public void YesButtonSelected()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.YESBUTTONSELECTEDKEYWORD);
+            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            yesAction();
+        }
 
-    /// <summary>
-    /// Sets variables for a no response
-    /// </summary>
-    public void NoButtonSelected()
-    {
-        GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.NOBUTTONSELECTEDKEYWORD);
-        GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
-        noAction();
-    }
+        /// <summary>
+        /// Sets variables for a no response
+        /// </summary>
+        public void NoButtonSelected()
+        {
+            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.NOBUTTONSELECTEDKEYWORD);
+            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            noAction();
+        }
 
+    }
 }

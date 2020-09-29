@@ -1,35 +1,38 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class InvasionSelectionToggleRoutines : MonoBehaviour
+namespace TheGreatCrusade
 {
-    public int index;
-
-    public void InvadedAreaSelected()
+    public class InvasionSelectionToggleRoutines : MonoBehaviour
     {
-        if (GetComponent<Toggle>().isOn)
+        public int index;
+
+        public void InvadedAreaSelected()
         {
-            GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.INVASIONAREASELECTIONKEYWORD + " " + name);
-            GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().SetInvasionArea(index);
+            if (GetComponent<Toggle>().isOn)
+            {
+                GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.INVASIONAREASELECTIONKEYWORD + " " + name);
+                GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().SetInvasionArea(index);
 
-            // Turn on the gui buttons
+                // Turn on the gui buttons
 
-            GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
-            GlobalDefinitions.undoButton.GetComponent<Button>().interactable = true;
-            GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().interactable = true;
-            GlobalDefinitions.AssignCombatButton.GetComponent<Button>().interactable = true;
-            GlobalDefinitions.DisplayAllCombatsButton.GetComponent<Button>().interactable = true;
-            GlobalDefinitions.AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
-            GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
-            GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
+                GlobalDefinitions.nextPhaseButton.GetComponent<Button>().interactable = true;
+                GlobalDefinitions.undoButton.GetComponent<Button>().interactable = true;
+                GlobalDefinitions.MustAttackToggle.GetComponent<Toggle>().interactable = true;
+                GlobalDefinitions.AssignCombatButton.GetComponent<Button>().interactable = true;
+                GlobalDefinitions.DisplayAllCombatsButton.GetComponent<Button>().interactable = true;
+                GlobalDefinitions.AlliedSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
+                GlobalDefinitions.GermanSupplyRangeToggle.GetComponent<Toggle>().interactable = true;
+                GlobalDefinitions.AlliedSupplySourcesButton.GetComponent<Button>().interactable = true;
 
-            if (!GlobalDefinitions.localControl)
-                GlobalDefinitions.SetGUIForNonLocalControl();
+                if (!GlobalDefinitions.localControl)
+                    GlobalDefinitions.SetGUIForNonLocalControl();
 
-            GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
-                    GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedInvasionState>().ExecuteSelectUnit;
+                GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
+                        GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedInvasionState>().ExecuteSelectUnit;
 
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            }
         }
     }
 }
