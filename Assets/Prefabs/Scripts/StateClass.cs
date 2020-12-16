@@ -107,12 +107,10 @@ namespace TheGreatCrusade
             string turnFileName;
 
             // Since at this point we know we are starting a saved game and not running the command file, remove the command file
+            GlobalDefinitions.DeleteFullCommandFile();
             if (!GlobalDefinitions.commandFileBeingRead)
                 if (File.Exists(GameControl.path + GlobalGameFields.commandFile))
-                {
                     GlobalDefinitions.DeleteCommandFile();
-                    GlobalDefinitions.DeleteFullCommandFile();
-                }
 
             // This calls up the file browser
             turnFileName = GlobalDefinitions.GuiFileDialog();
@@ -148,12 +146,11 @@ namespace TheGreatCrusade
             int fileNumber;
             GlobalDefinitions.WriteToLogFile("ExecuteNewGame: executing");
             // Since at this point we know we are starting a new game and not running the command file, remove the command file
+            GlobalDefinitions.DeleteFullCommandFile();
             if (!GlobalDefinitions.commandFileBeingRead)
                 if (File.Exists(GameControl.path + GlobalGameFields.commandFile))
-                {
                     GlobalDefinitions.DeleteCommandFile();
-                    GlobalDefinitions.DeleteFullCommandFile();
-                }
+
 
             // If the fileNumber is less than 100 the number to be used is being passed as part of a network game
             if (GlobalDefinitions.germanSetupFileUsed == 100)
@@ -169,16 +166,19 @@ namespace TheGreatCrusade
             GlobalDefinitions.GuiUpdateStatusMessage("German setup file number = " + fileNumber);
             GameControl.createBoardInstance.GetComponent<CreateBoard>().ReadGermanPlacement(GameControl.path + "GermanSetup\\TGCGermanSetup" + fileNumber + ".txt");
 
+            // The code below used to be bypasssed if a command file was being read, but I moved it out when I changed to always update the full command file
+            // even if a command file is being read to make it easier to generate test files over multiple sessions.
+            using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalGameFields.fullCommandFile))
+            {
+                writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
+                writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
+                writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
+            }
+
             // The network communication is a little different for a new game so I can't use the routine to write to the command file
             // since I don't want it sending a message to the remote computer.
             if (!GlobalDefinitions.commandFileBeingRead)
             {
-                using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalGameFields.fullCommandFile))
-                {
-                    writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
-                    writeFile.WriteLine(GlobalDefinitions.DIFFICULTYSETTINGKEYWORD + " " + GlobalDefinitions.difficultySetting);
-                    writeFile.WriteLine(GlobalDefinitions.PLAYNEWGAMEKEYWORD + " " + fileNumber);
-                }
                 using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalGameFields.commandFile))
                 {
                     writeFile.WriteLine(GlobalDefinitions.AGGRESSIVESETTINGKEYWORD + " " + GlobalDefinitions.aggressiveSetting);
@@ -242,7 +242,7 @@ namespace TheGreatCrusade
                         }
                         line = theReader.ReadLine();
                         GlobalDefinitions.WriteToLogFile("readCommandFile: reading line - " + line);
-                        Debug.Log("readCommandFile: reading line - " + line);
+                        //Debug.Log("readCommandFile: reading line - " + line);
                         if (line != null)
                         {
                             switchEntries = line.Split(delimiterChars);
@@ -269,6 +269,9 @@ namespace TheGreatCrusade
                                     GameControl.setUpStateInstance.GetComponent<SetUpState>().ExecuteNewGame();
                                     break;
                                 default:
+                                    // I'm reading from a command file, copy this to the full command file
+                                    using (StreamWriter writeFile = File.AppendText(GameControl.path + GlobalGameFields.fullCommandFile))
+                                        writeFile.WriteLine(line);
                                     ExecuteGameCommand.ProcessCommand(line);
                                     break;
                             }
@@ -325,6 +328,7 @@ namespace TheGreatCrusade
         // There are no modes in this state, all actions get executed by the initialization including the state transition
         public override void Initialize()
         {
+            GlobalDefinitions.WriteToLogFile("TurnInitializationState: on turn " + GlobalDefinitions.turnNumber + " number of carpet bombing missions = " + GlobalDefinitions.numberOfCarpetBombingsUsed);
             if (GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork)
             {
                 if (GlobalDefinitions.sideControled == GlobalDefinitions.Nationality.German)
@@ -397,7 +401,7 @@ namespace TheGreatCrusade
             GlobalDefinitions.tacticalAirMissionsThisTurn = 0;
 
             // Reset air mission hex highlights
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 hex.GetComponent<HexDatabaseFields>().riverInterdiction = false;
                 hex.GetComponent<HexDatabaseFields>().closeDefenseSupport = false;
@@ -491,7 +495,6 @@ namespace TheGreatCrusade
             if (GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetAlliedSupplyStatus(false))
             {
                 GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().HighlightUnsuppliedUnits();
-                GlobalDefinitions.WriteToLogFile("SupplyState: executing createSupplySourceGUI");
                 GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CreateSupplySourceGUI(false);
                 executeMethod = ExecuteSelectUnit;
             }
@@ -550,7 +553,7 @@ namespace TheGreatCrusade
             else if (inputMessage.unit.GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German)
                 GlobalDefinitions.GuiDisplayUnitsOnHex(inputMessage.unit.GetComponent<UnitDatabaseFields>().occupiedHex);
 
-            if (GlobalDefinitions.guiList.Count == 0)
+            if (GUIRoutines.guiList.Count == 0)
             {
                 GlobalDefinitions.selectedUnit = GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().GetInvadingUnit(inputMessage.unit);
                 if (GlobalDefinitions.selectedUnit == null)
@@ -667,7 +670,7 @@ namespace TheGreatCrusade
                 GlobalDefinitions.selectedUnit = null;
             }
 
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
                 GlobalDefinitions.UnhighlightHex(hex.gameObject);
@@ -999,7 +1002,7 @@ namespace TheGreatCrusade
             bool alliedVictory = false;
             bool germanVictory = false;
 
-            // If combat resolutin wasn't started then check to make sure that there aren't units that need to attack or be attacked
+            // If combat resolution wasn't started then check to make sure that there aren't units that need to attack or be attacked
             // Note the check for combatResolutionStarted is needed because the result of combat can create must attack units for the next turn so we can't check if there has been resolution
             // not to mention that if combat resolution was started it was already checked that required units were involved in a combat already
             if ((!GlobalDefinitions.combatResolutionStarted) && (CombatRoutines.CheckIfRequiredUnitsAreUncommitted(GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality, true)))
@@ -1281,7 +1284,7 @@ namespace TheGreatCrusade
         {
             if (alliedAIExecuting)
             {
-                GlobalDefinitions.RemoveAllGUIs();
+                GUIRoutines.RemoveAllGUIs();
                 GlobalDefinitions.GuiDisplayAIStatus(messageText);
             }
         }
@@ -1412,7 +1415,7 @@ namespace TheGreatCrusade
             GlobalDefinitions.SwitchLocalControl(true);
 
             // Get rid of the last status message
-            GlobalDefinitions.RemoveAllGUIs();
+            GUIRoutines.RemoveAllGUIs();
 
             // This will stop the status message from executing in the update() routine
             alliedAIExecuting = false;
@@ -1484,7 +1487,7 @@ namespace TheGreatCrusade
         {
             if (germanAIExecuting)
             {
-                GlobalDefinitions.RemoveAllGUIs();
+                GUIRoutines.RemoveAllGUIs();
                 GlobalDefinitions.GuiDisplayAIStatus(messageText);
             }
         }
@@ -1579,7 +1582,7 @@ namespace TheGreatCrusade
             GlobalDefinitions.SwitchLocalControl(true);
 
             // Get rid of the last status gui
-            GlobalDefinitions.RemoveAllGUIs();
+            GUIRoutines.RemoveAllGUIs();
 
             // Stop the AI update messages
             germanAIExecuting = false;

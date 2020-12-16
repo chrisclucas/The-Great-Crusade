@@ -26,7 +26,7 @@ namespace TheGreatCrusade
             // First reset all the supply sources on hexes since it has the sources from the last check
             // Also reset unassigned supply to the supply capacity
 
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 hex.GetComponent<HexDatabaseFields>().supplySources.Clear();
                 hex.GetComponent<HexDatabaseFields>().unitsThatCanBeSupplied.Clear();
@@ -58,7 +58,7 @@ namespace TheGreatCrusade
             }
 
             // At this point all the hexes have their supply sources set.  Go through and set the bit to show that the hex is in supply for the supply status gui
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 hex.GetComponent<HexDatabaseFields>().alliedInSupply = false;
                 if (hex.GetComponent<HexDatabaseFields>().supplySources.Count > 0)
@@ -168,7 +168,7 @@ namespace TheGreatCrusade
             //}
 
             // Now reset all the remainingMovement values
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 hex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
 
             return (userIntervention);
@@ -224,7 +224,7 @@ namespace TheGreatCrusade
             List<GameObject> unitsToRemove = new List<GameObject>();
 
             // Need to remove all the supply sources on hexes from the last check
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 hex.GetComponent<HexDatabaseFields>().supplySources.Clear();
 
             // There are 23 supply sources for the Germans.  They are the hexes on the eastern board edge north of Switzerland
@@ -255,7 +255,7 @@ namespace TheGreatCrusade
             SetHexAsSupplySource(GeneralHexRoutines.GetHexAtXY(23, 32), 100, GlobalDefinitions.Nationality.German);
 
             // Go through all the hexes and set the flag for displaying supply status in the gui
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 hex.GetComponent<HexDatabaseFields>().germanInSupply = false;
                 if (hex.GetComponent<HexDatabaseFields>().supplySources.Count > 0)
@@ -311,7 +311,7 @@ namespace TheGreatCrusade
             }
 
             // Now reset all the remainingMovement values
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 hex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
         }
 
@@ -332,7 +332,7 @@ namespace TheGreatCrusade
                 // The hex is a stopping point if it is in enemy ZOC or no more movement remaining
                 if (!GlobalDefinitions.HexInEnemyZOC(hexesToCheck[0], nationality) && (hexesToCheck[0].GetComponent<HexDatabaseFields>().remainingMovement > 0))
                 {
-                    foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                     {
                         // Supply can't pass through neutral, sea, or impassible hexes
                         if ((hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null) &&
@@ -456,18 +456,15 @@ namespace TheGreatCrusade
                 // if it is out of range of the supply hex it will be red
                 if ((unit.GetComponent<UnitDatabaseFields>().inSupply) && (unit.GetComponent<UnitDatabaseFields>().supplySource == supplySource))
                 {
-                    GlobalDefinitions.WriteToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " being supplied by current source - highlight yellow");
                     //GlobalDefinitions.highlightUnit(unit);
                     unit.GetComponent<SpriteRenderer>().material.color = Color.yellow;
                 }
                 else if (!unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().supplySources.Contains(supplySource))
                 {
-                    GlobalDefinitions.WriteToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " could be supplied by current source - highlight red");
                     unit.GetComponent<SpriteRenderer>().material.color = Color.red;
                 }
                 else if (!unit.GetComponent<UnitDatabaseFields>().inSupply)
                 {
-                    GlobalDefinitions.WriteToLogFile("highlightUnitsAvailableForSupply: unit " + unit.name + " out of supply - highlight gray");
                     unit.GetComponent<SpriteRenderer>().material.color = Color.gray;
                 }
             }
@@ -496,9 +493,9 @@ namespace TheGreatCrusade
             GameObject unassignedTextGameObject;
 
             // Only create the gui if there isn't already one active
-            if (GlobalDefinitions.guiList.Count > 0)
+            if (GUIRoutines.guiList.Count > 0)
             {
-                GlobalDefinitions.GuiUpdateStatusMessage("Resolve currently displayed menu before invoking another - gui list count = " + GlobalDefinitions.guiList.Count + " name[0] = " + GlobalDefinitions.guiList[0].name);
+                GlobalDefinitions.GuiUpdateStatusMessage("Resolve currently displayed menu before invoking another - gui list count = " + GUIRoutines.guiList.Count + " name[0] = " + GUIRoutines.guiList[0].name);
                 return;
             }
 
@@ -551,17 +548,17 @@ namespace TheGreatCrusade
 
             if (panelHeight > (UnityEngine.Screen.height - 50))
                 GlobalDefinitions.supplySourceGUIInstance =
-                        GlobalDefinitions.CreateScrollingGUICanvas("SupplyGUICanvas", panelWidth, panelHeight, ref supplyContentPanel, ref supplyCanvas);
+                        GUIRoutines.CreateScrollingGUICanvas("SupplyGUICanvas", panelWidth, panelHeight, ref supplyContentPanel, ref supplyCanvas);
             else
             {
-                GlobalDefinitions.supplySourceGUIInstance = GlobalDefinitions.CreateGUICanvas(name, panelWidth, panelHeight, ref supplyCanvas);
+                GlobalDefinitions.supplySourceGUIInstance = GUIRoutines.CreateGUICanvas(name, panelWidth, panelHeight, ref supplyCanvas);
                 supplyContentPanel.transform.SetParent(GlobalDefinitions.supplySourceGUIInstance.transform, false);
             }
 
             yPosition = 0.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight;
 
             // Need an OK button to get out of the gui
-            okButton = GlobalDefinitions.CreateButton("SupplySourcesOKButton", "OK",
+            okButton = GUIRoutines.CreateButton("SupplySourcesOKButton", "OK",
                     5.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     yPosition,
                     supplyCanvas);
@@ -583,7 +580,7 @@ namespace TheGreatCrusade
                 yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
                 // This creates a text box with the name of the source
-                (GlobalDefinitions.CreateUIText(GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().hexName,
+                (GUIRoutines.CreateUIText(GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().hexName,
                         "SourceNameText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -594,7 +591,7 @@ namespace TheGreatCrusade
                 if (!displayOnly)
                 {
                     // In column three a toggle will be displayed to select the supply source
-                    singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle = GlobalDefinitions.CreateToggle("SupplySourceSelectToggle" + index,
+                    singleSupplyGUI.GetComponent<SupplyGUIObject>().supplyToggle = GUIRoutines.CreateToggle("SupplySourceSelectToggle" + index,
                             GlobalDefinitions.GUIUNITIMAGESIZE * 3 * 1.25f - 0.5f * panelWidth,
                             yPosition,
                             supplyCanvas).GetComponent<Toggle>();
@@ -609,7 +606,7 @@ namespace TheGreatCrusade
                 }
 
                 // In column four the range of the source will be displayed
-                (GlobalDefinitions.CreateUIText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyRange).ToString(),
+                (GUIRoutines.CreateUIText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyRange).ToString(),
                         "supplySourceRangeText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -618,7 +615,7 @@ namespace TheGreatCrusade
                         Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
                 // In column six the total supply capacity will be listed
-                (GlobalDefinitions.CreateUIText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyCapacity).ToString(),
+                (GUIRoutines.CreateUIText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().supplyCapacity).ToString(),
                         "SupplySourceCapacityText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -627,7 +624,7 @@ namespace TheGreatCrusade
                         Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
                 // In column eight the unassigned capacity will be listed
-                unassignedTextGameObject = GlobalDefinitions.CreateUIText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().unassignedSupply).ToString(),
+                unassignedTextGameObject = GUIRoutines.CreateUIText((GlobalDefinitions.supplySources[index].GetComponent<HexDatabaseFields>().unassignedSupply).ToString(),
                         "SupplySourceUnassignedText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -636,10 +633,9 @@ namespace TheGreatCrusade
                         Color.white, supplyCanvas);
                 unassignedTextGameObject.transform.SetParent(supplyContentPanel.transform, false);
                 GlobalDefinitions.unassignedTextObejcts.Add(unassignedTextGameObject);
-                GlobalDefinitions.WriteToLogFile("createSupplySourceGUI: adding unassignedTextGameObject count = " + GlobalDefinitions.unassignedTextObejcts.Count);
 
                 // In column 10 add a button to locate the supply source
-                singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton = GlobalDefinitions.CreateButton("CombatResolutionLocateButton", "Locate",
+                singleSupplyGUI.GetComponent<SupplyGUIObject>().locateButton = GUIRoutines.CreateButton("CombatResolutionLocateButton", "Locate",
                        GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
                        yPosition,
                        supplyCanvas);
@@ -654,7 +650,7 @@ namespace TheGreatCrusade
             // Put a series of text boxes along the top row to serve as the header
             yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
             // The first column contains the names of the supply sources
-            (GlobalDefinitions.CreateUIText("Supply Source", "SupplySourceNameHeaderText",
+            (GUIRoutines.CreateUIText("Supply Source", "SupplySourceNameHeaderText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
@@ -664,7 +660,7 @@ namespace TheGreatCrusade
             if (!displayOnly)
             {
                 // In column three a toggle for selection will be listed
-                (GlobalDefinitions.CreateUIText("Select", "SupplySelectionText",
+                (GUIRoutines.CreateUIText("Select", "SupplySelectionText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE * 3 * 1.25f - 0.5f * panelWidth,
@@ -673,7 +669,7 @@ namespace TheGreatCrusade
             }
 
                 // In column four the range of the source will be listed
-                (GlobalDefinitions.CreateUIText("Range", "SupplyRangeText",
+                (GUIRoutines.CreateUIText("Range", "SupplyRangeText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
@@ -681,7 +677,7 @@ namespace TheGreatCrusade
                         Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
             // In column five the Total Supply Capacity will be listed
-            (GlobalDefinitions.CreateUIText("Total  Capacity", "SuppplyCapacityText",
+            (GUIRoutines.CreateUIText("Total  Capacity", "SuppplyCapacityText",
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
@@ -689,7 +685,7 @@ namespace TheGreatCrusade
                     Color.white, supplyCanvas)).transform.SetParent(supplyContentPanel.transform, false);
 
             // In column six the Unassigned Capacity will be listed
-            (GlobalDefinitions.CreateUIText("Unassigned Supply", "UnassignedSupplyText",
+            (GUIRoutines.CreateUIText("Unassigned Supply", "UnassignedSupplyText",
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 6.5f * 1.25f - 0.5f * panelWidth,
@@ -698,7 +694,7 @@ namespace TheGreatCrusade
 
             yPosition += 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
             if (!displayOnly)
-                (GlobalDefinitions.CreateUIText("You currently have more units that supply - you can use this form to decide which units will be unsupplied", "SupplyHeaderText",
+                (GUIRoutines.CreateUIText("You currently have more units than supply - you can use this form to decide which units will be unsupplied", "SupplyHeaderText",
                         panelWidth,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         0,
@@ -830,8 +826,7 @@ namespace TheGreatCrusade
             for (int index = 0; index < GlobalDefinitions.supplySources.Count; index++)
                 if (supplySource == GlobalDefinitions.supplySources[index])
                 {
-                    GlobalDefinitions.WriteToLogFile("updateUnassignedText: debug for out of range index  index = " + index + "  supplySources.Count = " + GlobalDefinitions.supplySources.Count);
-                    GlobalDefinitions.unassignedTextObejcts[index].GetComponent<TextMeshPro>().text = supplySource.GetComponent<HexDatabaseFields>().unassignedSupply.ToString();
+                    GlobalDefinitions.unassignedTextObejcts[index].GetComponent<TextMeshProUGUI>().text = supplySource.GetComponent<HexDatabaseFields>().unassignedSupply.ToString();
                 }
         }
 
@@ -846,11 +841,11 @@ namespace TheGreatCrusade
             Canvas supplyCanvas = new Canvas();
             float panelWidth = (numberUnitsToDisplay + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
             float panelHeight = 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            GlobalDefinitions.CreateGUICanvas("MultiUnitSupplyGUIInstance",
+            GUIRoutines.CreateGUICanvas("MultiUnitSupplyGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref supplyCanvas);
-            GlobalDefinitions.CreateUIText("Select a unit", "multiUnitSupplyText",
+            GUIRoutines.CreateUIText("Select a unit", "multiUnitSupplyText",
                     (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     //0.5f * (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -875,7 +870,7 @@ namespace TheGreatCrusade
 
                     Toggle tempToggle;
 
-                    tempToggle = GlobalDefinitions.CreateUnitTogglePair("multiUnitSupplyUnitToggle" + index,
+                    tempToggle = GUIRoutines.CreateUnitTogglePair("multiUnitSupplyUnitToggle" + index,
                             index * xSeperation + xOffset - 0.5f * panelWidth,
                             2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                             supplyCanvas,
@@ -886,7 +881,7 @@ namespace TheGreatCrusade
                     tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<SupplyButtonRoutines>().SelectFromMultiUnits());
 
                     if (!unit.GetComponent<UnitDatabaseFields>().inSupply)
-                        GlobalDefinitions.CreateUIText("Out of Supply",
+                        GUIRoutines.CreateUIText("Out of Supply",
                                 "OutOfSupplyText",
                                 GlobalDefinitions.GUIUNITIMAGESIZE,
                                 GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -894,7 +889,7 @@ namespace TheGreatCrusade
                                 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                                 Color.white, supplyCanvas);
                     else
-                        GlobalDefinitions.CreateUIText("In Supply",
+                        GUIRoutines.CreateUIText("In Supply",
                                 "InSupplyText",
                                 GlobalDefinitions.GUIUNITIMAGESIZE,
                                 GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -949,7 +944,7 @@ namespace TheGreatCrusade
         {
             List<GameObject> returnList = new List<GameObject>();
 
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().successfullyInvaded)
                 {
                     //GlobalDefinitions.writeToLogFile("returnAllAlliedSupplySources: adding supply source " + hex.name + " with capacity = " + hex.GetComponent<HexDatabaseFields>().supplyCapacity);

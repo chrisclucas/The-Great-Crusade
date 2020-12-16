@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using TheGreatCrusade;
 //[ExecuteInEditMode]
 
-namespace TheGreatCrusade
+namespace CommonRoutines
 {
     public class UnitDatabaseFields : MonoBehaviour
     {
@@ -152,17 +153,17 @@ namespace TheGreatCrusade
                 theWriter.Write(beginningTurnHex.name + " ");
             else
                 theWriter.Write("null ");
-            theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(inBritain) + " ");
-            theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(unitInterdiction) + " ");
+            theWriter.Write(IORoutines.WriteBooleanToSaveFormat(inBritain) + " ");
+            theWriter.Write(IORoutines.WriteBooleanToSaveFormat(unitInterdiction) + " ");
             theWriter.Write(invasionAreaIndex + " ");
-            theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(availableForStrategicMovement) + " ");
-            theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(inSupply) + " ");
+            theWriter.Write(IORoutines.WriteBooleanToSaveFormat(availableForStrategicMovement) + " ");
+            theWriter.Write(IORoutines.WriteBooleanToSaveFormat(inSupply) + " ");
             if (supplySource != null)
                 theWriter.Write(supplySource.name + " ");
             else
                 theWriter.Write("null ");
             theWriter.Write(supplyIncrementsOutOfSupply + " ");
-            theWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(unitEliminated) + " ");
+            theWriter.Write(IORoutines.WriteBooleanToSaveFormat(unitEliminated) + " ");
 
             theWriter.WriteLine();
         }

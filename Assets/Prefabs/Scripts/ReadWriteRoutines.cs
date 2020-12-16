@@ -30,7 +30,7 @@ namespace TheGreatCrusade
                 GlobalDefinitions.WriteGlobalVariables(fileWriter);
 
                 fileWriter.WriteLine("Hexes");
-                foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 {
                     hex.GetComponent<HexDatabaseFields>().WriteHexFields(fileWriter);
                 }

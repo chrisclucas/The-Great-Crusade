@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -19,14 +20,14 @@ namespace TheGreatCrusade
             {
                 if ((GlobalDefinitions.gameMode == GlobalDefinitions.GameModeValues.Peer2PeerNetwork) && (!GlobalDefinitions.localControl))
                 {
-                    GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                    GUIRoutines.RemoveGUI(transform.parent.gameObject);
                     CombatResolutionRoutines.ExecuteCombatResults(defendingUnits, attackingUnits, combatOdds, dieRollResult, combatResults, buttonLocation);
                 }
                 else
                 {
                     GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.COMBATRESOLUTIONSELECTEDKEYWORD + " " + GlobalDefinitions.CombatResultToggleName);
                     GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.CARPETBOMBINGRESULTSSELECTEDKEYWORD + " " + name + " " + dieRollResult);
-                    GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                    GUIRoutines.RemoveGUI(transform.parent.gameObject);
                     CombatResolutionRoutines.ExecuteCombatResults(defendingUnits, attackingUnits, combatOdds, dieRollResult, combatResults, buttonLocation);
 
                 }

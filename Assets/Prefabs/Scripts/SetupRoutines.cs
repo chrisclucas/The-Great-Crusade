@@ -153,7 +153,7 @@ namespace TheGreatCrusade
                 // Setup the ZOC for the hex and its neighbors.  Note that I did not bother to do this while the user was moving
                 // units around since I think it makes sense to just do it once when he is done.
                 unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().inGermanZOC = true;
-                foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSides in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 {
                     if ((unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides] != null)
                             && (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<BooleanArrayData>().exertsZOC[(int)hexSides]))

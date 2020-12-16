@@ -19,7 +19,7 @@ namespace TheGreatCrusade
         public void GoToNextPhase()
         {
             // Check if there is a gui up before we move to the next phase since it could result in unknown state
-            if (GlobalDefinitions.guiList.Count == 0)
+            if (GUIRoutines.guiList.Count == 0)
             {
                 // Need to do this first since during changes in control the next phase routine passes control so this would never be sent
                 GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.NEXTPHASEKEYWORD);
@@ -48,8 +48,8 @@ namespace TheGreatCrusade
             GlobalDefinitions.mainMenuButton.GetComponent<Button>().interactable = false;
 
             // Turn off any guis that are on
-            if (GlobalDefinitions.guiList.Count > 0)
-                foreach (GameObject gui in GlobalDefinitions.guiList)
+            if (GUIRoutines.guiList.Count > 0)
+                foreach (GameObject gui in GUIRoutines.guiList)
                     gui.SetActive(false);
 
             GlobalDefinitions.AskUserYesNoQuestion("Are you sure you want to quit?", ref yesButton, ref noButton, YesMain, NoMain);
@@ -64,8 +64,8 @@ namespace TheGreatCrusade
             GlobalDefinitions.quitButton.GetComponent<Button>().interactable = false;
 
             // Turn off any guis that are on
-            if (GlobalDefinitions.guiList.Count > 0)
-                foreach (GameObject gui in GlobalDefinitions.guiList)
+            if (GUIRoutines.guiList.Count > 0)
+                foreach (GameObject gui in GUIRoutines.guiList)
                     gui.SetActive(false);
 
             GlobalDefinitions.AskUserYesNoQuestion("Are you sure you want to quit?", ref yesButton, ref noButton, YesQuit, NoQuit);
@@ -90,13 +90,13 @@ namespace TheGreatCrusade
 
             // Copy list so the guis can be removed
             List<GameObject> removeList = new List<GameObject>();
-            foreach (GameObject gui in GlobalDefinitions.guiList)
+            foreach (GameObject gui in GUIRoutines.guiList)
                 removeList.Add(gui);
 
 
             // Get rid of all active guis
             foreach (GameObject gui in removeList)
-                GlobalDefinitions.RemoveGUI(gui);
+                GUIRoutines.RemoveGUI(gui);
 
             // Put all the units back on the OOB sheet
             foreach (Transform unit in GlobalDefinitions.allUnitsOnBoard.transform)
@@ -130,7 +130,7 @@ namespace TheGreatCrusade
             GlobalDefinitions.germanUnitsOnBoard.Clear();
 
             // Go through the hexes and reset all highlighting
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 hex.GetComponent<HexDatabaseFields>().riverInterdiction = false;
                 hex.GetComponent<HexDatabaseFields>().closeDefenseSupport = false;
@@ -184,7 +184,7 @@ namespace TheGreatCrusade
             GlobalDefinitions.quitButton.GetComponent<Button>().interactable = true;
 
             // Turn back on any guis that are active
-            foreach (GameObject gui in GlobalDefinitions.guiList)
+            foreach (GameObject gui in GUIRoutines.guiList)
                 gui.SetActive(true);
         }
 
@@ -197,7 +197,7 @@ namespace TheGreatCrusade
             GlobalDefinitions.mainMenuButton.GetComponent<Button>().interactable = true;
 
             // Turn back on any guis that are active
-            foreach (GameObject gui in GlobalDefinitions.guiList)
+            foreach (GameObject gui in GUIRoutines.guiList)
                 gui.SetActive(true);
         }
 
@@ -206,7 +206,7 @@ namespace TheGreatCrusade
         /// </summary>
         public void ExecuteCombatResolution()
         {
-            if (GlobalDefinitions.guiList.Count == 0)
+            if (GUIRoutines.guiList.Count == 0)
             {
                 if (GlobalDefinitions.allCombats.Count > 0)
                 {
@@ -256,7 +256,7 @@ namespace TheGreatCrusade
                 // Set the global variable so the other unhighlighing can be processed properly
                 GlobalDefinitions.displayAlliedSupplyStatus = true;
                 // Highlight all hexes that have supply available
-                foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                     if (hex.GetComponent<HexDatabaseFields>().alliedInSupply)
                         GlobalDefinitions.HighlightHexInSupply(hex);
             }
@@ -265,7 +265,7 @@ namespace TheGreatCrusade
                 // Set the global variable so the other unhighlighing can be processed properly
                 GlobalDefinitions.displayAlliedSupplyStatus = false;
                 // Turn off supply highlighting
-                foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                     GlobalDefinitions.UnhighlightHexSupplyRange(hex);
             }
         }
@@ -303,7 +303,7 @@ namespace TheGreatCrusade
         /// </summary>
         public void LoadCombat()
         {
-            if (GlobalDefinitions.guiList.Count == 0)
+            if (GUIRoutines.guiList.Count == 0)
             {
                 GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.LOADCOMBATKEYWORD);
 
@@ -345,7 +345,7 @@ namespace TheGreatCrusade
                 // Set the global variable so the other unhighlighing can be processed properly
                 GlobalDefinitions.displayGermanSupplyStatus = true;
                 // Highlight all hexes that have supply available
-                foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                     if (hex.GetComponent<HexDatabaseFields>().germanInSupply)
                         GlobalDefinitions.HighlightHexInSupply(hex);
             }
@@ -354,7 +354,7 @@ namespace TheGreatCrusade
                 // Set the global variable so the other unhighlighing can be processed properly
                 GlobalDefinitions.displayGermanSupplyStatus = false;
                 // Turn off supply highlighting
-                foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                     GlobalDefinitions.UnhighlightHexSupplyRange(hex);
             }
         }
@@ -366,7 +366,7 @@ namespace TheGreatCrusade
         {
             if (GameObject.Find("ShowHistoryToggle").GetComponent<Toggle>().isOn)
                 // The toggle is on so highlight the hexes
-                foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 {
                     if ((hex.GetComponent<HexDatabaseFields>().historyWeekCaptured <= GlobalDefinitions.turnNumber) &&
                             !hex.GetComponent<HexDatabaseFields>().sea && !hex.GetComponent<HexDatabaseFields>().bridge)
@@ -380,7 +380,7 @@ namespace TheGreatCrusade
                 }
             else
                 // The toggle is off so unhightlight the hexes
-                foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                     GlobalDefinitions.UnhighlightHex(hex);
         }
 
@@ -436,101 +436,101 @@ namespace TheGreatCrusade
             float panelHeight = 7 * GlobalDefinitions.GUIUNITIMAGESIZE;
 
             // Turn off any guis that are on
-            if (GlobalDefinitions.guiList.Count > 0)
-                foreach (GameObject gui in GlobalDefinitions.guiList)
+            if (GUIRoutines.guiList.Count > 0)
+                foreach (GameObject gui in GUIRoutines.guiList)
                     gui.SetActive(false);
 
-            //settingCanvasGameObject = GlobalDefinitions.createGUICanvas("SettingsGUIInstance",
-            GlobalDefinitions.CreateGUICanvas("SettingsGUIInstance",
+            //settingCanvasGameObject = GUIRoutines.CreateGUICanvas("SettingsGUIInstance",
+            GUIRoutines.CreateGUICanvas("SettingsGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref settingCanvas);
 
-            GlobalDefinitions.CreateUIText("Settings", "SettingsText",
+            GUIRoutines.CreateUIText("Settings", "SettingsText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     0,
                     3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     Color.white, settingCanvas);
 
-            agressivenessSlider = GlobalDefinitions.CreateSlider("AgressivenessSlider", "GUI Slider15",
+            agressivenessSlider = GUIRoutines.CreateSlider("AgressivenessSlider", "GUI Slider15",
                     0,
                     2f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     settingCanvas);
             agressivenessSlider.value = GlobalDefinitions.aggressiveSetting;
             agressivenessSlider.onValueChanged.AddListener(delegate { UpdateAggressivenessSettingText(agressivenessSlider.value); });
 
-            GlobalDefinitions.CreateUIText("Aggressive", "AggressiveText",
+            GUIRoutines.CreateUIText("Aggressive", "AggressiveText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     2f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     Color.white, settingCanvas);
 
-            GlobalDefinitions.CreateUIText("Defensive", "DefensiveText",
+            GUIRoutines.CreateUIText("Defensive", "DefensiveText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     2f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     Color.white, settingCanvas);
 
-            GlobalDefinitions.aggressivenessSettingText = GlobalDefinitions.CreateUIText(Convert.ToString(agressivenessSlider.value), "AggressivenessSettingText",
+            GlobalDefinitions.aggressivenessSettingText = GUIRoutines.CreateUIText(Convert.ToString(agressivenessSlider.value), "AggressivenessSettingText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     0,
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     Color.white, settingCanvas);
 
-            GlobalDefinitions.CreateUIText("Computer Aggressiveness", "ComputerAggressivenessText",
+            GUIRoutines.CreateUIText("Computer Aggressiveness", "ComputerAggressivenessText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     0,
                     1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     Color.white, settingCanvas);
 
-            diffiultySlider = GlobalDefinitions.CreateSlider("DifficultySlider", "GUI Slider010",
+            diffiultySlider = GUIRoutines.CreateSlider("DifficultySlider", "GUI Slider010",
                     0,
                     0,
                     settingCanvas);
             diffiultySlider.value = GlobalDefinitions.difficultySetting;
             diffiultySlider.onValueChanged.AddListener(delegate { UpdateDifficultySettingText(diffiultySlider.value); });
 
-            GlobalDefinitions.CreateUIText("Harder", "HarderText",
+            GUIRoutines.CreateUIText("Harder", "HarderText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0,
                     Color.white, settingCanvas);
 
-            GlobalDefinitions.CreateUIText("Easier", "EasierText",
+            GUIRoutines.CreateUIText("Easier", "EasierText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0,
                     Color.white, settingCanvas);
 
-            GlobalDefinitions.difficultySettingText = GlobalDefinitions.CreateUIText(Convert.ToString(diffiultySlider.value), "DifficultySettingText",
+            GlobalDefinitions.difficultySettingText = GUIRoutines.CreateUIText(Convert.ToString(diffiultySlider.value), "DifficultySettingText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     0,
                     -0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     Color.white, settingCanvas);
 
-            GlobalDefinitions.CreateUIText("Game Difficulty", "GameDifficultyText",
+            GUIRoutines.CreateUIText("Game Difficulty", "GameDifficultyText",
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     0,
                     -1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     Color.white, settingCanvas);
 
-            okButton = GlobalDefinitions.CreateButton("settingOKButton", "OK",
+            okButton = GUIRoutines.CreateButton("settingOKButton", "OK",
                     -1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     settingCanvas);
             okButton.gameObject.AddComponent<SettingGUIButtons>();
             okButton.onClick.AddListener(okButton.GetComponent<SettingGUIButtons>().OkSelected);
 
-            cancelButton = GlobalDefinitions.CreateButton("settingCancelButton", "Cancel",
+            cancelButton = GUIRoutines.CreateButton("settingCancelButton", "Cancel",
                     1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     -3f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     settingCanvas);
@@ -555,7 +555,7 @@ namespace TheGreatCrusade
         {
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.victoryState.GetComponent<VictoryState>();
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();
-            GlobalDefinitions.RemoveAllGUIs();
+            GUIRoutines.RemoveAllGUIs();
         }
     }
 }

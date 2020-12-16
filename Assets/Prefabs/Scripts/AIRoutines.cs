@@ -453,7 +453,7 @@ namespace TheGreatCrusade
         GlobalDefinitions.WriteToLogFile("setUnitMovementValues: processing unit " + unit.name + " supply status = " + unit.GetComponent<UnitDatabaseFields>().inSupply + "  remaining movement = " + unit.GetComponent<UnitDatabaseFields>().remainingMovement);
 #endif
             // This is a blunt approach but tying to see if this is why I'm getting inconsistent results with returnAvaialbleMovementHexes
-            foreach (GameObject tempHex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject tempHex in HexDefinitions.allHexesOnBoard)
             {
                 tempHex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
                 tempHex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = 0;
@@ -594,7 +594,7 @@ namespace TheGreatCrusade
 
                 // Check for an adjacent unit
                 modifierAdded = false;  // Reset this to false.  We will add only one modifier regardless of how many adjacent units there are
-                foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                     if (!modifierAdded)
                     {
                         if ((hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
@@ -664,7 +664,7 @@ namespace TheGreatCrusade
                             hexesOnlyTwoAway.Add(tempHex);
 
                     // Load a list of the hexes one hex away that the current hex projects ZOC into
-                    foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                         if (hex.GetComponent<BooleanArrayData>().exertsZOC[(int)hexSide])
                             zocHexes.Add(hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]);
 
@@ -679,7 +679,7 @@ namespace TheGreatCrusade
                                 if (!modifierAdded && HexInFriendlyZOC(tempHex, unit))
                                 {
                                     // At this point the tempHex is two hexes away and is in friendly ZOC
-                                    foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                                    foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                                     {
                                         // Make sure we're not seeing an abutting ZOC only due to the hex the unit is originally in
                                         matchUnit = false;
@@ -793,8 +793,8 @@ namespace TheGreatCrusade
                         //if (hex.GetComponent<HexDatabaseFields>().yMapCoor < enemyUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().yMapCoor)
                         {
                             // The enemy is to the upper right so no modification to the hex value if there is no river on the North or NorthEast sides
-                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.North] ||
-                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.NorthEast])
+                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.North] ||
+                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.NorthEast])
                             {
 #if OUTPUTDEBUG
                             GlobalDefinitions.WriteToLogFile("returnRiverContextHexValueModifier:   returning 0 modifier - " + enemyUnit.name + " is to the upper right");
@@ -806,8 +806,8 @@ namespace TheGreatCrusade
                         else if (hex.transform.position.y > enemyUnit.GetComponent<UnitDatabaseFields>().occupiedHex.transform.position.y)
                         {
                             // The enemy is to the bottom right so no modification to the hex value if there is no river on the South or SouthEast sides
-                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.South] ||
-                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.SouthEast])
+                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.South] ||
+                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.SouthEast])
                             {
 #if OUTPUTDEBUG
                             GlobalDefinitions.WriteToLogFile("returnRiverContextHexValueModifier:   returning 0 modifier - " + enemyUnit.name + " is to the bottom right");
@@ -819,8 +819,8 @@ namespace TheGreatCrusade
                         else
                         {
                             // The enemy is directly to the right so no modification to the hex value if there is no river on the NorthEast and SouthEast sides
-                            if (hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.NorthEast] ||
-                                    hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.SouthEast])
+                            if (hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.NorthEast] ||
+                                    hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.SouthEast])
                             {
 #if OUTPUTDEBUG
                             GlobalDefinitions.WriteToLogFile("returnRiverContextHexValueModifier:   returning 0 modifier - " + enemyUnit.name + " is to the right");
@@ -837,8 +837,8 @@ namespace TheGreatCrusade
                         if (hex.transform.position.y < enemyUnit.GetComponent<UnitDatabaseFields>().occupiedHex.transform.position.y)
                         {
                             // The enemy is to the upper left so no modification to the hex value if there is no river on the North and NorthWest sides
-                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.North] ||
-                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.NorthWest])
+                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.North] ||
+                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.NorthWest])
                             {
 #if OUTPUTDEBUG
                             GlobalDefinitions.WriteToLogFile("returnRiverContextHexValueModifier:   returning 0 modifier - " + enemyUnit.name + " is to the upper left");
@@ -850,8 +850,8 @@ namespace TheGreatCrusade
                         else if (hex.transform.position.y > enemyUnit.GetComponent<UnitDatabaseFields>().occupiedHex.transform.position.y)
                         {
                             // The enemy is to the bottom left so no modification to the hex value if there is no river on the South and SouthWest sides
-                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.South] ||
-                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.SouthWest])
+                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.South] ||
+                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.SouthWest])
                             {
 #if OUTPUTDEBUG
                             GlobalDefinitions.WriteToLogFile("returnRiverContextHexValueModifier:   returning 0 modifier - " + enemyUnit.name + " is to the bottom left");
@@ -863,8 +863,8 @@ namespace TheGreatCrusade
                         else
                         {
                             // The enemy is directly to the left so no modification to the hex value if there is no river on the NorthWest and SouthWest sides
-                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.NorthWest] ||
-                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.SouthWest])
+                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.NorthWest] ||
+                                    !hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.SouthWest])
                             {
 #if OUTPUTDEBUG
                             GlobalDefinitions.WriteToLogFile("returnRiverContextHexValueModifier:   returning 0 modifier - " + enemyUnit.name + " is to the left");
@@ -882,7 +882,7 @@ namespace TheGreatCrusade
                         if (hex.transform.position.y < enemyUnit.GetComponent<UnitDatabaseFields>().occupiedHex.transform.position.y)
                         {
                             // The enemy is directly above so no modification to the hex value if there is no river on the North side
-                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.North])
+                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.North])
                             {
 #if OUTPUTDEBUG
                             GlobalDefinitions.WriteToLogFile("returnRiverContextHexValueModifier:   returning 0 modifier - " + enemyUnit.name + " is directly above");
@@ -894,7 +894,7 @@ namespace TheGreatCrusade
                         else if (hex.transform.position.y > enemyUnit.GetComponent<UnitDatabaseFields>().occupiedHex.transform.position.y)
                         {
                             // The enemy is directly below so no modification to the hex value if there is no river on the South side
-                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.South])
+                            if (!hex.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.South])
                             {
 #if OUTPUTDEBUG
                             GlobalDefinitions.WriteToLogFile("returnRiverContextHexValueModifier:   returning 0 modifier - " + enemyUnit.name + " is directly below");
@@ -1131,7 +1131,7 @@ namespace TheGreatCrusade
             {
                 // Go through the hexes in the list and add all neighbors
                 foreach (GameObject tempHex in hexList)
-                    foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSides in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                         if (tempHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides] != null &&
                                 !tempHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides].GetComponent<HexDatabaseFields>().sea &&
                                 !tempHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides].GetComponent<HexDatabaseFields>().neutralCountry &&
@@ -1251,7 +1251,7 @@ namespace TheGreatCrusade
         /// </summary>
         public static void SetIntrinsicHexValues()
         {
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 if (hex.GetComponent<HexDatabaseFields>().fortress)
                     hex.GetComponent<HexDatabaseFields>().intrinsicHexValue = GlobalDefinitions.fortressIntrinsicValue;
@@ -2072,7 +2072,7 @@ namespace TheGreatCrusade
             List<GameObject> openAttackHexes = new List<GameObject>();
 
             // Check for empty adjacent hexes
-            foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 if ((hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null) &&
                         !hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().sea &&
                         !hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().impassible &&
@@ -2202,7 +2202,7 @@ namespace TheGreatCrusade
                 }
 
                 // Need to check if there is a river
-                if (!hexIncludesAdditionalDefenders && GlobalDefinitions.CheckForRiverBetweenTwoHexes(attackHex, defendingHex))
+                if (!hexIncludesAdditionalDefenders && GeneralHexRoutines.CheckForRiverBetweenTwoHexes(attackHex, defendingHex))
                 {
                     // Since this would be a cross river attack check to see if it would add additional defenders
                     // We need to go through all the additional potential defenders and make sure they are not all already being attacked
@@ -2232,7 +2232,7 @@ namespace TheGreatCrusade
             // they are tested in order so we want to make sure that the hexes that do not attack across a river are done first.
             List<GameObject> sortedSingleAttackHexes = new List<GameObject>();
             foreach (GameObject hex in singleAttackHexes)
-                if (!GlobalDefinitions.CheckForRiverBetweenTwoHexes(hex, defendingHex))
+                if (!GeneralHexRoutines.CheckForRiverBetweenTwoHexes(hex, defendingHex))
                     sortedSingleAttackHexes.Add(hex);
             foreach (GameObject hex in singleAttackHexes)
                 if (!sortedSingleAttackHexes.Contains(hex))
@@ -2298,7 +2298,7 @@ namespace TheGreatCrusade
                 }
 
                 // Need to check if there is a river
-                if (GlobalDefinitions.CheckForRiverBetweenTwoHexes(attackHex, defendingHex))
+                if (GeneralHexRoutines.CheckForRiverBetweenTwoHexes(attackHex, defendingHex))
                     // Since this would be a cross river attack check to see if it would add additional defenders
                     foreach (GameObject newHex in ReturnAdditionalDefendersForCrossRiverAttack(attackHex, defendingHex, attackingNationality))
                         foreach (GameObject unit in newHex.GetComponent<HexDatabaseFields>().occupyingUnit)
@@ -2400,7 +2400,7 @@ namespace TheGreatCrusade
 #if OUTPUTDEBUG
         GlobalDefinitions.WriteToLogFile("returnAdditionalDefendersForCrossRiverAttack: checking attack hex = " + attackHex.name + "  defendHex = " + defendHex.name);
 #endif
-            foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
             {
                 // Check that the neighbor hex for the defender exists
                 if (defendHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
@@ -2423,7 +2423,7 @@ namespace TheGreatCrusade
                             GlobalDefinitions.WriteToLogFile("returnAdditionalDefendersForCrossRiverAttack:         neighbor has defenders");
 #endif
                                 // And finally check if there is a river between the attack hex and the neighbor hex
-                                if (GlobalDefinitions.CheckForRiverBetweenTwoHexes(attackHex, defendHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]))
+                                if (GeneralHexRoutines.CheckForRiverBetweenTwoHexes(attackHex, defendHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]))
                                 {
 #if OUTPUTDEBUG
                                 GlobalDefinitions.WriteToLogFile("returnAdditionalDefendersForCrossRiverAttack:         river between neighbor and attack hex");
@@ -2517,7 +2517,7 @@ namespace TheGreatCrusade
             targetLocation = GetAverageEnemyLocation(GlobalDefinitions.Nationality.Allied);
 
             // Get a list of the replacement hexes that aren't fully stacked, not in Allied ZOC (I don't want to have to figure an attack out here) and it isn't in Allied control
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().germanRepalcement && !hex.GetComponent<HexDatabaseFields>().alliedControl && !hex.GetComponent<HexDatabaseFields>().inAlliedZOC)
                     if ((hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0) ||
                             ((hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German) &&
@@ -3765,7 +3765,7 @@ namespace TheGreatCrusade
 #if OUTPUTDEBUG
         GlobalDefinitions.WriteToLogFile("returnInvasionHexForTarget: processing for target hex " + targetHex.name);
 #endif
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if ((hex.GetComponent<HexDatabaseFields>().invasionTarget == targetHex) && !targetHex.GetComponent<HexDatabaseFields>().inlandPort)
                     return (hex.gameObject);
 #if OUTPUTDEBUG
@@ -4441,7 +4441,7 @@ namespace TheGreatCrusade
             GlobalDefinitions.WriteToLogFile("makeSupplyMovements: Check for additional supply ports available");
 #endif
                 // We've already checked all the ports with allied units on them so now check ports that don't have any units on them
-                foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                     if ((hex.GetComponent<HexDatabaseFields>().coastalPort || hex.GetComponent<HexDatabaseFields>().inlandPort) &&
                         !hex.GetComponent<HexDatabaseFields>().inGermanZOC && (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count == 0))
                     {

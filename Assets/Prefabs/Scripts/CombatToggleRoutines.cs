@@ -257,7 +257,7 @@ namespace TheGreatCrusade
         //        {
         //            if (attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
         //            {
-        //                foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+        //                foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
         //                {
         //                    if ((defendingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
         //                            && (defendingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] == attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex)
@@ -275,7 +275,7 @@ namespace TheGreatCrusade
         //                            {
         //                                if (committedDefender.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack && (committedDefender != defendingUnit))
         //                                {
-        //                                    foreach (GlobalDefinitions.HexSides hexSide2 in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+        //                                    foreach (HexDefinitions.HexSides hexSide2 in Enum.GetValues(typeof(HexDefinitions.HexSides)))
         //                                    {
         //                                        if ((committedDefender.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide2] != null)
         //                                                && (committedDefender.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide2] == defendingUnit.GetComponent<UnitDatabaseFields>().occupiedHex)
@@ -331,7 +331,7 @@ namespace TheGreatCrusade
         /// <param name="fortressHex"></param>
         public void AddDefendersOfFortressAttack(GameObject fortressHex)
         {
-            foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 if (fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                 {
                     if (!fortressHex.GetComponent<BooleanArrayData>().riverSides[(int)hexSide] &&
@@ -362,7 +362,7 @@ namespace TheGreatCrusade
         /// <param name="fortressHex"></param>
         public void RemoveDefendersOfFortressAttack(GameObject fortressHex)
         {
-            foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 if (fortressHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                     if (!fortressHex.GetComponent<BooleanArrayData>().riverSides[(int)hexSide])
                         // No need to check the type of hex.  If there are enemy units on it turn the toggle off

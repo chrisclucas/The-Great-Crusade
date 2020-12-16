@@ -58,7 +58,7 @@ namespace TheGreatCrusade
                 DestroyImmediate(combat.GetComponent<Combat>().airSupportToggle);
             }
 
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatResolutionGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.combatResolutionGUIInstance);
 
             if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
                     (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance") ||
@@ -88,7 +88,7 @@ namespace TheGreatCrusade
 
             if (GetComponentInChildren<Text>().text == "Continue")
             {
-                GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatResolutionGUIInstance);
+                GUIRoutines.RemoveGUI(GlobalDefinitions.combatResolutionGUIInstance);
 
                 // Turn the button back on
                 GameObject.Find("ResolveCombatButton").GetComponent<Button>().interactable = true;
@@ -114,7 +114,7 @@ namespace TheGreatCrusade
                 // Turn the button back on
                 GameObject.Find("ResolveCombatButton").GetComponent<Button>().interactable = true;
 
-                GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatResolutionGUIInstance);
+                GUIRoutines.RemoveGUI(GlobalDefinitions.combatResolutionGUIInstance);
 
                 GlobalDefinitions.allCombats.Clear();
 
@@ -222,7 +222,7 @@ namespace TheGreatCrusade
                 DestroyImmediate(curentCombat.GetComponent<Combat>().locateButton.gameObject);
                 //Get rid of the resolve button since the battle has been resolved.  This is also used to determine if all combats have been resolved.
                 //DestroyImmediate(GameObject.Find(GlobalDefinitions.CombatResultToggleName));
-                GlobalDefinitions.RemoveGUI(gameObject);
+                GUIRoutines.RemoveGUI(gameObject);
             }
 
             // Check if all the attacks have been resolved by seeing if there are any more Resolve buttons left

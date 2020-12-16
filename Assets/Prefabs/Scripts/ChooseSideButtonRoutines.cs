@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using CommonRoutines;
 
 namespace TheGreatCrusade{
     public class ChooseSideButtonRoutines : MonoBehaviour
@@ -14,7 +15,7 @@ namespace TheGreatCrusade{
             GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
             GlobalDefinitions.gameStarted = true; // Set true here since there is no network setup
             GlobalDefinitions.SwitchLocalControl(true);
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GUIRoutines.RemoveGUI(transform.parent.gameObject);
 
             // Call the setup routine.  The user will indicate whether they are playing a saved or new game there.
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.germanAISetupStateInstance.GetComponent<GermanAISetupState>();
@@ -33,7 +34,7 @@ namespace TheGreatCrusade{
             GlobalDefinitions.gameMode = GlobalDefinitions.GameModeValues.AI;
             GlobalDefinitions.gameStarted = true; // Set true here since there is no network setup
             GlobalDefinitions.SwitchLocalControl(true);
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GUIRoutines.RemoveGUI(transform.parent.gameObject);
 
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState = GameControl.setUpStateInstance.GetComponent<SetUpState>();
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.Initialize();

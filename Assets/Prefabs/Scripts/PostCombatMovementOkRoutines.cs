@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -7,7 +8,7 @@ namespace TheGreatCrusade
         public void ExecutePostCombatMovement()
         {
             GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.POSTCOMBATOKKEYWORD + " " + name);
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GUIRoutines.RemoveGUI(transform.parent.gameObject);
             GlobalDefinitions.hexesAvailableForPostCombatMovement.Clear();
             GlobalDefinitions.combatResolutionGUIInstance.SetActive(true);
         }

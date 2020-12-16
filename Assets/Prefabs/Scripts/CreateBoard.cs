@@ -162,7 +162,7 @@ namespace TheGreatCrusade
                                                     (entries[hexTypeWord] != "UpperEdgeNeutralFiller") &&
                                                     (entries[hexTypeWord] != "UpperEdgeLandFiller") &&
                                                     (entries[hexTypeWord] != "MountainFiller"))
-                                                GlobalDefinitions.allHexesOnBoard.Add(hexInstance);
+                                                HexDefinitions.allHexesOnBoard.Add(hexInstance);
 
                                             if (entries[hexTypeWord] == "City")
                                             {
@@ -518,14 +518,14 @@ namespace TheGreatCrusade
                                 {
                                     string[] entries = line.Split(delimiterChars);
 
-                                    GlobalDefinitions.CreateBoardText(ReturnRestOfLine(7, entries), "Text",
+                                    GUIRoutines.CreateBoardText(ReturnRestOfLine(7, entries), "Text",
                                             float.Parse(entries[3]),
                                             float.Parse(entries[4]),
                                             float.Parse(entries[0]),
                                             float.Parse(entries[1]),
                                             float.Parse(entries[2]),
                                             float.Parse(entries[5]),
-                                            GlobalDefinitions.ConvertStringToColor(entries[6]),
+                                            GUIRoutines.ConvertStringToColor(entries[6]),
                                             GlobalDefinitions.mapGraphicCanvas);
 
                                     line = theReader.ReadLine();
@@ -544,7 +544,7 @@ namespace TheGreatCrusade
                                             new Vector3(float.Parse(entries[0]), float.Parse(entries[3])),
                                             new Vector3(float.Parse(entries[2]), float.Parse(entries[3])),
                                             new Vector3(float.Parse(entries[2]), float.Parse(entries[1])),
-                                            float.Parse(entries[4]), GlobalDefinitions.ConvertStringToColor(entries[5]));
+                                            float.Parse(entries[4]), GUIRoutines.ConvertStringToColor(entries[5]));
 
                                     line = theReader.ReadLine();
                                     lineNumber++;
@@ -595,7 +595,7 @@ namespace TheGreatCrusade
                 hexNotUsing = hex1;
             }
 
-            if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.North] == hexNotUsing)
+            if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.North] == hexNotUsing)
             {
                 // The river lies on the N edge of hexToUse
                 point1.x = (float)(hexToUse.transform.position.x - (0.5 * edgeLength));
@@ -606,7 +606,7 @@ namespace TheGreatCrusade
                 point2.y = (float)(hexToUse.transform.position.y + (Mathf.Sqrt(3f) * edgeLength / 2f));
                 point2.z = 0f;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.NorthEast] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.NorthEast] == hexNotUsing)
             {
                 // The river lies on the NE edge of hexToUse
                 point1.x = (float)(hexToUse.transform.position.x + (0.5 * edgeLength));
@@ -617,7 +617,7 @@ namespace TheGreatCrusade
                 point2.y = (float)(hexToUse.transform.position.y);
                 point2.z = 0f;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.SouthEast] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.SouthEast] == hexNotUsing)
             {
                 // The river lies on the SE edge of hexToUse
                 point1.x = (float)(hexToUse.transform.position.x + edgeLength);
@@ -628,7 +628,7 @@ namespace TheGreatCrusade
                 point2.y = (float)(hexToUse.transform.position.y - (Mathf.Sqrt(3f) * edgeLength / 2f));
                 point2.z = 0f;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.South] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.South] == hexNotUsing)
             {
                 // The river lies on the S edge of hexToUse
                 point1.x = (float)(hexToUse.transform.position.x - (0.5 * edgeLength));
@@ -639,7 +639,7 @@ namespace TheGreatCrusade
                 point2.y = (float)(hexToUse.transform.position.y - (Mathf.Sqrt(3f) * edgeLength / 2f));
                 point2.z = 0f;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.SouthWest] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.SouthWest] == hexNotUsing)
             {
                 // The river lies on the SW edge of hexToUse
                 point1.x = (float)(hexToUse.transform.position.x + (0.5 * edgeLength));
@@ -650,7 +650,7 @@ namespace TheGreatCrusade
                 point2.y = (float)(hexToUse.transform.position.y);
                 point2.z = 0f;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.NorthWest] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.NorthWest] == hexNotUsing)
             {
                 // The river lies on the Nw edge of hexToUse
                 point1.x = (float)(hexToUse.transform.position.x - edgeLength);
@@ -703,65 +703,65 @@ namespace TheGreatCrusade
                 hexNotUsing = hex1;
             }
 
-            if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.North] == hexNotUsing)
+            if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.North] == hexNotUsing)
             {
                 // The river lies on the N edge of hexToUse
 
                 // Update the ZOC's of the hexes; they do not cross rivers
-                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.North] = false;
-                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.South] = false;
-                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.North] = true;
-                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.South] = true;
+                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.North] = false;
+                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.South] = false;
+                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.North] = true;
+                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.South] = true;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.NorthEast] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.NorthEast] == hexNotUsing)
             {
                 // The river lies on the NE edge of hexToUse
 
                 // Update the ZOC's of the hexes; they do not cross rivers
-                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.NorthEast] = false;
-                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.SouthWest] = false;
-                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.NorthEast] = true;
-                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.SouthWest] = true;
+                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.NorthEast] = false;
+                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.SouthWest] = false;
+                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.NorthEast] = true;
+                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.SouthWest] = true;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.SouthEast] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.SouthEast] == hexNotUsing)
             {
                 // The river lies on the SE edge of hexToUse
 
                 // Update the ZOC's of the hexes; they do not cross rivers
-                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.SouthEast] = false;
-                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.NorthWest] = false;
-                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.SouthEast] = true;
-                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.NorthWest] = true;
+                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.SouthEast] = false;
+                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.NorthWest] = false;
+                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.SouthEast] = true;
+                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.NorthWest] = true;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.South] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.South] == hexNotUsing)
             {
                 // The river lies on the S edge of hexToUse
 
                 // Update the ZOC's of the hexes; they do not cross rivers
-                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.South] = false;
-                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.North] = false;
-                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.South] = true;
-                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.North] = true;
+                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.South] = false;
+                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.North] = false;
+                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.South] = true;
+                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.North] = true;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.SouthWest] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.SouthWest] == hexNotUsing)
             {
                 // The river lies on the SW edge of hexToUse
 
                 // Update the ZOC's of the hexes; they do not cross rivers
-                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.SouthWest] = false;
-                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.NorthEast] = false;
-                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.SouthWest] = true;
-                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.NorthEast] = true;
+                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.SouthWest] = false;
+                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.NorthEast] = false;
+                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.SouthWest] = true;
+                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.NorthEast] = true;
             }
-            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)GlobalDefinitions.HexSides.NorthWest] == hexNotUsing)
+            else if (hexToUse.GetComponent<HexDatabaseFields>().Neighbors[(int)HexDefinitions.HexSides.NorthWest] == hexNotUsing)
             {
                 // The river lies on the Nw edge of hexToUse
 
                 // Update the ZOC's of the hexes; they do not cross rivers
-                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.NorthWest] = false;
-                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)GlobalDefinitions.HexSides.SouthEast] = false;
-                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.NorthWest] = true;
-                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)GlobalDefinitions.HexSides.SouthEast] = true;
+                hexToUse.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.NorthWest] = false;
+                hexNotUsing.GetComponent<BooleanArrayData>().exertsZOC[(int)HexDefinitions.HexSides.SouthEast] = false;
+                hexToUse.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.NorthWest] = true;
+                hexNotUsing.GetComponent<BooleanArrayData>().riverSides[(int)HexDefinitions.HexSides.SouthEast] = true;
             }
             else
             {
@@ -786,11 +786,11 @@ namespace TheGreatCrusade
             GameObject neighborHex;
 
             // Setup the reference for every hex to its neighbors and set the flag to indicate whether the hex exerts ZOC to the neighbor
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 currentHexCoodinates.x = hex.GetComponent<HexDatabaseFields>().xMapCoor;
                 currentHexCoodinates.y = hex.GetComponent<HexDatabaseFields>().yMapCoor;
-                foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSides in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 {
                     neightborHexCoordinates = CalculateNeighborCoordinates(currentHexCoodinates, hexSides);
                     neighborHex = GeneralHexRoutines.GetHexAtXY(neightborHexCoordinates.x, neightborHexCoordinates.y);
@@ -806,20 +806,20 @@ namespace TheGreatCrusade
             }
 
             // The following code sets the current hex to not project ZOC if it is a fortress, sea, impassible, or neutral
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
-                foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
+                foreach (HexDefinitions.HexSides hexSides in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                     if (hex.GetComponent<HexDatabaseFields>().fortress || hex.GetComponent<HexDatabaseFields>().sea ||
                             hex.GetComponent<HexDatabaseFields>().impassible || hex.GetComponent<HexDatabaseFields>().neutralCountry)
                         hex.GetComponent<BooleanArrayData>().exertsZOC[(int)hexSides] = false;
 
             // Make a reference from the sea hex to the invasion target.
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 hex.GetComponent<HexDatabaseFields>().invasionTarget = GeneralHexRoutines.GetHexAtXY(hex.GetComponent<HexDatabaseFields>().invasionTargetX, hex.GetComponent<HexDatabaseFields>().invasionTargetY);
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 if (hex.GetComponent<HexDatabaseFields>().sea)
                 {
-                    foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSides in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                     {
                         // Find the neighbor that is the invasion target.  Note, in the case of inland ports the ZOC will never get setup and that is correct
                         if (hex.GetComponent<HexDatabaseFields>().invasionTarget == hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides])
@@ -846,14 +846,14 @@ namespace TheGreatCrusade
 
 
             // Add city names to hexes with cities or ports
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().city || hex.GetComponent<HexDatabaseFields>().coastalPort || hex.GetComponent<HexDatabaseFields>().inlandPort || hex.GetComponent<HexDatabaseFields>().fortress)
-                    GlobalDefinitions.CreateHexText(Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexName), hex.GetComponent<HexDatabaseFields>().hexName, 100f, 100f, hex.transform.position.x, hex.transform.position.y, 10, Color.black, GlobalDefinitions.mapGraphicCanvas);
+                    GUIRoutines.CreateHexText(Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexName), hex.GetComponent<HexDatabaseFields>().hexName, 100f, 100f, hex.transform.position.x, hex.transform.position.y, 10, Color.black, GlobalDefinitions.mapGraphicCanvas);
 
             // Add supply capacity on invasion hexes
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().invasionTarget != null)
-                    GlobalDefinitions.CreateHexText(Convert.ToString(hex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity), "SupplyText", 100f, 100f, hex.transform.position.x, hex.transform.position.y, 10, Color.red, GlobalDefinitions.mapGraphicCanvas);
+                    GUIRoutines.CreateHexText(Convert.ToString(hex.GetComponent<HexDatabaseFields>().invasionTarget.GetComponent<HexDatabaseFields>().supplyCapacity), "SupplyText", 100f, 100f, hex.transform.position.x, hex.transform.position.y, 10, Color.red, GlobalDefinitions.mapGraphicCanvas);
 
 
             DrawInvasionArrows();
@@ -867,12 +867,12 @@ namespace TheGreatCrusade
         void DrawInvasionArrows()
         {
             float linePoint1x = 0f, linePoint1y = 0f, linePoint2x = 0f, linePoint2y = 0f;
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 // Every sea hex will have an arrow on it showing what its invasion target hex is.  Sea hexes without a target are just filler hexes
                 if (hex.GetComponent<HexDatabaseFields>().sea)
                 {
-                    foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSides in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                     {
                         // Find the neighbor that is the invasion target.  Note that this excludes inland ports so that two arrows don't get drawn.
                         if ((hex.GetComponent<HexDatabaseFields>().invasionTarget == hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides]) &&
@@ -892,7 +892,7 @@ namespace TheGreatCrusade
 
                             // The hexSides variable contains the orientation
 
-                            if (hexSides == GlobalDefinitions.HexSides.North)
+                            if (hexSides == HexDefinitions.HexSides.North)
                             {
                                 arrowInstance.transform.position += new Vector3(0, 4.5f, 0);
                                 linePoint1x = hex.transform.position.x + 0f;
@@ -900,7 +900,7 @@ namespace TheGreatCrusade
                                 linePoint2x = hex.transform.position.x + 0f;
                                 linePoint2y = hex.transform.position.y + 4.5f;
                             }
-                            else if (hexSides == GlobalDefinitions.HexSides.NorthEast)
+                            else if (hexSides == HexDefinitions.HexSides.NorthEast)
                             {
                                 arrowInstance.transform.localEulerAngles = new Vector3(0, 0, -60f);
                                 arrowInstance.transform.position += new Vector3(3.897f, 2.25f, 0);
@@ -909,7 +909,7 @@ namespace TheGreatCrusade
                                 linePoint2x = hex.transform.position.x + 3.897f;
                                 linePoint2y = hex.transform.position.y + 2.25f;
                             }
-                            else if (hexSides == GlobalDefinitions.HexSides.SouthEast)
+                            else if (hexSides == HexDefinitions.HexSides.SouthEast)
                             {
                                 arrowInstance.transform.localEulerAngles = new Vector3(0, 0, -120f);
                                 arrowInstance.transform.position += new Vector3(3.897f, -2.25f, 0);
@@ -918,7 +918,7 @@ namespace TheGreatCrusade
                                 linePoint2x = hex.transform.position.x + 3.897f;
                                 linePoint2y = hex.transform.position.y - 2.25f;
                             }
-                            else if (hexSides == GlobalDefinitions.HexSides.South)
+                            else if (hexSides == HexDefinitions.HexSides.South)
                             {
                                 arrowInstance.transform.localEulerAngles = new Vector3(0, 0, 180f);
                                 arrowInstance.transform.position += new Vector3(0, -4.5f, 0);
@@ -927,7 +927,7 @@ namespace TheGreatCrusade
                                 linePoint2x = hex.transform.position.x + 0f;
                                 linePoint2y = hex.transform.position.y - 4.5f;
                             }
-                            else if (hexSides == GlobalDefinitions.HexSides.SouthWest)
+                            else if (hexSides == HexDefinitions.HexSides.SouthWest)
                             {
                                 arrowInstance.transform.localEulerAngles = new Vector3(0, 0, 120f);
                                 arrowInstance.transform.position += new Vector3(-3.897f, -2.25f, 0);
@@ -936,7 +936,7 @@ namespace TheGreatCrusade
                                 linePoint2x = hex.transform.position.x - 3.897f;
                                 linePoint2y = hex.transform.position.y - 2.25f;
                             }
-                            else if (hexSides == GlobalDefinitions.HexSides.NorthWest)
+                            else if (hexSides == HexDefinitions.HexSides.NorthWest)
                             {
                                 arrowInstance.transform.localEulerAngles = new Vector3(0, 0, 60f);
                                 arrowInstance.transform.position += new Vector3(-3.897f, 2.25f, 0);
@@ -966,7 +966,7 @@ namespace TheGreatCrusade
             float distance = 0f;
             GameObject inlandPortHex = new GameObject();
 
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 // The inland ports do not have a reference back the hex that has their supply designation so start with sea hexes pointing at an inland port
                 if (hex.GetComponent<HexDatabaseFields>().sea)
@@ -1085,47 +1085,47 @@ namespace TheGreatCrusade
         /// <param name="hexCoordinates"></param>
         /// <param name="sideToCheck"></param>
         /// <returns></returns>
-        private HexLocation CalculateNeighborCoordinates(HexLocation hexCoordinates, GlobalDefinitions.HexSides sideToCheck)
+        private HexLocation CalculateNeighborCoordinates(HexLocation hexCoordinates, HexDefinitions.HexSides sideToCheck)
         {
             HexLocation returnValue = new HexLocation
             {
                 x = hexCoordinates.x,
                 y = hexCoordinates.y
             };
-            if (sideToCheck == GlobalDefinitions.HexSides.SouthWest)
+            if (sideToCheck == HexDefinitions.HexSides.SouthWest)
             {
                 returnValue.x = hexCoordinates.x - 1;
                 if ((hexCoordinates.x % 2) == 0)
                     returnValue.y = hexCoordinates.y - 1;
             }
 
-            if (sideToCheck == GlobalDefinitions.HexSides.NorthWest)
+            if (sideToCheck == HexDefinitions.HexSides.NorthWest)
             {
                 returnValue.x = hexCoordinates.x - 1;
                 if ((hexCoordinates.x % 2) != 0)
                     returnValue.y = hexCoordinates.y + 1;
             }
 
-            if (sideToCheck == GlobalDefinitions.HexSides.North)
+            if (sideToCheck == HexDefinitions.HexSides.North)
             {
                 returnValue.y = hexCoordinates.y + 1;
             }
 
-            if (sideToCheck == GlobalDefinitions.HexSides.NorthEast)
+            if (sideToCheck == HexDefinitions.HexSides.NorthEast)
             {
                 returnValue.x = hexCoordinates.x + 1;
                 if ((hexCoordinates.x % 2) != 0)
                     returnValue.y = hexCoordinates.y + 1;
             }
 
-            if (sideToCheck == GlobalDefinitions.HexSides.SouthEast)
+            if (sideToCheck == HexDefinitions.HexSides.SouthEast)
             {
                 returnValue.x = hexCoordinates.x + 1;
                 if ((hexCoordinates.x % 2) == 0)
                     returnValue.y = hexCoordinates.y - 1;
             }
 
-            if (sideToCheck == GlobalDefinitions.HexSides.South)
+            if (sideToCheck == HexDefinitions.HexSides.South)
             {
                 returnValue.y = hexCoordinates.y - 1;
             }
@@ -1138,7 +1138,7 @@ namespace TheGreatCrusade
         /// </summary>
         private void SetupColliderOnHexes()
         {
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 // Add a sphere collider
                 hex.gameObject.AddComponent<SphereCollider>();

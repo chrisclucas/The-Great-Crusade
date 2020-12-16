@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -31,7 +32,7 @@ namespace TheGreatCrusade
                 GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
                         GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedInvasionState>().ExecuteSelectUnit;
 
-                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                GUIRoutines.RemoveGUI(transform.parent.gameObject);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -37,7 +38,7 @@ namespace TheGreatCrusade
                 GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod(GameControl.inputMessage.GetComponent<InputMessage>());
                 GlobalDefinitions.gameStarted = true;
                 GlobalDefinitions.SwitchLocalControl(true);
-                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                GUIRoutines.RemoveGUI(transform.parent.gameObject);
 
             }
             else if (MainMenuRoutines.AIToggle.GetComponent<Toggle>().isOn)
@@ -47,7 +48,7 @@ namespace TheGreatCrusade
                 GlobalDefinitions.WriteToLogFile("okGameMode: Setting up AI mode");
                 GlobalDefinitions.commandFileHeader = "AI";
                 GlobalDefinitions.AskUserWhichSideToPlay();
-                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                GUIRoutines.RemoveGUI(transform.parent.gameObject);
             }
             //else if (MainMenuRoutines.peerToPeerNetworkToggle.GetComponent<Toggle>().isOn)
             //{
@@ -58,7 +59,7 @@ namespace TheGreatCrusade
             //    //GameControl.fileTransferServerInstance.GetComponent<FileTransferServer>().initiateFileTransferServer();
             //    MainMenuRoutines.NetworkSettingsUI();
 
-            //    GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            //    GUIRoutines.RemoveGUI(transform.parent.gameObject);
             //}
         }
     }

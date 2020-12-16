@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -78,7 +79,7 @@ namespace TheGreatCrusade
             }
 
             GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().CheckIfAlliedUnsuppliedUnitsShouldBeEliminated(false);
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.supplySourceGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.supplySourceGUIInstance);
 
             // Got rid of the GUI, now get rid of the global copies of the supply gui's
             //int count = GlobalDefinitions.supplyGUI.Count;
@@ -117,7 +118,7 @@ namespace TheGreatCrusade
             // Turn the button back on
             GameObject.Find("SupplySourcesButton").GetComponent<Button>().interactable = true;
 
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.supplySourceGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.supplySourceGUIInstance);
         }
 
         /// <summary>
@@ -131,7 +132,7 @@ namespace TheGreatCrusade
 
                 GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SwapSupplyStatus(unit);
             }
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GUIRoutines.RemoveGUI(transform.parent.gameObject);
             GlobalDefinitions.supplySourceGUIInstance.SetActive(true);
         }
     }

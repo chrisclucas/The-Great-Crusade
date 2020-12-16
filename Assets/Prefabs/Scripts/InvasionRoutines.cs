@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -24,7 +23,7 @@ namespace TheGreatCrusade
 
             GlobalDefinitions.numberAlliedReinforcementsLandedThisTurn = 0;
 
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
                 GlobalDefinitions.UnhighlightHex(hex.gameObject);
@@ -42,13 +41,13 @@ namespace TheGreatCrusade
 
             float panelWidth = 3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
             float panelHeight = 9 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            GlobalDefinitions.invasionAreaSelectionGUIInstance = GlobalDefinitions.CreateGUICanvas("InvasionAreaSelectionGUIInstance",
+            GlobalDefinitions.invasionAreaSelectionGUIInstance = GUIRoutines.CreateGUICanvas("InvasionAreaSelectionGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref invasionAreaSelectionCanvasInstance, 0.16f, 0.16f);
             GlobalDefinitions.invasionAreaSelectionGUIInstance.GetComponent<RectTransform>().anchorMin = new Vector2(0.16f, 0.5f);
 
-            GlobalDefinitions.CreateUIText("Select invasion area", "InvasionAreaSelectionText",
+            GUIRoutines.CreateUIText("Select invasion area", "InvasionAreaSelectionText",
                     (3) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -58,7 +57,7 @@ namespace TheGreatCrusade
             for (int index = 0; index < 7; index++)
             {
                 Toggle tempToggle;
-                GlobalDefinitions.CreateUIText(GlobalDefinitions.invasionAreas[index].name,
+                GUIRoutines.CreateUIText(GlobalDefinitions.invasionAreas[index].name,
                         "InvasionAreaSelectionText",
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -66,7 +65,7 @@ namespace TheGreatCrusade
                         (index + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         Color.white,
                         invasionAreaSelectionCanvasInstance, 0.16f, 0.16f, 0.5f, 0.5f);
-                tempToggle = GlobalDefinitions.CreateToggle("InvasionAreaSelectionToggle" + index,
+                tempToggle = GUIRoutines.CreateToggle("InvasionAreaSelectionToggle" + index,
                             2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             (index + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                             invasionAreaSelectionCanvasInstance, 0.16f, 0.16f, 0.5f, 0.5f).GetComponent<Toggle>();
@@ -241,7 +240,7 @@ namespace TheGreatCrusade
                 GlobalDefinitions.UnhighlightUnit(GlobalDefinitions.selectedUnit);
             GlobalDefinitions.selectedUnit = null;
 
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 GlobalDefinitions.UnhighlightHex(hex.gameObject);
                 hex.GetComponent<HexDatabaseFields>().availableForMovement = false;

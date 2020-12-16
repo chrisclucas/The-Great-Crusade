@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -16,7 +15,7 @@ namespace TheGreatCrusade
 
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
                     GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteCloseDefenseSelection;
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
         }
 
         public void CancelCloseDefense()
@@ -31,7 +30,7 @@ namespace TheGreatCrusade
                     GlobalDefinitions.closeDefenseHexes.Remove(hex);
                 }
             GlobalDefinitions.tacticalAirMissionsThisTurn--;
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
             CombatResolutionRoutines.CreateTacticalAirGUI();
         }
 
@@ -55,7 +54,7 @@ namespace TheGreatCrusade
 
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
                     GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteUnitInterdictionSelection;
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
         }
 
         public void CancelInterdictedUnit()
@@ -69,7 +68,7 @@ namespace TheGreatCrusade
                     GlobalDefinitions.interdictedUnits.Remove(unit);
                 }
             GlobalDefinitions.tacticalAirMissionsThisTurn--;
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
             CombatResolutionRoutines.CreateTacticalAirGUI();
         }
 
@@ -93,7 +92,7 @@ namespace TheGreatCrusade
 
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
                     GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<AlliedTacticalAirState>().ExecuteRiverInterdictionSelection;
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
         }
 
         public void CancelRiverInterdiction()
@@ -108,7 +107,7 @@ namespace TheGreatCrusade
                     GlobalDefinitions.riverInderdictedHexes.Remove(hex);
                 }
             GlobalDefinitions.tacticalAirMissionsThisTurn--;
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
             CombatResolutionRoutines.CreateTacticalAirGUI();
         }
 
@@ -130,7 +129,7 @@ namespace TheGreatCrusade
         {
             GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.TACAIRMULTIUNITSELECTIONKEYWORD + " " + name);
 
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
             CombatResolutionRoutines.AddInterdictedUnitToList(unit);
         }
 
@@ -138,7 +137,7 @@ namespace TheGreatCrusade
         {
             GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.EXECUTETACTICALAIROKKEYWORD);
 
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.tacticalAirGUIInstance);
 
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.ExecuteQuit();
         }

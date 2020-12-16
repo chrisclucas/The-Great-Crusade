@@ -133,14 +133,14 @@ namespace TheGreatCrusade
             panelImage.rectTransform.anchoredPosition = new Vector2(0, 0);
 
             if (panelHeight > (UnityEngine.Screen.height - 50))
-                combatResolutionGuiInstance = GlobalDefinitions.CreateScrollingGUICanvas("CombatResolutionGUIInstance",
+                combatResolutionGuiInstance = GUIRoutines.CreateScrollingGUICanvas("CombatResolutionGUIInstance",
                         panelWidth,
                         panelHeight,
                         ref combatContentPanel,
                         ref combatCanvas);
             else
             {
-                combatResolutionGuiInstance = GlobalDefinitions.CreateGUICanvas("CombatResolutionGUIInstance",
+                combatResolutionGuiInstance = GUIRoutines.CreateGUICanvas("CombatResolutionGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref combatCanvas);
@@ -151,7 +151,7 @@ namespace TheGreatCrusade
             // Put a series of text boxes along the top row to serve as the header
 
             // The first three columns contain images of the defending units
-            GlobalDefinitions.CreateUIText("Units on Defense", "UnitsHeaderText",
+            GUIRoutines.CreateUIText("Units on Defense", "UnitsHeaderText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 1 * 1.25f - 0.5f * panelWidth,
@@ -159,7 +159,7 @@ namespace TheGreatCrusade
                     Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
             // In column four the defense factor will be listed
-            GlobalDefinitions.CreateUIText("Defense", "DefenseHeaderText",
+            GUIRoutines.CreateUIText("Defense", "DefenseHeaderText",
                     1.1f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 4 * 1.25f - 0.5f * panelWidth,
@@ -167,7 +167,7 @@ namespace TheGreatCrusade
                     Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
             // In column five the attack factor will be listed
-            GlobalDefinitions.CreateUIText("Attack", "AttackHeaderText",
+            GUIRoutines.CreateUIText("Attack", "AttackHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 5 * 1.25f - 0.5f * panelWidth,
@@ -175,7 +175,7 @@ namespace TheGreatCrusade
                     Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
             // In column six the odds will be listed
-            GlobalDefinitions.CreateUIText("Odds", "OddsHeaderText",
+            GUIRoutines.CreateUIText("Odds", "OddsHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 6 * 1.25f - 0.5f * panelWidth,
@@ -185,14 +185,14 @@ namespace TheGreatCrusade
             // In column seven the carpet bombing indicator will be placed if Allied mode
             // if it is the German mode will put the close defense indicator
             if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
-                GlobalDefinitions.CreateUIText("Carpet Bomb", "CarpetBombHeaderText",
+                GUIRoutines.CreateUIText("Carpet Bomb", "CarpetBombHeaderText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
                         (GlobalDefinitions.allCombats.Count + 1.25f) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
             else
-                GlobalDefinitions.CreateUIText("Air Def", "CloseDefenseHeaderText",
+                GUIRoutines.CreateUIText("Air Def", "CloseDefenseHeaderText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE * 7 * 1.25f - 0.5f * panelWidth,
@@ -201,7 +201,7 @@ namespace TheGreatCrusade
 
             // In column eight the air support toggle will be placed only if it is Allied combat
             if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
-                GlobalDefinitions.CreateUIText("Air Support", "AirSupportHeaderText",
+                GUIRoutines.CreateUIText("Air Support", "AirSupportHeaderText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
@@ -209,7 +209,7 @@ namespace TheGreatCrusade
                         Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
             //  In column nine the combat results will be listed
-            GlobalDefinitions.CreateUIText("Combat Results", "CombatResultsHeaderText",
+            GUIRoutines.CreateUIText("Combat Results", "CombatResultsHeaderText",
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE * 9 * 1.25f - 0.5f * panelWidth,
@@ -233,7 +233,7 @@ namespace TheGreatCrusade
                 GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: unit " + combat.GetComponent<Combat>().defendingUnits[a].name + "  x = " + (GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(combat.GetComponent<Combat>().defendingUnits[a]) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE));
                 GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: unit index = " + combat.GetComponent<Combat>().defendingUnits.IndexOf(combat.GetComponent<Combat>().defendingUnits[a]));
 #endif
-                    GlobalDefinitions.CreateUnitImage(combat.GetComponent<Combat>().defendingUnits[a],
+                    GUIRoutines.CreateUnitImage(combat.GetComponent<Combat>().defendingUnits[a],
                                 "UnitImage",
                                 //GlobalDefinitions.GUIUNITIMAGESIZE * combat.GetComponent<Combat>().defendingUnits.IndexOf(defendingUnit) * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE,
                                 GlobalDefinitions.GUIUNITIMAGESIZE * a * 1.25f - 0.5f * panelWidth + GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -244,7 +244,7 @@ namespace TheGreatCrusade
             GlobalDefinitions.WriteToLogFile("combatResolutionDisplay: combat number = " + GlobalDefinitions.allCombats.IndexOf(combat) + " defender count = " + combat.GetComponent<Combat>().defendingUnits.Count + " attacker count = " + combat.GetComponent<Combat>().attackingUnits.Count);
 #endif
                 // In column four the defense factor will be listed
-                GlobalDefinitions.CreateUIText(CalculateBattleOddsRoutines.CalculateDefenseFactor(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits).ToString(),
+                GUIRoutines.CreateUIText(CalculateBattleOddsRoutines.CalculateDefenseFactor(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits).ToString(),
                         "DefenseFactorText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -253,7 +253,7 @@ namespace TheGreatCrusade
                         Color.white, combatCanvas).transform.SetParent(combatContentPanel.transform, false);
 
                 // In column five the attack factor will be listed
-                attackFactorTextGameObject = GlobalDefinitions.CreateUIText(CalculateBattleOddsRoutines.CalculateAttackFactor(combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport).ToString(),
+                attackFactorTextGameObject = GUIRoutines.CreateUIText(CalculateBattleOddsRoutines.CalculateAttackFactor(combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport).ToString(),
                         "AttackFactorText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -263,7 +263,7 @@ namespace TheGreatCrusade
                 attackFactorTextGameObject.transform.SetParent(combatContentPanel.transform, false);
 
                 // In column six the odds will be listed
-                oddsTextGameObject = GlobalDefinitions.CreateUIText(GlobalDefinitions.ConvertOddsToString(CalculateBattleOddsRoutines.ReturnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport)),
+                oddsTextGameObject = GUIRoutines.CreateUIText(GlobalDefinitions.ConvertOddsToString(CalculateBattleOddsRoutines.ReturnCombatOdds(combat.GetComponent<Combat>().defendingUnits, combat.GetComponent<Combat>().attackingUnits, combat.GetComponent<Combat>().attackAirSupport)),
                         "OddsText",
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -277,7 +277,7 @@ namespace TheGreatCrusade
                 if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
                 {
                     if (CheckIfCarpetBombingInEffect(combat.GetComponent<Combat>().defendingUnits))
-                        GlobalDefinitions.CreateUIText("Yes",
+                        GUIRoutines.CreateUIText("Yes",
                                 "CarpetBombingActiveText",
                                 GlobalDefinitions.GUIUNITIMAGESIZE,
                                 GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -288,7 +288,7 @@ namespace TheGreatCrusade
                 else
                 {
                     if (CheckIfCloseDefenseActive(combat.GetComponent<Combat>().defendingUnits))
-                        GlobalDefinitions.CreateUIText("Yes",
+                        GUIRoutines.CreateUIText("Yes",
                                 "CloseDefenseActiveText",
                                 GlobalDefinitions.GUIUNITIMAGESIZE,
                                 GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -300,7 +300,7 @@ namespace TheGreatCrusade
                 // In column eight a toggle will be listed to add air support if this is the Allied combat mode
                 if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
                 {
-                    combat.GetComponent<Combat>().airSupportToggle = GlobalDefinitions.CreateToggle("CombatResolutionAirSupportToggle" + GlobalDefinitions.allCombats.IndexOf(combat),
+                    combat.GetComponent<Combat>().airSupportToggle = GUIRoutines.CreateToggle("CombatResolutionAirSupportToggle" + GlobalDefinitions.allCombats.IndexOf(combat),
                         GlobalDefinitions.GUIUNITIMAGESIZE * 8 * 1.25f - 0.5f * panelWidth,
                         yPosition,
                         combatCanvas).GetComponent<Toggle>();
@@ -328,7 +328,7 @@ namespace TheGreatCrusade
                 }
 
                 // In column nine add a button to resolve the combat
-                combat.GetComponent<Combat>().resolveButton = GlobalDefinitions.CreateButton("CombatResolutionResolveButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Resolve",
+                combat.GetComponent<Combat>().resolveButton = GUIRoutines.CreateButton("CombatResolutionResolveButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Resolve",
                         GlobalDefinitions.GUIUNITIMAGESIZE * 9 * 1.25f - 0.5f * panelWidth,
                         yPosition,
                         combatCanvas);
@@ -346,7 +346,7 @@ namespace TheGreatCrusade
                     combat.GetComponent<Combat>().resolveButton.interactable = false;
 
                 // In column ten add a button to locate the combat
-                combat.GetComponent<Combat>().locateButton = GlobalDefinitions.CreateButton("CombatResolutionLocateButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Locate",
+                combat.GetComponent<Combat>().locateButton = GUIRoutines.CreateButton("CombatResolutionLocateButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Locate",
                        GlobalDefinitions.GUIUNITIMAGESIZE * 10 * 1.25f - 0.5f * panelWidth,
                        yPosition,
                        combatCanvas);
@@ -356,7 +356,7 @@ namespace TheGreatCrusade
                 combat.GetComponent<Combat>().locateButton.onClick.AddListener(combat.GetComponent<Combat>().locateButton.GetComponent<CombatResolutionButtonRoutines>().LocateAttack);
 
                 // In column eleven add a button to cancel the combat
-                combat.GetComponent<Combat>().cancelButton = GlobalDefinitions.CreateButton("CombatResolutionCamcelButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Cancel",
+                combat.GetComponent<Combat>().cancelButton = GUIRoutines.CreateButton("CombatResolutionCamcelButton" + GlobalDefinitions.allCombats.IndexOf(combat), "Cancel",
                         GlobalDefinitions.GUIUNITIMAGESIZE * 11 * 1.25f - 0.5f * panelWidth,
                         yPosition,
                         combatCanvas);
@@ -370,7 +370,7 @@ namespace TheGreatCrusade
             }
 
             // Need an OK button to get out of the GUI
-            okButton = GlobalDefinitions.CreateButton("CombatResolutionOKButton", "Continue",
+            okButton = GUIRoutines.CreateButton("CombatResolutionOKButton", "Continue",
                     7 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas);
@@ -474,34 +474,34 @@ namespace TheGreatCrusade
 
                     float panelWidth = 5 * GlobalDefinitions.GUIUNITIMAGESIZE;
                     float panelHeight = 3 * GlobalDefinitions.GUIUNITIMAGESIZE;
-                    GlobalDefinitions.CreateGUICanvas("CarpetBombingResultSelectionGUIInstance",
+                    GUIRoutines.CreateGUICanvas("CarpetBombingResultSelectionGUIInstance",
                             panelWidth,
                             panelHeight,
                             ref carpetBombingCanvasInstance);
 
-                    GlobalDefinitions.CreateUIText("Select a Result", "CarpetBombingGUIHeaderText",
+                    GUIRoutines.CreateUIText("Select a Result", "CarpetBombingGUIHeaderText",
                             3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                             Color.white, carpetBombingCanvasInstance);
 
-                    tempToggle1 = GlobalDefinitions.CreateToggle("CarpetBombingToggle1",
+                    tempToggle1 = GUIRoutines.CreateToggle("CarpetBombingToggle1",
                             1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                             carpetBombingCanvasInstance).GetComponent<Toggle>();
-                    GlobalDefinitions.CreateUIText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]), "CarpetBombingResultText",
+                    GUIRoutines.CreateUIText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult1]), "CarpetBombingResultText",
                             2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             1 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             2 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                             Color.white, carpetBombingCanvasInstance);
 
-                    tempToggle2 = GlobalDefinitions.CreateToggle("CarpetBombingToggle2",
+                    tempToggle2 = GUIRoutines.CreateToggle("CarpetBombingToggle2",
                             4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                             carpetBombingCanvasInstance).GetComponent<Toggle>();
-                    GlobalDefinitions.CreateUIText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]), "CarpetBombingResultText",
+                    GUIRoutines.CreateUIText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), GlobalDefinitions.dieRollResult2]), "CarpetBombingResultText",
                             2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             4 * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -552,7 +552,7 @@ namespace TheGreatCrusade
                 GlobalDefinitions.combatResultsFromLastTurn.Add(combatResults);
 
             // The added text below is to put the combat results in the Combat Results GUI in place of the deleted Resolve button
-            GlobalDefinitions.CreateUIText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), dieRollResult]), "CombatResolutionText",
+            GUIRoutines.CreateUIText(ConvertResultsToString(GlobalDefinitions.combatResultsTable[TranslateCombatOddsToArrayIndex(combatOdds), dieRollResult]), "CombatResolutionText",
                     1.4f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     buttonLocation.x,
@@ -789,14 +789,14 @@ namespace TheGreatCrusade
             float panelWidth = (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
             float panelHeight = 5 * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-            exchangeGuiInstance = GlobalDefinitions.CreateGUICanvas("ExchangeGUIInstance",
+            exchangeGuiInstance = GUIRoutines.CreateGUICanvas("ExchangeGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref combatCanvas);
 
             GlobalDefinitions.ExchangeGUIInstance = exchangeGuiInstance;
 
-            GlobalDefinitions.CreateUIText("Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected, "ExchangeText",
+            GUIRoutines.CreateUIText("Select " + GlobalDefinitions.exchangeFactorsToLose + " factors\nFactors selected so far: " + GlobalDefinitions.exchangeFactorsSelected, "ExchangeText",
                     4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -808,7 +808,7 @@ namespace TheGreatCrusade
             for (int index = 0; index < unitList.Count; index++)
             {
                 Toggle tempToggle;
-                tempToggle = GlobalDefinitions.CreateUnitTogglePair("ExchangeUnitToggle" + index,
+                tempToggle = GUIRoutines.CreateUnitTogglePair("ExchangeUnitToggle" + index,
                         index * xSeperation + xOffset - 0.5f * panelWidth,
                         2 * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         combatCanvas,
@@ -820,7 +820,7 @@ namespace TheGreatCrusade
                 tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<ExchangeToggleRoutines>().AddOrSubtractExchangeFactors());
             }
 
-            okButton = GlobalDefinitions.CreateButton("ExchangeOKButton", "OK",
+            okButton = GUIRoutines.CreateButton("ExchangeOKButton", "OK",
                     0.5f * (maxWidth + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                     0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas);
@@ -852,13 +852,13 @@ namespace TheGreatCrusade
 
             float panelWidth = widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE;
             float panelHeight = 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            GameObject postCombatMovementGuiInstance = GlobalDefinitions.CreateGUICanvas("PostCombatMovementGUIInstance",
+            GameObject postCombatMovementGuiInstance = GUIRoutines.CreateGUICanvas("PostCombatMovementGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref combatCanvas);
             GlobalDefinitions.postCombatMovementGuiInstance = postCombatMovementGuiInstance;
 
-            GlobalDefinitions.CreateUIText("Select units to occupy the vacated hex", "PostCombatMovementText",
+            GUIRoutines.CreateUIText("Select units to occupy the vacated hex", "PostCombatMovementText",
                     widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE,
                     2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
@@ -871,7 +871,7 @@ namespace TheGreatCrusade
             {
                 Toggle tempToggle;
 
-                tempToggle = GlobalDefinitions.CreateUnitTogglePair("PostCombatMovementUnitToggle" + index,
+                tempToggle = GUIRoutines.CreateUnitTogglePair("PostCombatMovementUnitToggle" + index,
                         index * xSeperation + xOffset - 0.5f * panelWidth,
                         2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         combatCanvas,
@@ -887,7 +887,7 @@ namespace TheGreatCrusade
                 tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<PostCombatMovementToggleRoutines>().MoveSelectedUnit());
             }
 
-            okButton = GlobalDefinitions.CreateButton("PostCombatMovementButton", "OK",
+            okButton = GUIRoutines.CreateButton("PostCombatMovementButton", "OK",
                     widthSeed * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
                     0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas);
@@ -951,12 +951,12 @@ namespace TheGreatCrusade
 
                 float panelWidth = (GlobalDefinitions.retreatingUnits.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
                 float panelHeight = 3 * GlobalDefinitions.GUIUNITIMAGESIZE;
-                GlobalDefinitions.CreateGUICanvas("RetreatGUIInstance",
+                GUIRoutines.CreateGUICanvas("RetreatGUIInstance",
                         panelWidth,
                         panelHeight,
                         ref combatCanvas);
 
-                GlobalDefinitions.CreateUIText("Select unit to retreat", "RetreatText",
+                GUIRoutines.CreateUIText("Select unit to retreat", "RetreatText",
                         3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         0.5f * (GlobalDefinitions.retreatingUnits.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -969,7 +969,7 @@ namespace TheGreatCrusade
                 {
                     Toggle tempToggle;
 
-                    tempToggle = GlobalDefinitions.CreateUnitTogglePair("RetreatUnitToggle" + index,
+                    tempToggle = GUIRoutines.CreateUnitTogglePair("RetreatUnitToggle" + index,
                             index * xSeperation + xOffset - 0.5f * panelWidth,
                             1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                             combatCanvas,
@@ -995,7 +995,7 @@ namespace TheGreatCrusade
             List<GameObject> firstMoveHexes = new List<GameObject>();
             List<GameObject> retreatHexes = new List<GameObject>();
             retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().remainingMovement = 1;
-            foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 if (retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                     if (CheckForRetreatMovementAvailableNoStackingRestrictions(retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex,
                             retreatingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], retreatingUnit))
@@ -1005,7 +1005,7 @@ namespace TheGreatCrusade
             foreach (GameObject hex in firstMoveHexes)
             {
                 hex.GetComponent<HexDatabaseFields>().remainingMovement = 1;
-                foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                     if (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                         if (CheckForRetreatMovementAvailable(hex, hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide], retreatingUnit))
                             retreatHexes.Add(hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]);
@@ -1034,7 +1034,7 @@ namespace TheGreatCrusade
             bool storeHex;
             while (hexesToCheck.Count > 0)
             {
-                foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 {
                     if (hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                     {
@@ -1061,7 +1061,7 @@ namespace TheGreatCrusade
                 hexesToCheck.Add(hex);
                 while (hexesToCheck.Count > 0)
                 {
-                    foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                     {
                         if (hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                         {
@@ -1308,7 +1308,7 @@ namespace TheGreatCrusade
         /// </summary>
         public static void ResetCarpetBombingHexes()
         {
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 hex.GetComponent<HexDatabaseFields>().carpetBombingActive = false;
         }
 
@@ -1331,6 +1331,7 @@ namespace TheGreatCrusade
         /// </summary>
         public static void EndAlliedCombatPhase()
         {
+            GlobalDefinitions.EliminateUnitsOnSeaHexes();
             ResetCarpetBombingHexes();
             GlobalDefinitions.GuiDisplayAlliedVictoryUnits();
             GameControl.supplyRoutinesInstance.GetComponent<SupplyRoutines>().SetAlliedSupplyStatus(true);
@@ -1375,7 +1376,7 @@ namespace TheGreatCrusade
                 float panelWidth = 9 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
                 float panelHeight = (numberOfRows) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-                GameObject tacticalAirGUIInstance = GlobalDefinitions.CreateGUICanvas("TacticalAirGUIInstance",
+                GameObject tacticalAirGUIInstance = GUIRoutines.CreateGUICanvas("TacticalAirGUIInstance",
                         panelWidth,
                         panelHeight,
                         ref tacticalAirCanvasInstance);
@@ -1383,7 +1384,7 @@ namespace TheGreatCrusade
                 GlobalDefinitions.tacticalAirGUIInstance = tacticalAirGUIInstance;
 
                 yPosition = 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight;
-                okButton = GlobalDefinitions.CreateButton("tacticalAirOKButton", "OK",
+                okButton = GUIRoutines.CreateButton("tacticalAirOKButton", "OK",
                             4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance);
@@ -1399,21 +1400,21 @@ namespace TheGreatCrusade
                     Button riverInterdictionLocateButton;
                     Button riverInterdictionCancelButton;
 
-                    GlobalDefinitions.CreateUIText("River Interdiction", "RiverInerdictionInstanceText",
+                    GUIRoutines.CreateUIText("River Interdiction", "RiverInerdictionInstanceText",
                             2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             Color.white, tacticalAirCanvasInstance);
 
-                    GlobalDefinitions.CreateUIText(hex.name, "RiverInerdictionHexText",
+                    GUIRoutines.CreateUIText(hex.name, "RiverInerdictionHexText",
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             Color.white, tacticalAirCanvasInstance);
 
-                    riverInterdictionLocateButton = GlobalDefinitions.CreateButton("riverInterdictionLocateButton" + toggleIndex, "Locate",
+                    riverInterdictionLocateButton = GUIRoutines.CreateButton("riverInterdictionLocateButton" + toggleIndex, "Locate",
                             5 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance);
@@ -1421,7 +1422,7 @@ namespace TheGreatCrusade
                     riverInterdictionLocateButton.gameObject.GetComponent<TacticalAirToggleRoutines>().hex = hex;
                     riverInterdictionLocateButton.onClick.AddListener(riverInterdictionLocateButton.GetComponent<TacticalAirToggleRoutines>().LocateRiverInterdiction);
 
-                    riverInterdictionCancelButton = GlobalDefinitions.CreateButton("riverInterdictionCancelButton" + toggleIndex, "Cancel",
+                    riverInterdictionCancelButton = GUIRoutines.CreateButton("riverInterdictionCancelButton" + toggleIndex, "Cancel",
                             7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance);
@@ -1439,19 +1440,19 @@ namespace TheGreatCrusade
                     Button unitInterdictionLocateButton;
                     Button unitInterdictionCancelButton;
 
-                    GlobalDefinitions.CreateUIText("Unit Interdiction", "UnitInerdictionInstanceText",
+                    GUIRoutines.CreateUIText("Unit Interdiction", "UnitInerdictionInstanceText",
                             2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             Color.white, tacticalAirCanvasInstance);
 
-                    GlobalDefinitions.CreateUnitImage(unit, "tacticalAirUnitInterdictionImage",
+                    GUIRoutines.CreateUnitImage(unit, "tacticalAirUnitInterdictionImage",
                             3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance);
 
-                    unitInterdictionLocateButton = GlobalDefinitions.CreateButton("unitInterdictionLocateButton" + toggleIndex, "Locate",
+                    unitInterdictionLocateButton = GUIRoutines.CreateButton("unitInterdictionLocateButton" + toggleIndex, "Locate",
                             5 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance);
@@ -1459,7 +1460,7 @@ namespace TheGreatCrusade
                     unitInterdictionLocateButton.gameObject.GetComponent<TacticalAirToggleRoutines>().unit = unit;
                     unitInterdictionLocateButton.onClick.AddListener(unitInterdictionLocateButton.GetComponent<TacticalAirToggleRoutines>().LocateInterdictedUnit);
 
-                    unitInterdictionCancelButton = GlobalDefinitions.CreateButton("unitInterdictionCancelButton" + toggleIndex, "Cancel",
+                    unitInterdictionCancelButton = GUIRoutines.CreateButton("unitInterdictionCancelButton" + toggleIndex, "Cancel",
                             7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance);
@@ -1476,7 +1477,7 @@ namespace TheGreatCrusade
                 {
                     Button closeDefenseLocateButton;
                     Button closeDefenseCancelButton;
-                    GlobalDefinitions.CreateUIText("Close Defense", "CloseDefenseInstanceText",
+                    GUIRoutines.CreateUIText("Close Defense", "CloseDefenseInstanceText",
                             2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             1 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1485,13 +1486,13 @@ namespace TheGreatCrusade
                     //for (int index = 0; ((index < hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count) && (index < 2)); index++)
                     for (int index = 0; (index < hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count); index++)
                     {
-                        GlobalDefinitions.CreateUnitImage(hex.GetComponent<HexDatabaseFields>().occupyingUnit[index], "tacticalAirDefenseImage",
+                        GUIRoutines.CreateUnitImage(hex.GetComponent<HexDatabaseFields>().occupyingUnit[index], "tacticalAirDefenseImage",
                             (index + 2) * 1f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 40 + index * 5,
                             yPosition,
                             tacticalAirCanvasInstance);
                     }
 
-                    closeDefenseLocateButton = GlobalDefinitions.CreateButton("closeDefenseLocateButton" + toggleIndex, "Locate",
+                    closeDefenseLocateButton = GUIRoutines.CreateButton("closeDefenseLocateButton" + toggleIndex, "Locate",
                             5 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance);
@@ -1500,7 +1501,7 @@ namespace TheGreatCrusade
                     closeDefenseLocateButton.onClick.AddListener(closeDefenseLocateButton.GetComponent<TacticalAirToggleRoutines>().LocateCloseDefense);
 
 
-                    closeDefenseCancelButton = GlobalDefinitions.CreateButton("closeDefenseCancelButton" + toggleIndex, "Cancel",
+                    closeDefenseCancelButton = GUIRoutines.CreateButton("closeDefenseCancelButton" + toggleIndex, "Cancel",
                             7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance);
@@ -1516,7 +1517,7 @@ namespace TheGreatCrusade
                 if ((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) > 0)
                 {
 
-                    closeDefenseToggle = GlobalDefinitions.CreateToggle("CloseDefense",
+                    closeDefenseToggle = GUIRoutines.CreateToggle("CloseDefense",
                             2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance).GetComponent<Toggle>();
@@ -1524,14 +1525,14 @@ namespace TheGreatCrusade
                     closeDefenseToggle.onValueChanged.AddListener((bool value) => closeDefenseToggle.GetComponent<TacticalAirToggleRoutines>().AddCloseDefenseHex());
 
 
-                    riverInterdictionToggle = GlobalDefinitions.CreateToggle("RiverInterdiction",
+                    riverInterdictionToggle = GUIRoutines.CreateToggle("RiverInterdiction",
                             4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance).GetComponent<Toggle>();
                     riverInterdictionToggle.gameObject.AddComponent<TacticalAirToggleRoutines>();
                     riverInterdictionToggle.onValueChanged.AddListener((bool value) => riverInterdictionToggle.GetComponent<TacticalAirToggleRoutines>().AddRiverInterdiction());
 
-                    unitInterdictionToggle = GlobalDefinitions.CreateToggle("UnitInterdiction",
+                    unitInterdictionToggle = GUIRoutines.CreateToggle("UnitInterdiction",
                             7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             tacticalAirCanvasInstance).GetComponent<Toggle>();
@@ -1540,21 +1541,21 @@ namespace TheGreatCrusade
 
                     yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-                    GlobalDefinitions.CreateUIText("Assign Close Defense Support", "CloseDefenseText",
+                    GUIRoutines.CreateUIText("Assign Close Defense Support", "CloseDefenseText",
                             3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             Color.white, tacticalAirCanvasInstance);
 
-                    GlobalDefinitions.CreateUIText("Assign River Interdiction", "RiverInterdictionText",
+                    GUIRoutines.CreateUIText("Assign River Interdiction", "RiverInterdictionText",
                             3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             yPosition,
                             Color.white, tacticalAirCanvasInstance);
 
-                    GlobalDefinitions.CreateUIText("Assign Unit Interdiction", "UnitInterdictionText",
+                    GUIRoutines.CreateUIText("Assign Unit Interdiction", "UnitInterdictionText",
                             3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                             GlobalDefinitions.GUIUNITIMAGESIZE,
                             7 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1564,7 +1565,7 @@ namespace TheGreatCrusade
                     yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
                 }
 
-                GlobalDefinitions.numberTacticalAirFactorsRemainingText = GlobalDefinitions.CreateUIText((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) + " number of air factors remaining", "RemainingFactorsText",
+                GlobalDefinitions.numberTacticalAirFactorsRemainingText = GUIRoutines.CreateUIText((GlobalDefinitions.maxNumberOfTacticalAirMissions - GlobalDefinitions.tacticalAirMissionsThisTurn) + " number of air factors remaining", "RemainingFactorsText",
                         7 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1573,7 +1574,7 @@ namespace TheGreatCrusade
 
                 yPosition += 0.75f * GlobalDefinitions.GUIUNITIMAGESIZE;
 
-                GlobalDefinitions.CreateUIText("Allied Tactical Air", "TacticalAirHeaderText",
+                GUIRoutines.CreateUIText("Allied Tactical Air", "TacticalAirHeaderText",
                         4 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         4.5f * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1607,7 +1608,7 @@ namespace TheGreatCrusade
                 return;
 
             // If a gui isn't already up then call up a tactical air gui
-            if (GlobalDefinitions.guiList.Count == 0)
+            if (GUIRoutines.guiList.Count == 0)
                 CreateTacticalAirGUI();
 
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
@@ -1650,7 +1651,7 @@ namespace TheGreatCrusade
             if (GlobalDefinitions.localControl)
             {
                 // If a gui isn't already up then call up a tactical air gui
-                if (GlobalDefinitions.guiList.Count == 0)
+                if (GUIRoutines.guiList.Count == 0)
                     CreateTacticalAirGUI();
 
                 GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
@@ -1691,7 +1692,7 @@ namespace TheGreatCrusade
                             GlobalDefinitions.GuiUpdateStatusMessage("All units on the hex have already been interdicted or aren't available for strategic movement anyhow");
 
                             // If a gui isn't already up then call up a tactical air gui
-                            if (GlobalDefinitions.guiList.Count == 0)
+                            if (GUIRoutines.guiList.Count == 0)
                                 CreateTacticalAirGUI();
 
                             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
@@ -1702,11 +1703,11 @@ namespace TheGreatCrusade
                             float panelWidth = (numberOfUnits + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE;
                             float panelHeight = 3 * GlobalDefinitions.GUIUNITIMAGESIZE;
                             // Will need to present a gui to the user to select which unit he wants to select
-                            GlobalDefinitions.tacticalAirGUIInstance = GlobalDefinitions.CreateGUICanvas("InterdictedAirGUIInstance",
+                            GlobalDefinitions.tacticalAirGUIInstance = GUIRoutines.CreateGUICanvas("InterdictedAirGUIInstance",
                                     panelWidth,
                                     panelHeight,
                                     ref tacticalAirMultiUnitCanvasInstance);
-                            GlobalDefinitions.CreateUIText("Select unit for interdiction", "TacticalAirMultiUnitText",
+                            GUIRoutines.CreateUIText("Select unit for interdiction", "TacticalAirMultiUnitText",
                                     (numberOfUnits + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE,
                                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                                     0.5f * (numberOfUnits + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -1717,7 +1718,7 @@ namespace TheGreatCrusade
                                         interdictedUnitHex.GetComponent<HexDatabaseFields>().occupyingUnit[index].GetComponent<UnitDatabaseFields>().availableForStrategicMovement)
                                 {
                                     Toggle tempToggle;
-                                    tempToggle = GlobalDefinitions.CreateUnitTogglePair("tacticalAirMultiUnitTogglePair" + index,
+                                    tempToggle = GUIRoutines.CreateUnitTogglePair("tacticalAirMultiUnitTogglePair" + index,
                                                 (currentUnitCount + 1) * GlobalDefinitions.GUIUNITIMAGESIZE * 1.25f - 0.5f * panelWidth,
                                                 1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                                                 tacticalAirMultiUnitCanvasInstance,
@@ -1737,7 +1738,7 @@ namespace TheGreatCrusade
                         {
 
                             // If a gui isn't already up then call up a tactical air gui
-                            if (GlobalDefinitions.guiList.Count == 0)
+                            if (GUIRoutines.guiList.Count == 0)
                                 CreateTacticalAirGUI();
 
                             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
@@ -1753,7 +1754,7 @@ namespace TheGreatCrusade
                     if (GlobalDefinitions.localControl)
                     {
                         // If a gui isn't already up then call up a tactical air gui
-                        if (GlobalDefinitions.guiList.Count == 0)
+                        if (GUIRoutines.guiList.Count == 0)
                             CreateTacticalAirGUI();
 
                         GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
@@ -1770,7 +1771,7 @@ namespace TheGreatCrusade
                 {
 
                     // If a gui isn't already up then call up a tactical air gui
-                    if (GlobalDefinitions.guiList.Count == 0)
+                    if (GUIRoutines.guiList.Count == 0)
                         CreateTacticalAirGUI();
 
                     GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
@@ -1786,7 +1787,7 @@ namespace TheGreatCrusade
             unit.GetComponent<UnitDatabaseFields>().unitInterdiction = true;
 
             // If a gui isn't already up then call up a tactical air gui
-            if (GlobalDefinitions.guiList.Count == 0)
+            if (GUIRoutines.guiList.Count == 0)
                 CreateTacticalAirGUI();
 
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
@@ -1799,7 +1800,7 @@ namespace TheGreatCrusade
         public static void CheckForAvailableFreeFrenchUnits()
         {
             bool germanUnitsCleared = true;
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().FreeFrenchAvailableHex && (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                         (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality == GlobalDefinitions.Nationality.German))
                     germanUnitsCleared = false;

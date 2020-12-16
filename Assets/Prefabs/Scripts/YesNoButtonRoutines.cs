@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -12,7 +13,7 @@ namespace TheGreatCrusade
         public void YesButtonSelected()
         {
             GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.YESBUTTONSELECTEDKEYWORD);
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GUIRoutines.RemoveGUI(transform.parent.gameObject);
             yesAction();
         }
 
@@ -22,7 +23,7 @@ namespace TheGreatCrusade
         public void NoButtonSelected()
         {
             GlobalDefinitions.WriteToCommandFile(GlobalDefinitions.NOBUTTONSELECTEDKEYWORD);
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GUIRoutines.RemoveGUI(transform.parent.gameObject);
             noAction();
         }
 

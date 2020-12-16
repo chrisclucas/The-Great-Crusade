@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -99,7 +100,7 @@ namespace TheGreatCrusade
                         foreach (GameObject attackingUnit in attackingUnits)
                             if (attackingUnit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
                                 // Go through each of the hexsides on the defending hexes and see if there is a river between the defender and the attacker
-                                foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                                foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                                     if ((defendingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                                             && (defendingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] == attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex)
                                             && defendingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<BooleanArrayData>().riverSides[(int)hexSide])
@@ -112,7 +113,7 @@ namespace TheGreatCrusade
                                         foreach (GameObject unit in ReturnFriendlyUnitsInZOC(defendingUnit))
                                             // Now check if any of the units are adjacent to the attacker with a river between them.  If so, add it to must be attacked.
                                             if (adjacentUnits.Contains(unit) &&
-                                                    GlobalDefinitions.CheckForRiverBetweenTwoHexes(attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex) &&
+                                                    GeneralHexRoutines.CheckForRiverBetweenTwoHexes(attackingUnit.GetComponent<UnitDatabaseFields>().occupiedHex, unit.GetComponent<UnitDatabaseFields>().occupiedHex) &&
                                                     !unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack)
                                             {
                                                 foundUnit = true;
@@ -133,7 +134,7 @@ namespace TheGreatCrusade
         private static List<GameObject> ReturnFriendlyUnitsInZOC(GameObject defendingUnit)
         {
             List<GameObject> returnList = new List<GameObject>();
-            foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 if (defendingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<BooleanArrayData>().exertsZOC[(int)hexSide])
                     foreach (GameObject unit in defendingUnit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit)
                         returnList.Add(unit);
@@ -151,7 +152,7 @@ namespace TheGreatCrusade
         {
             bool foundUnit = false;
 
-            foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 if ((hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                         && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BooleanArrayData>().exertsZOC[GlobalDefinitions.ReturnHexSideOpposide((int)hexSide)] == true)
                         && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0)
@@ -241,7 +242,8 @@ namespace TheGreatCrusade
                     GlobalDefinitions.GuiUpdateStatusMessage("No uncommitted defenders found on hex selected; all units on hex are already assigned to combat.  Cancel attacks and reassign combat to add additional attacking units.");
                 else if (ReturnUncommittedUnits(ReturnAdjacentEnemyUnits(hex, GlobalDefinitions.ReturnOppositeNationality(defendingNationality))).Count == 0)
                     GlobalDefinitions.GuiUpdateStatusMessage("No units are available to attack the hex selected");
-                else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality != defendingNationality)
+                //else if (hex.GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality != defendingNationality)
+                else
                     GlobalDefinitions.GuiDisplayUnitsOnHex(hex);
 
                 if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedMovementStateInstance") ||
@@ -300,12 +302,12 @@ namespace TheGreatCrusade
                 maxUnits = singleCombat.GetComponent<Combat>().attackingUnits.Count;
             float panelWidth = (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
             float panelHeight = 7 * GlobalDefinitions.GUIUNITIMAGESIZE;
-            GlobalDefinitions.combatGUIInstance = GlobalDefinitions.CreateGUICanvas("CombatGUIInstance",
+            GlobalDefinitions.combatGUIInstance = GUIRoutines.CreateGUICanvas("CombatGUIInstance",
                     panelWidth,
                     panelHeight,
                     ref combatCanvas);
 
-            GlobalDefinitions.CreateUIText("Combat Odds", "OddsText",
+            GUIRoutines.CreateUIText("Combat Odds", "OddsText",
                     3 * GlobalDefinitions.GUIUNITIMAGESIZE,
                     GlobalDefinitions.GUIUNITIMAGESIZE,
                     (0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE) - 0.5f * panelWidth,
@@ -317,7 +319,7 @@ namespace TheGreatCrusade
             for (int index = 0; index < singleCombat.GetComponent<Combat>().defendingUnits.Count; index++)
             {
                 Toggle tempToggle;
-                tempToggle = GlobalDefinitions.CreateUnitTogglePair("unitToggleDefendingPair" + index,
+                tempToggle = GUIRoutines.CreateUnitTogglePair("unitToggleDefendingPair" + index,
                         index * xSeperation + xOffset - 0.5f * panelWidth,
                         5.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         combatCanvas,
@@ -340,7 +342,7 @@ namespace TheGreatCrusade
             for (int index = 0; index < singleCombat.GetComponent<Combat>().attackingUnits.Count; index++)
             {
                 Toggle tempToggle;
-                tempToggle = GlobalDefinitions.CreateUnitTogglePair("unitToggleAttackingPair" + index,
+                tempToggle = GUIRoutines.CreateUnitTogglePair("unitToggleAttackingPair" + index,
                         index * xSeperation + xOffset - 0.5f * panelWidth,
                         3.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         combatCanvas,
@@ -365,7 +367,7 @@ namespace TheGreatCrusade
             if (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.currentNationality == GlobalDefinitions.Nationality.Allied)
             {
                 Toggle airToggle;
-                airToggle = GlobalDefinitions.CreateToggle("CombatAirSupportToggle",
+                airToggle = GUIRoutines.CreateToggle("CombatAirSupportToggle",
                         0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth - 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         combatCanvas).GetComponent<Toggle>();
@@ -378,7 +380,7 @@ namespace TheGreatCrusade
                 else
                     airToggle.GetComponent<Toggle>().interactable = false;
 
-                GlobalDefinitions.CreateUIText("Air Support", "CombatAirSupportText",
+                GUIRoutines.CreateUIText("Air Support", "CombatAirSupportText",
                         1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth - 1 * GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -386,7 +388,7 @@ namespace TheGreatCrusade
                         Color.white, combatCanvas);
 
                 Toggle carpetToggle;
-                carpetToggle = GlobalDefinitions.CreateToggle("CombatCarpetBombingToggle",
+                carpetToggle = GUIRoutines.CreateToggle("CombatCarpetBombingToggle",
                         0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         1.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         combatCanvas).GetComponent<Toggle>();
@@ -399,7 +401,7 @@ namespace TheGreatCrusade
                 else
                     carpetToggle.GetComponent<Toggle>().interactable = false;
 
-                GlobalDefinitions.CreateUIText("Carpet Bombing", "CarpetBombingSupportText",
+                GUIRoutines.CreateUIText("Carpet Bombing", "CarpetBombingSupportText",
                         1.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                         1 * GlobalDefinitions.GUIUNITIMAGESIZE,
                         0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 2 * GlobalDefinitions.GUIUNITIMAGESIZE,
@@ -408,7 +410,7 @@ namespace TheGreatCrusade
             }
 
             // OK button
-            okButton = GlobalDefinitions.CreateButton("combatOKButton", "OK",
+            okButton = GUIRoutines.CreateButton("combatOKButton", "OK",
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth - 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas);
@@ -417,7 +419,7 @@ namespace TheGreatCrusade
             okButton.onClick.AddListener(okButton.GetComponent<CombatGUIOK>().OkCombatGUISelection);
 
             // Cancel button
-            cancelButton = GlobalDefinitions.CreateButton("combatCancelButton", "Cancel",
+            cancelButton = GUIRoutines.CreateButton("combatCancelButton", "Cancel",
                     0.5f * (maxUnits + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE,
                     0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     combatCanvas);
@@ -493,7 +495,7 @@ namespace TheGreatCrusade
 
             // The avaialble carpet bombing hexes are stored in the hexesAttackedLastTurn list.  All non valid
             // hexes were removed already (i.e. hexes attacked last turn but do not have Germans on them this turn)
-            GlobalDefinitions.CreateGUICanvas("CarpetBombingGUI",
+            GUIRoutines.CreateGUICanvas("CarpetBombingGUI",
                     panelWidth,
                     panelHeight,
                     ref bombingCanvas);
@@ -503,7 +505,7 @@ namespace TheGreatCrusade
                 Toggle tempToggle;
                 Button tempLocateButton;
 
-                GlobalDefinitions.CreateUIText("Carpet bombing available - you may select a hex", "CarpetBombingAvailableText",
+                GUIRoutines.CreateUIText("Carpet bombing available - you may select a hex", "CarpetBombingAvailableText",
                         widthSeed * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         (widthSeed * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE) / 2 - 0.5f * panelWidth,
@@ -512,20 +514,20 @@ namespace TheGreatCrusade
 
                 for (int index2 = 0; index2 < GlobalDefinitions.hexesAttackedLastTurn[index].GetComponent<HexDatabaseFields>().occupyingUnit.Count; index2++)
                 {
-                    GlobalDefinitions.CreateUnitImage(GlobalDefinitions.hexesAttackedLastTurn[index].GetComponent<HexDatabaseFields>().occupyingUnit[index2], "UnitImage",
+                    GUIRoutines.CreateUnitImage(GlobalDefinitions.hexesAttackedLastTurn[index].GetComponent<HexDatabaseFields>().occupyingUnit[index2], "UnitImage",
                             index2 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                             (index + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                             bombingCanvas);
                 }
 
-                tempLocateButton = GlobalDefinitions.CreateButton("BombingLocateButton" + index, "Locate",
+                tempLocateButton = GUIRoutines.CreateButton("BombingLocateButton" + index, "Locate",
                         3 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         (index + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         bombingCanvas);
                 tempLocateButton.gameObject.AddComponent<CarpetBombingToggleRoutines>();
                 tempLocateButton.GetComponent<CarpetBombingToggleRoutines>().hex = GlobalDefinitions.hexesAttackedLastTurn[index];
                 tempLocateButton.onClick.AddListener(tempLocateButton.GetComponent<CarpetBombingToggleRoutines>().LocateCarpetBombingHex);
-                tempToggle = GlobalDefinitions.CreateToggle("BombingToggle" + index,
+                tempToggle = GUIRoutines.CreateToggle("BombingToggle" + index,
                         4 * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
                         (index + 1) * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE + 0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         bombingCanvas).GetComponent<Toggle>();
@@ -533,7 +535,7 @@ namespace TheGreatCrusade
                 tempToggle.GetComponent<CarpetBombingToggleRoutines>().hex = GlobalDefinitions.hexesAttackedLastTurn[index];
                 tempToggle.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => tempToggle.GetComponent<CarpetBombingToggleRoutines>().SelectHex());
             }
-            tempOKButton = GlobalDefinitions.CreateButton("BombingOKButton", "OK",
+            tempOKButton = GUIRoutines.CreateButton("BombingOKButton", "OK",
                     widthSeed * 1.25f * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
                     0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                     bombingCanvas);
@@ -563,7 +565,7 @@ namespace TheGreatCrusade
         /// <returns></returns>
         public bool CheckForInvadingAttacker(GameObject unit)
         {
-            // The assumption here is that if there is an attacker on a sea hex it and it is in the combatAssignmentAttackingUnits list than it is invading
+            // The assumption here is that if there is an attacker on a sea hex and it is in the combatAssignmentAttackingUnits list than it is invading
             if (unit.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().sea)
                 return true;
             else
@@ -581,7 +583,7 @@ namespace TheGreatCrusade
             //GlobalDefinitions.writeToLogFile("returnAdjacentEnemyUnits: hex = " + hex.name);
             List<GameObject> returnList = new List<GameObject>();
             if (hex != null)
-                foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSides in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 {
                     if ((hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides] != null) &&
                             (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
@@ -612,7 +614,7 @@ namespace TheGreatCrusade
             List<GameObject> returnList = new List<GameObject>();
             if (!CheckForInvasionDefense(hex.GetComponent<HexDatabaseFields>().occupyingUnit[0], singleCombat))
                 foreach (GameObject attacker in singleCombat.GetComponent<Combat>().attackingUnits)
-                    foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSides in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                         if ((attacker.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides] != null) &&
                                 (attacker.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                                 (attacker.GetComponent<UnitDatabaseFields>().occupiedHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality !=

@@ -52,7 +52,12 @@ namespace TheGreatCrusade
             {
                 // If the odds or worse than 1:6 then the attackers are eliminated and no battle takes place.  It does not
                 // count as an attack on the defending units
-                GlobalDefinitions.AskUserYesNoQuestion("Attacking at odds less than 1:6 is useless: do you want to continue?/nNote that the attackers will be eliminated and this will not count as a combat", ref yesButton, ref noButton, YesContinue, NoAbort);
+
+                // Turn off the combat assignment gui before brining up the yes/no question so the user doesn't select any of the buttons on the gui before answering the
+                // question which creates all kinds of problems
+                transform.parent.gameObject.SetActive(false);
+
+                GlobalDefinitions.AskUserYesNoQuestion("Attacking at odds less than 1:6 is useless: do you want to continue?  Note that if Yes is selected the attackers will be eliminated and this will not count as a combat if you are trying to use this as a soak-off attack", ref yesButton, ref noButton, YesContinue, NoAbort, 4f, 5f);
             }
 
             else
@@ -91,7 +96,7 @@ namespace TheGreatCrusade
                 }
 
                 GlobalDefinitions.allCombats.Add(singleCombat);
-                GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatGUIInstance);
+                GUIRoutines.RemoveGUI(GlobalDefinitions.combatGUIInstance);
 
                 // Check if the Must Attack toggle is on and if it is highlight uncommitted units that must participate in an attack
                 if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
@@ -135,7 +140,7 @@ namespace TheGreatCrusade
             }
 
             Destroy(singleCombat);
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.combatGUIInstance);
 
             if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
                     (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance") ||
@@ -173,7 +178,7 @@ namespace TheGreatCrusade
                 }
 
             Destroy(singleCombat);
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.combatGUIInstance);
 
             if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
             (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance"))
@@ -195,7 +200,7 @@ namespace TheGreatCrusade
                     unit.GetComponent<UnitDatabaseFields>().isCommittedToAnAttack = false;
 
             Destroy(singleCombat);
-            GlobalDefinitions.RemoveGUI(GlobalDefinitions.combatGUIInstance);
+            GUIRoutines.RemoveGUI(GlobalDefinitions.combatGUIInstance);
 
             if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedCombatStateInstance") ||
                     (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanCombatStateInstance"))

@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -13,10 +12,10 @@ namespace TheGreatCrusade
         public void CancelSelected()
         {
             // Get rid of the gui
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GUIRoutines.RemoveGUI(transform.parent.gameObject);
 
             // Bring back any gui's that were active before this was called
-            foreach (GameObject gui in GlobalDefinitions.guiList)
+            foreach (GameObject gui in GUIRoutines.guiList)
                 gui.SetActive(true);
 
             // Turn the button back on

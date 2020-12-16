@@ -13,7 +13,7 @@ namespace TheGreatCrusade
         /// Returns the the hex of the selected unit or displays the enemy units 
         /// </summary>
         /// <param name="nationality"></param>
-        public GameObject HighlighyHexesForMovement(GameObject selectedUnit)
+        public GameObject HighlightHexesForMovement(GameObject selectedUnit)
         {
             List<GameObject> movementHexes = new List<GameObject>();
             // Note that the check for a Null unit has already been done
@@ -101,7 +101,7 @@ namespace TheGreatCrusade
                     MoveUnitFromBritain(hex, unit);
                     GameControl.invasionRoutinesInstance.GetComponent<InvasionRoutines>().IncrementInvasionUnitLimits(unit);
 
-                    foreach (GameObject tempHex in GlobalDefinitions.allHexesOnBoard)
+                    foreach (GameObject tempHex in HexDefinitions.allHexesOnBoard)
                     {
                         GlobalDefinitions.UnhighlightHex(tempHex);
                         tempHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
@@ -122,7 +122,7 @@ namespace TheGreatCrusade
                     {
                         GlobalDefinitions.UnhighlightUnit(unit);
                         unit = null;
-                        foreach (GameObject tempHex in GlobalDefinitions.allHexesOnBoard)
+                        foreach (GameObject tempHex in HexDefinitions.allHexesOnBoard)
                         {
                             GlobalDefinitions.UnhighlightHex(tempHex);
                             tempHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
@@ -142,7 +142,7 @@ namespace TheGreatCrusade
             {
                 GlobalDefinitions.UnhighlightUnit(unit);
                 unit = null;
-                foreach (GameObject tempHex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject tempHex in HexDefinitions.allHexesOnBoard)
                 {
                     GlobalDefinitions.UnhighlightHex(tempHex);
                     tempHex.GetComponent<HexDatabaseFields>().availableForMovement = false;
@@ -190,7 +190,7 @@ namespace TheGreatCrusade
                         UpdateZOC(selectedHex);
 
                     // Finally remove all of the highlighting from hexes that were availabe for movement and reset the availableForMovement and remainingMovement fields
-                    foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                    foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                     {
                         GlobalDefinitions.UnhighlightHex(hex.gameObject);
                         hex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
@@ -212,7 +212,7 @@ namespace TheGreatCrusade
             {
                 GlobalDefinitions.UnhighlightUnit(selectedUnit);
                 selectedUnit = null;
-                foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+                foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 {
                     GlobalDefinitions.UnhighlightHex(hex);
                     hex.GetComponent<HexDatabaseFields>().availableForMovement = false;
@@ -475,7 +475,7 @@ namespace TheGreatCrusade
         /// <returns></returns>
         public bool CheckForAdjacentEnemy(GameObject hex, GameObject selectedUnit)
         {
-            foreach (GlobalDefinitions.HexSides hexSides in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (HexDefinitions.HexSides hexSides in Enum.GetValues(typeof(HexDefinitions.HexSides)))
             {
                 if ((hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides] != null) && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
                         (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSides].GetComponent<HexDatabaseFields>().occupyingUnit[0].GetComponent<UnitDatabaseFields>().nationality != selectedUnit.GetComponent<UnitDatabaseFields>().nationality))
@@ -520,7 +520,7 @@ namespace TheGreatCrusade
                 if (checkNeeded)
                 {
                     // Check if any of the 6 neighbors are exerting ZOC to the beginning hex
-                    foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                     {
                         if ((beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null) &&
                             (beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
@@ -575,7 +575,7 @@ namespace TheGreatCrusade
                     (destinationHex.GetComponent<HexDatabaseFields>().riverInterdiction))
             {
                 // The hex is interdicted, now check if movement crosses a river
-                foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 {
                     if ((beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] == destinationHex) &&
                                 beginningHex.GetComponent<BooleanArrayData>().riverSides[(int)hexSide])
@@ -625,7 +625,7 @@ namespace TheGreatCrusade
                     (destinationHex.GetComponent<HexDatabaseFields>().riverInterdiction))
             {
                 // The hex is interdicted, now check if movement crosses a river
-                foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 {
                     if ((beginningHex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] == destinationHex) &&
                                 beginningHex.GetComponent<BooleanArrayData>().riverSides[(int)hexSide])
@@ -647,7 +647,7 @@ namespace TheGreatCrusade
         public List<GameObject> ReturnAvailableMovementHexes(GameObject initialHexToCheck, GameObject selectedUnit)
         {
             // Reset hex values
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 hex.GetComponent<HexDatabaseFields>().remainingMovement = 0;
                 hex.GetComponent<HexDatabaseFields>().strategicRemainingMovement = 0;
@@ -680,7 +680,7 @@ namespace TheGreatCrusade
             while (hexesToCheck.Count > 0)
             {
                 //GlobalDefinitions.writeToLogFile("returnAvailableMovementHexes:     hexesToCheck.Count = " + hexesToCheck.Count + "  checking hex - " + hexesToCheck[0].name + " remaining movement = " + hexesToCheck[0].GetComponent<HexDatabaseFields>().remainingMovement);
-                foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                 {
                     if (hexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                     {
@@ -781,7 +781,7 @@ namespace TheGreatCrusade
             }
 
             // Finally remove all of the highlighting from hexes that were availabe for movement and reset the availableForMovement and remainingMovement fields
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().availableForMovement)
                 {
                     GlobalDefinitions.UnhighlightHex(hex.gameObject);
@@ -825,7 +825,7 @@ namespace TheGreatCrusade
             }
 
             // Finally remove all of the highlighting from hexes that were availabe for movement and reset the availableForMovement and remainingMovement fields
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().availableForMovement)
                 {
                     GlobalDefinitions.UnhighlightHex(hex.gameObject);
@@ -852,7 +852,7 @@ namespace TheGreatCrusade
                     hex.GetComponent<HexDatabaseFields>().inGermanZOC = true;
 
                     //  Set the ZOC field if exerting to a neighbor and add any units that aren't already there
-                    foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                         if ((hex.GetComponent<BooleanArrayData>().exertsZOC[(int)hexSide]) && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null))
                             hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().inGermanZOC = true;
                 }
@@ -861,7 +861,7 @@ namespace TheGreatCrusade
                     hex.GetComponent<HexDatabaseFields>().inAlliedZOC = true;
 
                     //  Set the ZOC field if exerting to a neighbor and add any units that aren't already there
-                    foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                    foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                         if ((hex.GetComponent<BooleanArrayData>().exertsZOC[(int)hexSide]) && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null))
                             hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<HexDatabaseFields>().inAlliedZOC = true;
                 }
@@ -877,7 +877,7 @@ namespace TheGreatCrusade
                 hex.GetComponent<HexDatabaseFields>().inGermanZOC = false;
                 hex.GetComponent<HexDatabaseFields>().inAlliedZOC = false;
                 CheckAdjacentHexZOCImpact(hex);
-                foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                     if (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                         CheckAdjacentHexZOCImpact(hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide]);
             }
@@ -903,7 +903,7 @@ namespace TheGreatCrusade
                     hex.GetComponent<HexDatabaseFields>().inGermanZOC = true;
                 }
 
-            foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+            foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
             {
                 if ((hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                         && (hex.GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide].GetComponent<BooleanArrayData>().exertsZOC[GlobalDefinitions.ReturnHexSideOpposide((int)hexSide)])
@@ -936,11 +936,11 @@ namespace TheGreatCrusade
                 Button cancelButton;
                 float panelWidth = (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE;
                 float panelHeight = 4 * GlobalDefinitions.GUIUNITIMAGESIZE;
-                GlobalDefinitions.CreateGUICanvas("MultiUnitMovementGUIInstance",
+                GUIRoutines.CreateGUICanvas("MultiUnitMovementGUIInstance",
                         panelWidth,
                         panelHeight,
                         ref movementCanvas);
-                GlobalDefinitions.CreateUIText("Select a unit", "multiUnitMovementText",
+                GUIRoutines.CreateUIText("Select a unit", "multiUnitMovementText",
                         (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE,
                         GlobalDefinitions.GUIUNITIMAGESIZE,
                         0.5f * (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelWidth,
@@ -953,7 +953,7 @@ namespace TheGreatCrusade
                 {
                     Toggle tempToggle;
 
-                    tempToggle = GlobalDefinitions.CreateUnitTogglePair("multiUnitMovementUnitToggle" + index,
+                    tempToggle = GUIRoutines.CreateUnitTogglePair("multiUnitMovementUnitToggle" + index,
                         index * xSeperation + xOffset - 0.5f * panelWidth,
                         2.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         movementCanvas,
@@ -963,7 +963,7 @@ namespace TheGreatCrusade
                     tempToggle.GetComponent<MultiUnitMovementToggleRoutines>().unit = hex.GetComponent<HexDatabaseFields>().occupyingUnit[index];
                     tempToggle.onValueChanged.AddListener((bool value) => tempToggle.GetComponent<MultiUnitMovementToggleRoutines>().SelectUnitToMove());
                 }
-                cancelButton = GlobalDefinitions.CreateButton("CancelButton", "Cancel",
+                cancelButton = GUIRoutines.CreateButton("CancelButton", "Cancel",
                         (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count + 1) * GlobalDefinitions.GUIUNITIMAGESIZE / 2 - 0.5f * panelWidth,
                         0.5f * GlobalDefinitions.GUIUNITIMAGESIZE - 0.5f * panelHeight,
                         movementCanvas);
@@ -1081,7 +1081,7 @@ namespace TheGreatCrusade
                     {
                         if (airborneHexesToCheck[0].GetComponent<HexDatabaseFields>().remainingMovement > 0)
                         {
-                            foreach (GlobalDefinitions.HexSides hexSide in Enum.GetValues(typeof(GlobalDefinitions.HexSides)))
+                            foreach (HexDefinitions.HexSides hexSide in Enum.GetValues(typeof(HexDefinitions.HexSides)))
                             {
                                 if (airborneHexesToCheck[0].GetComponent<HexDatabaseFields>().Neighbors[(int)hexSide] != null)
                                 {
@@ -1140,7 +1140,7 @@ namespace TheGreatCrusade
         public void RemoveHexHighlighting()
         {
             // Finally remove all of the highlighting from hexes that were availabe for movement and reset the availableForMovement and remainingMovement fields
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().availableForMovement)
                 {
                     GlobalDefinitions.UnhighlightHex(hex.gameObject);
@@ -1162,7 +1162,7 @@ namespace TheGreatCrusade
         public void DetermineAvailableReinforcementPorts()
         {
             GlobalDefinitions.availableReinforcementPorts.Clear();
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             {
                 if (hex.GetComponent<HexDatabaseFields>().inlandPort && GlobalDefinitions.CheckIfInlandPortClear(hex.gameObject) &&
                         (hex.GetComponent<HexDatabaseFields>().occupyingUnit.Count > 0) &&
@@ -1440,7 +1440,7 @@ namespace TheGreatCrusade
         /// <returns></returns>
         private GameObject GetBritainReturnHex(GameObject targetHex)
         {
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().invasionTarget == targetHex)
                 {
                     hex.GetComponent<HexDatabaseFields>().availableForMovement = true;
@@ -1465,7 +1465,7 @@ namespace TheGreatCrusade
         /// <param name="hex"></param>
         private void HighlightBritainReturnHex(GameObject targetHex)
         {
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().invasionTarget == targetHex)
                 {
                     //storedHexes.Add(hex.gameObject);
@@ -1529,7 +1529,7 @@ namespace TheGreatCrusade
             unit.GetComponent<SpriteRenderer>().material.color = Color.white;
 
             // Finally remove all of the highlighting from hexes that were availabe for movement and reset the availableForMovement and remainingMovement fields
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (hex.GetComponent<HexDatabaseFields>().availableForMovement)
                 {
                     GlobalDefinitions.UnhighlightHex(hex.gameObject);
@@ -1696,7 +1696,7 @@ namespace TheGreatCrusade
         /// </summary>
         public void HighlightGermanReplacementHexes()
         {
-            foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
                 if (!hex.GetComponent<HexDatabaseFields>().alliedControl && hex.GetComponent<HexDatabaseFields>().germanRepalcement)
                 {
                     GlobalDefinitions.HighlightHexForMovement(hex.gameObject);
@@ -1929,7 +1929,7 @@ namespace TheGreatCrusade
                     // AI TESTING: For debugging the AI algorithm I am setting the hex movement values here for the selected unit
                     //AIRoutines.setUnitMovementValues(selectedUnit);
 
-                    GlobalDefinitions.startHex = HighlighyHexesForMovement(selectedUnit);
+                    GlobalDefinitions.startHex = HighlightHexesForMovement(selectedUnit);
                 }
             else
                 GlobalDefinitions.GuiUpdateStatusMessage("No unit selected");

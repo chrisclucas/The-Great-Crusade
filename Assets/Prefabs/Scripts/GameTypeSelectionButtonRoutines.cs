@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
-using System.IO;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -25,7 +25,7 @@ namespace TheGreatCrusade
             {
                 GlobalDefinitions.WriteToLogFile("newSavedGameOK: Starting new game");
 
-                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                GUIRoutines.RemoveGUI(transform.parent.gameObject);
                 GameControl.setUpStateInstance.GetComponent<SetUpState>().ExecuteNewGame();
             }
             else if (GlobalDefinitions.savedGameToggle.GetComponent<Toggle>().isOn)
@@ -36,14 +36,14 @@ namespace TheGreatCrusade
                 if (!GlobalDefinitions.commandFileBeingRead)
                     GlobalDefinitions.DeleteCommandFile();
 
-                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                GUIRoutines.RemoveGUI(transform.parent.gameObject);
                 GameControl.setUpStateInstance.GetComponent<SetUpState>().ExecuteSavedGame();
             }
             else if (GlobalDefinitions.commandFileToggle.GetComponent<Toggle>().isOn)
             {
                 GlobalDefinitions.WriteToLogFile("newSavedGameOK: Executing command file");
 
-                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                GUIRoutines.RemoveGUI(transform.parent.gameObject);
                 GameControl.setUpStateInstance.GetComponent<SetUpState>().ReadCommandFile();
             }
         }

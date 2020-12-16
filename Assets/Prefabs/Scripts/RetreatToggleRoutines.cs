@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -42,7 +43,7 @@ namespace TheGreatCrusade
                     // Need to call selection routines in case there are more units that cannot retreat
                     CombatResolutionRoutines.SelectUnitsForRetreat();
                 }
-                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                GUIRoutines.RemoveGUI(transform.parent.gameObject);
             }
         }
     }

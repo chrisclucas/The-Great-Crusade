@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -16,7 +17,7 @@ namespace TheGreatCrusade
                         GlobalDefinitions.numberOfCarpetBombingsUsed++;
                         GlobalDefinitions.carpetBombingUsedThisTurn = true;
                     }
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GUIRoutines.RemoveGUI(transform.parent.gameObject);
             GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod = GameControl.alliedCombatStateInstance.GetComponent<CombatState>().ExecuteSelectUnit;
         }
     }

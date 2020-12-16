@@ -149,7 +149,7 @@ namespace TheGreatCrusade
 
             // Load the global for storing all hexes on the board
             //foreach (Transform hex in GameObject.Find("Board").transform)
-            //    GlobalDefinitions.allHexesOnBoard.Add(hex.gameObject);
+            //    HexDefinitions.allHexesOnBoard.Add(hex.gameObject);
 
             // Deal with the configuration settings
             GlobalGameFields.settingsFile = path + GlobalGameFields.settingsFile;
@@ -179,7 +179,7 @@ namespace TheGreatCrusade
             hexValueGuiInstance.name = "hexValueGuiInstance";
 
             // AI TESTING
-            //foreach (GameObject hex in GlobalDefinitions.allHexesOnBoard)
+            //foreach (GameObject hex in HexDefinitions.allHexesOnBoard)
             //    GlobalDefinitions.createHexText(Convert.ToString(hex.GetComponent<HexDatabaseFields>().hexValue), hex.name + "HexValueText", 20, 20, hex.position.x, hex.position.y, 14, hexValueCanvas);
 
             GlobalDefinitions.WriteToLogFile("GameControl start(): Putting Allied units in Britain - reading from file: " + GlobalGameFields.britainUnitLocationFile);
@@ -194,7 +194,7 @@ namespace TheGreatCrusade
             GlobalDefinitions.startHex = null;
 
             // Reset the list of active GUI's
-            GlobalDefinitions.guiList.Clear();
+            GUIRoutines.guiList.Clear();
 
             gameStateControlInstance = new GameObject("gameStateControl");
             gameStateControlInstance.AddComponent<GameStateControl>();

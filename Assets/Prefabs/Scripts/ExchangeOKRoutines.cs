@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -56,7 +57,7 @@ namespace TheGreatCrusade
                     }
                 }
 
-                GlobalDefinitions.RemoveGUI(GlobalDefinitions.ExchangeGUIInstance);
+                GUIRoutines.RemoveGUI(GlobalDefinitions.ExchangeGUIInstance);
 
                 if (attackerHadMostFactors && (GlobalDefinitions.hexesAvailableForPostCombatMovement.Count > 0) && (attackingUnits.Count > 0))
                     CombatResolutionRoutines.SelectUnitsForPostCombatMovement(attackingUnits);

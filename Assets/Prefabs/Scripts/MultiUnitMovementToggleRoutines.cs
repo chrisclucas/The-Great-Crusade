@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CommonRoutines;
 
 namespace TheGreatCrusade
 {
@@ -35,7 +36,7 @@ namespace TheGreatCrusade
                             GlobalDefinitions.HighlightHexForMovement(hex);
                     }
 
-                    GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                    GUIRoutines.RemoveGUI(transform.parent.gameObject);
 
                     if ((GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "alliedMovementStateInstance") ||
                             (GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.name == "germanMovementStateInstance"))
@@ -53,7 +54,7 @@ namespace TheGreatCrusade
             else
             {
                 // This actually should never happen since when the toggle is selected the gui is removed so there is never a chance to unselect the toggle
-                GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+                GUIRoutines.RemoveGUI(transform.parent.gameObject);
             }
         }
 
@@ -72,7 +73,7 @@ namespace TheGreatCrusade
                 GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.executeMethod =
                                     GameControl.gameStateControlInstance.GetComponent<GameStateControl>().currentState.GetComponent<SetUpState>().ExecuteSelectUnit;
 
-            GlobalDefinitions.RemoveGUI(transform.parent.gameObject);
+            GUIRoutines.RemoveGUI(transform.parent.gameObject);
         }
     }
 }

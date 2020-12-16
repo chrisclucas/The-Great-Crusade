@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace TheGreatCrusade
+namespace CommonRoutines
 {
     public class HexDatabaseFields : MonoBehaviour
     {
@@ -209,12 +209,12 @@ namespace TheGreatCrusade
         public void WriteHexFields(StreamWriter fileWriter)
         {
             fileWriter.Write(name + " ");
-            fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(inGermanZOC) + " ");
-            fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(inAlliedZOC) + " ");
-            fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(alliedControl) + " ");
-            fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(successfullyInvaded) + " ");
-            fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(closeDefenseSupport) + " ");
-            fileWriter.Write(GlobalDefinitions.WriteBooleanToSaveFormat(riverInterdiction) + " ");
+            fileWriter.Write(IORoutines.WriteBooleanToSaveFormat(inGermanZOC) + " ");
+            fileWriter.Write(IORoutines.WriteBooleanToSaveFormat(inAlliedZOC) + " ");
+            fileWriter.Write(IORoutines.WriteBooleanToSaveFormat(alliedControl) + " ");
+            fileWriter.Write(IORoutines.WriteBooleanToSaveFormat(successfullyInvaded) + " ");
+            fileWriter.Write(IORoutines.WriteBooleanToSaveFormat(closeDefenseSupport) + " ");
+            fileWriter.Write(IORoutines.WriteBooleanToSaveFormat(riverInterdiction) + " ");
             fileWriter.WriteLine();
         }
 
